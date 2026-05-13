@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" -Recurse -Filter \"*.json\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" status --short)",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" log --oneline -10)",
+      "Bash(move \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\karta-pobytu-landing.pdf\" \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\public\\\\karta-pobytu-landing.pdf\")",
+      "Bash(npm run *)"
+    ]
+  }
+}
