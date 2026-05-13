@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Компас Міграції - революційне юридичне агентство для захисту прав емігрантів в Європі. ШІ-асистент 24/7, гарантований результат, 40 000 клієнтів">
+<meta name="keywords" content="юридичні послуги, захист емігрантів, карта побуту, депортація, Європа">
+<meta property="og:title" content="Компас Міграції — Професійний захист прав емігрантів">
+<meta property="og:description" content="Революційне юридичне агентство з ШІ-асистентом 24/7 для захисту прав емігрантів в Європі">
+<meta property="og:image" content="https://via.placeholder.com/1200x630">
+<title>Компас Міграції — Професійний захист прав емігрантів</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧭%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,300;1,600&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* LIGHT ELEGANT PALETTE */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-tertiary: #f0f2f5;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-light: #7a7a9a;
+  --accent-primary: #2563eb;
+  --accent-secondary: #059669;
+  --accent-tertiary: #d97706;
+  --accent-light: #93c5fd;
+  --border-color: #e5e7eb;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+  
+  --font-display: 'Syne', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════ UTILITIES ══════════════════════════════════ */
+.container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+@media(max-width: 768px) { .container { padding: 0 24px; } }
+
+.section-space { padding: 120px 0; }
+@media(max-width: 768px) { .section-space { padding: 60px 0; } }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: var(--font-display);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ══════════════════════════════════ HEADER & NAV ══════════════════════════════════ */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+header.scrolled {
+  box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  height: 72px;
+}
+
+.nav-logo {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo-icon {
+  font-size: 24px;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.nav-center {
+  display: flex;
+  gap: 40px;
+  list-style: none;
+}
+
+.nav-center a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-center a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transition: width 0.3s;
+}
+
+.nav-center a:hover {
+  color: var(--accent-primary);
+}
+
+.nav-center a:hover::after {
+  width: 100%;
+}
+
+.nav-right {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.lang-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.lang-btn.active {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.lang-btn:hover:not(.active) {
+  color: var(--accent-primary);
+}
+
+@media(max-width: 768px) {
+  .nav-center { display: none; }
+  .nav-logo { font-size: 18px; }
+}
+
+/* ══════════════════════════════════ HERO ══════════════════════════════════ */
+.hero {
+  margin-top: 72px;
+  min-height: calc(100vh - 72px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.08), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(5, 150, 105, 0.08), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 40px;
+  animation: slideDown 0.8s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  animation: slideDown 0.8s ease 0.1s backwards;
+}
+
+.hero h1 em {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 16px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin-bottom: 40px;
+  line-height: 1.8;
+  animation: slideDown 0.8s ease 0.2s backwards;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: slideDown 0.8s ease 0.3s backwards;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-light);
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ══════════════════════════════════ SERVICES SECTION ══════════════════════════════════ */
+.services-section {
+  background: var(--bg-secondary);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 300;
+  color: var(--text-primary);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.service-card {
+  background: var(--bg-primary);
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-icon {
+  font-size: 36px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.service-card h3 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.service-card p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+.service-arrow {
+  align-self: flex-start;
+  font-size: 18px;
+  color: var(--accent-primary);
+  transition: transform 0.3s;
+}
+
+.service-card:hover .service-arrow {
+  transform: translate(4px, -4px);
+}
+
+/* ══════════════════════════════════ FEATURES SECTION ══════════════════════════════════ */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+.feature-item {
+  display: flex;
+  gap: 20px;
+}
+
+.feature-number {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--accent-primary);
+  min-width: 50px;
+}
+
+.feature-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.feature-content p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════ PRICING SECTION ══════════════════════════════════ */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 60px;
+}
+
+.price-card {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 40px;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-card.featured {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-lg);
+  transform: scale(1.05);
+}
+
+.price-badge {
+  position: absolute;
+  top: -16px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.price-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.price-amount {
+  font-family: var(--font-serif);
+  font-size: 42px;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.price-amount sup {
+  font-size: 18px;
+  color: var(--text-light);
+}
+
+.price-description {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.price-features {
+  list-style: none;
+  margin: 24px 0;
+  padding: 24px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  flex-grow: 1;
+}
+
+.price-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  padding: 10px 0;
+}
+
+.price-features li::before {
+  content: '✓';
+  color: var(--accent-secondary);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.price-btn {
+  background: var(--accent-primary);
+  color: white;
+  text-align: center;
+  padding: 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.price-btn:hover {
+  background: var(--accent-secondary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ══════════════════════════════════ PROCESS SECTION ══════════════════════════════════ */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin-top: 60px;
+  position: relative;
+}
+
+.process-step {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: center;
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 300;
+  box-shadow: var(--shadow-md);
+}
+
+.step-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ══════════════════════════════════ CONTACT FORM ══════════════════════════════════ */
+.form-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: var(--bg-secondary);
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media(max-width: 768px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+.form-submit {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-status {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: center;
+  min-height: 24px;
+}
+
+.form-status.success {
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--accent-secondary);
+}
+
+.form-status.error {
+  background: rgba(220, 38, 38, 0.1);
+  color: #dc2626;
+}
+
+/* ══════════════════════════════════ FOOTER ══════════════════════════════════ */
+footer {
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+  padding: 60px 0 24px;
+  margin-top: 120px;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-col h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+
+.footer-col a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 14px;
+}
+
+.footer-col a:hover {
+  color: white;
+}
+
+.footer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 40px 0;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media(max-width: 768px) {
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+
+/* ══════════════════════════════════ ANIMATIONS ══════════════════════════════════ */
+.fade-in {
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════ RESPONSIVE ══════════════════════════════════ */
+@media(max-width: 768px) {
+  .hero { padding: 60px 0; }
+  .section-space { padding: 80px 0; }
+  .services-grid { gap: 20px; }
+  .price-card.featured { transform: scale(1); }
+  .process-steps { gap: 20px; }
+  .footer-content { gap: 20px; }
+}
+
+@media(max-width: 480px) {
+  .section-space { padding: 40px 0; }
+  .hero h1 { font-size: 36px; }
+  .section-title { font-size: 28px; }
+  .services-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════ SCROLLBAR ══════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header id="header">
+  <div class="container">
+    <nav>
+      <a href="#" class="nav-logo">
+        <span class="nav-logo-icon">🧭</span>
+        <span data-i18n="brand">Компас Міграції</span>
+      </a>
+      
+      <ul class="nav-center">
+        <li><a href="#services" data-i18n="nav-services">Послуги</a></li>
+        <li><a href="#process" data-i18n="nav-process">Процес</a></li>
+        <li><a href="#pricing" data-i18n="nav-pricing">Ціни</a></li>
+        <li><a href="#contact" data-i18n="nav-contact">Контакт</a></li>
+      </ul>
+      
+      <div class="nav-right">
+        <div class="lang-selector">
+          <button class="lang-btn active" onclick="switchLanguage('uk')" title="Українська">UKR</button>
+          <button class="lang-btn" onclick="switchLanguage('pl')" title="Polski">PL</button>
+          <button class="lang-btn" onclick="switchLanguage('es')" title="Español">ESP</button>
+          <button class="lang-btn" onclick="switchLanguage('en')" title="English">EN</button>
+        </div>
+        <a href="https://wa.me/48729271848" class="btn btn-primary" data-i18n="nav-consult">Консультація</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════ HERO SECTION ══════════ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>✓</span>
+        <span data-i18n="hero-badge">Революційний проект · Захист прав · Вся Європа</span>
+      </div>
+      
+      <h1>
+        <span data-i18n="hero-title-1">Ми — мирна</span><br>
+        <span><em data-i18n="hero-title-2">профспілка емігрантів</em></span>
+      </h1>
+      
+      <p data-i18n="hero-subtitle">Ми не просто юридичний сервіс. Ми — революція у захисті прав кожного іноземця в Європі. Штучний інтелект + досвід юристів + 40 000 людей які нам довіряють.</p>
+      
+      <div class="hero-cta">
+        <a href="https://wa.me/48729271848" class="btn btn-primary" data-i18n="hero-cta-primary">💬 Почати зараз — безкоштовно</a>
+        <a href="#services" class="btn btn-secondary" data-i18n="hero-cta-secondary">Дізнатись більше ↓</a>
+      </div>
+    </div>
+  </div>
+  
+  <div class="scroll-indicator">
+    <span data-i18n="scroll-indicator">Прокрути вниз</span>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
+</section>
+
+<!-- ══════════ SERVICES SECTION ══════════ -->
+<section class="services-section section-space" id="services">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="services-tag">Ваша ситуація — наша задача</div>
+      <h2 class="section-title" data-i18n="services-title">12 сфер <em>тотального захисту</em></h2>
+    </div>
+    
+    <div class="services-grid" id="services-grid">
+      <!-- Services will be populated by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FEATURES SECTION ══════════ -->
+<section class="section-space">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="features-tag">Чому ми кращі</div>
+      <h2 class="section-title" data-i18n="features-title">4 причини довірити нам</h2>
+    </div>
+    
+    <div class="features-grid" id="features-grid">
+      <!-- Features will be populated by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PROCESS SECTION ══════════ -->
+<section class="section-space" style="background: var(--bg-secondary);" id="process">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="process-tag">Як це працює</div>
+      <h2 class="section-title" data-i18n="process-title">5 автоматичних кроків</h2>
+    </div>
+    
+    <div class="process-steps" id="process-steps">
+      <!-- Process steps will be populated by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ PRICING SECTION ══════════ -->
+<section class="section-space" id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="pricing-tag">Прозоро. Без прихованого</div>
+      <h2 class="section-title" data-i18n="pricing-title">Гнучкі ціни для кожної ситуації</h2>
+    </div>
+    
+    <div class="pricing-grid" id="pricing-grid">
+      <!-- Pricing cards will be populated by JavaScript -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CONTACT SECTION ══════════ -->
+<section class="section-space" style="background: var(--bg-secondary);" id="contact">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag" data-i18n="contact-tag">Почніть прямо зараз</div>
+      <h2 class="section-title" data-i18n="contact-title">Зв'яжіться з нами</h2>
+    </div>
+    
+    <div class="form-container">
+      <form id="contact-form" onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name" data-i18n="form-name">Ваше ім'я</label>
+            <input type="text" id="name" name="name" placeholder="Іван Петренко" required>
+          </div>
+          <div class="form-group">
+            <label for="phone" data-i18n="form-phone">Телефон WhatsApp</label>
+            <input type="tel" id="phone" name="phone" placeholder="+48 xxx xxx xxx" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country" data-i18n="form-country">Країна</label>
+            <select id="country" name="country" required>
+              <option value="pl" data-i18n="country-pl">Польща</option>
+              <option value="es" data-i18n="country-es">Іспанія</option>
+              <option value="de" data-i18n="country-de">Німеччина</option>
+              <option value="cz" data-i18n="country-cz">Чехія</option>
+              <option value="at" data-i18n="country-at">Австрія</option>
+              <option value="other" data-i18n="country-other">Інша</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="service" data-i18n="form-service">Послуга</label>
+            <select id="service" name="service" required>
+              <option value="deportation" data-i18n="service-deportation">🛡 Захист від депортації</option>
+              <option value="residence" data-i18n="service-residence">📄 Карта побуту</option>
+              <option value="salary" data-i18n="service-salary">💼 Невиплачена зарплата</option>
+              <option value="fraud" data-i18n="service-fraud">🚨 Шахрайство</option>
+              <option value="marriage" data-i18n="service-marriage">💍 Шлюб / Розлучення</option>
+              <option value="other" data-i18n="service-other">⚖️ Інше</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="message" data-i18n="form-message">Опис ситуації</label>
+          <textarea id="message" name="message" placeholder="Коротко опишіть що сталось..." required></textarea>
+        </div>
+        
+        <button type="submit" class="form-submit" data-i18n="form-submit">🤖 Відправити — ШІ аналізує одразу</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-col">
+        <h3 data-i18n="footer-about">Про нас</h3>
+        <p style="font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, 0.7); margin-bottom: 16px;" data-i18n="footer-about-text">Професійне агентство з захисту прав емігрантів у Європі з 10+ років досвіду.</p>
+      </div>
+      
+      <div class="footer-col">
+        <h3 data-i18n="footer-services">Послуги</h3>
+        <ul>
+          <li><a href="#" data-i18n="footer-legal">Юридичні консультації</a></li>
+          <li><a href="#" data-i18n="footer-documents">Документи та переклади</a></li>
+          <li><a href="#" data-i18n="footer-support">Юридична підтримка</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-col">
+        <h3 data-i18n="footer-contact">Контакт</h3>
+        <ul>
+          <li><a href="https://wa.me/48729271848">📱 WhatsApp: +48 729 271 848</a></li>
+          <li><a href="mailto:prijmalnakompasmigracii@gmail.com">📧 Email: prijmalnakompasmigracii@gmail.com</a></li>
+          <li><a href="#">🕐 24/7 Онлайн підтримка</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-divider"></div>
+    
+    <div class="footer-bottom">
+      <span data-i18n="footer-copyright">© 2025 Kompas Migracji · Усі права захищені</span>
+      <a href="#" data-i18n="footer-privacy">Конфіденційність</a>
+      <a href="#" data-i18n="footer-terms">Умови використання</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+// ══════════════════════════════════ TRANSLATIONS ══════════════════════════════════
+const translations = {
+  uk: {
+    brand: "Компас Міграції",
+    "nav-services": "Послуги",
+    "nav-process": "Процес",
+    "nav-pricing": "Ціни",
+    "nav-contact": "Контакт",
+    "nav-consult": "📞 Консультація",
+    "hero-badge": "Революційний проект · Захист прав · Вся Європа",
+    "hero-title-1": "Ми — мирна",
+    "hero-title-2": "профспілка емігрантів",
+    "hero-subtitle": "Ми не просто юридичний сервіс. Ми — революція у захисті прав кожного іноземця в Європі. Штучний інтелект + досвід юристів + 40 000 людей які нам довіряють.",
+    "hero-cta-primary": "💬 Почати зараз — безкоштовно",
+    "hero-cta-secondary": "Дізнатись більше ↓",
+    "scroll-indicator": "Прокрути вниз",
+    "services-tag": "Ваша ситуація — наша задача",
+    "services-title": "12 сфер тотального захисту",
+    "features-tag": "Чому ми кращі",
+    "features-title": "4 причини довірити нам",
+    "process-tag": "Як це працює",
+    "process-title": "5 автоматичних кроків",
+    "pricing-tag": "Прозоро. Без прихованого",
+    "pricing-title": "Гнучкі ціни для кожної ситуації",
+    "contact-tag": "Почніть прямо зараз",
+    "contact-title": "Зв'яжіться з нами",
+    "form-name": "Ваше ім'я",
+    "form-phone": "Телефон WhatsApp",
+    "form-country": "Країна",
+    "form-service": "Послуга",
+    "form-message": "Опис ситуації",
+    "form-submit": "🤖 Відправити — ШІ аналізує одразу",
+    "country-pl": "Польща",
+    "country-es": "Іспанія",
+    "country-de": "Німеччина",
+    "country-cz": "Чехія",
+    "country-at": "Австрія",
+    "country-other": "Інша",
+    "service-deportation": "🛡 Захист від депортації",
+    "service-residence": "📄 Карта побуту",
+    "service-salary": "💼 Невиплачена зарплата",
+    "service-fraud": "🚨 Шахрайство",
+    "service-marriage": "💍 Шлюб / Розлучення",
+    "service-other": "⚖️ Інше",
+    "footer-about": "Про нас",
+    "footer-about-text": "Професійне агентство з захисту прав емігрантів у Європі з 10+ років досвіду.",
+    "footer-services": "Послуги",
+    "footer-legal": "Юридичні консультації",
+    "footer-documents": "Документи та переклади",
+    "footer-support": "Юридична підтримка",
+    "footer-contact": "Контакт",
+    "footer-copyright": "© 2025 Kompas Migracji · Усі права захищені",
+    "footer-privacy": "Конфіденційність",
+    "footer-terms": "Умови використання",
+  },
+  pl: {
+    brand: "Kompas Migracji",
+    "nav-services": "Usługi",
+    "nav-process": "Proces",
+    "nav-pricing": "Ceny",
+    "nav-contact": "Kontakt",
+    "nav-consult": "📞 Konsultacja",
+    "hero-badge": "Rewolucyjny projekt · Ochrona praw · Cała Europa",
+    "hero-title-1": "Jesteśmy spokojnym",
+    "hero-title-2": "związkiem zawodowym emigrantów",
+    "hero-subtitle": "Nie jesteśmy zwykłą usługą prawną. Jesteśmy rewolucją w ochronie praw każdego cudzoziemca w Europie. Sztuczna inteligencja + doświadczenie prawników + 40 000 ludzi którzy nam ufają.",
+    "hero-cta-primary": "💬 Zacznij teraz — bezpłatnie",
+    "hero-cta-secondary": "Dowiedz się więcej ↓",
+    "scroll-indicator": "Przewiń w dół",
+    "services-tag": "Twoja sytuacja — nasze wyzwanie",
+    "services-title": "12 obszarów całkowitej ochrony",
+    "features-tag": "Dlaczego my jesteśmy lepsi",
+    "features-title": "4 powody aby nam zaufać",
+    "process-tag": "Jak to działa",
+    "process-title": "5 zautomatyzowanych kroków",
+    "pricing-tag": "Przejrzyście. Bez ukrytych kosztów",
+    "pricing-title": "Elastyczne ceny dla każdej sytuacji",
+    "contact-tag": "Zacznij zaraz",
+    "contact-title": "Skontaktuj się z nami",
+    "form-name": "Twoje imię",
+    "form-phone": "Telefon WhatsApp",
+    "form-country": "Kraj",
+    "form-service": "Usługa",
+    "form-message": "Opis sytuacji",
+    "form-submit": "🤖 Wyślij — AI analizuje teraz",
+    "country-pl": "Polska",
+    "country-es": "Hiszpania",
+    "country-de": "Niemcy",
+    "country-cz": "Czechy",
+    "country-at": "Austria",
+    "country-other": "Inne",
+    "service-deportation": "🛡 Ochrona przed deportacją",
+    "service-residence": "📄 Karta pobytu",
+    "service-salary": "💼 Zaległa pensja",
+    "service-fraud": "🚨 Oszustwo",
+    "service-marriage": "💍 Małżeństwo / Rozwód",
+    "service-other": "⚖️ Inne",
+    "footer-about": "O nas",
+    "footer-about-text": "Profesjonalna agencja ochrony praw emigrantów w Europie z 10+ lat doświadczenia.",
+    "footer-services": "Usługi",
+    "footer-legal": "Konsultacje prawne",
+    "footer-documents": "Dokumenty i tłumaczenia",
+    "footer-support": "Wsparcie prawne",
+    "footer-contact": "Kontakt",
+    "footer-copyright": "© 2025 Kompas Migracji · Wszystkie prawa zastrzeżone",
+    "footer-privacy": "Prywatność",
+    "footer-terms": "Warunki użytkowania",
+  },
+  es: {
+    brand: "Brújula de Migración",
+    "nav-services": "Servicios",
+    "nav-process": "Proceso",
+    "nav-pricing": "Precios",
+    "nav-contact": "Contacto",
+    "nav-consult": "📞 Consulta",
+    "hero-badge": "Proyecto revolucionario · Protección de derechos · Toda Europa",
+    "hero-title-1": "Somos un sindicato",
+    "hero-title-2": "de emigrantes pacíficos",
+    "hero-subtitle": "No somos un simple servicio legal. Somos una revolución en la protección de derechos de cada extranjero en Europa. Inteligencia artificial + experiencia de abogados + 40,000 personas que nos confían.",
+    "hero-cta-primary": "💬 Comienza ahora — gratis",
+    "hero-cta-secondary": "Saber más ↓",
+    "scroll-indicator": "Desplácese hacia abajo",
+    "services-tag": "Tu situación — nuestro desafío",
+    "services-title": "12 áreas de protección total",
+    "features-tag": "Por qué somos mejores",
+    "features-title": "4 razones para confiar en nosotros",
+    "process-tag": "Cómo funciona",
+    "process-title": "5 pasos automatizados",
+    "pricing-tag": "Transparente. Sin costos ocultos",
+    "pricing-title": "Precios flexibles para cada situación",
+    "contact-tag": "Comienza ahora",
+    "contact-title": "Ponte en contacto",
+    "form-name": "Tu nombre",
+    "form-phone": "Teléfono WhatsApp",
+    "form-country": "País",
+    "form-service": "Servicio",
+    "form-message": "Descripción de la situación",
+    "form-submit": "🤖 Enviar — AI analiza ahora",
+    "country-pl": "Polonia",
+    "country-es": "España",
+    "country-de": "Alemania",
+    "country-cz": "República Checa",
+    "country-at": "Austria",
+    "country-other": "Otro",
+    "service-deportation": "🛡 Protección contra deportación",
+    "service-residence": "📄 Tarjeta de residencia",
+    "service-salary": "💼 Salario adeudado",
+    "service-fraud": "🚨 Fraude",
+    "service-marriage": "💍 Matrimonio / Divorcio",
+    "service-other": "⚖️ Otro",
+    "footer-about": "Acerca de nosotros",
+    "footer-about-text": "Agencia profesional de protección de derechos de emigrantes en Europa con 10+ años de experiencia.",
+    "footer-services": "Servicios",
+    "footer-legal": "Consultas legales",
+    "footer-documents": "Documentos y traducciones",
+    "footer-support": "Apoyo legal",
+    "footer-contact": "Contacto",
+    "footer-copyright": "© 2025 Kompas Migracji · Todos los derechos reservados",
+    "footer-privacy": "Privacidad",
+    "footer-terms": "Términos de uso",
+  },
+  en: {
+    brand: "Migration Compass",
+    "nav-services": "Services",
+    "nav-process": "Process",
+    "nav-pricing": "Pricing",
+    "nav-contact": "Contact",
+    "nav-consult": "📞 Consultation",
+    "hero-badge": "Revolutionary Project · Rights Protection · All of Europe",
+    "hero-title-1": "We are a peaceful",
+    "hero-title-2": "union of migrants",
+    "hero-subtitle": "We are not just a legal service. We are a revolution in protecting the rights of every foreigner in Europe. Artificial intelligence + lawyer expertise + 40,000 people who trust us.",
+    "hero-cta-primary": "💬 Start now — free",
+    "hero-cta-secondary": "Learn more ↓",
+    "scroll-indicator": "Scroll down",
+    "services-tag": "Your situation — our challenge",
+    "services-title": "12 areas of total protection",
+    "features-tag": "Why we are better",
+    "features-title": "4 reasons to trust us",
+    "process-tag": "How it works",
+    "process-title": "5 automated steps",
+    "pricing-tag": "Transparent. No hidden costs",
+    "pricing-title": "Flexible pricing for every situation",
+    "contact-tag": "Start now",
+    "contact-title": "Get in touch",
+    "form-name": "Your name",
+    "form-phone": "WhatsApp phone",
+    "form-country": "Country",
+    "form-service": "Service",
+    "form-message": "Description of situation",
+    "form-submit": "🤖 Submit — AI analyzes now",
+    "country-pl": "Poland",
+    "country-es": "Spain",
+    "country-de": "Germany",
+    "country-cz": "Czech Republic",
+    "country-at": "Austria",
+    "country-other": "Other",
+    "service-deportation": "🛡 Deportation protection",
+    "service-residence": "📄 Residence card",
+    "service-salary": "💼 Unpaid salary",
+    "service-fraud": "🚨 Fraud",
+    "service-marriage": "💍 Marriage / Divorce",
+    "service-other": "⚖️ Other",
+    "footer-about": "About us",
+    "footer-about-text": "Professional agency for protecting migrants' rights in Europe with 10+ years of experience.",
+    "footer-services": "Services",
+    "footer-legal": "Legal consultations",
+    "footer-documents": "Documents and translations",
+    "footer-support": "Legal support",
+    "footer-contact": "Contact",
+    "footer-copyright": "© 2025 Kompas Migracji · All rights reserved",
+    "footer-privacy": "Privacy",
+    "footer-terms": "Terms of use",
+  }
+};
+
+const servicesData = {
+  uk: [
+    { icon: "🛡", title: "Захист від депортації", desc: "Термінова зупинка процесу. Оскарження рішень. Захист статусу." },
+    { icon: "📄", title: "Карта побуту та легалізація", desc: "Перша карта, поновлення, резидент ЄС, громадянство." },
+    { icon: "💼", title: "Невиплачена зарплата", desc: "Повертаємо гроші через закон. Швидко і без зайвих витрат." },
+    { icon: "🚨", title: "Шахрайство", desc: "Вас обманули? Знаємо алгоритм повернення грошей." },
+    { icon: "⚖️", title: "Дискримінація та права", desc: "Захищаємо ваші права. Адвокати в Польщі та Україні." },
+    { icon: "💍", title: "Шлюб та розлучення", desc: "Шлюб без консульства. Аліменти. Медіація. Розлучення." },
+    { icon: "👨‍👩‍👧", title: "Захист дітей та школа", desc: "Права дитини. Запис до школи. Захист від дискримінації." },
+    { icon: "📜", title: "Нотаріус та переклади", desc: "Нотаріальні документи, апостиль, присяжні переклади." },
+    { icon: "🔍", title: "Розшук та аліменти", desc: "Міжнародний розшук. Стягнення аліментів через суд." },
+    { icon: "🏛", title: "Держустанови", desc: "Переговори з урядом. Досвід з канцелярією Президента РП." },
+    { icon: "💰", title: "Бухгалтерія та бізнес", desc: "Відкриття бізнесу, податки, бухгалтерський супровід." },
+    { icon: "🤝", title: "Медіація та переговори", desc: "Конфлікт без суду. Швидке рішення. Обидві сторони виграють." },
+  ],
+  pl: [
+    { icon: "🛡", title: "Ochrona przed deportacją", desc: "Natychmiastowe wstrzymanie procesu. Odwołania. Ochrona statusu." },
+    { icon: "📄", title: "Karta pobytu i legalizacja", desc: "Pierwsza karta, odnawianie, rezydent UE, obywatelstwo." },
+    { icon: "💼", title: "Zaległa pensja", desc: "Zwracamy pieniądze drogą prawną. Szybko i bez ukrytych kosztów." },
+    { icon: "🚨", title: "Oszustwo", desc: "Zostałeś oszukany? Znamy algorytm odzyskania pieniędzy." },
+    { icon: "⚖️", title: "Dyskryminacja i prawa", desc: "Chronimy Twoje prawa. Prawnicy w Polsce i Ukrainie." },
+    { icon: "💍", title: "Małżeństwo i rozwód", desc: "Małżeństwo bez konsulatu. Alimenty. Mediacja. Rozwód." },
+    { icon: "👨‍👩‍👧", title: "Ochrona dzieci i szkoła", desc: "Prawa dziecka. Zapis do szkoły. Ochrona przed dyskryminacją." },
+    { icon: "📜", title: "Notariat i tłumaczenia", desc: "Dokumenty notarialne, apostila, tłumaczenia przysięgłe." },
+    { icon: "🔍", title: "Poszukiwanie i alimenty", desc: "Poszukiwanie międzynarodowe. Pobór alimentów przez sąd." },
+    { icon: "🏛", title: "Instytucje państwowe", desc: "Negocjacje z rządem. Doświadczenie z kancelarią Prezydenta RP." },
+    { icon: "💰", title: "Księgowość i biznes", desc: "Założenie biznesu, podatki, obsługa księgowa." },
+    { icon: "🤝", title: "Mediacja i negocjacje", desc: "Konflikt bez sądu. Szybkie rozwiązanie. Obaj wygrywają." },
+  ],
+  es: [
+    { icon: "🛡", title: "Protección contra la deportación", desc: "Suspensión inmediata del proceso. Recursos. Protección de estatus." },
+    { icon: "📄", title: "Tarjeta de residencia y legalización", desc: "Primera tarjeta, renovación, residente de la UE, ciudadanía." },
+    { icon: "💼", title: "Salario adeudado", desc: "Recuperamos dinero a través de la ley. Rápido y sin gastos ocultos." },
+    { icon: "🚨", title: "Fraude", desc: "¿Fuiste estafado? Conocemos el algoritmo para recuperar el dinero." },
+    { icon: "⚖️", title: "Discriminación y derechos", desc: "Protegemos tus derechos. Abogados en Polonia y Ucrania." },
+    { icon: "💍", title: "Matrimonio y divorcio", desc: "Matrimonio sin consulado. Pensión alimenticia. Mediación. Divorcio." },
+    { icon: "👨‍👩‍👧", title: "Protección de niños y escuela", desc: "Derechos del niño. Inscripción escolar. Protección contra discriminación." },
+    { icon: "📜", title: "Notariado y traducciones", desc: "Documentos notariales, apostilla, traducciones juradas." },
+    { icon: "🔍", title: "Búsqueda y manutención", desc: "Búsqueda internacional. Cobro de pensión alimenticia por orden judicial." },
+    { icon: "🏛", title: "Instituciones de gobierno", desc: "Negociaciones con el gobierno. Experiencia con la oficina del Presidente de RP." },
+    { icon: "💰", title: "Contabilidad y negocios", desc: "Establecimiento de negocios, impuestos, contabilidad." },
+    { icon: "🤝", title: "Mediación y negociaciones", desc: "Conflicto sin corte. Solución rápida. Ambos ganan." },
+  ],
+  en: [
+    { icon: "🛡", title: "Deportation protection", desc: "Immediate suspension of proceedings. Appeals. Status protection." },
+    { icon: "📄", title: "Residence card and legalization", desc: "First card, renewal, EU resident, citizenship." },
+    { icon: "💼", title: "Unpaid salary", desc: "We recover money through the law. Fast and without hidden costs." },
+    { icon: "🚨", title: "Fraud", desc: "Were you scammed? We know the algorithm to recover money." },
+    { icon: "⚖️", title: "Discrimination and rights", desc: "We protect your rights. Lawyers in Poland and Ukraine." },
+    { icon: "💍", title: "Marriage and divorce", desc: "Marriage without consulate. Alimony. Mediation. Divorce." },
+    { icon: "👨‍👩‍👧", title: "Child protection and school", desc: "Child rights. School enrollment. Protection against discrimination." },
+    { icon: "📜", title: "Notary and translations", desc: "Notarial documents, apostille, sworn translations." },
+    { icon: "🔍", title: "Search and alimony", desc: "International search. Collection of alimony by court order." },
+    { icon: "🏛", title: "Government institutions", desc: "Negotiations with government. Experience with Polish President's office." },
+    { icon: "💰", title: "Accounting and business", desc: "Business establishment, taxes, accounting support." },
+    { icon: "🤝", title: "Mediation and negotiations", desc: "Conflict without court. Quick solution. Both sides win." },
+  ]
+};
+
+const featuresData = {
+  uk: [
+    { num: "01", title: "ШІ-асистент 24/7", desc: "Відповідає миттєво. Діагностує ситуацію. Пропонує рішення в будь-який час." },
+    { num: "02", title: "Повна автоматизація", desc: "Від заявки до результату — без ручної роботи, затримок та стресу." },
+    { num: "03", title: "40 000 в спільноті", desc: "Одна з найбільших профспілок емігрантів. Колективна сила." },
+    { num: "04", title: "10+ років досвіду", desc: "Перевірені методи. Президентський рівень. Результат гарантований." },
+  ],
+  pl: [
+    { num: "01", title: "Asystent AI 24/7", desc: "Odpowiada natychmiast. Diagnozuje sytuację. Proponuje rozwiązania o każdej porze." },
+    { num: "02", title: "Pełna automatyzacja", desc: "Od złożenia do wyniku — bez pracy ręcznej, opóźnień i stresu." },
+    { num: "03", title: "40 000 w społeczności", desc: "Jeden z największych związków emigrantów. Siła zbiorowa." },
+    { num: "04", title: "10+ lat doświadczenia", desc: "Sprawdzone metody. Poziom prezydencki. Wynik gwarantowany." },
+  ],
+  es: [
+    { num: "01", title: "Asistente de IA 24/7", desc: "Responde al instante. Diagnostica la situación. Propone soluciones a cualquier hora." },
+    { num: "02", title: "Automatización completa", desc: "De la solicitud al resultado — sin trabajo manual, retrasos ni estrés." },
+    { num: "03", title: "40,000 en la comunidad", desc: "Uno de los sindicatos más grandes de migrantes. Fuerza colectiva." },
+    { num: "04", title: "10+ años de experiencia", desc: "Métodos comprobados. Nivel presidencial. Resultado garantizado." },
+  ],
+  en: [
+    { num: "01", title: "AI assistant 24/7", desc: "Responds instantly. Diagnoses situation. Offers solutions at any time." },
+    { num: "02", title: "Full automation", desc: "From application to result — without manual work, delays or stress." },
+    { num: "03", title: "40,000 in community", desc: "One of the largest migrant unions. Collective power." },
+    { num: "04", title: "10+ years of experience", desc: "Proven methods. Presidential level. Result guaranteed." },
+  ]
+};
+
+const processData = {
+  uk: [
+    { num: "01", title: "ШІ-Діагностика", desc: "4 кліки. Бот аналізує ситуацію і пропонує рішення автоматично." },
+    { num: "02", title: "Стратегія", desc: "Варіант А і Б. Чіткий план. Юрист отримує готовий кейс." },
+    { num: "03", title: "Оплата онлайн", desc: "Przelewy24 або картка. Миттєве підтвердження. Без готівки." },
+    { num: "04", title: "Автоматизація", desc: "Документи готуються. Вам — підписати онлайн. Все прозоро." },
+    { num: "05", title: "Результат", desc: "Закрита справа. Контроль виконання. Безкоштовний дзвінок після." },
+  ],
+  pl: [
+    { num: "01", title: "Diagnostyka AI", desc: "4 kliknięcia. Bot analizuje sytuację i proponuje rozwiązanie automatycznie." },
+    { num: "02", title: "Strategia", desc: "Opcja A i B. Jasny plan. Prawnik otrzymuje gotową sprawę." },
+    { num: "03", title: "Płatność online", desc: "Przelewy24 lub karta. Natychmiastowe potwierdzenie. Bez gotówki." },
+    { num: "04", title: "Automatyzacja", desc: "Dokumenty są przygotowywane. Ty - podpisz online. Wszystko przejrzyste." },
+    { num: "05", title: "Wynik", desc: "Zamknięta sprawa. Kontrola wykonania. Bezpłatny dzwonek po." },
+  ],
+  es: [
+    { num: "01", title: "Diagnóstico de IA", desc: "4 clics. El bot analiza la situación y propone la solución automáticamente." },
+    { num: "02", title: "Estrategia", desc: "Opción A y B. Plan claro. El abogado recibe el caso listo." },
+    { num: "03", title: "Pago en línea", desc: "Przelewy24 o tarjeta. Confirmación inmediata. Sin efectivo." },
+    { num: "04", title: "Automatización", desc: "Los documentos se preparan. Tú - firma en línea. Todo transparente." },
+    { num: "05", title: "Resultado", desc: "Caso cerrado. Control de ejecución. Llamada gratuita después." },
+  ],
+  en: [
+    { num: "01", title: "AI Diagnosis", desc: "4 clicks. Bot analyzes situation and proposes solution automatically." },
+    { num: "02", title: "Strategy", desc: "Option A and B. Clear plan. Lawyer receives ready-made case." },
+    { num: "03", title: "Online payment", desc: "Przelewy24 or card. Instant confirmation. No cash." },
+    { num: "04", title: "Automation", desc: "Documents are prepared. You - sign online. Everything transparent." },
+    { num: "05", title: "Result", desc: "Case closed. Execution control. Free call after." },
+  ]
+};
+
+const pricingData = {
+  uk: [
+    { label: "Перші 2 хвилини", amount: "Безкоштовно", desc: "Первинна оцінка ситуації та розуміння чи можемо допомогти.", features: ["Первинна оцінка", "ШІ-аналіз", "Відповідь одразу"], cta: "Написати у WhatsApp" },
+    { label: "Консультація 15 хв", amount: "150", currency: "zł", badge: "Популярне", desc: "Повний розбір. При замовленні послуги — вираховується із загальної суми.", features: ["Варіант А та Б", "Покроковий план", "Гарантований результат", "Зараховується в послугу"], cta: "Записатись зараз", featured: true },
+    { label: "Юридична година", amount: "450", currency: "zł", desc: "Адвокат або спеціаліст. Без ПДВ — нижче ніж у канцелярій.", features: ["Адвокат або спеціаліст", "Документи і стратегія", "Без ПДВ", "Письмові гарантії"], cta: "Дізнатись деталі" },
+  ],
+  pl: [
+    { label: "Pierwsze 2 minuty", amount: "Bezpłatnie", desc: "Ocena początkowa sytuacji i zrozumienie, czy możemy pomóc.", features: ["Ocena początkowa", "Analiza AI", "Odpowiedź natychmiast"], cta: "Napisz na WhatsApp" },
+    { label: "Konsultacja 15 min", amount: "150", currency: "zł", badge: "Popularne", desc: "Pełna analiza. Przy zamówieniu usługi — odejmuje się od całkowitej sumy.", features: ["Opcja A i B", "Plan krok po kroku", "Gwarantowany wynik", "Zalicza się do usługi"], cta: "Zapisz się teraz", featured: true },
+    { label: "Godzina prawnika", amount: "450", currency: "zł", desc: "Adwokat lub specjalista. Bez VAT — taniej niż w kancelariach.", features: ["Adwokat lub specjalista", "Dokumenty i strategia", "Bez VAT", "Gwarancje na piśmie"], cta: "Dowiedz się szczegóły" },
+  ],
+  es: [
+    { label: "Primeros 2 minutos", amount: "Gratis", desc: "Evaluación inicial de la situación y comprensión si podemos ayudar.", features: ["Evaluación inicial", "Análisis de IA", "Respuesta inmediata"], cta: "Escribir en WhatsApp" },
+    { label: "Consulta 15 min", amount: "150", currency: "zł", badge: "Popular", desc: "Análisis completo. Al pedir el servicio - se resta de la cantidad total.", features: ["Opción A y B", "Plan paso a paso", "Resultado garantizado", "Se aplica al servicio"], cta: "Reservar ahora", featured: true },
+    { label: "Hora de abogado", amount: "450", currency: "zł", desc: "Abogado o especialista. Sin IVA - más barato que en despachos.", features: ["Abogado o especialista", "Documentos y estrategia", "Sin IVA", "Garantías por escrito"], cta: "Conocer detalles" },
+  ],
+  en: [
+    { label: "First 2 minutes", amount: "Free", desc: "Initial assessment of situation and understanding if we can help.", features: ["Initial assessment", "AI analysis", "Immediate response"], cta: "Write on WhatsApp" },
+    { label: "15 min consultation", amount: "150", currency: "zł", badge: "Popular", desc: "Full analysis. When ordering a service - deducted from the total amount.", features: ["Option A and B", "Step-by-step plan", "Guaranteed result", "Applied to service"], cta: "Book now", featured: true },
+    { label: "Lawyer hour", amount: "450", currency: "zł", desc: "Lawyer or specialist. Without VAT - cheaper than law firms.", features: ["Lawyer or specialist", "Documents and strategy", "Without VAT", "Written guarantees"], cta: "Learn details" },
+  ]
+};
+
+// ══════════════════════════════════ LANGUAGE SWITCH ══════════════════════════════════
+let currentLang = localStorage.getItem('lang') || 'uk';
+
+function switchLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  
+  // Update language buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.trim() === 
+      (lang === 'uk' ? 'UKR' : lang === 'pl' ? 'PL' : lang === 'es' ? 'ESP' : 'EN'));
+  });
+  
+  // Update all translations
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (translations[lang] && translations[lang][key]) {
+      if (el.tagName === 'OPTION') {
+        el.textContent = translations[lang][key];
+      } else if (el.textContent && !el.querySelector('*')) {
+        el.textContent = translations[lang][key];
+      } else {
+        el.innerHTML = translations[lang][key];
+      }
+    }
+  });
+  
+  // Reload dynamic content
+  renderServices();
+  renderFeatures();
+  renderProcess();
+  renderPricing();
+  
+  // Update HTML lang attribute
+  document.documentElement.lang = lang;
+}
+
+// ══════════════════════════════════ RENDER FUNCTIONS ══════════════════════════════════
+function renderServices() {
+  const grid = document.getElementById('services-grid');
+  grid.innerHTML = '';
+  const data = servicesData[currentLang];
+  data.forEach((service, idx) => {
+    const card = document.createElement('div');
+    card.className = 'service-card slide-up';
+    card.style.animationDelay = (idx * 0.05) + 's';
+    card.innerHTML = `
+      <div class="service-icon">${service.icon}</div>
+      <h3>${service.title}</h3>
+      <p>${service.desc}</p>
+      <span class="service-arrow">↗</span>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function renderFeatures() {
+  const grid = document.getElementById('features-grid');
+  grid.innerHTML = '';
+  const data = featuresData[currentLang];
+  data.forEach((feature, idx) => {
+    const item = document.createElement('div');
+    item.className = 'feature-item slide-up';
+    item.style.animationDelay = (idx * 0.05) + 's';
+    item.innerHTML = `
+      <div class="feature-number">${feature.num}</div>
+      <div class="feature-content">
+        <h3>${feature.title}</h3>
+        <p>${feature.desc}</p>
+      </div>
+    `;
+    grid.appendChild(item);
+  });
+}
+
+function renderProcess() {
+  const container = document.getElementById('process-steps');
+  container.innerHTML = '';
+  const data = processData[currentLang];
+  data.forEach((step, idx) => {
+    const div = document.createElement('div');
+    div.className = 'process-step slide-up';
+    div.style.animationDelay = (idx * 0.05) + 's';
+    div.innerHTML = `
+      <div class="step-number">${step.num}</div>
+      <div class="step-title">${step.title}</div>
+      <div class="step-desc">${step.desc}</div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function renderPricing() {
+  const grid = document.getElementById('pricing-grid');
+  grid.innerHTML = '';
+  const data = pricingData[currentLang];
+  data.forEach((card, idx) => {
+    const div = document.createElement('div');
+    div.className = 'price-card slide-up' + (card.featured ? ' featured' : '');
+    div.style.animationDelay = (idx * 0.05) + 's';
+    const amountHTML = card.amount === 'Безкоштовно' || card.amount === 'Bezpłatnie' || card.amount === 'Gratis' || card.amount === 'Free' 
+      ? `<span class="price-amount">${card.amount}</span>`
+      : `<span class="price-amount"><sup>${card.currency}</sup>${card.amount}</span>`;
+    div.innerHTML = `
+      ${card.badge ? `<span class="price-badge">${card.badge}</span>` : ''}
+      <div class="price-label">${card.label}</div>
+      ${amountHTML}
+      <div class="price-description">${card.desc}</div>
+      <ul class="price-features">
+        ${card.features.map(f => `<li>${f}</li>`).join('')}
+      </ul>
+      <a href="https://wa.me/48729271848" class="price-btn">${card.cta}</a>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════ FORM HANDLING ══════════════════════════════════
+function submitForm(event) {
+  event.preventDefault();
+  const form = document.getElementById('contact-form');
+  const status = document.getElementById('form-status');
+  const btn = event.target.querySelector('.form-submit');
+  const formData = new FormData(form);
+  
+  status.textContent = currentLang === 'uk' ? '🤖 ШІ аналізує ваш запит...' : 
+                       currentLang === 'pl' ? '🤖 AI analizuje twój zapyt...' :
+                       currentLang === 'es' ? '🤖 AI analiza tu solicitud...' :
+                       '🤖 AI analyzing your request...';
+  status.className = 'form-status';
+  btn.disabled = true;
+  
+  setTimeout(() => {
+    const whatsappMsg = `Запит від: ${formData.get('name')}\nТелефон: ${formData.get('phone')}\nКраїна: ${formData.get('country')}\nПослуга: ${formData.get('service')}\nОпис: ${formData.get('message')}`;
+    window.location.href = `https://wa.me/48729271848?text=${encodeURIComponent(whatsappMsg)}`;
+    status.className = 'form-status success';
+    status.textContent = currentLang === 'uk' ? '✅ Заявку отримано!' : 
+                         currentLang === 'pl' ? '✅ Żądanie odebrane!' :
+                         currentLang === 'es' ? '✅ ¡Solicitud recibida!' :
+                         '✅ Request received!';
+    btn.disabled = false;
+    setTimeout(() => { form.reset(); btn.disabled = false; }, 2000);
+  }, 2000);
+}
+
+// ══════════════════════════════════ HEADER SCROLL ══════════════════════════════════
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ══════════════════════════════════ INITIAL RENDER ══════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  switchLanguage(currentLang);
+  
+  // Add animation class to elements on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('fade-in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  document.querySelectorAll('.service-card, .feature-item, .process-step, .price-card').forEach(el => {
+    observer.observe(el);
+  });
+});
+</script>
+</body>
+</html>
