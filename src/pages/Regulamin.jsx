@@ -22,14 +22,14 @@ const List = ({ items }) => (
   </ul>
 );
 
+
 export default function Regulamin() {
   return (
-    <div style={{ minHeight: '100vh', background: '#0f172a', color: '#f1f5f9', padding: '48px 24px', fontFamily: "'Inter', sans-serif" }}>
-      <div style={{ maxWidth: 720, margin: '0 auto' }}>
-
-        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', color: '#f97316', marginBottom: 8, textTransform: 'uppercase' }}>REGULAMIN KOMPAS MIGRACJI</p>
-        <h1 style={{ fontSize: 28, fontWeight: 900, color: '#f1f5f9', margin: '0 0 8px', lineHeight: 1.2, letterSpacing: '-0.02em' }}>Правила Компасу Міграції</h1>
-        <p style={{ fontSize: 13, color: '#64748b', marginBottom: 48 }}>Набирає чинності з дня публікації на сайті kompasmigracji.com</p>
+    <div className="min-h-screen bg-white text-navy py-16 px-4 font-display">
+      <div className="max-w-2xl mx-auto">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">REGULAMIN KOMPAS MIGRACJI</p>
+        <h1 className="text-3xl md:text-4xl font-black text-navy mb-2 leading-tight tracking-tight">Правила Компасу Міграції</h1>
+        <p className="text-sm text-muted mb-12">Набирає чинності з дня публікації на сайті kompasmigracji.com</p>
 
         <Section title="Преамбула — хто ми є">
           <P>Компас Міграції — це приватна ініціатива. Не державна. Не політична.</P>
@@ -162,8 +162,8 @@ export default function Regulamin() {
           <P>Ми призвані зробити все вірно і з першого разу.</P>
         </Section>
 
-        <div style={{ borderTop: '1px solid #1e293b', paddingTop: 24, marginTop: 8 }}>
-          <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.7 }}>
+        <div className="border-t border-soft pt-8 mt-4">
+          <p className="text-base text-muted leading-relaxed">
             Дякуємо що нас обрали.<br />
             Де гроші і документи — все письмово. Це ваші гарантії. 🧭
           </p>
