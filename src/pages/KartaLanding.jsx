@@ -462,7 +462,7 @@ export default function KartaLanding() {
               <p style={{ fontWeight: 700, fontSize: 13, margin: '0 0 4px', color: DARK }}>{t.ft2name}</p>
               <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{t.ft2desc}</p>
               <Tag color={ORANGE}>{t.ft3tag}</Tag>
-              <a href="https://invite.viber.com/?number=%2B48729271848" target="_blank" rel="noreferrer" style={{
+              <a href="https://invite.viber.com/?g2=AQBlah" target="_blank" rel="noreferrer" style={{
                 display: 'block',
                 fontSize: 24, fontWeight: 900, color: DARK,
                 margin: '10px 0 4px', letterSpacing: '-0.03em', lineHeight: 1,
@@ -472,7 +472,7 @@ export default function KartaLanding() {
               <p style={{ fontSize: 11, color: GRAY, margin: '0 0 18px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.ft3sub}</p>
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'stretch' }}>
                 <a
-                  href="https://invite.viber.com/?number=%2B48729271848"
+                  href="https://invite.viber.com/?g2=AQBlah"
                   target="_blank"
                   rel="noreferrer"
                   style={{
