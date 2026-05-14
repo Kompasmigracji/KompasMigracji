@@ -462,21 +462,25 @@ export default function KartaLanding() {
               <p style={{ fontWeight: 700, fontSize: 13, margin: '0 0 4px', color: DARK }}>{t.ft2name}</p>
               <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{t.ft2desc}</p>
               <Tag color={ORANGE}>{t.ft3tag}</Tag>
-              <p style={{ fontSize: 28, fontWeight: 900, color: DARK, margin: '8px 0 2px', letterSpacing: '-0.03em', lineHeight: 1 }}>+48 729 271 848</p>
-              <p style={{ fontSize: 11, color: GRAY, margin: '0 0 16px', letterSpacing: '0.05em' }}>{t.ft3sub}</p>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <p style={{
+                fontSize: 34, fontWeight: 900, color: DARK,
+                margin: '10px 0 4px', letterSpacing: '-0.04em', lineHeight: 1,
+                fontFamily: "'Syne', sans-serif",
+              }}>+48 729 271 848</p>
+              <p style={{ fontSize: 11, color: GRAY, margin: '0 0 18px', letterSpacing: '0.06em', textTransform: 'uppercase' }}>{t.ft3sub}</p>
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'stretch' }}>
                 <a
-                  href="viber://chat?number=48729271848"
+                  href="viber://chat?number=%2B48729271848"
                   style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     background: '#7360f2', color: '#fff',
-                    fontSize: 13, fontWeight: 700, letterSpacing: '0.01em',
-                    padding: '10px 20px', borderRadius: 9,
+                    fontSize: 13, fontWeight: 700, letterSpacing: '0.02em',
+                    padding: '11px 22px', borderRadius: 10,
                     textDecoration: 'none', whiteSpace: 'nowrap',
-                    height: 40,
+                    boxShadow: '0 2px 8px rgba(115,96,242,0.35)',
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M11.4 0C5.5 0 .8 4.4.8 9.8c0 3 1.5 5.7 3.9 7.5v3.7l3.5-1.9c1 .3 2 .4 3.1.4 5.9 0 10.6-4.4 10.6-9.8S17.3 0 11.4 0zm1 13.2l-2.5-2.7-4.9 2.7 5.4-5.8 2.6 2.7 4.8-2.7-5.4 5.8z"/></svg>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M11.4 0C5.5 0 .8 4.4.8 9.8c0 3 1.5 5.7 3.9 7.5v3.7l3.5-1.9c1 .3 2 .4 3.1.4 5.9 0 10.6-4.4 10.6-9.8S17.3 0 11.4 0zm1 13.2l-2.5-2.7-4.9 2.7 5.4-5.8 2.6 2.7 4.8-2.7-5.4 5.8z"/></svg>
                   Viber
                 </a>
                 <a
@@ -484,15 +488,15 @@ export default function KartaLanding() {
                   target="_blank"
                   rel="noreferrer"
                   style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     background: '#25d366', color: '#fff',
-                    fontSize: 13, fontWeight: 700, letterSpacing: '0.01em',
-                    padding: '10px 20px', borderRadius: 9,
+                    fontSize: 13, fontWeight: 700, letterSpacing: '0.02em',
+                    padding: '11px 22px', borderRadius: 10,
                     textDecoration: 'none', whiteSpace: 'nowrap',
-                    height: 40,
+                    boxShadow: '0 2px 8px rgba(37,211,102,0.35)',
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.5 0-.2-.1-.4-.2-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.1 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3 0-.1-.3-.2-.5-.3z"/><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.6C8.1 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-3.8 1 1-3.7-.2-.4C2.3 15.5 1.8 13.8 1.8 12 1.8 6.4 6.4 1.8 12 1.8S22.2 6.4 22.2 12 17.6 21.8 12 21.8z"/></svg>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.5 0-.2-.1-.4-.2-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.1 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3 0-.1-.3-.2-.5-.3z"/><path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.6C8.1 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-3.8 1 1-3.7-.2-.4C2.3 15.5 1.8 13.8 1.8 12 1.8 6.4 6.4 1.8 12 1.8S22.2 6.4 22.2 12 17.6 21.8 12 21.8z"/></svg>
                   WhatsApp
                 </a>
               </div>
