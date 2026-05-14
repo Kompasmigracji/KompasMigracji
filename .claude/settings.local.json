@@ -9,7 +9,9 @@
       "Bash(npm run *)",
       "Bash(findstr /i \"vite\")",
       "Bash(npx vercel *)",
-      "Bash(Remove-Item \"C:/Users/user/Documents/GitHub/KompasMigracji/.git/index.lock\" -Force)"
+      "Bash(Remove-Item \"C:/Users/user/Documents/GitHub/KompasMigracji/.git/index.lock\" -Force)",
+      "Bash(npm install *)",
+      "Bash(npm list *)"
     ]
   }
 }

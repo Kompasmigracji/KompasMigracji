@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../lib/supabase';
 
 const ORANGE = '#f97316';
 const MINT   = '#86efac';
@@ -207,13 +208,16 @@ export default function KartaLanding() {
   const [lang, setLang] = useState('ua');
   const t = LANGS[lang];
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     const msgs = {
       ua: 'Хочу замовити Пакет Прискорення — Карта побуту',
       pl: 'Chcę zamówić Pakiet Przyspieszenia — Karta pobytu',
       ru: 'Хочу заказать Пакет Ускорения — Карта побыту',
       en: 'I want to order the Acceleration Package — Residence Card',
     };
+    await supabase.from('leads').insert({
+      service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang,
+    });
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
 
