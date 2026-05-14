@@ -211,6 +211,7 @@ export default function KartaLanding() {
     const msgs = {
       ua: 'Хочу замовити Пакет Прискорення — Карта побуту',
       pl: 'Chcę zamówić Pakiet Przyspieszenia — Karta pobytu',
+      ru: 'Хочу заказать Пакет Ускорения — Карта побыту',
       en: 'I want to order the Acceleration Package — Residence Card',
     };
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
@@ -240,9 +241,23 @@ export default function KartaLanding() {
           text-decoration: none;
         }
         .karta-cta-btn:hover { opacity: 0.88; }
+
+        #karta-root { overflow-x: hidden; }
+        #karta-root p, #karta-root span, #karta-root li {
+          word-break: break-word;
+          overflow-wrap: break-word;
+        }
+        #karta-root * { box-sizing: border-box; }
+
+        @media (max-width: 480px) {
+          .karta-price { font-size: clamp(32px, 11vw, 46px) !important; }
+          .karta-step-num { font-size: 28px !important; margin-bottom: 6px !important; }
+          .karta-pkg-name { font-size: 16px !important; }
+          .karta-hero-h1 { letter-spacing: -0.035em !important; }
+        }
       `}</style>
 
-      <div style={{ fontFamily: "'Syne', sans-serif", background: '#fff', color: DARK }}>
+      <div id="karta-root" style={{ fontFamily: "'Syne', sans-serif", background: '#fff', color: DARK }}>
 
         {/* ── LANG BAR ── */}
         <div style={{ borderBottom: `1px solid ${LGRAY}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 6 }}>
@@ -294,7 +309,7 @@ export default function KartaLanding() {
           {/* HERO */}
           <section style={{ padding: '48px 0 32px' }}>
             <Tag color={ORANGE}>{t.tag}</Tag>
-            <h1 style={{ fontSize: 'clamp(34px, 10vw, 86px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: 0 }}>
+            <h1 className="karta-hero-h1" style={{ fontSize: 'clamp(34px, 10vw, 86px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: 0 }}>
               <span style={{ display: 'block', color: DARK }}>{t.h1[0]}</span>
               <span style={{ display: 'block', color: ORANGE }}>{t.h1[1]}</span>
             </h1>
@@ -336,8 +351,8 @@ export default function KartaLanding() {
             <div style={{ borderTop: `2px solid ${LGRAY}`, marginBottom: 0 }} />
             {t.steps.map((s, i) => (
               <div key={i} style={{ borderBottom: `1px solid ${LGRAY}`, padding: '24px 0' }}>
-                <p style={{ fontSize: 40, fontWeight: 900, color: '#d1d5db', margin: '0 0 8px', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.n}</p>
-                <p style={{ fontSize: 15, fontWeight: 700, margin: '0 0 6px', color: DARK }}>{s.title}</p>
+                <p className="karta-step-num" style={{ fontSize: 40, fontWeight: 900, color: '#d1d5db', margin: '0 0 8px', lineHeight: 1, letterSpacing: '-0.02em' }}>{s.n}</p>
+                <p style={{ fontSize: 14, fontWeight: 700, margin: '0 0 6px', color: DARK, lineHeight: 1.4 }}>{s.title}</p>
                 <MixedText pre={s.pre} bold={s.bold} post={s.post} size={13} />
               </div>
             ))}
@@ -352,8 +367,8 @@ export default function KartaLanding() {
               {/* pkg 1 */}
               <div>
                 <Tag color={ORANGE}>{t.p1tag}</Tag>
-                <p style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
-                <p style={{ fontSize: 46, fontWeight: 900, color: ORANGE, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p1price}</p>
+                <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
+                <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: ORANGE, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p1price}</p>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p1sub}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p1f.map((f, i) => (
@@ -367,8 +382,8 @@ export default function KartaLanding() {
               {/* pkg 2 */}
               <div>
                 <Tag color={MINT}>{t.p2tag}</Tag>
-                <p style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p2name}</p>
-                <p style={{ fontSize: 46, fontWeight: 900, color: MINT, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p2price}</p>
+                <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p2name}</p>
+                <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: MINT, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p2price}</p>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p2sub}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p2f.map((f, i) => (
@@ -445,11 +460,10 @@ export default function KartaLanding() {
             <div>
               <Tag color={ORANGE}>{t.ft2tag}</Tag>
               <p style={{ fontWeight: 700, fontSize: 13, margin: '0 0 4px', color: DARK }}>{t.ft2name}</p>
-              <p style={{ fontSize: 12, color: GRAY, margin: '0 0 8px', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{t.ft2desc}</p>
-              <p style={{ fontSize: 14, fontWeight: 800, color: MINT, margin: '0 0 20px' }}>+48 729 271 848</p>
+              <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{t.ft2desc}</p>
               <Tag color={ORANGE}>{t.ft3tag}</Tag>
-              <p style={{ fontSize: 14, fontWeight: 800, color: DARK, margin: '6px 0 2px' }}>+48 729 271 848</p>
-              <p style={{ fontSize: 11, color: GRAY, margin: 0 }}>{t.ft3sub}</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '8px 0 3px', letterSpacing: '-0.01em' }}>+48 729 271 848</p>
+              <p style={{ fontSize: 11, color: GRAY, margin: 0, letterSpacing: '0.04em' }}>{t.ft3sub}</p>
             </div>
           </div>
 
