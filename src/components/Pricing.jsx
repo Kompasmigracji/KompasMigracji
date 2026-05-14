@@ -1,8 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '../lib/supabase';
 
 export default function Pricing() {
   const { t } = useTranslation();
+
+  const handleCta = async (label) => {
+    if (supabase) await supabase.from('leads').insert({ service: label, source: 'pricing' });
+    window.open('https://wa.me/48729271848', '_blank');
+  };
 
   const cards = [
     {
@@ -86,18 +92,16 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <a
-                href="https://wa.me/48729271848"
-                target="_blank"
-                rel="noreferrer"
-                className={`text-center py-3 rounded-lg text-sm font-semibold no-underline transition-all ${
+              <button
+                onClick={() => handleCta(card.label)}
+                className={`text-center py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer border-0 ${
                   card.featured
                     ? 'gradient-btn text-white hover:opacity-90'
                     : 'bg-primary text-white hover:bg-secondary'
                 }`}
               >
                 {card.cta}
-              </a>
+              </button>
             </div>
           ))}
         </div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-const SOURCE_LABEL = { main: 'Головна', karta: '/karta' };
-const SOURCE_COLOR = { main: '#3b82f6', karta: '#f97316' };
+const SOURCE_LABEL = { main: 'Головна', karta: '/karta', pricing: 'Ціни' };
+const SOURCE_COLOR = { main: '#3b82f6', karta: '#f97316', pricing: '#8b5cf6' };
 
 export default function Admin() {
   const [leads, setLeads] = useState([]);
@@ -35,7 +35,7 @@ export default function Admin() {
             <h1 style={{ fontSize: 22, fontWeight: 900, margin: 0, letterSpacing: '-0.02em' }}>Заявки ({leads.length})</h1>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            {['all', 'main', 'karta'].map(s => (
+            {['all', 'main', 'karta', 'pricing'].map(s => (
               <button key={s} onClick={() => setFilter(s)} style={{
                 padding: '7px 16px', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
                 background: filter === s ? '#f97316' : '#1e293b', color: filter === s ? '#fff' : '#94a3b8',
