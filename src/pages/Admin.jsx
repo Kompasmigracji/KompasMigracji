@@ -8,13 +8,15 @@ export default function Admin() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     supabase
       .from('leads')
       .select('*')
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) setError(error.message);
         setLeads(data || []);
         setLoading(false);
       });
@@ -44,6 +46,13 @@ export default function Admin() {
         </div>
 
         {loading && <p style={{ color: '#64748b' }}>Завантаження...</p>}
+
+        {error && (
+          <div style={{ background: '#450a0a', border: '1px solid #991b1b', borderRadius: 10, padding: '14px 18px', marginBottom: 20 }}>
+            <p style={{ fontSize: 12, fontWeight: 700, color: '#fca5a5', margin: '0 0 4px', letterSpacing: '0.06em' }}>ПОМИЛКА ПІДКЛЮЧЕННЯ</p>
+            <p style={{ fontSize: 13, color: '#fecaca', margin: 0, fontFamily: 'monospace' }}>{error}</p>
+          </div>
+        )}
 
         {!loading && visible.length === 0 && (
           <p style={{ color: '#64748b', textAlign: 'center', marginTop: 60 }}>Заявок поки немає</p>
