@@ -10,14 +10,16 @@ const Section = ({ num, title, children }) => (
   </section>
 );
 
+
 const P = ({ children }) => (
-  <p style={{ fontSize: 15, lineHeight: 1.75, color: '#cbd5e1', margin: '0 0 10px' }}>{children}</p>
+  <p style={{ fontSize: 15, lineHeight: 1.75, color: '#111', margin: '0 0 10px' }}>{children}</p>
 );
+
 
 const List = ({ items }) => (
   <ul style={{ margin: '0 0 10px', paddingLeft: 20 }}>
     {items.map((item, i) => (
-      <li key={i} style={{ fontSize: 15, lineHeight: 1.75, color: '#cbd5e1', marginBottom: 4 }}>{item}</li>
+      <li key={i} style={{ fontSize: 15, lineHeight: 1.75, color: '#111', marginBottom: 4 }}>{item}</li>
     ))}
   </ul>
 );
