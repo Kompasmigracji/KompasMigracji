@@ -61,7 +61,7 @@ export default function Hero() {
             WhatsApp
           </a>
           <a
-            href="viber://chat?number=%2B48729271848"
+            href="viber://add?number=48729271848"
             target="_blank"
             rel="noreferrer"
             className="bg-white border-2 border-purple-400 text-purple-700 font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-purple-600 hover:text-purple-900 transition-colors"
