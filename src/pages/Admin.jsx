@@ -6,26 +6,43 @@ const SOURCE_COLOR = { main: '#3b82f6', karta: '#f97316', pricing: '#8b5cf6' };
 const ADMIN_KEY = 'km_admin_auth';
 
 export default function Admin() {
+  const [authed, setAuthed] = useState(sessionStorage.getItem(ADMIN_KEY) === '1');
+  const [pwd, setPwd] = useState('');
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [error, setError] = useState(null);
-  const [authed, setAuthed] = useState(sessionStorage.getItem(ADMIN_KEY) === '1');
-  const [pwd, setPwd] = useState('');
+
+  useEffect(() => {
+    if (!authed) return;
+    if (!supabase) { setError('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY не задані'); setLoading(false); return; }
+    supabase
+      .from('leads')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .then(({ data, error }) => {
+        if (error) setError(error.message);
+        setLeads(data || []);
+        setLoading(false);
+      });
+  }, [authed]);
 
   if (!authed) {
     return (
       <div style={{ minHeight: '100vh', background: '#0f172a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <form onSubmit={e => {
-          e.preventDefault();
-          if (pwd === import.meta.env.VITE_ADMIN_PASSWORD || pwd === 'kompas2026') {
-            sessionStorage.setItem(ADMIN_KEY, '1');
-            setAuthed(true);
-          } else {
-            setPwd('');
-            alert('Невірний пароль');
-          }
-        }} style={{ background: '#1e293b', padding: '32px', borderRadius: 16, display: 'flex', flexDirection: 'column', gap: 12, minWidth: 280 }}>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            if (pwd === import.meta.env.VITE_ADMIN_PASSWORD || pwd === 'kompas2026') {
+              sessionStorage.setItem(ADMIN_KEY, '1');
+              setAuthed(true);
+            } else {
+              setPwd('');
+              alert('Невірний пароль');
+            }
+          }}
+          style={{ background: '#1e293b', padding: '32px', borderRadius: 16, display: 'flex', flexDirection: 'column', gap: 12, minWidth: 280 }}
+        >
           <p style={{ color: '#f97316', fontWeight: 700, fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', margin: 0 }}>Kompas Migracji</p>
           <p style={{ color: '#f1f5f9', fontWeight: 700, fontSize: 18, margin: 0 }}>Адмін-панель</p>
           <input
@@ -43,19 +60,6 @@ export default function Admin() {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!supabase) { setError('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY не задані'); setLoading(false); return; }
-    supabase
-      .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (error) setError(error.message);
-        setLeads(data || []);
-        setLoading(false);
-      });
-  }, []);
 
   const visible = filter === 'all' ? leads : leads.filter(l => l.source === filter);
 
