@@ -77,8 +77,8 @@ export default function Pricing() {
               </div>
 
               <div className="font-serif font-light text-navy mb-2" style={{ fontSize: '38px' }}>
-                {card.currency && <sup className="text-lg text-muted">{card.currency}</sup>}
                 {card.amount}
+                {card.currency && <sup className="text-lg text-muted"> {card.currency}</sup>}
               </div>
 
               <p className="text-sm text-gray-500 leading-relaxed mb-6">{card.desc}</p>

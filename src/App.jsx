@@ -1,21 +1,24 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import KartaLanding from './pages/KartaLanding';
-import Regulamin from './pages/Regulamin';
-import Privacy from './pages/Privacy';
-import Admin from './pages/Admin';
+
+const KartaLanding = lazy(() => import('./pages/KartaLanding'));
+const Regulamin = lazy(() => import('./pages/Regulamin'));
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/karta" element={<KartaLanding />} />
-        <Route path="/regulamin" element={<Regulamin />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/admin" element={<Admin />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/karta" element={<KartaLanding />} />
+          <Route path="/regulamin" element={<Regulamin />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

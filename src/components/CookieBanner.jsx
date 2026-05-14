@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
 export default function CookieBanner() {
-  const [consent, setConsent] = useState(
-    localStorage.getItem('km_cookie') === '1'
+  const [visible, setVisible] = useState(
+    localStorage.getItem('km_cookie') !== '1'
   );
 
-  if (consent) return null;
+  if (!visible) return null;
 
   const accept = () => {
     localStorage.setItem('km_cookie', '1');
-    setConsent(true);
+    setVisible(false);
   };
 
   return (
@@ -25,7 +25,7 @@ export default function CookieBanner() {
           Прийняти
         </button>
         <button
-          onClick={accept}
+          onClick={() => setVisible(false)}
           className="text-sm text-gray-400 hover:text-gray-600 px-3 py-2 transition-colors"
         >
           Закрити

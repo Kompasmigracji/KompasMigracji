@@ -10,14 +10,8 @@ export default function ContactForm({ preselectedPlan }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    try {
-      const hash = window.location.hash || '';
-      if (hash.includes('plan=')) {
-        const q = hash.split('?')[1] || '';
-        const p = new URLSearchParams(q).get('plan');
-        if (p) setService(p);
-      }
-    } catch (e) {}
+    const p = new URLSearchParams(window.location.search).get('plan');
+    if (p) setService(p);
   }, []);
 
   const waNumber = '48729271848';
@@ -74,9 +68,11 @@ export default function ContactForm({ preselectedPlan }) {
           className={inputCls}
         >
           <option value="">Оберіть послугу</option>
-          <option>Пакет Прискорення (450 ЗЛ)</option>
-          <option>Пакет Резидент (900 ЗЛ)</option>
-          <option>Консультація (150 ЗЛ)</option>
+          <option>Безкоштовна консультація (2 хв)</option>
+          <option>Консультація 15 хв (150 zł)</option>
+          <option>Юридична година (450 zł)</option>
+          <option>Пакет Прискорення — Карта побуту (450 zł)</option>
+          <option>Пакет Резидент — Карта ЄС (900 zł)</option>
           <option>Інше</option>
         </select>
       </div>

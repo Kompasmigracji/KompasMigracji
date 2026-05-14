@@ -20,7 +20,7 @@ export default function Hero() {
         style={{ background: 'radial-gradient(circle, rgba(5,150,105,0.08), transparent)', transform: 'translate(-30%, 30%)' }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 max-w-4xl">
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
         <div className="animate-slide-down">
           <span
             className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-primary mb-10 shadow-sm"
