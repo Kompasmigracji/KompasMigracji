@@ -50,7 +50,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1">
-            {['ua', 'pl', 'en'].map((l) => (
+            {['ua', 'pl', 'en', 'ru'].map((l) => (
               <button
                 key={l}
                 onClick={() => changeLang(l)}

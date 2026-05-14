@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import ua from './ua.json';
 import pl from './pl.json';
 import en from './en.json';
+import ru from './ru.json';
 
 i18n
   .use(initReactI18next)
@@ -10,7 +11,8 @@ i18n
     resources: {
       ua: { translation: ua },
       pl: { translation: pl },
-      en: { translation: en }
+      en: { translation: en },
+      ru: { translation: ru }
     },
     fallbackLng: 'ua',
     interpolation: { escapeValue: false }
