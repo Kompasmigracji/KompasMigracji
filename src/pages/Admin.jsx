@@ -11,6 +11,7 @@ export default function Admin() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!supabase) { setError('VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY не задані'); setLoading(false); return; }
     supabase
       .from('leads')
       .select('*')

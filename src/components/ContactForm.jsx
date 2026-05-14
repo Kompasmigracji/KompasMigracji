@@ -24,9 +24,7 @@ export default function ContactForm({ preselectedPlan }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await supabase.from('leads').insert({
-      name, phone, service, message, source: 'main',
-    });
+    if (supabase) await supabase.from('leads').insert({ name, phone, service, message, source: 'main' });
     const text =
       `Kompas Migracji — Новий запит\n` +
       `Ім'я: ${name}\n` +
