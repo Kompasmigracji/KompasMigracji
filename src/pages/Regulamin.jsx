@@ -25,11 +25,11 @@ const List = ({ items }) => (
 
 export default function Regulamin() {
   return (
-    <div className="min-h-screen bg-white text-navy py-16 px-4 font-display">
+    <div className="min-h-screen bg-white text-black py-16 px-4 font-display">
       <div className="max-w-2xl mx-auto">
         <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">REGULAMIN KOMPAS MIGRACJI</p>
-        <h1 className="text-3xl md:text-4xl font-black text-navy mb-2 leading-tight tracking-tight">Правила Компасу Міграції</h1>
-        <p className="text-sm text-muted mb-12">Набирає чинності з дня публікації на сайті kompasmigracji.com</p>
+        <h1 className="text-3xl md:text-4xl font-black text-black mb-2 leading-tight tracking-tight">Правила Компасу Міграції</h1>
+        <p className="text-sm text-gray-700 mb-12">Набирає чинності з дня публікації на сайті kompasmigracji.com</p>
 
         <Section title="Преамбула — хто ми є">
           <P>Компас Міграції — це приватна ініціатива. Не державна. Не політична.</P>
@@ -163,7 +163,7 @@ export default function Regulamin() {
         </Section>
 
         <div className="border-t border-soft pt-8 mt-4">
-          <p className="text-base text-muted leading-relaxed">
+          <p className="text-base text-gray-700 leading-relaxed">
             Дякуємо що нас обрали.<br />
             Де гроші і документи — все письмово. Це ваші гарантії. 🧭
           </p>
