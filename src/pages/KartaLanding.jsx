@@ -463,7 +463,35 @@ export default function KartaLanding() {
               <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px', lineHeight: 1.65, whiteSpace: 'pre-line' }}>{t.ft2desc}</p>
               <Tag color={ORANGE}>{t.ft3tag}</Tag>
               <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '8px 0 3px', letterSpacing: '-0.01em' }}>+48 729 271 848</p>
-              <p style={{ fontSize: 11, color: GRAY, margin: 0, letterSpacing: '0.04em' }}>{t.ft3sub}</p>
+              <p style={{ fontSize: 11, color: GRAY, margin: '0 0 14px', letterSpacing: '0.04em' }}>{t.ft3sub}</p>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <a
+                  href="viber://chat?number=%2B48729271848"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    background: '#7360f2', color: '#fff',
+                    fontSize: 12, fontWeight: 700, letterSpacing: '0.02em',
+                    padding: '9px 18px', borderRadius: 8,
+                    textDecoration: 'none', whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span style={{ fontSize: 14 }}>📱</span> Viber
+                </a>
+                <a
+                  href="https://wa.me/48729271848"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    background: '#25d366', color: '#fff',
+                    fontSize: 12, fontWeight: 700, letterSpacing: '0.02em',
+                    padding: '9px 18px', borderRadius: 8,
+                    textDecoration: 'none', whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span style={{ fontSize: 14 }}>💬</span> WhatsApp
+                </a>
+              </div>
             </div>
           </div>
 
