@@ -6,7 +6,10 @@
       "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" status --short)",
       "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" log --oneline -10)",
       "Bash(move \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\karta-pobytu-landing.pdf\" \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\public\\\\karta-pobytu-landing.pdf\")",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(findstr /i \"vite\")",
+      "Bash(npx vercel *)",
+      "Bash(Remove-Item \"C:/Users/user/Documents/GitHub/KompasMigracji/.git/index.lock\" -Force)"
     ]
   }
 }
