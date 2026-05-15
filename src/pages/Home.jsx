@@ -10,6 +10,7 @@ import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
 import CookieBanner from '../components/CookieBanner';
 import ChatBot from '../components/ChatBot';
+import Blog from '../components/Blog';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export default function Home() {
         <HowItWorks />
         <Pricing />
         <FAQ />
+        <Blog />
 
         <section id="contact" className="py-24 bg-soft">
           <div className="max-w-7xl mx-auto px-6">

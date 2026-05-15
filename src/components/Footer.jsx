@@ -37,7 +37,17 @@ export default function Footer() {
             <ul className="flex flex-col gap-2">
               <li>
                 <a href="https://wa.me/48729271848" className="text-sm text-white/60 hover:text-white transition-colors no-underline">
-                  📱 WhatsApp: +48 729 271 848
+                  💬 WhatsApp: +48 729 271 848
+                </a>
+              </li>
+              <li>
+                <a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer" className="text-sm text-white/60 hover:text-white transition-colors no-underline">
+                  ✈️ Telegram: @kompasmigracji
+                </a>
+              </li>
+              <li>
+                <a href="viber://chat?number=48729271848" className="text-sm text-white/60 hover:text-white transition-colors no-underline">
+                  📳 Viber: +48 729 271 848
                 </a>
               </li>
               <li>
