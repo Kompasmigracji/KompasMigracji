@@ -6,6 +6,7 @@ const KartaLanding = lazy(() => import('./pages/KartaLanding'));
 const Regulamin = lazy(() => import('./pages/Regulamin'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Admin = lazy(() => import('./pages/Admin'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/regulamin" element={<Regulamin />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

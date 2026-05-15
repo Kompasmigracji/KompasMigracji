@@ -205,9 +205,61 @@ function MixedText({ pre, bold, post, size = 15, lineHeight = 1.7 }) {
 }
 
 /* ─── COMPONENT ─────────────────────────────────────────── */
+const PAY_TEXT = {
+  ua: { btn: 'Оплатити через Przelewy24', emailLabel: 'Ваш email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз." },
+  pl: { btn: 'Zapłać przez Przelewy24', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.' },
+  ru: { btn: 'Оплатить через Przelewy24', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.' },
+  en: { btn: 'Pay via Przelewy24', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.' },
+};
+
 export default function KartaLanding() {
   const [lang, setLang] = useState('ua');
   const t = LANGS[lang];
+  const pt = PAY_TEXT[lang];
+
+  const [payStep, setPayStep] = useState(null); // null | { pkg, amount, desc }
+  const [payEmail, setPayEmail] = useState('');
+  const [payLoading, setPayLoading] = useState(false);
+  const [payError, setPayError] = useState('');
+
+  const openPay = (pkg, amount, desc) => {
+    setPayStep({ pkg, amount, desc });
+    setPayEmail('');
+    setPayError('');
+  };
+
+  const closePay = () => {
+    setPayStep(null);
+    setPayEmail('');
+    setPayError('');
+    setPayLoading(false);
+  };
+
+  const proceedPay = async () => {
+    if (!payEmail || !/\S+@\S+\.\S+/.test(payEmail)) {
+      setPayError(pt.errEmail);
+      return;
+    }
+    setPayLoading(true);
+    setPayError('');
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: payStep.amount, description: payStep.desc, email: payEmail, lang }),
+      });
+      const data = await res.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        setPayError(data.error || pt.errNet);
+        setPayLoading(false);
+      }
+    } catch {
+      setPayError(pt.errNet);
+      setPayLoading(false);
+    }
+  };
 
   const handleOrder = async () => {
     const msgs = {
@@ -373,7 +425,7 @@ export default function KartaLanding() {
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
                 <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: ORANGE, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p1price}</p>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p1sub}</p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p1f.map((f, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, color: LIGHT }}>
                       <span style={{ color: ORANGE, flexShrink: 0, fontWeight: 700, lineHeight: '1.6' }}>→</span>
@@ -381,6 +433,19 @@ export default function KartaLanding() {
                     </li>
                   ))}
                 </ul>
+                <button
+                  onClick={() => openPay('p1', 45000, t.p1name)}
+                  style={{
+                    width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                    background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14,
+                    fontFamily: "'Syne', sans-serif", letterSpacing: '0.01em',
+                    transition: 'opacity 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+                >
+                  {pt.btn}
+                </button>
               </div>
               {/* pkg 2 */}
               <div>
@@ -388,7 +453,7 @@ export default function KartaLanding() {
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p2name}</p>
                 <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: MINT, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p2price}</p>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p2sub}</p>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p2f.map((f, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, color: LIGHT }}>
                       <span style={{ color: MINT, flexShrink: 0, fontWeight: 700, lineHeight: '1.6' }}>→</span>
@@ -396,6 +461,19 @@ export default function KartaLanding() {
                     </li>
                   ))}
                 </ul>
+                <button
+                  onClick={() => openPay('p2', 90000, t.p2name)}
+                  style={{
+                    width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: 'pointer',
+                    background: '#1e293b', color: '#fff', fontWeight: 700, fontSize: 14,
+                    fontFamily: "'Syne', sans-serif", letterSpacing: '0.01em',
+                    transition: 'opacity 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.opacity = '0.82'; }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+                >
+                  {pt.btn}
+                </button>
               </div>
             </div>
           </section>
@@ -532,6 +610,87 @@ export default function KartaLanding() {
         </footer>
 
       </div>
+      {/* ── PAYMENT MODAL ── */}
+      {payStep && (
+        <div
+          onClick={closePay}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 10000,
+            background: 'rgba(0,0,0,0.55)', display: 'flex',
+            alignItems: 'center', justifyContent: 'center', padding: 16,
+          }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff', borderRadius: 16, padding: '32px 28px',
+              width: '100%', maxWidth: 420,
+              fontFamily: "'Inter', system-ui, sans-serif",
+            }}
+          >
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 8px' }}>
+              Przelewy24
+            </p>
+            <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '0 0 4px' }}>
+              {payStep.desc}
+            </p>
+            <p style={{ fontSize: 26, fontWeight: 900, color: payStep.pkg === 'p1' ? ORANGE : '#1e293b', margin: '0 0 24px', letterSpacing: '-0.02em' }}>
+              {payStep.pkg === 'p1' ? '450 PLN' : '900 PLN'}
+            </p>
+
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: GRAY, marginBottom: 6 }}>
+              {pt.emailLabel}
+            </label>
+            <input
+              type="email"
+              value={payEmail}
+              onChange={e => setPayEmail(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && proceedPay()}
+              placeholder={pt.emailPh}
+              autoFocus
+              style={{
+                width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14,
+                border: `1.5px solid ${payError ? '#ef4444' : '#e2e8f0'}`,
+                outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box',
+                marginBottom: payError ? 6 : 20,
+              }}
+            />
+            {payError && (
+              <p style={{ fontSize: 12, color: '#ef4444', margin: '0 0 16px' }}>{payError}</p>
+            )}
+
+            <button
+              onClick={proceedPay}
+              disabled={payLoading}
+              style={{
+                width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: payLoading ? 'default' : 'pointer',
+                background: payLoading ? '#e2e8f0' : ORANGE,
+                color: payLoading ? GRAY : '#fff',
+                fontWeight: 700, fontSize: 14, fontFamily: 'inherit', marginBottom: 10,
+                transition: 'background 0.15s',
+              }}
+            >
+              {payLoading ? pt.loading : pt.go}
+            </button>
+            <button
+              onClick={closePay}
+              disabled={payLoading}
+              style={{
+                width: '100%', padding: '11px 0', borderRadius: 10,
+                border: `1.5px solid #e2e8f0`, background: 'transparent',
+                color: GRAY, fontWeight: 600, fontSize: 14, fontFamily: 'inherit', cursor: 'pointer',
+              }}
+            >
+              {pt.cancel}
+            </button>
+
+            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '16px 0 0' }}>
+              🔒 Безпечна оплата · Przelewy24 · SSL
+            </p>
+          </div>
+        </div>
+      )}
+
       <ChatBot />
     </>
   );
