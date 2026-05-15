@@ -305,7 +305,6 @@ export default function KartaLanding() {
         #karta-root * { box-sizing: border-box; }
 
         @media (max-width: 480px) {
-          .karta-price { font-size: clamp(32px, 11vw, 46px) !important; }
           .karta-step-num { font-size: 28px !important; margin-bottom: 6px !important; }
           .karta-pkg-name { font-size: 16px !important; }
           .karta-hero-h1 { letter-spacing: -0.035em !important; }
@@ -423,7 +422,14 @@ export default function KartaLanding() {
               <div>
                 <Tag color={ORANGE}>{t.p1tag}</Tag>
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
-                <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: ORANGE, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p1price}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, margin: '4px 0 2px' }}>
+                  <span style={{ fontSize: 'clamp(64px, 16vw, 96px)', fontWeight: 900, color: ORANGE, letterSpacing: '-0.045em', lineHeight: 0.88 }}>
+                    {t.p1price.split(' ')[0]}
+                  </span>
+                  <span style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 900, color: ORANGE, letterSpacing: '-0.02em' }}>
+                    {t.p1price.split(' ').slice(1).join(' ')}
+                  </span>
+                </div>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p1sub}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p1f.map((f, i) => (
@@ -451,7 +457,14 @@ export default function KartaLanding() {
               <div>
                 <Tag color={MINT}>{t.p2tag}</Tag>
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p2name}</p>
-                <p className="karta-price" style={{ fontSize: 46, fontWeight: 900, color: MINT, margin: '0 0 2px', lineHeight: 1, letterSpacing: '-0.03em' }}>{t.p2price}</p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, margin: '4px 0 2px' }}>
+                  <span style={{ fontSize: 'clamp(64px, 16vw, 96px)', fontWeight: 900, color: MINT, letterSpacing: '-0.045em', lineHeight: 0.88 }}>
+                    {t.p2price.split(' ')[0]}
+                  </span>
+                  <span style={{ fontSize: 'clamp(28px, 6vw, 42px)', fontWeight: 900, color: MINT, letterSpacing: '-0.02em' }}>
+                    {t.p2price.split(' ').slice(1).join(' ')}
+                  </span>
+                </div>
                 <p style={{ fontSize: 12, color: GRAY, margin: '0 0 20px' }}>{t.p2sub}</p>
                 <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {t.p2f.map((f, i) => (
