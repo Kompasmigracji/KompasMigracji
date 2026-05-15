@@ -70,6 +70,23 @@ export default function Footer() {
             </Link>
           </div>
         </div>
+
+        <div className="mt-5 pt-4 border-t border-white/5 text-center">
+          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.18)' }}>
+            Designed &amp; Developed by{' '}
+            <a
+              href="mailto:iphoenixgsm@gmail.com"
+              style={{ color: 'rgba(249,115,22,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'rgba(249,115,22,0.9)'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(249,115,22,0.45)'; }}
+            >
+              iPhoenixGSM®
+            </a>
+            {' '}·{' '}
+            <span style={{ letterSpacing: '0.02em' }}>Oleksandr Khrystodul</span>
+            {' '}· © 2026
+          </span>
+        </div>
       </div>
     </footer>
   );
