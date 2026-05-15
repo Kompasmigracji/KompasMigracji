@@ -102,6 +102,15 @@ export default function Pricing() {
               >
                 {card.cta}
               </button>
+
+              {card.currency && (
+                <p className="text-center mt-2" style={{ fontSize: 10, color: '#9ca3af' }}>
+                  Замовляючи, ви погоджуєтесь з{' '}
+                  <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: '#9ca3af', textDecoration: 'underline' }}>
+                    Regulamin
+                  </a>
+                </p>
+              )}
             </div>
           ))}
         </div>

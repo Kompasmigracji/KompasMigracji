@@ -206,10 +206,10 @@ function MixedText({ pre, bold, post, size = 15, lineHeight = 1.7 }) {
 
 /* ─── COMPONENT ─────────────────────────────────────────── */
 const PAY_TEXT = {
-  ua: { btn: 'Оплатити через Przelewy24', emailLabel: 'Ваш email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз." },
-  pl: { btn: 'Zapłać przez Przelewy24', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.' },
-  ru: { btn: 'Оплатить через Przelewy24', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.' },
-  en: { btn: 'Pay via Przelewy24', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.' },
+  ua: { btn: 'Оплатити через Przelewy24', emailLabel: 'Ваш email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз.", regText: 'Оплачуючи, ви погоджуєтесь з' },
+  pl: { btn: 'Zapłać przez Przelewy24', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
+  ru: { btn: 'Оплатить через Przelewy24', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
+  en: { btn: 'Pay via Przelewy24', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
 };
 
 export default function KartaLanding() {
@@ -452,6 +452,12 @@ export default function KartaLanding() {
                 >
                   {pt.btn}
                 </button>
+                <p style={{ fontSize: 11, color: GRAY, textAlign: 'center', margin: '8px 0 0' }}>
+                  {pt.regText}{' '}
+                  <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: GRAY, textDecoration: 'underline' }}>
+                    Regulamin
+                  </a>
+                </p>
               </div>
               {/* pkg 2 */}
               <div>
@@ -487,6 +493,12 @@ export default function KartaLanding() {
                 >
                   {pt.btn}
                 </button>
+                <p style={{ fontSize: 11, color: GRAY, textAlign: 'center', margin: '8px 0 0' }}>
+                  {pt.regText}{' '}
+                  <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: GRAY, textDecoration: 'underline' }}>
+                    Regulamin
+                  </a>
+                </p>
               </div>
             </div>
           </section>
@@ -697,8 +709,10 @@ export default function KartaLanding() {
               {pt.cancel}
             </button>
 
-            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '16px 0 0' }}>
-              🔒 Безпечна оплата · Przelewy24 · SSL
+            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '16px 0 0', lineHeight: 1.9 }}>
+              🔒 Безпечна оплата · Przelewy24 · SSL<br />
+              <span>{pt.regText}{' '}</span>
+              <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: '#94a3b8', textDecoration: 'underline' }}>Regulamin</a>
             </p>
           </div>
         </div>

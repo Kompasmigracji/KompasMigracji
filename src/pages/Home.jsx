@@ -13,6 +13,7 @@ import ChatBot from '../components/ChatBot';
 import Blog from '../components/Blog';
 import Team from '../components/Team';
 import Reviews from '../components/Reviews';
+import PromoBanner from '../components/PromoBanner';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ export default function Home() {
       <Footer />
       <CookieBanner />
       <ChatBot />
+      <PromoBanner />
     </div>
   );
 }
