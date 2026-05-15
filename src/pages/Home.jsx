@@ -9,6 +9,7 @@ import FAQ from '../components/FAQ';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
 import CookieBanner from '../components/CookieBanner';
+import ChatBot from '../components/ChatBot';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -40,6 +41,7 @@ export default function Home() {
 
       <Footer />
       <CookieBanner />
+      <ChatBot />
     </div>
   );
 }

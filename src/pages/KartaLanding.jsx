@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import ChatBot from '../components/ChatBot';
 
 const ORANGE = '#f97316';
 const MINT   = '#86efac';
@@ -531,6 +532,7 @@ export default function KartaLanding() {
         </footer>
 
       </div>
+      <ChatBot />
     </>
   );
 }
