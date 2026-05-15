@@ -32,7 +32,7 @@ export default function PromoBanner() {
   const [error, setError]         = useState('');
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 8000);
+    const t = setTimeout(() => setVisible(true), 120000);
     return () => clearTimeout(t);
   }, []);
 
@@ -42,7 +42,7 @@ export default function PromoBanner() {
     setEmail('');
     setError('');
     setLoading(false);
-    setTimeout(() => setVisible(true), 45000);
+    setTimeout(() => setVisible(true), 120000);
   };
 
   const pay = async () => {

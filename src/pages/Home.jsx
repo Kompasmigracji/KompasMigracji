@@ -14,6 +14,7 @@ import Blog from '../components/Blog';
 import Team from '../components/Team';
 import Reviews from '../components/Reviews';
 import PromoBanner from '../components/PromoBanner';
+import KompasAI from '../components/KompasAI';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -50,6 +51,7 @@ export default function Home() {
       <CookieBanner />
       <ChatBot />
       <PromoBanner />
+      <KompasAI />
     </div>
   );
 }
