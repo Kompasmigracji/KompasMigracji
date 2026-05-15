@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
@@ -38,16 +38,54 @@ const FACTS = [
   },
 ];
 
-const AUTO_CLOSE_SEC = 12;
+const AUTO_CLOSE_SEC = 14;
+
+// random delay between MIN and MAX seconds
+const randDelay = (minS, maxS) =>
+  Math.floor(Math.random() * (maxS - minS + 1) + minS) * 1000;
+
+function NavBtn({ dir, onClick }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: hov ? 'rgba(249,115,22,0.18)' : 'rgba(255,255,255,0.06)',
+        border: 'none', borderRadius: 7,
+        width: 28, height: 28,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        cursor: 'pointer', flexShrink: 0,
+        transition: 'background 0.15s',
+      }}
+    >
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+        stroke={hov ? ORANGE : '#64748b'} strokeWidth="2.5"
+        style={{ transition: 'stroke 0.15s' }}>
+        {dir === 'prev'
+          ? <polyline points="15 18 9 12 15 6" />
+          : <polyline points="9 18 15 12 9 6" />}
+      </svg>
+    </button>
+  );
+}
 
 export default function KompasAI() {
-  const [visible, setVisible]   = useState(false);
-  const [factIdx, setFactIdx]   = useState(0);
+  const [visible,  setVisible]  = useState(false);
+  const [factIdx,  setFactIdx]  = useState(0);
   const [progress, setProgress] = useState(100);
-  const timerRef   = useRef(null);
+  const [animKey,  setAnimKey]  = useState(0); // force re-animation on fact change
+  const timerRef    = useRef(null);
   const progressRef = useRef(null);
 
-  const startAutoClose = () => {
+  const stopAutoClose = useCallback(() => {
+    clearTimeout(timerRef.current);
+    clearInterval(progressRef.current);
+  }, []);
+
+  const startAutoClose = useCallback(() => {
+    stopAutoClose();
     setProgress(100);
     const start = Date.now();
     progressRef.current = setInterval(() => {
@@ -56,37 +94,44 @@ export default function KompasAI() {
       setProgress(pct);
       if (pct <= 0) clearInterval(progressRef.current);
     }, 80);
-    timerRef.current = setTimeout(() => {
-      setVisible(false);
-    }, AUTO_CLOSE_SEC * 1000);
-  };
+    timerRef.current = setTimeout(() => setVisible(false), AUTO_CLOSE_SEC * 1000);
+  }, [stopAutoClose]);
 
-  const stopAutoClose = () => {
-    clearTimeout(timerRef.current);
-    clearInterval(progressRef.current);
-    setProgress(100);
-  };
-
-  useEffect(() => {
-    const first = setTimeout(() => {
-      setFactIdx(0);
+  // schedule next appearance
+  const scheduleNext = useCallback(() => {
+    const delay = randDelay(18, 50); // 18–50 seconds, random each time
+    setTimeout(() => {
+      setFactIdx(() => Math.floor(Math.random() * FACTS.length));
+      setAnimKey(k => k + 1);
       setVisible(true);
-    }, 4000);
-    return () => clearTimeout(first);
+    }, delay);
+  }, []);
+
+  // first appearance: random 3–7 seconds
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setFactIdx(Math.floor(Math.random() * FACTS.length));
+      setVisible(true);
+    }, randDelay(3, 7));
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
     if (visible) startAutoClose();
-    else stopAutoClose();
+    else { stopAutoClose(); }
     return stopAutoClose;
-  }, [visible]); // eslint-disable-line
+  }, [visible, startAutoClose, stopAutoClose]);
 
   const close = () => {
     setVisible(false);
-    setTimeout(() => {
-      setFactIdx(i => (i + 1) % FACTS.length);
-      setVisible(true);
-    }, 90000);
+    scheduleNext();
+  };
+
+  const changeFact = (dir) => {
+    stopAutoClose();
+    setFactIdx(i => (i + dir + FACTS.length) % FACTS.length);
+    setAnimKey(k => k + 1);
+    startAutoClose();
   };
 
   if (!visible) return null;
@@ -97,12 +142,15 @@ export default function KompasAI() {
     <>
       <style>{`
         @keyframes kai-in {
-          from { opacity: 0; transform: translateY(20px) scale(0.96); }
+          from { opacity: 0; transform: translateY(24px) scale(0.95); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .kai-card {
-          animation: kai-in 0.38s cubic-bezier(0.22,1,0.36,1) both;
+        @keyframes kai-text {
+          from { opacity: 0; transform: translateX(8px); }
+          to   { opacity: 1; transform: translateX(0); }
         }
+        .kai-card  { animation: kai-in   0.4s cubic-bezier(0.22,1,0.36,1) both; }
+        .kai-fact  { animation: kai-text 0.25s ease both; }
       `}</style>
 
       <div
@@ -118,79 +166,70 @@ export default function KompasAI() {
           border: '1px solid rgba(249,115,22,0.25)',
           fontFamily: "'Syne', sans-serif",
           overflow: 'hidden',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.45)',
         }}
         onMouseEnter={stopAutoClose}
         onMouseLeave={startAutoClose}
       >
         {/* Progress bar */}
         <div style={{ height: 3, background: 'rgba(255,255,255,0.06)' }}>
-          <div
-            style={{
-              height: '100%',
-              width: `${progress}%`,
-              background: ORANGE,
-              transition: 'width 0.08s linear',
-              borderRadius: 3,
-            }}
-          />
+          <div style={{
+            height: '100%',
+            width: `${progress}%`,
+            background: ORANGE,
+            transition: 'width 0.08s linear',
+          }} />
         </div>
 
-        <div style={{ padding: '14px 16px 16px' }}>
-          {/* Header */}
+        <div style={{ padding: '13px 14px 15px' }}>
+          {/* Header row */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{
                 width: 30, height: 30, borderRadius: '50%',
                 background: 'linear-gradient(135deg, #f97316, #ea580c)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 15, flexShrink: 0,
+                fontSize: 14, flexShrink: 0,
               }}>🧭</div>
               <div>
                 <div style={{ fontSize: 11, fontWeight: 800, color: ORANGE, letterSpacing: '0.12em', textTransform: 'uppercase', lineHeight: 1 }}>
                   Kompas AI
                 </div>
-                <div style={{ fontSize: 9, color: '#475569', letterSpacing: '0.06em', textTransform: 'uppercase', marginTop: 1 }}>
+                <div style={{ fontSize: 9, color: '#475569', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: 2 }}>
                   Факти для емігрантів
                 </div>
               </div>
             </div>
             <button
               onClick={close}
-              aria-label="Закрити"
               style={{
                 background: 'none', border: 'none',
                 color: '#334155', fontSize: 18, cursor: 'pointer',
-                lineHeight: 1, padding: '2px 4px', flexShrink: 0,
+                lineHeight: 1, padding: '2px 5px', flexShrink: 0,
               }}
               onMouseEnter={e => { e.currentTarget.style.color = '#94a3b8'; }}
               onMouseLeave={e => { e.currentTarget.style.color = '#334155'; }}
             >✕</button>
           </div>
 
-          {/* Tag */}
-          <div style={{
-            display: 'inline-block',
-            fontSize: 10, fontWeight: 700,
-            color: ORANGE,
-            background: 'rgba(249,115,22,0.1)',
-            borderRadius: 6,
-            padding: '3px 8px',
-            marginBottom: 8,
-            letterSpacing: '0.04em',
-          }}>
-            {fact.tag}
-          </div>
+          {/* Fact body — re-animates on factIdx change via key */}
+          <div key={animKey} className="kai-fact">
+            {/* Tag */}
+            <div style={{
+              display: 'inline-block',
+              fontSize: 10, fontWeight: 700, color: ORANGE,
+              background: 'rgba(249,115,22,0.1)',
+              borderRadius: 6, padding: '3px 8px', marginBottom: 8,
+              letterSpacing: '0.04em',
+            }}>
+              {fact.tag}
+            </div>
 
-          {/* Text */}
-          <p style={{
-            fontSize: 13,
-            color: '#94a3b8',
-            lineHeight: 1.6,
-            margin: '0 0 14px',
-          }}>
-            {fact.text}
-          </p>
+            {/* Text */}
+            <p style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6, margin: '0 0 14px' }}>
+              {fact.text}
+            </p>
+          </div>
 
           {/* CTA */}
           <a
@@ -199,17 +238,13 @@ export default function KompasAI() {
             rel="noreferrer"
             onClick={close}
             style={{
-              display: 'block',
-              textAlign: 'center',
-              padding: '10px 0',
-              borderRadius: 9,
-              background: ORANGE,
-              color: '#fff',
-              fontWeight: 700,
-              fontSize: 13,
-              textDecoration: 'none',
-              letterSpacing: '0.01em',
+              display: 'block', textAlign: 'center',
+              padding: '10px 0', borderRadius: 9,
+              background: ORANGE, color: '#fff',
+              fontWeight: 700, fontSize: 13,
+              textDecoration: 'none', letterSpacing: '0.01em',
               transition: 'opacity 0.15s',
+              marginBottom: 12,
             }}
             onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
             onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -217,21 +252,29 @@ export default function KompasAI() {
             Отримати допомогу →
           </a>
 
-          <div style={{
-            display: 'flex', justifyContent: 'center', gap: 4, marginTop: 10,
-          }}>
-            {FACTS.map((_, i) => (
-              <div
-                key={i}
-                style={{
-                  width: i === factIdx ? 16 : 5,
-                  height: 5,
-                  borderRadius: 3,
-                  background: i === factIdx ? ORANGE : '#1e293b',
-                  transition: 'width 0.3s ease, background 0.3s ease',
-                }}
-              />
-            ))}
+          {/* Navigation row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <NavBtn dir="prev" onClick={() => changeFact(-1)} />
+
+            {/* Dot indicators */}
+            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+              {FACTS.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => { stopAutoClose(); setFactIdx(i); setAnimKey(k => k + 1); startAutoClose(); }}
+                  style={{
+                    width: i === factIdx ? 16 : 5,
+                    height: 5,
+                    borderRadius: 3,
+                    background: i === factIdx ? ORANGE : '#1e293b',
+                    transition: 'width 0.3s ease, background 0.3s ease',
+                    cursor: 'pointer',
+                  }}
+                />
+              ))}
+            </div>
+
+            <NavBtn dir="next" onClick={() => changeFact(1)} />
           </div>
         </div>
       </div>
