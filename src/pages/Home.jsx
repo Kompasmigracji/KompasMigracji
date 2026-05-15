@@ -11,6 +11,8 @@ import Footer from '../components/Footer';
 import CookieBanner from '../components/CookieBanner';
 import ChatBot from '../components/ChatBot';
 import Blog from '../components/Blog';
+import Team from '../components/Team';
+import Reviews from '../components/Reviews';
 
 export default function Home() {
   const { t } = useTranslation();
@@ -20,6 +22,8 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <Team />
+        <Reviews />
         <ServicesGrid />
         <HowItWorks />
         <Pricing />

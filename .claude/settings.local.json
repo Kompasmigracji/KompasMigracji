@@ -19,7 +19,8 @@
       "Bash(npm uninstall *)",
       "Bash(curl -s -X POST \"https://www.kompasmigracji.com/api/chat\" -H \"Content-Type: application/json\" -d \"{\\\\\"messages\\\\\":[{\\\\\"role\\\\\":\\\\\"user\\\\\",\\\\\"content\\\\\":\\\\\"привіт\\\\\"}]}\")",
       "WebFetch(domain:www.youtube.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.gowork.pl)"
     ]
   }
 }
