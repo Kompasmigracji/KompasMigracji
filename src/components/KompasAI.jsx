@@ -71,7 +71,7 @@ export default function KompasAI() {
     const first = setTimeout(() => {
       setFactIdx(0);
       setVisible(true);
-    }, 15000);
+    }, 4000);
     return () => clearTimeout(first);
   }, []);
 
@@ -112,7 +112,7 @@ export default function KompasAI() {
           bottom: 24,
           left: 24,
           zIndex: 9997,
-          width: 'min(340px, calc(100vw - 48px)',
+          width: 'min(340px, calc(100vw - 48px))',
           background: NAVY,
           borderRadius: 18,
           border: '1px solid rgba(249,115,22,0.25)',
