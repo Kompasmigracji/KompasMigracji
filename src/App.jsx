@@ -12,6 +12,7 @@ const Regulamin = lazy(() => import('./pages/Regulamin'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Admin = lazy(() => import('./pages/Admin'));
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const PricingPage = lazy(() => import('./pages/PricingPage'));
 
 function AppInner() {
   const { analytics } = useCookieConsent();
@@ -25,6 +26,7 @@ function AppInner() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/pricing" element={<PricingPage />} />
         </Routes>
       </Suspense>
       {analytics && <Analytics />}

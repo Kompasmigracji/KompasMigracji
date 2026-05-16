@@ -165,6 +165,9 @@ export default function Header() {
               {label}
             </a>
           ))}
+          <Link to="/pricing" className="px-3 py-2 text-sm font-semibold text-primary hover:bg-orange-50 rounded-lg transition-colors no-underline">
+            Прайс-лист
+          </Link>
         </nav>
 
         {/* Right side: phone + socials + lang */}
@@ -242,6 +245,9 @@ export default function Header() {
               className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}
             </a>
           ))}
+          <Link to="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
+            Прайс-лист
+          </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>
             <div className="flex gap-2 ml-auto">
