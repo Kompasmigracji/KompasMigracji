@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Logo from '../assets/logo.svg';
+import { useTheme } from '../lib/ThemeContext';
 
 const PHONE = '+48 729 271 848';
 const WA_LINK = 'https://wa.me/48729271848';
@@ -45,6 +46,42 @@ const SOCIAL = [
   { href: WA_LINK, icon: <WaIcon />, label: 'WhatsApp', color: '#25D366' },
   { href: VB_LINK, icon: <VbIcon />, label: 'Viber', color: '#7360F2' },
 ];
+
+function ThemeToggle() {
+  const { dark, toggle } = useTheme();
+  return (
+    <button
+      onClick={toggle}
+      title={dark ? 'Світла тема' : 'Темна тема'}
+      style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+        background: dark ? 'rgba(255,255,255,0.1)' : '#f3f4f6',
+        border: `1.5px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e5e7eb'}`,
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = '#f97316'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.18)' : '#e5e7eb'; }}
+    >
+      {dark ? (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="#fbbf24" strokeWidth="2" strokeLinecap="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      ) : (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+          stroke="#6366f1" strokeWidth="2" strokeLinecap="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      )}
+    </button>
+  );
+}
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -156,6 +193,9 @@ export default function Header() {
               </a>
             ))}
           </div>
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Language */}
           <div className="flex items-center gap-0.5 bg-gray-50 border border-gray-200 rounded-lg px-1.5 py-1">
