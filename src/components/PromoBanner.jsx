@@ -30,6 +30,7 @@ export default function PromoBanner() {
   const [email, setEmail]         = useState('');
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState('');
+  const [agreed, setAgreed]       = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 120000);
@@ -42,6 +43,7 @@ export default function PromoBanner() {
     setEmail('');
     setError('');
     setLoading(false);
+    setAgreed(false);
     setTimeout(() => setVisible(true), 120000);
   };
 
@@ -234,14 +236,37 @@ export default function PromoBanner() {
               />
               {error && <p style={{ fontSize: 12, color: '#ef4444', margin: '0 0 14px' }}>{error}</p>}
 
+              {/* Regulamin checkbox */}
+              <label style={{
+                display: 'flex', gap: 10, alignItems: 'flex-start',
+                cursor: 'pointer', margin: '0 0 14px', userSelect: 'none',
+              }}>
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={e => setAgreed(e.target.checked)}
+                  style={{ marginTop: 3, accentColor: ORANGE, width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>
+                  Я ознайомився та погоджуюсь з{' '}
+                  <Link
+                    to="/regulamin"
+                    onClick={e => e.stopPropagation()}
+                    style={{ color: ORANGE, textDecoration: 'none', fontWeight: 600 }}
+                  >
+                    Regulamin
+                  </Link>
+                </span>
+              </label>
+
               <button
                 onClick={pay}
-                disabled={loading}
+                disabled={loading || !agreed}
                 style={{
                   width: '100%', padding: '13px 0', borderRadius: 10, border: 'none',
-                  cursor: loading ? 'default' : 'pointer',
-                  background: loading ? '#1e293b' : ORANGE,
-                  color: loading ? '#475569' : '#fff',
+                  cursor: loading || !agreed ? 'not-allowed' : 'pointer',
+                  background: loading || !agreed ? '#1e293b' : ORANGE,
+                  color: loading || !agreed ? '#475569' : '#fff',
                   fontWeight: 700, fontSize: 14, fontFamily: 'inherit',
                   transition: 'background 0.15s', marginBottom: 0,
                 }}
@@ -249,10 +274,8 @@ export default function PromoBanner() {
                 {loading ? 'Перенаправлення...' : 'Перейти до оплати →'}
               </button>
 
-              <p style={{ fontSize: 10, color: '#334155', textAlign: 'center', margin: '12px 0 0', lineHeight: 1.9 }}>
-                Оплачуючи, ви погоджуєтесь з{' '}
-                <Link to="/regulamin" onClick={close} style={{ color: '#475569', textDecoration: 'underline' }}>Regulamin</Link>
-                <br />🔒 Безпечна оплата · Przelewy24 · SSL
+              <p style={{ fontSize: 10, color: '#334155', textAlign: 'center', margin: '10px 0 0' }}>
+                🔒 Безпечна оплата · Przelewy24 · SSL
               </p>
             </>
           )}

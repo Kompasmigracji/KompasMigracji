@@ -221,11 +221,13 @@ export default function KartaLanding() {
   const [payEmail, setPayEmail] = useState('');
   const [payLoading, setPayLoading] = useState(false);
   const [payError, setPayError] = useState('');
+  const [payAgreed, setPayAgreed] = useState(false);
 
   const openPay = (pkg, amount, desc) => {
     setPayStep({ pkg, amount, desc });
     setPayEmail('');
     setPayError('');
+    setPayAgreed(false);
   };
 
   const closePay = () => {
@@ -684,13 +686,39 @@ export default function KartaLanding() {
               <p style={{ fontSize: 12, color: '#ef4444', margin: '0 0 16px' }}>{payError}</p>
             )}
 
+            {/* Regulamin checkbox */}
+            <label style={{
+              display: 'flex', gap: 10, alignItems: 'flex-start',
+              cursor: 'pointer', margin: '0 0 16px', userSelect: 'none',
+            }}>
+              <input
+                type="checkbox"
+                checked={payAgreed}
+                onChange={e => setPayAgreed(e.target.checked)}
+                style={{ marginTop: 3, accentColor: ORANGE, width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: 12, color: GRAY, lineHeight: 1.6 }}>
+                {pt.regText}{' '}
+                <a
+                  href="/regulamin"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: ORANGE, textDecoration: 'none', fontWeight: 600 }}
+                  onClick={e => e.stopPropagation()}
+                >
+                  Regulamin
+                </a>
+              </span>
+            </label>
+
             <button
               onClick={proceedPay}
-              disabled={payLoading}
+              disabled={payLoading || !payAgreed}
               style={{
-                width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: payLoading ? 'default' : 'pointer',
-                background: payLoading ? '#e2e8f0' : ORANGE,
-                color: payLoading ? GRAY : '#fff',
+                width: '100%', padding: '13px 0', borderRadius: 10, border: 'none',
+                cursor: payLoading || !payAgreed ? 'not-allowed' : 'pointer',
+                background: payLoading || !payAgreed ? '#e2e8f0' : ORANGE,
+                color: payLoading || !payAgreed ? GRAY : '#fff',
                 fontWeight: 700, fontSize: 14, fontFamily: 'inherit', marginBottom: 10,
                 transition: 'background 0.15s',
               }}
@@ -709,10 +737,8 @@ export default function KartaLanding() {
               {pt.cancel}
             </button>
 
-            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '16px 0 0', lineHeight: 1.9 }}>
-              🔒 Безпечна оплата · Przelewy24 · SSL<br />
-              <span>{pt.regText}{' '}</span>
-              <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: '#94a3b8', textDecoration: 'underline' }}>Regulamin</a>
+            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '14px 0 0' }}>
+              🔒 Безпечна оплата · Przelewy24 · SSL
             </p>
           </div>
         </div>
