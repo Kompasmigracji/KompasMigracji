@@ -16,19 +16,19 @@ const CATEGORIES = [
     title: 'Легалізація побиту',
     icon: '🏠',
     rows: [
-      { name: 'Часовий побит',                                        price: '950',      amountGrosze: 95000 },
-      { name: 'Часовий побит — ускладнені обставини',                 price: '1 400',    amountGrosze: 140000 },
-      { name: 'Часовий побит — діти',                                 price: '800',      amountGrosze: 80000 },
-      { name: 'Сталий побит',                                         price: '1 800',    amountGrosze: 180000 },
-      { name: 'Резидент ЄС',                                          price: '1 800',    amountGrosze: 180000 },
-      { name: 'Громадянство Польщі (через Воєводу)',                  price: '2 000',    amountGrosze: 200000 },
-      { name: 'Громадянство Польщі (Президент)',                      price: '2 500',    amountGrosze: 250000 },
-      { name: 'Резидент + Громадянство',                              price: '4 000',    amountGrosze: 400000 },
-      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '450',      amountGrosze: 45000 },
-      { name: 'Прискорення карти побиту (апеляція / складна справа)', price: '900',      amountGrosze: 90000 },
-      { name: 'Прискорення отримання карти Резидента ЄС',            price: '900',      amountGrosze: 90000 },
-      { name: 'Консультація телефонічна',                             price: '150',      amountGrosze: 15000 },
-      { name: 'Консультація + узасаднєніє',                          price: '450',      amountGrosze: 45000 },
+      { name: 'Часовий побит',                                        price: '1 200',    amountGrosze: 120000 },
+      { name: 'Часовий побит — ускладнені обставини',                 price: '1 650',    amountGrosze: 165000 },
+      { name: 'Часовий побит — діти',                                 price: '950',      amountGrosze: 95000 },
+      { name: 'Сталий побит',                                         price: '2 100',    amountGrosze: 210000 },
+      { name: 'Резидент ЄС',                                          price: '2 100',    amountGrosze: 210000 },
+      { name: 'Громадянство Польщі (через Воєводу)',                  price: '2 400',    amountGrosze: 240000 },
+      { name: 'Громадянство Польщі (Президент)',                      price: '2 900',    amountGrosze: 290000 },
+      { name: 'Резидент + Громадянство',                              price: '4 700',    amountGrosze: 470000 },
+      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '550',      amountGrosze: 55000 },
+      { name: 'Прискорення карти побиту (апеляція / складна справа)', price: '1 050',    amountGrosze: 105000 },
+      { name: 'Прискорення отримання карти Резидента ЄС',            price: '1 050',    amountGrosze: 105000 },
+      { name: 'Консультація телефонічна',                             price: '180',      amountGrosze: 18000 },
+      { name: 'Консультація + узасаднєніє',                          price: '550',      amountGrosze: 55000 },
     ],
   },
   {
@@ -36,9 +36,9 @@ const CATEGORIES = [
     title: 'Шлюб та сімейне право',
     icon: '💍',
     rows: [
-      { name: 'Супровід по шлюбу',                                    price: '800',      amountGrosze: 80000 },
-      { name: 'Довідка для шлюбу без консульства',                    price: '200–350',  amountGrosze: null },
-      { name: 'Розлучення в Україні без присутності сторін',          price: '1 800',    amountGrosze: 180000 },
+      { name: 'Супровід по шлюбу',                                    price: '950',      amountGrosze: 95000 },
+      { name: 'Довідка для шлюбу без консульства',                    price: '250–420',  amountGrosze: null },
+      { name: 'Розлучення в Україні без присутності сторін',          price: '2 100',    amountGrosze: 210000 },
       { name: 'Медіація між сторонами',                               price: '1–2 год.', amountGrosze: null },
     ],
   },
@@ -47,10 +47,10 @@ const CATEGORIES = [
     title: 'Переклади',
     icon: '📄',
     rows: [
-      { name: 'Свідоцтво про народження / шлюб / розлучення / посвідчення водія', price: '100', amountGrosze: 10000 },
+      { name: 'Свідоцтво про народження / шлюб / розлучення / посвідчення водія', price: '120', amountGrosze: 12000 },
       { name: 'Індивідуальні тексти',                                 price: 'Індивідуально', amountGrosze: null },
-      { name: 'Доставка — пачкомат InPost',                           price: '25',       amountGrosze: 2500 },
-      { name: 'Доставка — кур\'єр',                                   price: '35',       amountGrosze: 3500 },
+      { name: 'Доставка — пачкомат InPost',                           price: '29',       amountGrosze: 2900 },
+      { name: 'Доставка — кур\'єр',                                   price: '44',       amountGrosze: 4400 },
     ],
   },
   {
@@ -58,12 +58,12 @@ const CATEGORIES = [
     title: 'Бюрократичні справи',
     icon: '📋',
     rows: [
-      { name: 'Відновлення 800+',                                     price: '800',      amountGrosze: 80000 },
-      { name: 'Розробка договору',                                    price: '450',      amountGrosze: 45000 },
-      { name: 'Вичитка договору (пошук «підводних каменів»)',         price: '150',      amountGrosze: 15000 },
-      { name: 'Лист-запит до державної установи',                     price: '150',      amountGrosze: 15000 },
-      { name: 'Підписання / розірвання договорів з орендодавцем',     price: '150',      amountGrosze: 15000 },
-      { name: 'Нетипове резюме (польська та англійська)',             price: '150',      amountGrosze: 15000 },
+      { name: 'Відновлення 800+',                                     price: '950',      amountGrosze: 95000 },
+      { name: 'Розробка договору',                                    price: '550',      amountGrosze: 55000 },
+      { name: 'Вичитка договору (пошук «підводних каменів»)',         price: '180',      amountGrosze: 18000 },
+      { name: 'Лист-запит до державної установи',                     price: '180',      amountGrosze: 18000 },
+      { name: 'Підписання / розірвання договорів з орендодавцем',     price: '180',      amountGrosze: 18000 },
+      { name: 'Нетипове резюме (польська та англійська)',             price: '180',      amountGrosze: 18000 },
     ],
   },
   {
@@ -72,7 +72,7 @@ const CATEGORIES = [
     icon: '⚖️',
     rows: [
       { name: 'Допомога в підготовці документів на візи та дозволи',  price: 'Індивідуально', amountGrosze: null },
-      { name: 'Міжнародний захист',                                   price: '1 600',    amountGrosze: 160000 },
+      { name: 'Міжнародний захист',                                   price: '1 900',    amountGrosze: 190000 },
       { name: 'Захист прав мігрантів (порушення / дискримінація)',    price: 'Індивідуально', amountGrosze: null },
       { name: 'Грошовий спір з роботодавцем',                        price: '1–2 год.', amountGrosze: null },
       { name: 'Колекторський спір',                                   price: '1–2 год.', amountGrosze: null },
@@ -256,13 +256,13 @@ export default function PricingPage() {
             <div style={{ textAlign: 'left' }}>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 4px' }}>Юридична година</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
+                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>500</span>
                 <span style={{ fontSize: 22, fontWeight: 800, color: ORANGE }}>zł</span>
-                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 100 €</span>
+                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 115 €</span>
               </div>
             </div>
             <button
-              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 45000 })}
+              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 50000 })}
               style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}

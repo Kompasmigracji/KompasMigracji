@@ -22,7 +22,7 @@ export default function Pricing() {
     },
     {
       label: t('pricing_consult_label'),
-      amount: '150',
+      amount: '180',
       currency: 'zł',
       badge: t('pricing_consult_badge'),
       desc: t('pricing_consult_desc'),
@@ -32,7 +32,7 @@ export default function Pricing() {
     },
     {
       label: t('pricing_hour_label'),
-      amount: '450',
+      amount: '500',
       currency: 'zł',
       desc: t('pricing_hour_desc'),
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],
