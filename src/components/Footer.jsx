@@ -59,6 +59,17 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Company legal info */}
+        <div className="border-t border-white/10 pt-6 pb-6 mb-2">
+          <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs text-white/40">
+            <span className="font-semibold text-white/60">DOMUS V Sp. z o.o.</span>
+            <span>NIP: <span className="text-white/55">5223350030</span></span>
+            <span>KRS: <span className="text-white/55">0001198474</span></span>
+            <span>ul. Dzieci Warszawy 27, 02-495 Warszawa</span>
+            <span>Nr konta: <span className="text-white/55 font-mono tracking-wide">10 1050 1025 1000 0090 8594 6938</span></span>
+          </div>
+        </div>
+
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <span className="text-xs text-white/40">{t('footer_copyright')}</span>
           <div className="flex gap-6">
