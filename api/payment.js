@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   const crc        = process.env.P24_CRC;
   const apiKey     = process.env.P24_API_KEY;
   const sandbox    = process.env.P24_SANDBOX === 'true';
-  const siteUrl    = process.env.SITE_URL || 'https://kompasmigracji.pl';
+  const siteUrl    = process.env.SITE_URL || 'https://kompasmigracji.com';
 
   if (!merchantId || !crc || !apiKey) {
     return res.status(500).json({ error: 'Платіжна система не налаштована' });
