@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
 
-const FACTS = [
+const FALLBACK_FACTS = [
   {
     tag: '📋 Статус у Польщі',
     text: 'Тимчасовий захист для українців (UKR) продовжено до березня 2026 року. Якщо ви ще не оновили реєстрацію в UDSz — зробіть це негайно, щоб не втратити статус.',
@@ -72,10 +72,11 @@ function NavBtn({ dir, onClick }) {
 }
 
 export default function KompasAI() {
+  const [facts,    setFacts]    = useState(FALLBACK_FACTS);
   const [visible,  setVisible]  = useState(false);
   const [factIdx,  setFactIdx]  = useState(0);
   const [progress, setProgress] = useState(100);
-  const [animKey,  setAnimKey]  = useState(0); // force re-animation on fact change
+  const [animKey,  setAnimKey]  = useState(0);
   const timerRef    = useRef(null);
   const progressRef = useRef(null);
 
@@ -99,22 +100,30 @@ export default function KompasAI() {
 
   // schedule next appearance
   const scheduleNext = useCallback(() => {
-    const delay = randDelay(18, 50); // 18–50 seconds, random each time
+    const delay = randDelay(18, 50);
     setTimeout(() => {
-      setFactIdx(() => Math.floor(Math.random() * FACTS.length));
+      setFactIdx(() => Math.floor(Math.random() * facts.length));
       setAnimKey(k => k + 1);
       setVisible(true);
     }, delay);
+  }, [facts.length]);
+
+  // load facts from Telegram channel, fall back to FALLBACK_FACTS
+  useEffect(() => {
+    fetch('/api/facts')
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d?.facts?.length) setFacts(d.facts); })
+      .catch(() => {});
   }, []);
 
   // first appearance: random 3–7 seconds
   useEffect(() => {
     const t = setTimeout(() => {
-      setFactIdx(Math.floor(Math.random() * FACTS.length));
+      setFactIdx(Math.floor(Math.random() * facts.length));
       setVisible(true);
     }, randDelay(3, 7));
     return () => clearTimeout(t);
-  }, []);
+  }, [facts.length]);
 
   useEffect(() => {
     if (visible) startAutoClose();
@@ -127,16 +136,16 @@ export default function KompasAI() {
     scheduleNext();
   };
 
-  const changeFact = (dir) => {
+  const changeFact = useCallback((dir) => {
     stopAutoClose();
-    setFactIdx(i => (i + dir + FACTS.length) % FACTS.length);
+    setFactIdx(i => (i + dir + facts.length) % facts.length);
     setAnimKey(k => k + 1);
     startAutoClose();
-  };
+  }, [facts.length, stopAutoClose, startAutoClose]);
 
   if (!visible) return null;
 
-  const fact = FACTS[factIdx];
+  const fact = facts[factIdx] ?? facts[0];
 
   return (
     <>
@@ -258,7 +267,7 @@ export default function KompasAI() {
 
             {/* Dot indicators */}
             <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-              {FACTS.map((_, i) => (
+              {facts.map((_, i) => (
                 <div
                   key={i}
                   onClick={() => { stopAutoClose(); setFactIdx(i); setAnimKey(k => k + 1); startAutoClose(); }}
