@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Home from './pages/Home';
 
 const KartaLanding = lazy(() => import('./pages/KartaLanding'));
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
         </Routes>
       </Suspense>
+      <Analytics />
     </BrowserRouter>
   );
 }
