@@ -6,7 +6,7 @@ const TOKEN    = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_ID = process.env.TELEGRAM_ADMIN_ID;
 const SB_URL   = process.env.VITE_SUPABASE_URL;
 const SB_KEY   = process.env.VITE_SUPABASE_ANON_KEY;
-const SITE_URL = process.env.SITE_URL || 'https://kompasmigracji.pl';
+const SITE_URL = process.env.SITE_URL || 'https://kompasmigracji.com';
 
 const TG_API = `https://api.telegram.org/bot${TOKEN}`;
 
