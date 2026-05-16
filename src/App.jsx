@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { ThemeProvider } from './lib/ThemeContext';
+import { useCookieConsent } from './lib/useCookieConsent';
 import StarField from './components/StarField';
 import Home from './pages/Home';
 
@@ -12,24 +13,31 @@ const Privacy = lazy(() => import('./pages/Privacy'));
 const Admin = lazy(() => import('./pages/Admin'));
 const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
 
+function AppInner() {
+  const { analytics } = useCookieConsent();
+  return (
+    <BrowserRouter>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/karta" element={<KartaLanding />} />
+          <Route path="/regulamin" element={<Regulamin />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+        </Routes>
+      </Suspense>
+      {analytics && <Analytics />}
+      {analytics && <SpeedInsights />}
+    </BrowserRouter>
+  );
+}
+
 export default function App() {
   return (
     <ThemeProvider>
       <StarField />
-      <BrowserRouter>
-        <Suspense fallback={null}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/karta" element={<KartaLanding />} />
-            <Route path="/regulamin" element={<Regulamin />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-          </Routes>
-        </Suspense>
-        <Analytics />
-        <SpeedInsights />
-      </BrowserRouter>
+      <AppInner />
     </ThemeProvider>
   );
 }
