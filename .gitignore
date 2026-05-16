@@ -53,3 +53,6 @@ KompasRevolutionTimeAndCost.pdf
 Kompasmigracjicom_*.pdf
 iPhoenix.*
 DOC-*.PDF
+
+.vercel
+.env*.local
