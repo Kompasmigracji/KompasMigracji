@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
 
   try {
-    const r = await fetch('https://t.me/s/kompasmigracji', {
+    const r = await fetch('https://t.me/s/ukrainianinpolandpl', {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
         'Accept-Language': 'uk,pl;q=0.9,en;q=0.8',
