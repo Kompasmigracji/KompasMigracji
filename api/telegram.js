@@ -111,7 +111,7 @@ async function sendWelcome(chatId, firstName) {
   await tg('sendMessage', {
     chat_id: chatId,
     text:
-      `👋 Вітаю${firstName ? `, *${firstName}*` : ''}\\! Я бот сервісу *Kompas Migracji*\\.
+      `👋 Вітаю${firstName ? `, *${esc(firstName)}*` : ''}\\! Я бот сервісу *Kompas Migracji*\\.
 
 За 2 хвилини розберемось у твоїй ситуації — і Олександр зв'яжеться з конкретною пропозицією, як легально вирішити твоє питання в ЄС\\.
 
@@ -184,7 +184,7 @@ async function sendConfirmation(chatId, d) {
   await tg('sendMessage', {
     chat_id: chatId,
     text:
-      `✅ Дякую${d.first_name ? `, *${d.first_name}*` : ''}\\! Ось як я тебе зрозумів:\n\n` +
+      `✅ Дякую${d.first_name ? `, *${esc(d.first_name)}*` : ''}\\! Ось як я тебе зрозумів:\n\n` +
       `🌍 *Країна:* ${esc(d.country)}\n` +
       `📋 *Послуга:* ${esc(d.service)}\n` +
       `⏱ *Терміновість:* ${esc(d.urgency)}\n` +
@@ -272,11 +272,17 @@ async function dispatchStep(chatId, step, data) {
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 export default async function handler(req, res) {
-  res.status(200).send('OK'); // always ack Telegram first
+  if (req.method !== 'POST') return res.status(200).send('OK');
 
-  if (req.method !== 'POST') return;
+  try {
+    await handleUpdate(req.body);
+  } catch (e) {
+    console.error('Bot error:', e);
+  }
+  return res.status(200).send('OK');
+}
 
-  const update = req.body;
+async function handleUpdate(update) {
   const msg = update.message;
   const cb  = update.callback_query;
 
