@@ -22,7 +22,8 @@
       "WebSearch",
       "WebFetch(domain:www.gowork.pl)",
       "Bash(node -e \"console.log\\(atob\\('wqkgMjAyNiBPbGVrc2FuZHIgS2hyeXN0b2R1bCDigJQgaVBob2VuaXhHU03CuiA8aXBob2VuaXhnc21AZ21haWwuY29tPiAuIEFsbCByaWdodHMgcmVzZXJ2ZWQu'\\)\\)\")",
-      "Bash(dir \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\api\\\\\")"
+      "Bash(dir \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\api\\\\\")",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(JSON.stringify\\(Object.keys\\(p.dependencies || {}\\)\\)\\)\")"
     ]
   }
 }

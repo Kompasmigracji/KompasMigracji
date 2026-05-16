@@ -2,6 +2,8 @@
 // Env vars required: TELEGRAM_BOT_TOKEN, TELEGRAM_ADMIN_ID,
 //                   VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
 
+import { createClient } from '@supabase/supabase-js';
+
 const TOKEN    = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_ID = process.env.TELEGRAM_ADMIN_ID;
 const SB_URL   = process.env.VITE_SUPABASE_URL;
@@ -9,6 +11,7 @@ const SB_KEY   = process.env.VITE_SUPABASE_ANON_KEY;
 const SITE_URL = process.env.SITE_URL || 'https://kompasmigracji.com';
 
 const TG_API = `https://api.telegram.org/bot${TOKEN}`;
+const sb = SB_URL && SB_KEY ? createClient(SB_URL, SB_KEY) : null;
 
 // ─── Telegram ────────────────────────────────────────────────────────────────
 
@@ -29,40 +32,29 @@ function btn(text, data) {
   return { text, callback_data: data };
 }
 
-// ─── Supabase REST ───────────────────────────────────────────────────────────
+// ─── Supabase ────────────────────────────────────────────────────────────────
 
-const SB = {
-  apikey: SB_KEY,
-  Authorization: `Bearer ${SB_KEY}`,
-  'Content-Type': 'application/json',
-};
-
-async function dbGet(table, filter) {
-  const r = await fetch(`${SB_URL}/rest/v1/${table}?${filter}&select=*&limit=1`, { headers: SB });
-  const d = await r.json();
-  return Array.isArray(d) ? d[0] || null : null;
+async function dbGet(table, column, value) {
+  if (!sb) return null;
+  const { data } = await sb.from(table).select('*').eq(column, value).limit(1).single();
+  return data || null;
 }
 
 async function dbUpsert(table, row) {
-  await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: { ...SB, Prefer: 'resolution=merge-duplicates' },
-    body: JSON.stringify(row),
-  });
+  if (!sb) return;
+  await sb.from(table).upsert(row, { onConflict: 'chat_id' });
 }
 
 async function dbInsert(table, row) {
-  await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: SB,
-    body: JSON.stringify(row),
-  });
+  if (!sb) return;
+  const { error } = await sb.from(table).insert(row);
+  if (error) console.error(`dbInsert ${table} error:`, error);
 }
 
 // ─── Session ─────────────────────────────────────────────────────────────────
 
 async function getSession(chatId) {
-  const s = await dbGet('bot_sessions', `chat_id=eq.${chatId}`);
+  const s = await dbGet('bot_sessions', 'chat_id', chatId);
   return s || { step: 0, data: {} };
 }
 
