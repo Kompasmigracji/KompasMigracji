@@ -27,5 +27,8 @@ create table if not exists leads (
 alter table bot_sessions enable row level security;
 alter table leads         enable row level security;
 
+drop policy if exists "service insert sessions" on bot_sessions;
+drop policy if exists "service insert leads"    on leads;
+
 create policy "service insert sessions" on bot_sessions for all using (true) with check (true);
 create policy "service insert leads"    on leads         for all using (true) with check (true);
