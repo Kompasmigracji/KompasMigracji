@@ -7,7 +7,13 @@ export default function Privacy() {
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold mb-2">1. Administrator danych</h2>
-        <p className="text-slate-300">Administratorem danych osobowych jest Kompas Migracji. Kontakt: info@kompasmigracji.com</p>
+        <p className="text-slate-300">
+          Administratorem danych osobowych jest:<br />
+          <strong className="text-white">DOMUS V Sp. z o.o.</strong><br />
+          ul. Dzieci Warszawy 27, 02-495 Warszawa<br />
+          NIP: 5223350030 · KRS: 0001198474<br />
+          Kontakt: info@kompasmigracji.com
+        </p>
       </section>
 
       <section className="mb-6">
@@ -37,7 +43,12 @@ export default function Privacy() {
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold mb-2">7. Kontakt</h2>
-        <p className="text-slate-300">W sprawach dotyczących ochrony danych osobowych prosimy o kontakt: info@kompasmigracji.com</p>
+        <p className="text-slate-300">
+          W sprawach dotyczących ochrony danych osobowych prosimy o kontakt:<br />
+          <strong className="text-white">DOMUS V Sp. z o.o.</strong><br />
+          ul. Dzieci Warszawy 27, 02-495 Warszawa<br />
+          E-mail: info@kompasmigracji.com
+        </p>
       </section>
     </div>
   );
