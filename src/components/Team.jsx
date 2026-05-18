@@ -3,8 +3,8 @@ import React from 'react';
 const PHOTO = 'https://yt3.ggpht.com/lu2REm3NMXphDWjWEz1mM9Ja8fUjdLNxMLr6pNHw5nPIcoK_vTFi9a9IAc8o173f5lGhhKlwl8LO=s1024-rw-nd-v1';
 
 const STATS = [
-  { val: '8+',   label: 'років досвіду' },
-  { val: '500+', label: 'справ закрито' },
+  { val: '10+',   label: 'років досвіду' },
+  { val: '1200+', label: 'справ закрито' },
   { val: '24/7', label: 'на звʼязку' },
 ];
 
@@ -43,7 +43,7 @@ export default function Team() {
                   Олександр Василишин
                 </h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                  8 років у міграційному праві Польщі. Особисто веде кожну консультацію та завжди бере трубку.
+                  10 років у міграційному праві Польщі. Особисто веде кожну консультацію та завжди бере трубку.
                   Засновник Kompas Migracji — єдиного вікна для вирішення всіх бюрократичних задач
                   українців в ЄС.
                 </p>
