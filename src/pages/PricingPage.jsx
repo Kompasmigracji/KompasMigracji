@@ -24,11 +24,11 @@ const CATEGORIES = [
       { name: 'Громадянство Польщі (через Воєводу)',                  price: '2 400',    amountGrosze: 240000 },
       { name: 'Громадянство Польщі (Президент)',                      price: '2 900',    amountGrosze: 290000 },
       { name: 'Резидент + Громадянство',                              price: '4 700',    amountGrosze: 470000 },
-      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '550',      amountGrosze: 55000 },
+      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '500',      amountGrosze: 50000 },
       { name: 'Прискорення карти побиту (апеляція / складна справа)', price: '1 050',    amountGrosze: 105000 },
       { name: 'Прискорення отримання карти Резидента ЄС',            price: '1 050',    amountGrosze: 105000 },
       { name: 'Консультація телефонічна',                             price: '180',      amountGrosze: 18000 },
-      { name: 'Консультація + узасаднєніє',                          price: '550',      amountGrosze: 55000 },
+      { name: 'Консультація + узасаднєніє',                          price: '500',      amountGrosze: 50000 },
     ],
   },
   {
@@ -59,7 +59,7 @@ const CATEGORIES = [
     icon: '📋',
     rows: [
       { name: 'Відновлення 800+',                                     price: '950',      amountGrosze: 95000 },
-      { name: 'Розробка договору',                                    price: '550',      amountGrosze: 55000 },
+      { name: 'Розробка договору',                                    price: '500',      amountGrosze: 50000 },
       { name: 'Вичитка договору (пошук «підводних каменів»)',         price: '180',      amountGrosze: 18000 },
       { name: 'Лист-запит до державної установи',                     price: '180',      amountGrosze: 18000 },
       { name: 'Підписання / розірвання договорів з орендодавцем',     price: '180',      amountGrosze: 18000 },

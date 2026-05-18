@@ -58,7 +58,7 @@ export default function PromoBanner() {
       const res  = await fetch('/api/payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: 55000, description: 'Пакет Прискорення — Карта побуту', email, lang: 'ua' }),
+        body: JSON.stringify({ amount: 50000, description: 'Пакет Прискорення — Карта побуту', email, lang: 'ua' }),
       });
       const data = await res.json();
       if (data.redirectUrl) {
@@ -135,7 +135,7 @@ export default function PromoBanner() {
               </h2>
 
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, margin: '0 0 20px' }}>
-                <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>550</span>
+                <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>500</span>
                 <span style={{ fontSize: 28, fontWeight: 900, color: ORANGE, letterSpacing: '-0.02em' }}>ЗЛ</span>
                 <span style={{ fontSize: 13, color: '#64748b', marginLeft: 4 }}>= 1 юридична година</span>
               </div>
@@ -161,7 +161,7 @@ export default function PromoBanner() {
                 onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
                 onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
               >
-                Купити зараз — 550 ЗЛ
+                Купити зараз — 500 ЗЛ
               </button>
 
               <div style={{ textAlign: 'center', marginBottom: 16 }}>
@@ -211,7 +211,7 @@ export default function PromoBanner() {
                 Пакет Прискорення
               </p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, margin: '0 0 24px' }}>
-                <span style={{ fontSize: 38, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>550</span>
+                <span style={{ fontSize: 38, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>500</span>
                 <span style={{ fontSize: 20, fontWeight: 900, color: ORANGE }}>PLN</span>
               </div>
 
