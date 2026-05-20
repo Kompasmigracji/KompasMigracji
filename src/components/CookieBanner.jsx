@@ -28,36 +28,23 @@ function Toggle({ on, onChange }) {
   );
 }
 
-export default function CookieBanner() {
-  const { decided, analytics, acceptAll, rejectAll, saveCustom } = useCookieConsent();
-  const { dark } = useTheme();
-  const [open, setOpen]           = useState(false);
-  const [analyticsOn, setAnalyticsOn] = useState(true);
-
-  if (decided) return null;
-
-  const bg     = dark ? 'rgba(10, 18, 36, 0.97)' : '#ffffff';
-  const border = dark ? 'rgba(255,255,255,0.12)' : '#e5e7eb';
-  const text   = dark ? '#dde4f0' : '#1a1a2e';
-  const muted  = dark ? '#7a8ba8' : '#6b7280';
-  const card   = dark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
-
-  return (
-    <>
-      <style>{`
-        @keyframes ck-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .ck-banner { animation: ck-in 0.4s cubic-bezier(0.22,1,0.36,1) both; }
-      `}</style>
-
-      <div
-        className="ck-banner"
-        style={{
-          position: 'fixed',
-          bottom: 16, left: 16, right: 16,
-          maxWidth: 480,
+// CookieBanner is temporarily disabled
+// export default function CookieBanner() {
+//   const { decided, analytics, acceptAll, rejectAll, saveCustom } = useCookieConsent();
+//   const { dark } = useTheme();
+//   const [open, setOpen]           = useState(false);
+//   const [analyticsOn, setAnalyticsOn] = useState(true);
+//
+//   if (decided) return null;
+//
+//   const bg     = dark ? 'rgba(10, 18, 36, 0.97)' : '#ffffff';
+//   const border = dark ? 'rgba(255,255,255,0.12)' : '#e5e7eb';
+//   const text   = dark ? '#dde4f0' : '#1a1a2e';
+//   const muted  = dark ? '#7a8ba8' : '#6b7280';
+//   const card   = dark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
+//
+//   return null;
+// }
           margin: '0 auto',
           zIndex: 9995,
           background: bg,
