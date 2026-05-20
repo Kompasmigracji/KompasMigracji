@@ -135,7 +135,7 @@ export default function PromoBanner() {
               </h2>
 
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, margin: '0 0 20px' }}>
-                <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>500</span>
+                <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
                 <span style={{ fontSize: 28, fontWeight: 900, color: ORANGE, letterSpacing: '-0.02em' }}>ЗЛ</span>
                 <span style={{ fontSize: 13, color: '#64748b', marginLeft: 4 }}>= 1 юридична година</span>
               </div>
