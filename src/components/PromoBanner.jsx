@@ -25,7 +25,6 @@ function Stars() {
 }
 
 export default function PromoBanner() {
-  return null; // временно отключён
   const [visible, setVisible]     = useState(false);
   const [step, setStep]           = useState('promo'); // 'promo' | 'pay'
   const [email, setEmail]         = useState('');

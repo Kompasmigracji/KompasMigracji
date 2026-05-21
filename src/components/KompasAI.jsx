@@ -72,6 +72,7 @@ function NavBtn({ dir, onClick }) {
 }
 
 export default function KompasAI() {
+  return null; // временно отключён
   const [facts,    setFacts]    = useState(FALLBACK_FACTS);
   const [visible,  setVisible]  = useState(false);
   const [factIdx,  setFactIdx]  = useState(0);
