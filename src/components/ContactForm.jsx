@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../lib/supabase';
-
 export default function ContactForm({ preselectedPlan }) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
@@ -18,6 +16,7 @@ export default function ContactForm({ preselectedPlan }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { supabase } = await import('../lib/supabase');
     if (supabase) await supabase.from('leads').insert({ name, phone, service, message, source: 'main' });
     const text =
       `Kompas Migracji — Новий запит\n` +

@@ -4,8 +4,6 @@ import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CookieBanner from '../components/CookieBanner';
-import { supabase } from '../lib/supabase';
-
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
 
@@ -194,6 +192,7 @@ function PriceRow({ row, onBuy, isEven }) {
   const isHourly   = row.amountGrosze === null && !isFree;
 
   const handleWhatsApp = async () => {
+    const { supabase } = await import('../lib/supabase');
     if (supabase) await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }).catch(() => {});
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(`Цікавить послуга: ${row.name}`)}`, '_blank');
   };

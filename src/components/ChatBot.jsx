@@ -1,6 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-
 const GREETING = 'Привіт! Я AI-асистент Kompas Migracji 👋\n\nДопоможу з питаннями про Карту побуту, легалізацію та наші послуги. Запитуйте!';
 const LEAD_RE = /\[\[LEAD:(\{[^}]*\})\]\]/;
 
@@ -108,6 +106,7 @@ export default function ChatBot() {
       if (match) {
         try {
           const lead = JSON.parse(match[1]);
+          const { supabase } = await import('../lib/supabase');
           if (supabase && lead.name && lead.phone) {
             await supabase.from('leads').insert({ ...lead, source: 'chatbot' });
           }

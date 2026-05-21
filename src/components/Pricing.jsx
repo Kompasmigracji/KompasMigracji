@@ -1,11 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../lib/supabase';
-
 export default function Pricing() {
   const { t } = useTranslation();
 
   const handleCta = async (label) => {
+    const { supabase } = await import('../lib/supabase');
     if (supabase) await supabase.from('leads').insert({ service: label, source: 'pricing' });
     window.open('https://wa.me/48729271848', '_blank');
   };

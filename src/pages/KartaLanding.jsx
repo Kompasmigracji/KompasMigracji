@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
 import ChatBot from '../components/ChatBot';
 
 const ORANGE = '#f97316';
@@ -270,6 +269,7 @@ export default function KartaLanding() {
       ru: 'Хочу заказать Пакет Ускорения — Карта побыту',
       en: 'I want to order the Acceleration Package — Residence Card',
     };
+    const { supabase } = await import('../lib/supabase');
     if (supabase) await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang });
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
