@@ -51,7 +51,7 @@ const styles = {
   status: { color: '#94a3b8', fontSize: 11, display: 'flex', alignItems: 'center', gap: 5 },
   statusDot: { width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' },
   closeButton: { background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#64748b' },
-  messagesContainer: { flex: 1, overflowY: 'auto' as const, padding: '16px 14px 8px', scrollbarWidth: 'thin', scrollbarColor: '#e2e8f0 transparent' },
+  messagesContainer: { flex: 1, overflowY: 'auto' as const, padding: '16px 14px 8px', scrollbarWidth: 'thin' as const, scrollbarColor: '#e2e8f0 transparent' as const },
   bubble: (isUser: boolean) => ({ 
     display: 'flex', 
     justifyContent: isUser ? 'flex-end' : 'flex-start', 
