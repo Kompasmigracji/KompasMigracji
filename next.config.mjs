@@ -6,7 +6,8 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Routes are file-system based under app/. Old Vite api/* migrate to app/api/.
+  // Only .tsx/.ts files are Next.js pages — excludes legacy src/pages/*.jsx from Pages Router detection
+  pageExtensions: ['tsx', 'ts'],
 };
 
 export default withNextIntl(nextConfig);
