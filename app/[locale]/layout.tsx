@@ -6,7 +6,7 @@ import { Syne, Cormorant_Garamond } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { locales } from '@/i18n';
-import './../globals.css';
+import '../globals.css';
 
 const syne = Syne({
   subsets: ['latin', 'latin-ext'],
