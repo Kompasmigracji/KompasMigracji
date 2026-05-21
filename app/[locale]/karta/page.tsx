@@ -251,10 +251,15 @@ export default function KartaPage() {
     setPayLoading(true);
     setPayError('');
     try {
+      if (!payStep) {
+        setPayError(pt.errNet);
+        setPayLoading(false);
+        return;
+      }
       const res = await fetch('/api/payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: payStep!.amount, description: payStep!.desc, email: payEmail, lang }),
+        body: JSON.stringify({ amount: payStep.amount, description: payStep.desc, email: payEmail, lang }),
       });
       const data = await res.json();
       if (data.redirectUrl) {
