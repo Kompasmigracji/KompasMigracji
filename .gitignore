@@ -5,7 +5,7 @@ node_modules
 
 # Build outputs
 dist
-dist-ssr
+dist-*
 build
 *.local
 
