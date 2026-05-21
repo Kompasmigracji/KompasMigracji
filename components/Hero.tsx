@@ -51,9 +51,7 @@ export default function Hero() {
             WhatsApp
           </a>
           <a
-            href="https://invite.viber.com/?g2=AQBlah"
-            target="_blank"
-            rel="noreferrer"
+            href="viber://chat?number=48729271848"
             className="bg-white border-2 border-purple-400 text-purple-700 font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-purple-600 hover:text-purple-900 transition-colors"
           >
             Viber

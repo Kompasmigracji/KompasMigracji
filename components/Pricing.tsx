@@ -6,7 +6,7 @@ export default function Pricing() {
   const t = useTranslations();
 
   const handleCta = async (label: string) => {
-    if (supabase) await supabase.from('leads').insert({ service: label, source: 'pricing' });
+    if (supabase) { try { await supabase.from('leads').insert({ service: label, source: 'pricing' }); } catch {} }
     window.open('https://wa.me/48729271848', '_blank');
   };
 

@@ -206,9 +206,9 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
-          <Link href="/blog" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
-            Читати →
-          </Link>
+          <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
+            WhatsApp →
+          </a>
         ) : isFixed ? (
           <button onClick={() => onBuy(row)}
             style={{ padding: '6px 16px', borderRadius: 8, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit', transition: 'opacity 0.15s' }}
