@@ -29,7 +29,7 @@ function Toggle({ on, onChange }) {
 }
 
 export default function CookieBanner() {
-  const { decided, analytics, acceptAll, rejectAll, saveCustom } = useCookieConsent();
+  const { decided, acceptAll, rejectAll, saveCustom } = useCookieConsent();
   const { dark } = useTheme();
   const [open, setOpen] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);

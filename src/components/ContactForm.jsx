@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 
 export default function ContactForm({ preselectedPlan }) {
-  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [service, setService] = useState(preselectedPlan || '');
@@ -39,7 +37,7 @@ export default function ContactForm({ preselectedPlan }) {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
         <div>
-          <label className={labelCls}>Ім'я</label>
+          <label className={labelCls}>Ім&apos;я</label>
           <input
             required
             value={name}

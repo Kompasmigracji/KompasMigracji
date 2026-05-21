@@ -8,13 +8,9 @@ import HowItWorks from '../components/HowItWorks';
 import FAQ from '../components/FAQ';
 import ContactForm from '../components/ContactForm';
 import Footer from '../components/Footer';
-import CookieBanner from '../components/CookieBanner';
-import ChatBot from '../components/ChatBot';
 import Blog from '../components/Blog';
 import Team from '../components/Team';
 import Reviews from '../components/Reviews';
-import PromoBanner from '../components/PromoBanner';
-import KompasAI from '../components/KompasAI';
 
 export default function Home() {
   const { t } = useTranslation();

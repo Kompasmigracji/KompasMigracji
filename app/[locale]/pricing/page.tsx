@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { supabase } from '../lib/supabase';
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import { supabase } from '@/lib/supabase';
 
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
 
-// null amountGrosze = WhatsApp inquiry
 const CATEGORIES = [
   {
     id: 'legalization',
@@ -93,13 +94,15 @@ const CATEGORIES = [
   },
 ];
 
-function PayModal({ service, onClose }) {
+type ServiceRow = { name: string; price: string; amountGrosze: number | null };
+
+function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
   const [email, setEmail]   = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState('');
 
-  const amountZl = (service.amountGrosze / 100).toLocaleString('uk-UA');
+  const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString('uk-UA');
 
   const pay = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
@@ -116,7 +119,7 @@ function PayModal({ service, onClose }) {
           amount: service.amountGrosze,
           description: `${service.name} — Kompas Migracji`,
           email,
-          lang: 'ua',
+          lang: 'uk',
         }),
       });
       const data = await res.json();
@@ -170,7 +173,7 @@ function PayModal({ service, onClose }) {
             />
             <span style={{ fontSize:12, color:'#64748b', lineHeight:1.6 }}>
               Я ознайомився та погоджуюсь з{' '}
-              <Link to="/regulamin" onClick={e => e.stopPropagation()} style={{ color:ORANGE, textDecoration:'none', fontWeight:600 }}>Regulamin</Link>
+              <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:ORANGE, textDecoration:'none', fontWeight:600 }}>Regulamin</Link>
             </span>
           </label>
 
@@ -186,12 +189,12 @@ function PayModal({ service, onClose }) {
   );
 }
 
-function PriceRow({ row, onBuy, isEven }) {
-  const isFixed = row.amountGrosze !== null;
-  const isFree = row.price === 'Безкоштовно';
+function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: ServiceRow) => void; isEven: boolean }) {
+  const isFixed  = row.amountGrosze !== null;
+  const isFree   = row.price === 'Безкоштовно';
 
   const handleWhatsApp = async () => {
-    if (supabase) await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }).catch(() => {});
+    if (supabase) { try { await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(`Цікавить послуга: ${row.name}`)}`, '_blank');
   };
 
@@ -203,9 +206,9 @@ function PriceRow({ row, onBuy, isEven }) {
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
-          <Link to="/blog" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
-            Читати →
-          </Link>
+          <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
+            WhatsApp →
+          </a>
         ) : isFixed ? (
           <button onClick={() => onBuy(row)}
             style={{ padding: '6px 16px', borderRadius: 8, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit', transition: 'opacity 0.15s' }}
@@ -229,7 +232,7 @@ function PriceRow({ row, onBuy, isEven }) {
 }
 
 export default function PricingPage() {
-  const [payService, setPayService] = useState(null);
+  const [payService, setPayService] = useState<ServiceRow | null>(null);
 
   return (
     <div className="min-h-screen bg-white text-navy">
@@ -248,7 +251,6 @@ export default function PricingPage() {
             Юридична година — базова одиниця взаємодії зі спеціалістом. Охоплює консультації, аналіз ситуації,
             підготовку документів, формування стратегії та підготовку до подачі чи співбесіди.
           </p>
-          {/* Base unit card */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: 'rgba(249,115,22,0.12)', border: '1.5px solid rgba(249,115,22,0.35)', borderRadius: 16, padding: '18px 28px', fontFamily: "'Syne', sans-serif" }}>
             <div style={{ textAlign: 'left' }}>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 4px' }}>Юридична година</p>
@@ -259,7 +261,7 @@ export default function PricingPage() {
               </div>
             </div>
             <button
-              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 45000 })}
+              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 45000, price: '450' })}
               style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -309,7 +311,6 @@ export default function PricingPage() {
             </div>
           ))}
 
-          {/* Note */}
           <div style={{ background: '#fff7ed', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 12, padding: '16px 20px', fontSize: 13, color: '#92400e', lineHeight: 1.7 }}>
             <strong>Важливо:</strong> Ціни позначені «Індивідуально» розраховуються партнерською фірмою у кожному випадку залежно від обставин. Ми не продаємо черги в консульство та не торгуємо запрошеннями.
           </div>
@@ -346,7 +347,6 @@ export default function PricingPage() {
       </main>
 
       <Footer />
-      {/* <CookieBanner /> */}
 
       {payService && <PayModal service={payService} onClose={() => setPayService(null)} />}
     </div>

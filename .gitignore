@@ -56,3 +56,9 @@ DOC-*.PDF
 
 .vercel
 .env*.local
+
+# Next.js
+.next/
+out/
+.turbo/
+next-env.d.ts
