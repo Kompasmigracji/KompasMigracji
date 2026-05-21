@@ -194,7 +194,7 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
   const isFree   = row.price === 'Безкоштовно';
 
   const handleWhatsApp = async () => {
-    if (supabase) await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }).catch(() => {});
+    if (supabase) { try { await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(`Цікавить послуга: ${row.name}`)}`, '_blank');
   };
 
