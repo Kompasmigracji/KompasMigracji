@@ -8,7 +8,7 @@ try {
 	// In Vite/browser builds, import.meta.env will be available
 	url = import.meta.env.VITE_SUPABASE_URL;
 	key = import.meta.env.VITE_SUPABASE_ANON_KEY;
-} catch (e) {
+} catch {
 	// ignore — import.meta may be unavailable in some runtimes
 }
 
