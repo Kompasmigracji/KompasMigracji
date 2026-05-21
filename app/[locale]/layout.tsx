@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { Syne, Cormorant_Garamond } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { locales } from '@/src/i18n';
+import locales from '@/src/i18n';
 import '../globals.css';
 
 const syne = Syne({
