@@ -1,13 +1,14 @@
 // Kompas Migracji — Telegram Lead Bot
 // Env vars required: TELEGRAM_BOT_TOKEN, TELEGRAM_ADMIN_ID,
-//                   VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+//                   NEXT_PUBLIC_SUPABASE_URL (or VITE_SUPABASE_URL), SUPABASE_SERVICE_KEY (preferred) or VITE_SUPABASE_ANON_KEY
 
 import { createClient } from '@supabase/supabase-js';
 
 const TOKEN    = process.env.TELEGRAM_BOT_TOKEN;
 const ADMIN_ID = process.env.TELEGRAM_ADMIN_ID;
-const SB_URL   = process.env.VITE_SUPABASE_URL;
-const SB_KEY   = process.env.VITE_SUPABASE_ANON_KEY;
+const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+// Prefer a server/service key for server-side operations; fall back to anon key if not present
+const SB_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 const SITE_URL = process.env.SITE_URL || 'https://kompasmigracji.com';
 
 const TG_API = `https://api.telegram.org/bot${TOKEN}`;
@@ -36,19 +37,46 @@ function btn(text, data) {
 
 async function dbGet(table, column, value) {
   if (!sb) return null;
-  const { data } = await sb.from(table).select('*').eq(column, value).limit(1).single();
-  return data || null;
+  try {
+    const { data, error } = await sb.from(table).select('*').eq(column, value).limit(1).single();
+    if (error) {
+      console.error(`dbGet ${table} error:`, error);
+      if (error.details) console.error('Supabase error details:', error.details);
+      return null;
+    }
+    return data || null;
+  } catch (e) {
+    console.error(`dbGet ${table} exception:`, e);
+    return null;
+  }
 }
 
 async function dbUpsert(table, row) {
   if (!sb) return;
-  await sb.from(table).upsert(row, { onConflict: 'chat_id' });
+  try {
+    const { data, error } = await sb.from(table).upsert(row, { onConflict: 'chat_id' });
+    if (error) {
+      console.error(`dbUpsert ${table} error:`, error);
+      if (error.details) console.error('Supabase error details:', error.details);
+    }
+    return data;
+  } catch (e) {
+    console.error(`dbUpsert ${table} exception:`, e);
+  }
 }
 
 async function dbInsert(table, row) {
   if (!sb) return;
-  const { error } = await sb.from(table).insert(row);
-  if (error) console.error(`dbInsert ${table} error:`, error);
+  try {
+    const { data, error } = await sb.from(table).insert(row);
+    if (error) {
+      console.error(`dbInsert ${table} error:`, error);
+      if (error.details) console.error('Supabase error details:', error.details);
+    }
+    return data;
+  } catch (e) {
+    console.error(`dbInsert ${table} exception:`, e);
+  }
 }
 
 // ─── Session ─────────────────────────────────────────────────────────────────
