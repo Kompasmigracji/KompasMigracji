@@ -31,7 +31,7 @@ function Toggle({ on, onChange }) {
 export default function CookieBanner() {
   const { decided, analytics, acceptAll, rejectAll, saveCustom } = useCookieConsent();
   const { dark } = useTheme();
-  const [open, setOpen]           = useState(false);
+  const [open, setOpen] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);
 
   if (decided) return null;
@@ -43,34 +43,26 @@ export default function CookieBanner() {
   const card   = dark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
 
   return (
-    <>
-      <style>{`
-        @keyframes ck-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .ck-banner { animation: ck-in 0.4s cubic-bezier(0.22,1,0.36,1) both; }
-      `}</style>
-
-      <div
-        className="ck-banner"
-        style={{
-          position: 'fixed',
-          bottom: 16, left: 16, right: 16,
-          maxWidth: 480,
-          margin: '0 auto',
-          zIndex: 9995,
-          background: bg,
-          border: `1px solid ${border}`,
-          borderRadius: 16,
-          padding: '20px 20px 18px',
-          boxShadow: dark
-            ? '0 8px 40px rgba(0,0,0,0.6)'
-            : '0 8px 32px rgba(0,0,0,0.12)',
-          fontFamily: "'Syne', sans-serif",
-          backdropFilter: dark ? 'blur(12px)' : 'none',
-        }}
-      >
+    <div style={{
+      position: 'fixed', bottom: 16, left: 0, right: 0,
+      display: 'flex', justifyContent: 'center',
+      padding: '0 16px', zIndex: 9995,
+      pointerEvents: 'none',
+    }}>
+      <div style={{
+        maxWidth: 480, width: '100%',
+        margin: '0 auto',
+        background: bg,
+        border: `1px solid ${border}`,
+        borderRadius: 16,
+        padding: '20px 20px 18px',
+        boxShadow: dark
+          ? '0 8px 40px rgba(0,0,0,0.6)'
+          : '0 8px 32px rgba(0,0,0,0.12)',
+        fontFamily: "'Syne', sans-serif",
+        backdropFilter: dark ? 'blur(12px)' : 'none',
+        pointerEvents: 'all',
+      }}>
         {/* Header */}
         <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
           <span style={{ fontSize: 20, lineHeight: 1 }}>🍪</span>
@@ -90,36 +82,26 @@ export default function CookieBanner() {
         {/* Expandable settings */}
         {open && (
           <div style={{ margin: '12px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {/* Necessary */}
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: card, borderRadius: 10, padding: '10px 14px',
               border: `1px solid ${border}`,
             }}>
               <div>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>
-                  Необхідні
-                </p>
-                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>
-                  Мова, тема, сесія — завжди активні
-                </p>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>Необхідні</p>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>Мова, тема, сесія — завжди активні</p>
               </div>
               <Toggle on={true} onChange={null} />
             </div>
 
-            {/* Analytics */}
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               background: card, borderRadius: 10, padding: '10px 14px',
               border: `1px solid ${border}`,
             }}>
               <div>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>
-                  Аналітичні
-                </p>
-                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>
-                  Vercel Analytics — статистика відвідувань
-                </p>
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>Аналітичні</p>
+                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>Vercel Analytics — статистика відвідувань</p>
               </div>
               <Toggle on={analyticsOn} onChange={setAnalyticsOn} />
             </div>
@@ -127,64 +109,51 @@ export default function CookieBanner() {
         )}
 
         {/* Buttons */}
-        <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
           <button
             onClick={acceptAll}
             style={{
-              flex: 1, minWidth: 120, padding: '9px 12px', borderRadius: 9, border: 'none',
-              background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 13,
-              fontFamily: 'inherit', cursor: 'pointer', transition: 'opacity 0.15s',
+              flex: 1, minWidth: 120, padding: '10px 16px', borderRadius: 10,
+              border: 'none', background: ORANGE, color: '#fff',
+              fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
             }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
           >
             Прийняти всі
           </button>
-
+          <button
+            onClick={() => setOpen(o => !o)}
+            style={{
+              padding: '10px 14px', borderRadius: 10,
+              border: `1px solid ${border}`, background: 'transparent',
+              color: muted, fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
+            }}
+          >
+            {open ? 'Сховати' : 'Налаштувати'}
+          </button>
+          {open && (
+            <button
+              onClick={() => saveCustom({ analytics: analyticsOn })}
+              style={{
+                padding: '10px 14px', borderRadius: 10,
+                border: `1px solid ${border}`, background: 'transparent',
+                color: text, fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit',
+              }}
+            >
+              Зберегти
+            </button>
+          )}
           <button
             onClick={rejectAll}
             style={{
-              flex: 1, minWidth: 100, padding: '9px 12px', borderRadius: 9,
-              border: `1.5px solid ${border}`,
-              background: 'transparent', color: muted, fontWeight: 600, fontSize: 13,
-              fontFamily: 'inherit', cursor: 'pointer', transition: 'color 0.15s, border-color 0.15s',
+              padding: '10px 14px', borderRadius: 10,
+              border: 'none', background: 'transparent',
+              color: muted, fontWeight: 500, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit',
             }}
-            onMouseEnter={e => { e.currentTarget.style.color = text; e.currentTarget.style.borderColor = text; }}
-            onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.borderColor = border; }}
           >
-            Лише необхідні
+            Відхилити
           </button>
-
-          {!open ? (
-            <button
-              onClick={() => setOpen(true)}
-              style={{
-                padding: '9px 12px', borderRadius: 9, border: `1.5px solid ${border}`,
-                background: 'transparent', color: muted, fontSize: 13,
-                fontFamily: 'inherit', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: 4,
-              }}
-            >
-              Налаштувати
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <polyline points="6 9 12 15 18 9"/>
-              </svg>
-            </button>
-          ) : (
-            <button
-              onClick={() => saveCustom(analyticsOn)}
-              style={{
-                padding: '9px 14px', borderRadius: 9, border: 'none',
-                background: dark ? 'rgba(255,255,255,0.1)' : '#f3f4f6',
-                color: text, fontWeight: 600, fontSize: 13,
-                fontFamily: 'inherit', cursor: 'pointer',
-              }}
-            >
-              Зберегти ↑
-            </button>
-          )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

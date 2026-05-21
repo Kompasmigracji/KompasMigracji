@@ -48,10 +48,10 @@ export default function Home() {
       </main>
 
       <Footer />
-      <CookieBanner />
+      {/* <CookieBanner />
       <ChatBot />
       <PromoBanner />
-      <KompasAI />
+      <KompasAI /> */}
     </div>
   );
 }

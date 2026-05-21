@@ -32,7 +32,7 @@ export default function Pricing() {
     },
     {
       label: t('pricing_hour_label'),
-      amount: '500',
+      amount: '450',
       currency: 'zł',
       desc: t('pricing_hour_desc'),
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],

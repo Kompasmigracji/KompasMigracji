@@ -24,11 +24,11 @@ const CATEGORIES = [
       { name: 'Громадянство Польщі (через Воєводу)',                  price: '2 400',    amountGrosze: 240000 },
       { name: 'Громадянство Польщі (Президент)',                      price: '2 900',    amountGrosze: 290000 },
       { name: 'Резидент + Громадянство',                              price: '4 700',    amountGrosze: 470000 },
-      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '500',      amountGrosze: 50000 },
+      { name: 'Прискорення карти побиту (вивід на комітет рішень)',   price: '450',      amountGrosze: 45000 },
       { name: 'Прискорення карти побиту (апеляція / складна справа)', price: '1 050',    amountGrosze: 105000 },
       { name: 'Прискорення отримання карти Резидента ЄС',            price: '1 050',    amountGrosze: 105000 },
       { name: 'Консультація телефонічна',                             price: '180',      amountGrosze: 18000 },
-      { name: 'Консультація + узасаднєніє',                          price: '500',      amountGrosze: 50000 },
+      { name: 'Консультація + узасаднєніє',                          price: '450',      amountGrosze: 45000 },
     ],
   },
   {
@@ -59,7 +59,7 @@ const CATEGORIES = [
     icon: '📋',
     rows: [
       { name: 'Відновлення 800+',                                     price: '950',      amountGrosze: 95000 },
-      { name: 'Розробка договору',                                    price: '500',      amountGrosze: 50000 },
+      { name: 'Розробка договору',                                    price: '450',      amountGrosze: 45000 },
       { name: 'Вичитка договору (пошук «підводних каменів»)',         price: '180',      amountGrosze: 18000 },
       { name: 'Лист-запит до державної установи',                     price: '180',      amountGrosze: 18000 },
       { name: 'Підписання / розірвання договорів з орендодавцем',     price: '180',      amountGrosze: 18000 },
@@ -256,13 +256,13 @@ export default function PricingPage() {
             <div style={{ textAlign: 'left' }}>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 4px' }}>Юридична година</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>500</span>
+                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
                 <span style={{ fontSize: 22, fontWeight: 800, color: ORANGE }}>zł</span>
-                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 115 €</span>
+                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 105 €</span>
               </div>
             </div>
             <button
-              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 50000 })}
+              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 45000 })}
               style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -349,7 +349,7 @@ export default function PricingPage() {
       </main>
 
       <Footer />
-      <CookieBanner />
+      {/* <CookieBanner /> */}
 
       {payService && <PayModal service={payService} onClose={() => setPayService(null)} />}
     </div>
