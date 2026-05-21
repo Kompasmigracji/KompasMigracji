@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 const ORANGE = '#f97316';
 const MINT   = '#86efac';
-const GRAY   = '#64748b';
 
 const FEATURES = [
   'Скарга на бездіяльність уженду',

@@ -127,7 +127,7 @@ export default function Reviews() {
               className="absolute top-6 left-8 font-serif text-7xl leading-none select-none"
               style={{ color: '#2563eb18' }}
             >
-              "
+              &ldquo;
             </div>
 
             <Stars n={r.rating} />

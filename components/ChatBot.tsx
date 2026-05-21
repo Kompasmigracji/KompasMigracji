@@ -142,7 +142,7 @@ export default function ChatBot() {
     setMessages(history);
     setLoading(true);
     try {
-      const apiMessages = history.filter(m => !m.greeting).map(({ id, ...rest }) => rest);
+      const apiMessages = history.filter(m => !m.greeting).map(({ ...rest }) => rest);
       const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: apiMessages }) });
       const data = await res.json();
       let content = data.content || 'Вибачте, сталася помилка. Спробуйте пізніше.';

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const REVIEWS = [
   { text: 'Отримала карту побуту після двох років очікування. Олександр чітко розʼяснив ситуацію і зібрав правильний пакет документів. Результат — за 6 тижнів.', rating: 5, author: 'Олена К.', date: 'лютий 2026' },
@@ -41,20 +41,20 @@ export default function Reviews() {
   const [paused, setPaused] = useState(false);
   const [animating, setAnimating] = useState(false);
 
-  const go = (idx: number) => {
+  const go = useCallback((idx: number) => {
     if (animating) return;
     setAnimating(true);
     setTimeout(() => {
       setCurrent((idx + REVIEWS.length) % REVIEWS.length);
       setAnimating(false);
     }, 200);
-  };
+  }, [animating]);
 
   useEffect(() => {
     if (paused) return;
     const id = setInterval(() => go(current + 1), 5000);
     return () => clearInterval(id);
-  }, [paused, current]);
+  }, [paused, current, go]);
 
   const r = REVIEWS[current];
 
@@ -75,7 +75,7 @@ export default function Reviews() {
             className="bg-soft rounded-3xl px-10 py-12 text-center relative"
             style={{ minHeight: 260, opacity: animating ? 0 : 1, transition: 'opacity 0.2s ease' }}
           >
-            <div className="absolute top-6 left-8 font-serif text-7xl leading-none select-none" style={{ color: '#2563eb18' }}>"</div>
+            <div className="absolute top-6 left-8 font-serif text-7xl leading-none select-none" style={{ color: '#2563eb18' }}>&ldquo;</div>
             <Stars n={r.rating} />
             <p className="text-gray-700 text-base leading-relaxed mt-5 mb-6 relative z-10">{r.text}</p>
             <div className="font-bold text-navy text-sm">{r.author}</div>

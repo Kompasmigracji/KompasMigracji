@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 
 export default function ContactForm({ preselectedPlan }) {
-  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [service, setService] = useState(preselectedPlan || '');

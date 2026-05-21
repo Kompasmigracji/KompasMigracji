@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import CookieBanner from '../components/CookieBanner';
 import { supabase } from '../lib/supabase';
 
 const ORANGE = '#f97316';
@@ -189,9 +187,8 @@ function PayModal({ service, onClose }) {
 }
 
 function PriceRow({ row, onBuy, isEven }) {
-  const isFixed    = row.amountGrosze !== null;
-  const isFree     = row.price === 'Безкоштовно';
-  const isHourly   = row.amountGrosze === null && !isFree;
+  const isFixed = row.amountGrosze !== null;
+  const isFree = row.price === 'Безкоштовно';
 
   const handleWhatsApp = async () => {
     if (supabase) await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }).catch(() => {});
