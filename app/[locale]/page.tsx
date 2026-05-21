@@ -1,25 +1,41 @@
-"use client";
-import { useTranslations } from 'next-intl';
+import Header from '@/components/Header';
+import Hero from '@/components/Hero';
+import Team from '@/components/Team';
+import Reviews from '@/components/Reviews';
+import ServicesGrid from '@/components/ServicesGrid';
+import HowItWorks from '@/components/HowItWorks';
+import Pricing from '@/components/Pricing';
+import FAQ from '@/components/FAQ';
+import Blog from '@/components/Blog';
+import ContactForm from '@/components/ContactForm';
+import Footer from '@/components/Footer';
+import CookieBanner from '@/components/CookieBanner';
+import ChatBot from '@/components/ChatBot';
+import KompasAI from '@/components/KompasAI';
+import PromoBanner from '@/components/PromoBanner';
+import StarField from '@/components/StarField';
 
 export default function HomePage() {
-  const t = useTranslations();
-
   return (
-    <main className="min-h-screen flex items-center justify-center px-6">
-      <div className="text-center max-w-3xl">
-        <span className="inline-block px-4 py-2 mb-6 text-sm rounded-full bg-gray-50 border border-gray-200">
-          {t('hero_badge')}
-        </span>
-        <h1 className="text-4xl md:text-6xl font-display font-bold gradient-text mb-6">
-          {t('hero_title')}
-        </h1>
-        <p className="text-lg md:text-xl text-gray-600 mb-10">
-          {t('hero_sub')}
-        </p>
-        <div className="text-xs text-gray-400 pt-12 border-t border-gray-100">
-          Next.js 14 · TypeScript · next-intl · Tailwind 4 — scaffold OK ✓
-        </div>
-      </div>
-    </main>
+    <>
+      <StarField />
+      <Header />
+      <main>
+        <Hero />
+        <Team />
+        <Reviews />
+        <ServicesGrid />
+        <HowItWorks />
+        <Pricing />
+        <FAQ />
+        <Blog />
+        <ContactForm />
+      </main>
+      <Footer />
+      <CookieBanner />
+      <ChatBot />
+      <KompasAI />
+      <PromoBanner />
+    </>
   );
 }
