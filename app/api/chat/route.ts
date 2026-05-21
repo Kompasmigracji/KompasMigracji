@@ -26,6 +26,29 @@ const SYSTEM_PROMPT = `Ти — AI-асистент компанії Kompas Migr
    Після цього рядку підтверди що заявку передано спеціалісту і він зв'яжеться найближчим часом
 6. Не включай [[LEAD:...]] без реального імені та телефону`;
 
+const requestLimitStore = new Map<string, { count: number; reset: number }>();
+
+function getClientId(req: NextRequest): string {
+  return req.headers.get('x-forwarded-for') || req.headers.get('user-agent') || 'unknown';
+}
+
+function checkRateLimit(clientId: string): boolean {
+  const now = Date.now();
+  const limit = requestLimitStore.get(clientId);
+  
+  if (!limit || now > limit.reset) {
+    requestLimitStore.set(clientId, { count: 1, reset: now + 60000 });
+    return true;
+  }
+  
+  if (limit.count >= 10) {
+    return false;
+  }
+  
+  limit.count++;
+  return true;
+}
+
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
@@ -38,6 +61,14 @@ export async function OPTIONS() {
 }
 
 export async function POST(req: NextRequest) {
+  const clientId = getClientId(req);
+  if (!checkRateLimit(clientId)) {
+    return NextResponse.json(
+      { error: 'Занадто багато запитів. Спробуйте через 1 хвилину.' },
+      { status: 429 }
+    );
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return NextResponse.json({ error: 'ANTHROPIC_API_KEY не налаштований' }, { status: 500 });
