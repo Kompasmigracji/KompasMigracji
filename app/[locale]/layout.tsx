@@ -46,7 +46,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${syne.variable} ${cormorant.variable}`}>
       <body>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             {children}
           </ThemeProvider>
