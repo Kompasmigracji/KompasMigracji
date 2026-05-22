@@ -115,7 +115,7 @@ const CATEGORIES = [
 type ServiceRow = { name: string; price: string; amountGrosze: number | null };
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
-  const [email, setEmail]   = useState('');
+  const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState('');
@@ -208,8 +208,8 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 }
 
 function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: ServiceRow) => void; isEven: boolean }) {
-  const isFixed  = row.amountGrosze !== null;
-  const isFree   = row.price === 'Безкоштовно';
+  const isFixed = row.amountGrosze !== null;
+  const isFree = row.price.toLowerCase().includes('безкоштовно');
 
   const handleWhatsApp = async () => {
     if (supabase) { try { await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }); } catch {} }
@@ -220,7 +220,7 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
     <tr style={{ background: isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '14px 16px', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{row.name}</td>
       <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap', fontSize: 14, fontWeight: 700, color: isFree ? '#059669' : NAVY }}>
-        {isFree ? row.price : isFixed ? `${row.price} zł` : row.price}
+        {isFree ? row.price : (isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
