@@ -12,18 +12,6 @@ const FEATURES = [
   'Сучасний сервіс — результат гарантовано',
 ];
 
-function Stars() {
-  return (
-    <div style={{ display: 'flex', gap: 2, marginBottom: 6 }}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="none">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      ))}
-      <span style={{ fontSize: 11, color: '#94a3b8', marginLeft: 4 }}>5.0 · GoWork.pl</span>
-    </div>
-  );
-}
 
 export default function PromoBanner() {
   const [visible, setVisible] = useState(false);
@@ -90,7 +78,6 @@ export default function PromoBanner() {
               <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 12px' }}>
                 АКЦІЯ · ДО 06.06.2026 · 1 ЮРИДИЧНА ГОДИНА
               </p>
-              <Stars />
               <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 8px', color: '#fff' }}>Встигніть</h2>
               <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 20px', color: ORANGE }}>спробувати!</h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '0 0 20px', flexWrap: 'wrap' }}>
