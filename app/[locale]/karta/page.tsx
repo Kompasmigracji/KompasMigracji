@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { supabase } from '@/lib/supabase';
+import { useRouter, usePathname } from 'next/navigation';
 import ChatBot from '@/components/ChatBot';
 
 const ORANGE = '#f97316';
@@ -219,7 +220,16 @@ const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', 
 
 export default function KartaPage() {
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const [lang, setLang] = useState<LangKey>(() => LOCALE_TO_LANG[locale] ?? 'ua');
+  
+  // Синхронизируем состояние с локалью из URL для избежания ошибок гидратации
+  useEffect(() => {
+    const nextLang = LOCALE_TO_LANG[locale] ?? 'ua';
+    if (lang !== nextLang) setLang(nextLang);
+  }, [locale]);
+
   const t = LANGS[lang];
   const pt = PAY_TEXT[lang];
 
@@ -272,6 +282,13 @@ export default function KartaPage() {
       setPayError(pt.errNet);
       setPayLoading(false);
     }
+  };
+
+  const changeLanguage = (newKey: LangKey) => {
+    // Вместо простого useState, меняем URL для корректной работы i18n
+    const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
+    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    router.push(newPath);
   };
 
   const handleOrder = async () => {
@@ -327,7 +344,7 @@ export default function KartaPage() {
         {/* LANG BAR */}
         <div style={{ borderBottom: `1px solid ${LGRAY}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 6 }}>
           {(Object.entries(LANGS) as [LangKey, typeof LANGS.ua][]).map(([key, val]) => (
-            <button key={key} onClick={() => setLang(key)} style={{
+            <button key={key} onClick={() => changeLanguage(key)} style={{
               padding: '4px 12px',
               border: `1.5px solid ${lang === key ? ORANGE : LGRAY}`,
               borderRadius: 6,
