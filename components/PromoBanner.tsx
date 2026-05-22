@@ -7,9 +7,9 @@ const ORANGE = '#f97316';
 const MINT   = '#86efac';
 
 const FEATURES = [
-  'Скарга на бездіяльність уженду',
-  'Унікальний пакет документів',
-  'Результат за 6 тижнів — або суд',
+  'Вивід на комітет рішень — персонально',
+  'Більшість клієнтів повертаються повторно',
+  'Сучасний сервіс — результат гарантовано',
 ];
 
 function Stars() {
@@ -58,8 +58,8 @@ export default function PromoBanner() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: 45000,
-          description: 'Прискорення карти побуту (вивід на комітет рішень)',
+          amount: 30000,
+          description: 'Акція Прискорення — 1 юридична година (вивід на комітет рішень)',
           email,
           lang: locale
         })
@@ -88,20 +88,26 @@ export default function PromoBanner() {
 
           {step === 'promo' && (
             <>
-              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 12px' }}>ПОСЛУГА ПРИСКОРЕННЯ · 1 ЮРИДИЧНА ГОДИНА</p>
+              <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.15em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 12px' }}>
+                АКЦІЯ · ДО 06.06.2026 · 1 ЮРИДИЧНА ГОДИНА
+              </p>
               <Stars />
-              <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 8px', color: '#fff' }}>Втомився</h2>
-              <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 20px', color: ORANGE }}>чекати?</h2>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, margin: '0 0 20px' }}>
-                <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
-                <span style={{ fontSize: 28, fontWeight: 900, color: ORANGE, letterSpacing: '-0.02em' }}>ЗЛ</span>
-                <span style={{ fontSize: 13, color: '#64748b', marginLeft: 4 }}>= 1 юридична година</span>
+              <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 8px', color: '#fff' }}>Встигніть</h2>
+              <h2 style={{ fontSize: 'clamp(30px,7vw,46px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.04em', margin: '0 0 20px', color: ORANGE }}>спробувати!</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '0 0 20px', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: 22, fontWeight: 700, color: '#475569', textDecoration: 'line-through' }}>450 ЗЛ</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={ORANGE} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                  <span style={{ fontSize: 52, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>300</span>
+                  <span style={{ fontSize: 28, fontWeight: 900, color: ORANGE, letterSpacing: '-0.02em' }}>ЗЛ</span>
+                </div>
+                <span style={{ fontSize: 13, color: '#64748b' }}>= 1 юридична година</span>
               </div>
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 26px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {FEATURES.map(f => <li key={f} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: 13, color: '#94a3b8', lineHeight: 1.5 }}><span style={{ color: MINT, fontWeight: 800, flexShrink: 0 }}>→</span>{f}</li>)}
               </ul>
               <button onClick={() => setStep('pay')} style={{ width: '100%', padding: '14px 0', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 15, fontFamily: 'inherit', cursor: 'pointer', marginBottom: 10 }}>
-                Купити зараз — 450 ЗЛ
+                Замовити за 300 ЗЛ — до 06.06.26 →
               </button>
               <div style={{ textAlign: 'center', marginBottom: 16 }}>
                 <p style={{ fontSize: 11, color: '#334155', margin: '0 0 10px' }}>
@@ -124,10 +130,11 @@ export default function PromoBanner() {
                 </button>
                 <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: ORANGE, textTransform: 'uppercase' }}>Przelewy24</span>
               </div>
-              <p style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Пакет Прискорення</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 4px' }}>Акція Прискорення · до 06.06.2026</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, margin: '0 0 24px' }}>
-                <span style={{ fontSize: 38, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
+                <span style={{ fontSize: 38, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>300</span>
                 <span style={{ fontSize: 20, fontWeight: 900, color: ORANGE }}>PLN</span>
+                <span style={{ fontSize: 14, color: '#475569', textDecoration: 'line-through', marginLeft: 8 }}>450</span>
               </div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 6 }}>Ваш email для чеку</label>
               <input

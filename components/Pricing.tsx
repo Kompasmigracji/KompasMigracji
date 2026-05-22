@@ -19,6 +19,7 @@ export default function Pricing() {
       features: [t('pricing_free_f1'), t('pricing_free_f2')],
       cta: t('pricing_free_cta'),
       featured: false,
+      oldAmount: undefined,
     },
     {
       label: t('pricing_consult_label'),
@@ -29,14 +30,17 @@ export default function Pricing() {
       features: [t('pricing_consult_f1'), t('pricing_consult_f2'), t('pricing_consult_f3')],
       cta: t('pricing_consult_cta'),
       featured: true,
+      oldAmount: undefined,
     },
     {
       label: t('pricing_hour_label'),
-      amount: '450',
+      amount: '300',
+      oldAmount: '450',
       currency: 'zł',
+      badge: 'АКЦІЯ до 06.06',
       desc: t('pricing_hour_desc'),
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],
-      cta: t('pricing_hour_cta'),
+      cta: 'Замовити за 300 zł →',
       featured: false,
     },
   ];
@@ -55,14 +59,19 @@ export default function Pricing() {
               className={`relative bg-white rounded-xl p-8 border-2 flex flex-col transition-all duration-300 ${card.featured ? 'border-primary shadow-xl scale-105' : 'border-gray-200 hover:border-primary hover:shadow-lg'}`}
             >
               {card.badge && (
-                <span className="absolute -top-4 right-5 text-white text-xs font-semibold px-4 py-1.5 rounded-full" style={{ background: 'linear-gradient(135deg, #2563eb, #059669)' }}>
+                <span className="absolute -top-4 right-5 text-white text-xs font-semibold px-4 py-1.5 rounded-full" style={{ background: card.oldAmount ? 'linear-gradient(135deg, #f97316, #dc2626)' : 'linear-gradient(135deg, #2563eb, #059669)' }}>
                   {card.badge}
                 </span>
               )}
               <div className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">{card.label}</div>
-              <div className="font-serif font-light text-navy mb-2" style={{ fontSize: '38px' }}>
-                {card.amount}
-                {card.currency && <sup className="text-lg text-muted"> {card.currency}</sup>}
+              <div className="mb-2">
+                {card.oldAmount && (
+                  <span className="text-base text-gray-400 line-through mr-2">{card.oldAmount} {card.currency}</span>
+                )}
+                <span className="font-serif font-light text-navy" style={{ fontSize: '38px' }}>
+                  {card.amount}
+                  {card.currency && <sup className="text-lg text-muted"> {card.currency}</sup>}
+                </span>
               </div>
               <p className="text-sm text-gray-500 leading-relaxed mb-6">{card.desc}</p>
               <ul className="border-t border-b border-gray-100 py-5 mb-6 flex flex-col gap-2 flex-grow">

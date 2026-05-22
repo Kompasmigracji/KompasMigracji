@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import PromoSection from '@/components/PromoSection';
 import Team from '@/components/Team';
 import Reviews from '@/components/Reviews';
 import ServicesGrid from '@/components/ServicesGrid';
@@ -22,6 +23,7 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <PromoSection />
         <Team />
         <Reviews />
         <ServicesGrid />
