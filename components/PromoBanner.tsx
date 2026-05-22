@@ -35,8 +35,8 @@ export default function PromoBanner() {
   const locale = useLocale();
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 40000);
-    return () => clearTimeout(t);
+    const id = setInterval(() => setVisible(true), 40000);
+    return () => clearInterval(id);
   }, []);
 
   const close = () => {
@@ -46,7 +46,6 @@ export default function PromoBanner() {
     setError('');
     setLoading(false);
     setAgreed(false);
-    setTimeout(() => setVisible(true), 40000);
   };
 
   const pay = async () => {

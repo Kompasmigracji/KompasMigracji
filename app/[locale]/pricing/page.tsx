@@ -40,7 +40,7 @@ const CATEGORIES = [
       { name: 'Громадянство Польщі (Воєвода)',                        price: '2000',     amountGrosze: 200000 },
       { name: 'Громадянство Польщі (Президент)',                      price: '2500',     amountGrosze: 250000 },
       { name: 'Резидент + Громадянство',                              price: '4000',     amountGrosze: 400000 },
-      { name: 'Прискорення карти побуту (вивід на комітет рішень)',   price: '450',      amountGrosze: 45000 },
+      { name: 'Прискорення карти побуту (вивід на комітет рішень)',   price: '300',      amountGrosze: 30000 },
       { name: 'Прискорення карти побуту (апеляція / складна справа)', price: '900',      amountGrosze: 90000 },
       { name: 'Прискорення Резидента ЄС',                             price: '900',      amountGrosze: 90000 },
       { name: 'Консультація телефонічна',                             price: '150',      amountGrosze: 15000 },
@@ -272,13 +272,13 @@ export default function PricingPage() {
             <div style={{ textAlign: 'left' }}>
               <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 4px' }}>Юридична година</p>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>450</span>
+                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>300</span>
                 <span style={{ fontSize: 22, fontWeight: 800, color: ORANGE }}>zł</span>
-                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 105 €</span>
+                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 70 €</span>
               </div>
             </div>
             <button
-              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 45000, price: '450' })}
+              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 30000, price: '300' })}
               style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
               onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}

@@ -55,7 +55,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                 <option>Безкоштовна консультація (2 хв)</option>
                 <option>Консультація телефонічна (150 zł)</option>
                 <option>Консультація + узасаднення (450 zł)</option>
-                <option>Юридична година (450 zł)</option>
+                <option>Юридична година (300 zł)</option>
               </optgroup>
               <optgroup label="Нотаріальні послуги">
                 <option>Разова довіреність (250 zł)</option>
@@ -65,7 +65,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                 <option>Заява (380 zł)</option>
                 <option>Комплект «Спадщина» (720 zł)</option>
               </optgroup>
-              <option>Прискорення карти побуту (комітет) (450 zł)</option>
+              <option>Прискорення карти побуту (комітет) (300 zł)</option>
               <option>Прискорення карти побуту (апеляція) (900 zł)</option>
               <option>Прискорення Резидента ЄС (900 zł)</option>
               <option>Інше</option>

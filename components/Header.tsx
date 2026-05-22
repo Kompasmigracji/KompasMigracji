@@ -15,7 +15,7 @@ const SERVICES = [
   { label: 'Карта побуту (тимчасова)', href: '/#services' },
   { label: 'Карта резидента ЄС', href: '/#services' },
   { label: 'Консультація 15 хв — 150 zł', href: '/#pricing' },
-  { label: 'Юридична година — 450 zł', href: '/#pricing' },
+  { label: 'Юридична година — 300 zł', href: '/#pricing' },
   { label: 'Пакет "Прискорення" →', href: '/karta', accent: true },
 ];
 
