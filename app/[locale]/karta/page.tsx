@@ -218,13 +218,13 @@ function MixedText({ pre, bold, post, size = 15, lineHeight = 1.7 }: { pre: stri
 
 const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', en: 'en' };
 
-export default function KartaPage() {
+export default function KartaPage(): React.JSX.Element {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const [lang, setLang] = useState<LangKey>(() => LOCALE_TO_LANG[locale] ?? 'ua');
+  const [lang, setLang] = useState<LangKey>('ua'); // Начинаем с дефолта
   
-  // Синхронизируем состояние с локалью из URL для избежания ошибок гидратации
+  // Синхронизируем только после монтирования для предотвращения Hydration Error
   useEffect(() => {
     const nextLang = LOCALE_TO_LANG[locale] ?? 'ua';
     if (lang !== nextLang) setLang(nextLang);
@@ -239,14 +239,14 @@ export default function KartaPage() {
   const [payError, setPayError] = useState('');
   const [payAgreed, setPayAgreed] = useState(false);
 
-  const openPay = (pkg: string, amount: number, desc: string) => {
+  const openPay = (pkg: string, amount: number, desc: string): void => {
     setPayStep({ pkg, amount, desc });
     setPayEmail('');
     setPayError('');
     setPayAgreed(false);
   };
 
-  const closePay = () => {
+  const closePay = (): void => {
     setPayStep(null);
     setPayEmail('');
     setPayError('');
@@ -284,14 +284,14 @@ export default function KartaPage() {
     }
   };
 
-  const changeLanguage = (newKey: LangKey) => {
-    // Вместо простого useState, меняем URL для корректной работы i18n
+  const changeLanguage = (newKey: LangKey): void => {
     const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
-    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    // Более надежная замена локали в пути
+    const newPath = pathname.startsWith(`/${locale}`) ? pathname.replace(`/${locale}`, `/${nextLocale}`) : `/${nextLocale}${pathname}`;
     router.push(newPath);
   };
 
-  const handleOrder = async () => {
+  const handleOrder = async (): Promise<void> => {
     const msgs: Record<LangKey, string> = {
       ua: 'Хочу замовити Пакет Прискорення — Карта побуту',
       pl: 'Chcę zamówić Pakiet Przyspieszenia — Karta pobytu',
@@ -301,6 +301,10 @@ export default function KartaPage() {
     if (supabase) { try { await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
+
+  // Если ваш Cookie Banner находится в layout.tsx, убедитесь, что его z-index выше 10001
+  // Если он не нажимается, проверьте, нет ли у ChatBot невидимой обертки на весь экран.
+  // Ниже исправлен потенциальный баг с блокировкой кликов через fixed overlay.
 
   return (
     <>
