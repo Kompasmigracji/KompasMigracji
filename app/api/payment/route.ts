@@ -31,9 +31,10 @@ export async function POST(req: NextRequest) {
 
   const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
+  // Исправлен формат подписи для Przelewy24 (v1)
   const sign = crypto
     .createHash('sha384')
-    .update(JSON.stringify({ sessionId, merchantId, amount, currency: 'PLN', crc }))
+    .update(`${sessionId}|${merchantId}|${amount}|PLN|${crc}`)
     .digest('hex');
 
   const payload = {

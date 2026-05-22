@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import { supabase } from '@/lib/supabase';
+import { useRouter, usePathname } from 'next/navigation';
 import ChatBot from '@/components/ChatBot';
 
 const ORANGE = '#f97316';
@@ -219,7 +220,17 @@ const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', 
 
 export default function KartaPage() {
   const locale = useLocale();
-  const [lang, setLang] = useState<LangKey>(() => LOCALE_TO_LANG[locale] ?? 'ua');
+  const router = useRouter();
+  const pathname = usePathname();
+  
+  const [mounted, setMounted] = useState(false);
+  const [lang, setLang] = useState<LangKey>('ua');
+
+  useEffect(() => {
+    setMounted(true);
+    setLang((LOCALE_TO_LANG[locale] as LangKey) ?? 'ua');
+  }, [locale]);
+
   const t = LANGS[lang];
   const pt = PAY_TEXT[lang];
 
@@ -274,6 +285,12 @@ export default function KartaPage() {
     }
   };
 
+  const changeLanguage = (newKey: LangKey) => {
+    const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
+    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
+    router.push(newPath);
+  };
+
   const handleOrder = async () => {
     const msgs: Record<LangKey, string> = {
       ua: 'Хочу замовити Пакет Прискорення — Карта побуту',
@@ -284,6 +301,8 @@ export default function KartaPage() {
     if (supabase) { try { await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
+
+  if (!mounted) return null; // Предотвращает ошибки гидратации
 
   return (
     <>
@@ -327,7 +346,7 @@ export default function KartaPage() {
         {/* LANG BAR */}
         <div style={{ borderBottom: `1px solid ${LGRAY}`, padding: '10px 24px', display: 'flex', justifyContent: 'flex-end', gap: 6 }}>
           {(Object.entries(LANGS) as [LangKey, typeof LANGS.ua][]).map(([key, val]) => (
-            <button key={key} onClick={() => setLang(key)} style={{
+            <button key={key} onClick={() => changeLanguage(key)} style={{
               padding: '4px 12px',
               border: `1.5px solid ${lang === key ? ORANGE : LGRAY}`,
               borderRadius: 6,
