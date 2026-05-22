@@ -29,7 +29,8 @@
       "Bash(git remote *)",
       "Bash(git fetch *)",
       "mcp__claude_ai_Vercel__get_runtime_logs",
-      "mcp__claude_ai_Vercel__web_fetch_vercel_url"
+      "mcp__claude_ai_Vercel__web_fetch_vercel_url",
+      "Bash(python -c ' *)"
     ]
   }
 }
