@@ -234,6 +234,7 @@ export default function KartaPage(): React.JSX.Element {
   const [payAgreed, setPayAgreed] = useState(false);
 
   useEffect(() => setMounted(true), []);
+  useEffect(() => { setLang(LOCALE_TO_LANG[locale] ?? 'ua'); }, [locale]);
 
   const openPay = (pkg: string, amount: number, desc: string): void => {
     setPayStep({ pkg, amount, desc });

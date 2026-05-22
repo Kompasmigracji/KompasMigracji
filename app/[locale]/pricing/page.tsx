@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/supabase';
@@ -252,8 +251,6 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
 
 export default function PricingPage() {
   const [payService, setPayService] = useState<ServiceRow | null>(null);
-  const t = useTranslations();
-
   return (
     <div className="min-h-screen bg-white text-navy">
       <Header />
