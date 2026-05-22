@@ -52,7 +52,7 @@ export default function PromoBanner() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: 45000, description: 'Пакет Прискорення — Карта побуту', email, lang: 'uk' }) });
+      const res = await fetch('/api/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: 45000, description: 'Прискорення карти побиту (вивід на комітет рішень)', email, lang: 'uk' }) });
       const data = await res.json();
       if (data.redirectUrl) { window.location.href = data.redirectUrl; }
       else { setError(data.error || "Помилка з'єднання. Спробуйте ще раз."); setLoading(false); }
