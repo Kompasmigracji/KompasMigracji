@@ -54,7 +54,7 @@ const LANGS = {
     ctaBtn: 'Замовити зараз',
     callTag: 'ЗАТЕЛЕФОНУВАТИ', callDesc: 'Особиста консультація від Олександра Василишина. Пн–Нд: 10:00 — 22:00',
     quote: 'Закладаю власну репутацію. Якщо щось не так — дзвоніть. Беру трубку завжди. — Олександр',
-    ft1tag: 'ПРО ПРОЕКТ', ft1desc: "Захист українців від дискримінації. Єдине вікно з розв'язання усіх бюрократичних задач — нотаріус, адвокат, медіатор, юридичний асистент.",
+    ft1tag: 'ПРО ПРОЕКТ', ft1desc: "Захист українців від дискримінації. Єдине вікно з розв'язання усіх бюрократичних завдань — нотаріус, адвокат, медіатор, юридичний асистент.",
     ft2tag: 'ОСОБИСТІ КОНСУЛЬТАЦІЇ', ft2name: 'Олександр Василишин', ft2desc: 'Побудова дорожньої карти в еміграції.\nПн–Нд: 10:00 — 22:00',
     ft3tag: 'ЕКСТРЕНА ЮРИДИЧНА ДОПОМОГА', ft3sub: 'Цілодобово · 24/7',
     copy: 'Жодної корупції · Виключно по закону · Для українців в ЄС',
@@ -220,6 +220,9 @@ const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', 
 
 export default function KartaPage(): React.JSX.Element {
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
   const [lang, setLang] = useState<LangKey>(() => LOCALE_TO_LANG[locale] ?? 'ua');
   const t = LANGS[lang];
   const pt = PAY_TEXT[lang];
@@ -229,6 +232,8 @@ export default function KartaPage(): React.JSX.Element {
   const [payLoading, setPayLoading] = useState(false);
   const [payError, setPayError] = useState('');
   const [payAgreed, setPayAgreed] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const openPay = (pkg: string, amount: number, desc: string): void => {
     setPayStep({ pkg, amount, desc });

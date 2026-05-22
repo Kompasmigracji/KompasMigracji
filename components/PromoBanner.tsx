@@ -59,7 +59,7 @@ export default function PromoBanner() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount: 45000,
-          description: 'Прискорення карти побиту (вивід на комітет рішень)',
+          description: 'Прискорення карти побуту (вивід на комітет рішень)',
           email,
           lang: locale
         })

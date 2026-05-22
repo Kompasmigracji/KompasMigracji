@@ -28,7 +28,7 @@ export default function Team() {
                 <h3 className="text-2xl font-black text-navy mb-4 leading-tight">Олександр Василишин</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
                   10 років у міграційному праві Польщі. Особисто веде кожну консультацію та завжди бере трубку.
-                  Засновник Kompas Migracji — єдиного вікна для вирішення всіх бюрократичних задач українців в ЄС.
+                  Засновник Kompas Migracji — єдиного вікна для вирішення всіх бюрократичних завдань українців в ЄС.
                 </p>
                 <div className="grid grid-cols-3 gap-4 border-t border-gray-100 pt-6 mb-8">
                   {STATS.map((s) => (

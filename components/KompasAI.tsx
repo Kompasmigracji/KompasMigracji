@@ -144,7 +144,7 @@ export default function KompasAI() {
                   Kompas AI
                 </div>
                 <div style={{ fontSize: 9, color: '#475569', letterSpacing: '0.05em', textTransform: 'uppercase', marginTop: 2 }}>
-                  Факти для емігрантів
+                  Факти для мігрантів
                 </div>
               </div>
             </div>
