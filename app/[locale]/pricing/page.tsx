@@ -268,23 +268,32 @@ export default function PricingPage() {
             Юридична година — базова одиниця взаємодії зі спеціалістом. Охоплює консультації, аналіз ситуації,
             підготовку документів, формування стратегії та підготовку до подачі чи співбесіди.
           </p>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: 'rgba(249,115,22,0.12)', border: '1.5px solid rgba(249,115,22,0.35)', borderRadius: 16, padding: '18px 28px', fontFamily: "'Syne', sans-serif" }}>
-            <div style={{ textAlign: 'left' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 4px' }}>Юридична година</p>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>300</span>
-                <span style={{ fontSize: 22, fontWeight: 800, color: ORANGE }}>zł</span>
-                <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 70 €</span>
+          <div style={{ position: 'relative', display: 'inline-block' }}>
+            <span style={{ position: 'absolute', top: -14, left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #f97316, #dc2626)', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', padding: '3px 14px', borderRadius: 999, whiteSpace: 'nowrap', textTransform: 'uppercase' }}>
+              АКЦІЯ · ДО 06.06.2026
+            </span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 16, background: 'rgba(249,115,22,0.12)', border: '1.5px solid rgba(249,115,22,0.35)', borderRadius: 16, padding: '20px 28px 18px', fontFamily: "'Syne', sans-serif" }}>
+              <div style={{ textAlign: 'left' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#94a3b8', margin: '0 0 6px' }}>Юридична година</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: '#475569', textDecoration: 'line-through' }}>450 zł</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ORANGE} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                  <span style={{ fontSize: 44, fontWeight: 900, color: ORANGE, letterSpacing: '-0.04em', lineHeight: 1 }}>300</span>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: ORANGE }}>zł</span>
+                  <span style={{ fontSize: 12, color: '#64748b', marginLeft: 4 }}>≈ 70 €</span>
+                </div>
               </div>
+              <button
+                onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 30000, price: '300' })}
+                style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+              >
+                Замовити за 300 zł →
+              </button>
             </div>
-            <button
-              onClick={() => setPayService({ name: 'Юридична година', amountGrosze: 30000, price: '300' })}
-              style={{ padding: '12px 24px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', transition: 'opacity 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; }}
-              onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
-            >
-              Купити →
-            </button>
           </div>
         </section>
 
