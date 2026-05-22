@@ -275,15 +275,8 @@ export default function KartaPage(): React.JSX.Element {
     }
   };
 
-  const changeLanguage = (newKey: LangKey) => {
-    const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
-    const newPath = pathname.replace(`/${locale}`, `/${nextLocale}`);
-    router.push(newPath);
-  };
-
   const changeLanguage = (newKey: LangKey): void => {
     const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
-    // Более надежная замена локали в пути
     const newPath = pathname.startsWith(`/${locale}`) ? pathname.replace(`/${locale}`, `/${nextLocale}`) : `/${nextLocale}${pathname}`;
     router.push(newPath);
   };
@@ -298,6 +291,8 @@ export default function KartaPage(): React.JSX.Element {
     if (supabase) { try { await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
+
+  if (!mounted) return <div style={{ background: '#fff', minHeight: '100vh' }} />;
 
   return (
     <>
