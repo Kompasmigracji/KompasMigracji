@@ -55,7 +55,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
               <option>Консультація 15 хв (150 zł)</option>
               <option>Юридична година (450 zł)</option>
               <option>Пакет Прискорення — Карта побуту (450 zł)</option>
-              <option>Пакет Резидент — Карта ЄС (900 zł)</option>
+              <option>Прискорення Резидента ЄС (900 zł)</option>
               <option>Інше</option>
             </select>
           </div>
