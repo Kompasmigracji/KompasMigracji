@@ -6,8 +6,8 @@ export default function Hero() {
 
   return (
     <section
-      className="hero-section min-h-screen flex flex-col justify-center pt-16 pb-20 relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fb 50%, #ffffff 100%)' }}
+      className="hero-section relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fb 50%, #ffffff 100%)', paddingTop: 'calc(5rem + 80px)', paddingBottom: '96px' }}
     >
       <div
         className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none opacity-60"

@@ -16,7 +16,7 @@ const syne = Syne({
 });
 
 const cormorant = Cormorant_Garamond({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'latin-ext', 'cyrillic'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-cormorant',
   display: 'swap',
