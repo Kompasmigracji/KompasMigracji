@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const KEY = 'km_consent_v2';
 
@@ -36,7 +36,11 @@ function load(): CookieConsent | null {
 }
 
 export function useCookieConsent() {
-  const [consent, setConsent] = useState<CookieConsent | null>(load);
+  const [consent, setConsent] = useState<CookieConsent | null>(null);
+
+  useEffect(() => {
+    setConsent(load());
+  }, []);
 
   const save = (data: Pick<CookieConsent, 'necessary' | 'analytics'>) => {
     const full: CookieConsent = { ...data, decided: true };

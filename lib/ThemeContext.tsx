@@ -4,9 +4,14 @@ import { createContext, useContext, useState, useEffect } from 'react';
 const Ctx = createContext({ dark: false, toggle: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [dark, setDark] = useState(() => {
-    try { return localStorage.getItem('theme') === 'dark'; } catch { return false; }
-  });
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('theme') === 'dark';
+      setDark(stored);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
