@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLocale } from 'next-intl';
 
 const ORANGE = '#f97316';
 const MINT   = '#86efac';
@@ -31,6 +32,7 @@ export default function PromoBanner() {
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
   const [agreed, setAgreed]   = useState(false);
+  const locale = useLocale();
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 120000);
@@ -52,7 +54,16 @@ export default function PromoBanner() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: 45000, description: 'Прискорення карти побиту (вивід на комітет рішень)', email, lang: 'uk' }) });
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: 45000,
+          description: 'Прискорення карти побиту (вивід на комітет рішень)',
+          email,
+          lang: locale
+        })
+      });
       const data = await res.json();
       if (data.redirectUrl) { window.location.href = data.redirectUrl; }
       else { setError(data.error || "Помилка з'єднання. Спробуйте ще раз."); setLoading(false); }
