@@ -445,10 +445,17 @@ export default function KartaPage(): React.JSX.Element {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 40 }}>
               {/* pkg 1 */}
-              <div>
+              <div style={{ position: 'relative' }}>
+                <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, #f97316, #dc2626)', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', padding: '3px 12px', borderRadius: 999, textTransform: 'uppercase', marginBottom: 8 }}>
+                  АКЦІЯ · ДО 06.06.2026
+                </span>
                 <Tag color={ORANGE}>{t.p1tag}</Tag>
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, margin: '4px 0 2px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 2px' }}>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: '#9ca3af', textDecoration: 'line-through' }}>450</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ORANGE} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, margin: '0 0 2px' }}>
                   <span style={{ fontSize: 'clamp(64px, 16vw, 96px)', fontWeight: 900, color: ORANGE, letterSpacing: '-0.045em', lineHeight: 0.88 }}>
                     {t.p1price.split(' ')[0]}
                   </span>
