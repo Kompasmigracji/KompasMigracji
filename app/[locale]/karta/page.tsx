@@ -218,19 +218,9 @@ function MixedText({ pre, bold, post, size = 15, lineHeight = 1.7 }: { pre: stri
 
 const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', en: 'en' };
 
-export default function KartaPage() {
+export default function KartaPage(): React.JSX.Element {
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-  
-  const [mounted, setMounted] = useState(false);
-  const [lang, setLang] = useState<LangKey>('ua');
-
-  useEffect(() => {
-    setMounted(true);
-    setLang((LOCALE_TO_LANG[locale] as LangKey) ?? 'ua');
-  }, [locale]);
-
+  const [lang, setLang] = useState<LangKey>(() => LOCALE_TO_LANG[locale] ?? 'ua');
   const t = LANGS[lang];
   const pt = PAY_TEXT[lang];
 
@@ -240,14 +230,14 @@ export default function KartaPage() {
   const [payError, setPayError] = useState('');
   const [payAgreed, setPayAgreed] = useState(false);
 
-  const openPay = (pkg: string, amount: number, desc: string) => {
+  const openPay = (pkg: string, amount: number, desc: string): void => {
     setPayStep({ pkg, amount, desc });
     setPayEmail('');
     setPayError('');
     setPayAgreed(false);
   };
 
-  const closePay = () => {
+  const closePay = (): void => {
     setPayStep(null);
     setPayEmail('');
     setPayError('');
@@ -291,7 +281,14 @@ export default function KartaPage() {
     router.push(newPath);
   };
 
-  const handleOrder = async () => {
+  const changeLanguage = (newKey: LangKey): void => {
+    const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
+    // Более надежная замена локали в пути
+    const newPath = pathname.startsWith(`/${locale}`) ? pathname.replace(`/${locale}`, `/${nextLocale}`) : `/${nextLocale}${pathname}`;
+    router.push(newPath);
+  };
+
+  const handleOrder = async (): Promise<void> => {
     const msgs: Record<LangKey, string> = {
       ua: 'Хочу замовити Пакет Прискорення — Карта побуту',
       pl: 'Chcę zamówić Pakiet Przyspieszenia — Karta pobytu',
@@ -301,8 +298,6 @@ export default function KartaPage() {
     if (supabase) { try { await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
-
-  if (!mounted) return null; // Предотвращает ошибки гидратации
 
   return (
     <>
