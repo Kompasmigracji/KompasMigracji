@@ -52,9 +52,11 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             <select value={service} onChange={e => setService(e.target.value)} className={inputCls}>
               <option value="">Оберіть послугу</option>
               <option>Безкоштовна консультація (2 хв)</option>
-              <option>Консультація 15 хв (150 zł)</option>
+              <option>Консультація телефонічна (150 zł)</option>
+              <option>Консультація + узасаднєніє (450 zł)</option>
               <option>Юридична година (450 zł)</option>
-              <option>Пакет Прискорення — Карта побуту (450 zł)</option>
+              <option>Прискорення карти побиту (вивід на комітет рішень) (450 zł)</option>
+              <option>Прискорення карти побиту (апеляція / складна справа) (900 zł)</option>
               <option>Прискорення Резидента ЄС (900 zł)</option>
               <option>Інше</option>
             </select>
