@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { supabase } from '@/lib/supabase';
@@ -54,7 +55,7 @@ const CATEGORIES = [
     rows: [
       { name: 'Супровід по шлюбу',                                    price: '800',      amountGrosze: 80000 },
       { name: 'Довідка для шлюбу без консульства',                    price: '200–350',  amountGrosze: null },
-      { name: 'Розлучення в Україні без присутності сторін',          price: '1 800',    amountGrosze: 180000 },
+      { name: 'Розлучення в Україні без присутності сторін',          price: '1800',     amountGrosze: 180000 },
       { name: 'Медіація між сторонами',                               price: '1–2 юридичні години', amountGrosze: null },
     ],
   },
@@ -115,7 +116,7 @@ const CATEGORIES = [
 type ServiceRow = { name: string; price: string; amountGrosze: number | null };
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
-  const [email, setEmail]   = useState('');
+  const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState('');
@@ -208,8 +209,8 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 }
 
 function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: ServiceRow) => void; isEven: boolean }) {
-  const isFixed  = row.amountGrosze !== null;
-  const isFree   = row.price === 'Безкоштовно';
+  const isFixed = row.amountGrosze !== null && row.amountGrosze > 0;
+  const isFree = row.amountGrosze === null && row.price.toLowerCase().includes('безкоштовно');
 
   const handleWhatsApp = async () => {
     if (supabase) { try { await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }); } catch {} }
@@ -220,7 +221,7 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
     <tr style={{ background: isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '14px 16px', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{row.name}</td>
       <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap', fontSize: 14, fontWeight: 700, color: isFree ? '#059669' : NAVY }}>
-        {isFree ? row.price : isFixed ? `${row.price} zł` : row.price}
+        {isFree ? row.price : (isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
@@ -251,6 +252,7 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
 
 export default function PricingPage() {
   const [payService, setPayService] = useState<ServiceRow | null>(null);
+  const t = useTranslations();
 
   return (
     <div className="min-h-screen bg-white text-navy">
@@ -321,7 +323,7 @@ export default function PricingPage() {
                   </thead>
                   <tbody>
                     {cat.rows.map((row, i) => (
-                      <PriceRow key={i} row={row} isEven={i % 2 === 0} onBuy={setPayService} />
+                      <PriceRow key={row.name + i} row={row} isEven={i % 2 === 0} onBuy={setPayService} />
                     ))}
                   </tbody>
                 </table>

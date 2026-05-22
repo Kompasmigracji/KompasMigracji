@@ -29,7 +29,12 @@ const SYSTEM_PROMPT = `Ти — AI-асистент компанії Kompas Migr
 const requestLimitStore = new Map<string, { count: number; reset: number }>();
 
 function getClientId(req: NextRequest): string {
-  return req.headers.get('x-forwarded-for') || req.headers.get('user-agent') || 'unknown';
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    // x-forwarded-for может содержать цепочку IP, берем первый
+    return forwarded.split(',')[0].trim();
+  }
+  return req.headers.get('user-agent') || 'unknown';
 }
 
 function checkRateLimit(clientId: string): boolean {

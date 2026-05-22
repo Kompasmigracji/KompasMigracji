@@ -51,12 +51,22 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             <label className={labelCls}>Послуга</label>
             <select value={service} onChange={e => setService(e.target.value)} className={inputCls}>
               <option value="">Оберіть послугу</option>
-              <option>Безкоштовна консультація (2 хв)</option>
-              <option>Консультація телефонічна (150 zł)</option>
-              <option>Консультація + узасаднєніє (450 zł)</option>
-              <option>Юридична година (450 zł)</option>
-              <option>Прискорення карти побиту (вивід на комітет рішень) (450 zł)</option>
-              <option>Прискорення карти побиту (апеляція / складна справа) (900 zł)</option>
+              <optgroup label="Консультації">
+                <option>Безкоштовна консультація (2 хв)</option>
+                <option>Консультація телефонічна (150 zł)</option>
+                <option>Консультація + узасаднєніє (450 zł)</option>
+                <option>Юридична година (450 zł)</option>
+              </optgroup>
+              <optgroup label="Нотаріальні послуги">
+                <option>Разова довіреність (250 zł)</option>
+                <option>Довіреність на транспортний засіб (350 zł)</option>
+                <option>Довіреність на нерухомість (450 zł)</option>
+                <option>Довіреність на представлення інтересів (450 zł)</option>
+                <option>Заява (380 zł)</option>
+                <option>Комплект «Спадщина» (720 zł)</option>
+              </optgroup>
+              <option>Прискорення карти побиту (комітет) (450 zł)</option>
+              <option>Прискорення карти побиту (апеляція) (900 zł)</option>
               <option>Прискорення Резидента ЄС (900 zł)</option>
               <option>Інше</option>
             </select>

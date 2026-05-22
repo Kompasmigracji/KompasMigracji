@@ -31,9 +31,10 @@ export async function POST(req: NextRequest) {
 
   const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
+  // Исправлен формат подписи: P24 ожидает конкатенацию через |, а не JSON
   const sign = crypto
     .createHash('sha384')
-    .update(JSON.stringify({ sessionId, merchantId, amount, currency: 'PLN', crc }))
+    .update(`${sessionId}|${merchantId}|${amount}|PLN|${crc}`)
     .digest('hex');
 
   const payload = {
