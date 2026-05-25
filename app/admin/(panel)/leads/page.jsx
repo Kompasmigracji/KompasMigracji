@@ -2,7 +2,7 @@
 /* /admin/leads — лиды воронки: Telegram-бот, сайт, FB, IG.
    Читает из существующей таблицы leads (статусы: new, contacted, closed, dropped). */
 import React, { useEffect, useState, useCallback } from "react";
-import { Badge, Spinner, Empty, Icon } from "@/components/admin/ui";
+import { Spinner, Empty, Icon } from "@/components/admin/ui";
 
 /* Статусы из таблицы leads проекта */
 const FILTERS = [
@@ -12,13 +12,6 @@ const FILTERS = [
   ["closed", "Закрито"],
   ["dropped", "Відмова"],
 ];
-
-const STATUS_BADGE = {
-  new:       "blue",
-  contacted: "brass",
-  closed:    "green",
-  dropped:   "dim",
-};
 
 const SOURCE_LABEL = {
   bot:       "🤖 Telegram",
@@ -94,7 +87,7 @@ export default function LeadsPage() {
             <thead>
               <tr>
                 <th>Джерело</th>
-                <th>Ім'я / username</th>
+                <th>{"Ім'я"} / username</th>
                 <th>Контакт</th>
                 <th>Повідомлення</th>
                 <th>Дата</th>

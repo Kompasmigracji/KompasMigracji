@@ -26,7 +26,7 @@ export default function LoginPage() {
       if (!res.ok) { setError(data.error || "Ошибка входа"); setLoading(false); return; }
       const next = params.get("next") || "/admin";
       router.push(data.user.role === "member" ? "/admin/me" : next);
-    } catch (e) {
+    } catch {
       setError("Сеть недоступна");
       setLoading(false);
     }

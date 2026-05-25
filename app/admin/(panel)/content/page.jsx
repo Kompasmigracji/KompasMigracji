@@ -2,7 +2,7 @@
 /* /admin/content — управление блоками контента сайта kompasmigracji.com.
    Юридический чек-лист: оферта, цены, регламент, политика приватности. */
 import React, { useEffect, useState } from "react";
-import { Icon, Spinner, Badge, Empty } from "@/components/admin/ui";
+import { Icon, Spinner, Badge } from "@/components/admin/ui";
 
 const DESC = {
   offer: "Описание услуг портала",
