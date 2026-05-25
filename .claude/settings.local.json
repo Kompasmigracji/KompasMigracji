@@ -32,7 +32,10 @@
       "mcp__claude_ai_Vercel__web_fetch_vercel_url",
       "Bash(python -c ' *)",
       "mcp__claude_ai_Vercel__list_teams",
-      "mcp__claude_ai_Vercel__list_projects"
+      "mcp__claude_ai_Vercel__list_projects",
+      "WebFetch(domain:www.instagram.com)",
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.PSIsContainer } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) } | Sort-Object)",
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -Depth 4 | Where-Object { $_.PSIsContainer } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })"
     ]
   }
 }
