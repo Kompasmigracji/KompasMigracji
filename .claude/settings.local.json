@@ -36,7 +36,8 @@
       "WebFetch(domain:www.instagram.com)",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem -Recurse -Depth 3 | Where-Object { $_.PSIsContainer } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) } | Sort-Object)",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -Depth 4 | Where-Object { $_.PSIsContainer } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })",
-      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })"
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })",
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem kompascms -Recurse | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\kompascms\\\\\", \"\"\\) })"
     ]
   }
 }
