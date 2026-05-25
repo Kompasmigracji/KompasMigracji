@@ -1,0 +1,10 @@
+{
+  "_комментарий": "НЕ заменяй этим файлом свой package.json. Просто установи три зависимости в существующий Next.js-проект kompasmigracji.com:",
+  "_команда": "npm install pg jose bcryptjs",
+  "dependencies": {
+    "pg": "^8.13.0",
+    "jose": "^5.9.0",
+    "bcryptjs": "^2.4.3"
+  },
+  "_примечание": "Next.js 14/15 и react уже есть в твоём проекте. jose работает в Edge (middleware), pg и bcryptjs — в Node-роутах (в них стоит export const runtime = 'nodejs')."
+}
