@@ -3,22 +3,25 @@ import { useState } from 'react';
 
 const VIDEOS = [
   {
-    id: 'PPiu_WeBaOY',
+    id: '24965019156532477',
     title: 'Нові правила карти побуту для українців в Польщі 2026',
     desc: 'Що змінилося у 2026 році: нові вимоги, строки розгляду та порядок подачі документів на карту побуту для громадян України.',
     tag: 'Новини 2026',
+    color: 'from-blue-900 to-slate-900',
   },
   {
-    id: 'r4XhXjJXS4o',
+    id: '1315638563758737',
     title: 'Продовження легального перебування та статусу УКР у Польщі',
     desc: 'Розбір закону про продовження легального перебування та статусу УКР для громадян України у Польщі.',
     tag: 'Статус УКР',
+    color: 'from-indigo-900 to-slate-900',
   },
   {
-    id: 'sFvGIpl2Ccw',
+    id: '1906985087370863',
     title: 'Тимчасовий захист, карта ЦУКР та статус УКР — переваги та недоліки',
     desc: 'Порівнюємо тимчасовий захист, карту побуту ЦУКР та статус УКР: що обрати і які права дає кожен статус.',
     tag: 'Карта ЦУКР',
+    color: 'from-slate-800 to-blue-950',
   },
 ];
 
@@ -46,9 +49,9 @@ function VideoModal({ videoId, onClose }: { videoId: string; onClose: () => void
         style={{ width: '100%', maxWidth: 900, aspectRatio: '16/9', position: 'relative' }}
       >
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+          src={`https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fvideo%2F${videoId}&show_text=false&autoplay=true&width=900`}
           title="Video"
-          allow="autoplay; encrypted-media"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
           allowFullScreen
           style={{ width: '100%', height: '100%', border: 'none', borderRadius: 12 }}
         />
@@ -82,14 +85,20 @@ export default function Blog() {
               className="group rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 cursor-pointer"
               onClick={() => setActive(v.id)}
             >
-              <div className="relative overflow-hidden" style={{ aspectRatio: '16/9', background: '#0f172a' }}>
-                <img
-                  src={`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}
-                  alt={v.title}
-                  className="w-full h-full object-cover opacity-90 group-hover:opacity-75 group-hover:scale-105 transition-all duration-500"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="transform group-hover:scale-110 transition-transform duration-200"><PlayIcon /></div>
+              <div
+                className={`relative overflow-hidden bg-gradient-to-br ${v.color} flex items-center justify-center`}
+                style={{ aspectRatio: '16/9' }}
+              >
+                {/* Facebook logo watermark */}
+                <svg
+                  viewBox="0 0 24 24" fill="rgba(255,255,255,0.08)"
+                  style={{ position: 'absolute', width: 120, height: 120 }}
+                >
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                {/* Play button */}
+                <div className="relative z-10 transform group-hover:scale-110 transition-transform duration-200">
+                  <PlayIcon />
                 </div>
               </div>
               <div className="p-5">
@@ -109,15 +118,15 @@ export default function Blog() {
 
         <div className="text-center mt-10">
           <a
-            href="https://www.youtube.com/@kompasmigracji"
+            href="https://www.facebook.com/kompasmigracji"
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 border border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-sm font-semibold px-6 py-3 rounded-xl transition-all no-underline"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>
-            Усі відео на YouTube
+            Усі відео на Facebook
           </a>
         </div>
       </div>
