@@ -248,7 +248,7 @@ pnpm start
 
 ---
 
-## Архітектура API
+## Архітектура APIЖ
 
 ```
 POST /api/chat
