@@ -38,7 +38,13 @@
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -Depth 4 | Where-Object { $_.PSIsContainer } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem app -Recurse -File | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\\", \"\"\\) })",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; Get-ChildItem kompascms -Recurse | Select-Object -ExpandProperty FullName | ForEach-Object { $_.Replace\\(\"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\kompascms\\\\\", \"\"\\) })",
-      "PowerShell(cd \"C:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; npx next --version 2>$null; Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Select-Object Id, CPU, @{n='Cmd';e={$_.MainWindowTitle}} | Format-Table)"
+      "PowerShell(cd \"C:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; npx next --version 2>$null; Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Select-Object Id, CPU, @{n='Cmd';e={$_.MainWindowTitle}} | Format-Table)",
+      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/admin/members/[id]\")",
+      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/admin/\\(panel\\)/members/[id]\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\members\\[id]"
     ]
   }
 }
