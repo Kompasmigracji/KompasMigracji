@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "installCommand": "pnpm install --force",
+  "installCommand": "pnpm install --ignore-scripts",
   "headers": [
     {
       "source": "/(.*)",
