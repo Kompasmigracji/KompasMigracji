@@ -51,7 +51,8 @@
       "Bash(node --env-file=.env.local -e ' *)",
       "Bash(node --env-file=.env.local -e \"console.log\\(require\\('crypto'\\).randomBytes\\(8\\).toString\\('hex'\\)\\)\")",
       "Bash(node --env-file=.env.local scripts/create-admin.mjs iphoenixgsm@gmail.com \"Kompas2026!\" \"Alex Khrysto\")",
-      "Bash(vercel --version)"
+      "Bash(vercel --version)",
+      "PowerShell(Get-ChildItem -Path \"$env:USERPROFILE\" -Filter \"auth.json\" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 5 | ForEach-Object { Write-Host $_.FullName })"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
