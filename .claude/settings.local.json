@@ -42,7 +42,8 @@
       "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/admin/members/[id]\")",
       "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/admin/\\(panel\\)/members/[id]\")",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; pnpm build 2>&1 | Select-String -Pattern \"Error|error|Warning|warning|✓|✗|Route|Failed|compiled\" | Select-Object -First 60 | ForEach-Object { $_.Line })",
-      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; pnpm build 2>&1 | Select-Object -Last 30 | ForEach-Object { $_.ToString\\(\\) })"
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; pnpm build 2>&1 | Select-Object -Last 30 | ForEach-Object { $_.ToString\\(\\) })",
+      "Bash(pnpm install *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
