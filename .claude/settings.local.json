@@ -46,7 +46,8 @@
       "Bash(pnpm install *)",
       "Bash(echo \"EXIT:$?\")",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; $bytes = [System.IO.File]::ReadAllBytes\\(\"pnpm-workspace.yaml\"\\); $hex = \\($bytes | ForEach-Object { $_.ToString\\(\"X2\"\\) }\\) -join \" \"; Write-Host \"Hex dump \\(first 100 bytes\\):\"; Write-Host $hex.Substring\\(0, [Math]::Min\\(300, $hex.Length\\)\\))",
-      "Bash(grep -B 2 -A 30 \"^  unrs-resolver@1\\\\.12\\\\.2:$\")"
+      "Bash(grep -B 2 -A 30 \"^  unrs-resolver@1\\\\.12\\\\.2:$\")",
+      "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; pnpm config get lockfile; Write-Host \"---\"; Get-Content \"$env:USERPROFILE\\\\.npmrc\" -ErrorAction SilentlyContinue; Write-Host \"---global npmrc\"; Get-Content \"$env:LOCALAPPDATA\\\\pnpm\\\\config\\\\rc\" -ErrorAction SilentlyContinue)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
