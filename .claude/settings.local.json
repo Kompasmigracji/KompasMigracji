@@ -49,7 +49,8 @@
       "Bash(grep -B 2 -A 30 \"^  unrs-resolver@1\\\\.12\\\\.2:$\")",
       "PowerShell(cd \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\"; pnpm config get lockfile; Write-Host \"---\"; Get-Content \"$env:USERPROFILE\\\\.npmrc\" -ErrorAction SilentlyContinue; Write-Host \"---global npmrc\"; Get-Content \"$env:LOCALAPPDATA\\\\pnpm\\\\config\\\\rc\" -ErrorAction SilentlyContinue)",
       "Bash(node --env-file=.env.local -e ' *)",
-      "Bash(node --env-file=.env.local -e \"console.log\\(require\\('crypto'\\).randomBytes\\(8\\).toString\\('hex'\\)\\)\")"
+      "Bash(node --env-file=.env.local -e \"console.log\\(require\\('crypto'\\).randomBytes\\(8\\).toString\\('hex'\\)\\)\")",
+      "Bash(node --env-file=.env.local scripts/create-admin.mjs iphoenixgsm@gmail.com \"Kompas2026!\" \"Alex Khrysto\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
