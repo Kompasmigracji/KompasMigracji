@@ -25,6 +25,15 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // ── Strip locale prefix from admin routes: /uk/admin → /admin ────────────
+  // Prevents 404 when a user navigates to /uk/admin (locale-prefixed URL)
+  const localeAdminMatch = pathname.match(/^\/(uk|pl|en|ru)(\/admin.*)$/);
+  if (localeAdminMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localeAdminMatch[2];
+    return NextResponse.redirect(url);
+  }
+
   // ── Admin pages + admin API: JWT protection ───────────────────────────────
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     // Login page and auth endpoints are public
