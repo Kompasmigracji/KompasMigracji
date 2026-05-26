@@ -1,11 +1,12 @@
 "use client";
 /* Страница входа /admin/login — вне каркаса CMS. */
 import "@/styles/kompascms.css";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@/components/admin/ui";
 
-export default function LoginPage() {
+/* Inner component needs Suspense because it calls useSearchParams() */
+function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const [email, setEmail] = useState("");
@@ -68,5 +69,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   );
 }

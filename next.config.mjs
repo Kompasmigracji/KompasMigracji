@@ -6,8 +6,8 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Only .tsx/.ts files are Next.js pages — excludes legacy src/pages/*.jsx from Pages Router detection
-  pageExtensions: ['tsx', 'ts'],
+  // Include .jsx/.js for KompasCMS admin pages alongside .tsx/.ts
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
 };
 
 export default withNextIntl(nextConfig);

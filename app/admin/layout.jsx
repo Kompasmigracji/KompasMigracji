@@ -1,13 +1,7 @@
-/* HTML-обёртка для всего /admin/* (страница входа + CMS-панель).
-   Изолирована от [locale]-раскладки сайта — своя html+body. */
+/* Layout для /admin/* — вкладається в кореневий layout (app/layout.tsx).
+   Не потрібен власний html/body — кореневий вже надає їх. */
 export const metadata = { title: "KompasCMS · Kompas Migracji" };
 
 export default function AdminLayout({ children }) {
-  return (
-    <html lang="uk">
-      <body style={{ margin: 0, padding: 0 }}>
-        {children}
-      </body>
-    </html>
-  );
+  return <>{children}</>;
 }
