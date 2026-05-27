@@ -28,19 +28,21 @@ export async function GET(req) {
     NODE_ENV:          process.env.NODE_ENV,
   };
 
-  // Тест подключения к БД
+  // Все результаты объявляем снаружи try — чтобы return мог их видеть
   let dbResult = "not tested";
+  let parsedDbResult = "not tested";
+  let parsedConnInfo = null;
+
   try {
     const { Pool } = await import("pg");
 
-    // Определяем что использует lib/db
+    // ── 1. Тест старого подхода: connectionString + ssl option ─────────────
     let connConfig = null;
     let which = null;
 
-    const pghost = process.env.PGHOST;
-    if (pghost) {
+    if (process.env.PGHOST) {
       connConfig = {
-        host: pghost,
+        host: process.env.PGHOST,
         port: Number(process.env.PGPORT) || 5432,
         user: process.env.PGUSER || "postgres",
         password: process.env.PGPASSWORD,
@@ -53,7 +55,7 @@ export async function GET(req) {
       which = "DATABASE_URL";
     } else if (process.env.POSTGRES_URL) {
       connConfig = { connectionString: process.env.POSTGRES_URL, ssl: { rejectUnauthorized: false } };
-      which = "POSTGRES_URL";
+      which = "POSTGRES_URL (connectionString)";
     } else if (process.env.POSTGRES_HOST) {
       connConfig = {
         host: process.env.POSTGRES_HOST,
@@ -66,54 +68,53 @@ export async function GET(req) {
       which = "POSTGRES_HOST";
     }
 
-    // Дополнительно: тест с parsed URL (новый подход lib/db.js)
-    let parsedConfig = null;
-    if (process.env.POSTGRES_URL) {
-      try {
-        const u = new URL(process.env.POSTGRES_URL);
-        parsedConfig = {
-          host: u.hostname,
-          port: parseInt(u.port) || 5432,
-          user: decodeURIComponent(u.username),
-          password: decodeURIComponent(u.password),
-          database: (u.pathname || "/postgres").replace(/^\//, "") || "postgres",
-          ssl: { rejectUnauthorized: false },
-        };
-      } catch (e) {
-        parsedConfig = { parseError: e.message };
-      }
-    }
-
     if (connConfig) {
       const pool = new Pool({ ...connConfig, max: 1, connectionTimeoutMillis: 8000 });
       try {
         const r = await pool.query("select current_user, version()");
-        dbResult = { ok: true, which, user: r.rows[0].current_user, version: r.rows[0].version.slice(0, 40) };
+        dbResult = { ok: true, which, user: r.rows[0].current_user, ver: r.rows[0].version.slice(0, 40) };
       } catch (e) {
         dbResult = { ok: false, which, error: e.message };
       } finally {
         await pool.end().catch(() => {});
       }
     } else {
-      dbResult = { ok: false, which: "none", error: "no db env vars found" };
+      dbResult = { ok: false, which: "none", error: "no db env vars" };
     }
 
-    // Тест parsed URL
-    let parsedDbResult = "skipped";
-    if (parsedConfig && !parsedConfig.parseError) {
-      const pool2 = new Pool({ ...parsedConfig, max: 1, connectionTimeoutMillis: 8000 });
+    // ── 2. Тест нового подхода: parsed URL → individual params ─────────────
+    if (process.env.POSTGRES_URL) {
       try {
-        const r = await pool2.query("select current_user");
-        parsedDbResult = { ok: true, user: r.rows[0].current_user };
+        const u = new URL(process.env.POSTGRES_URL);
+        const parsedConfig = {
+          host:     u.hostname,
+          port:     parseInt(u.port) || 5432,
+          user:     decodeURIComponent(u.username),
+          password: decodeURIComponent(u.password),
+          database: (u.pathname || "/postgres").replace(/^\//, "") || "postgres",
+          ssl:      { rejectUnauthorized: false },
+        };
+        parsedConnInfo = { host: parsedConfig.host, port: parsedConfig.port, user: parsedConfig.user, database: parsedConfig.database };
+
+        const pool2 = new Pool({ ...parsedConfig, max: 1, connectionTimeoutMillis: 8000 });
+        try {
+          const r = await pool2.query("select current_user");
+          parsedDbResult = { ok: true, user: r.rows[0].current_user };
+        } catch (e) {
+          parsedDbResult = { ok: false, error: e.message };
+        } finally {
+          await pool2.end().catch(() => {});
+        }
       } catch (e) {
-        parsedDbResult = { ok: false, error: e.message };
-      } finally {
-        await pool2.end().catch(() => {});
+        parsedDbResult = { ok: false, error: "URL parse failed: " + e.message };
       }
+    } else {
+      parsedDbResult = { ok: false, error: "POSTGRES_URL not set" };
     }
+
   } catch (e) {
-    dbResult = { ok: false, error: "import failed: " + e.message };
+    dbResult = { ok: false, error: "pg import failed: " + e.message };
   }
 
-  return NextResponse.json({ vars, dbResult, parsedDbResult, parsedConfig: parsedConfig ? { host: parsedConfig.host, port: parsedConfig.port, user: parsedConfig.user, database: parsedConfig.database } : null });
+  return NextResponse.json({ vars, dbResult, parsedDbResult, parsedConnInfo });
 }
