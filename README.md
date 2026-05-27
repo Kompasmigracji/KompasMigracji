@@ -1,10 +1,11 @@
 # Kompas Migracji — KompasCRM
 
-> **© 2024–2026 iPhoenixGSM. All rights reserved.**  
-> Товарні знаки «KompasCRM» та «Kompas Migracji» належать **iPhoenixGSM** (iphoenixgsm@gmail.com).
+> **© 2024–2026 DOMUS V Sp. z o.o. (Варшава). Wszelkie prawa zastrzeżone.**  
+> Бренд та торгова марка «Kompas Migracji» належать **DOMUS V Sp. z o.o.**  
+> CRM-система KompasCRM розроблена **iPhoenixGSM** (iphoenixgsm@gmail.com).
 
 Повноцінна платформа юридичних послуг для мігрантів у Польщі та ЄС.  
-Стек: **Next.js 14 + TypeScript + Tailwind CSS + KompasCRM**
+Компанія: **DOMUS V Sp. z o.o.** (Варшава) · Стек: **Next.js 14 + TypeScript + Tailwind CSS + KompasCRM**
 
 ---
 
