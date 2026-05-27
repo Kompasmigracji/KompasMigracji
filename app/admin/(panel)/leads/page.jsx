@@ -310,6 +310,174 @@ function MessageComposer({ lead, onClose }) {
 /* ══════════════════════════════════════════════════════════════════
    LeadsPage
    ══════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   PaymentLinkModal — генерацiя посилання на оплату Przelewy24
+   ══════════════════════════════════════════════════════════════════ */
+function PaymentLinkModal({ lead, onClose }) {
+  const [amountPln,  setAmountPln]  = useState("");
+  const [description, setDescription] = useState(lead.service || "");
+  const [email,      setEmail]      = useState("");
+  const [loading,    setLoading]    = useState(false);
+  const [paymentUrl, setPaymentUrl] = useState(null);
+  const [error,      setError]      = useState("");
+  const [copied,     setCopied]     = useState(false);
+
+  async function generate() {
+    const amt = parseFloat(amountPln);
+    if (!amountPln || isNaN(amt) || amt <= 0) {
+      setError("Введiть суму бiльше 0");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/leads/${lead.id}/payment-link`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount_pln:  amt,
+          description: description.trim() || undefined,
+          email:       email.trim()       || undefined,
+        }),
+      });
+      const d = await res.json();
+      if (d.error) { setError(d.error); return; }
+      setPaymentUrl(d.paymentUrl);
+    } catch {
+      setError("Мережа недоступна");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function copyUrl() {
+    navigator.clipboard?.writeText(paymentUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)",
+      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300,
+    }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="kc-card" style={{
+        width: "100%", maxWidth: 500, margin: 16,
+        display: "flex", flexDirection: "column", gap: 14,
+      }}>
+        {/* Заголовок */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 15 }}>
+              💳 Оплата: {lead.name || "Без iменi"}
+            </div>
+            {lead.service && (
+              <div style={{ fontSize: 12, color: "#a78bfa", marginTop: 2 }}>{lead.service}</div>
+            )}
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#8a96a3" }}>✕</button>
+        </div>
+
+        {!paymentUrl ? (
+          <>
+            {/* Форма */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div>
+                <label style={{ fontSize: 12, color: "#8a96a3", display: "block", marginBottom: 4 }}>
+                  Сума (PLN) *
+                </label>
+                <input
+                  className="kc-input"
+                  type="number" min="1" step="0.01"
+                  value={amountPln}
+                  onChange={e => setAmountPln(e.target.value)}
+                  placeholder="100.00"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: 12, color: "#8a96a3", display: "block", marginBottom: 4 }}>
+                  Опис послуги
+                </label>
+                <input
+                  className="kc-input"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Консультацiя з мiграцiйного права"
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: 12, color: "#8a96a3", display: "block", marginBottom: 4 }}>
+                  Email клiєнта <span style={{ color: "#5a6470" }}>(необов'язково)</span>
+                </label>
+                <input
+                  className="kc-input"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="client@example.com"
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="kc-note" style={{ color: "#f87171", background: "rgba(248,113,113,0.1)" }}>
+                {error}
+              </div>
+            )}
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button className="kc-btn kc-btn-ghost" onClick={onClose}>Скасувати</button>
+              <button className="kc-btn kc-btn-primary" onClick={generate} disabled={loading || !amountPln}>
+                {loading ? "Генерацiя…" : "💳 Генерувати посилання"}
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Результат */}
+            <div className="kc-note" style={{ background: "rgba(34,197,94,0.1)", color: "#22c55e", borderColor: "rgba(34,197,94,0.25)" }}>
+              ✅ Посилання готове! Надiшлiть клiєнту — воно дiйсне 24 год.
+            </div>
+
+            <div>
+              <label style={{ fontSize: 12, color: "#8a96a3", display: "block", marginBottom: 6 }}>
+                Посилання Przelewy24:
+              </label>
+              <div style={{
+                background: "#0f1623", border: "1px solid #2d3748",
+                borderRadius: 8, padding: "10px 12px",
+                fontFamily: "monospace", fontSize: 12,
+                wordBreak: "break-all", color: "#a78bfa", lineHeight: 1.5,
+              }}>
+                {paymentUrl}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+              <button className="kc-btn kc-btn-ghost" onClick={copyUrl}>
+                {copied ? "✅ Скопiйовано!" : "Копiювати"}
+              </button>
+              <a
+                href={paymentUrl} target="_blank" rel="noreferrer"
+                className="kc-btn kc-btn-primary"
+                style={{ textDecoration: "none" }}
+              >
+                Вiдкрити ↗
+              </a>
+              <button className="kc-btn kc-btn-ghost" onClick={onClose}>Закрити</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LeadsPage
+   ══════════════════════════════════════════════════════════════════ */
 export default function LeadsPage() {
   const [leads, setLeads]       = useState(null);
   const [filter, setFilter]     = useState("");
@@ -318,6 +486,7 @@ export default function LeadsPage() {
   const [trashCount, setTrashCount] = useState(0);
   const [confirm, setConfirm]   = useState(null);
   const [composer, setComposer] = useState(null); // лiд для MessageComposer
+  const [paymentModal, setPaymentModal] = useState(null); // лiд для PaymentLinkModal
 
   const loadLeads = useCallback(async (st) => {
     setLeads(null);
@@ -418,6 +587,10 @@ export default function LeadsPage() {
 
       {composer && (
         <MessageComposer lead={composer} onClose={() => setComposer(null)} />
+      )}
+
+      {paymentModal && (
+        <PaymentLinkModal lead={paymentModal} onClose={() => setPaymentModal(null)} />
       )}
 
       {/* ── Панель фильтров ── */}
@@ -521,7 +694,7 @@ export default function LeadsPage() {
 
                   {/* Имя */}
                   <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                       <span style={{ fontWeight: 500 }}>{l.name || "—"}</span>
                       {/* Кнопка Telegram для bot-лiдiв */}
                       {l.chat_id && !isTrash && (
@@ -535,6 +708,20 @@ export default function LeadsPage() {
                             lineHeight: 1.4,
                           }}>
                           ✈️
+                        </button>
+                      )}
+                      {/* Кнопка оплати P24 */}
+                      {!isTrash && (
+                        <button
+                          onClick={() => setPaymentModal(l)}
+                          title="Генерувати посилання на оплату Przelewy24"
+                          style={{
+                            background: "rgba(167,139,250,0.15)", border: "none",
+                            borderRadius: 6, padding: "2px 6px", cursor: "pointer",
+                            fontSize: 12, color: "#a78bfa", fontWeight: 600,
+                            lineHeight: 1.4,
+                          }}>
+                          💳
                         </button>
                       )}
                     </div>
