@@ -189,7 +189,7 @@ export default function SettingsPage() {
               </div>
             )}
             <div className="kc-field">
-              <label className="kc-label">Iм'я та прiзвище</label>
+              <label className="kc-label">Iм&apos;я та прiзвище</label>
               <input className="kc-input" value={invite.full_name}
                 onChange={(e) => setInvite({ ...invite, full_name: e.target.value })}
                 placeholder="Юлiя Онищак" />
