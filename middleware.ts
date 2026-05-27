@@ -42,6 +42,21 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // ── Strip locale prefix from payment routes: /uk/payment → /payment ───────
+  // Payment pages live in app/payment/ (not in app/[locale]/), so they must
+  // be accessed WITHOUT a locale prefix.
+  const localePaymentMatch = pathname.match(/^\/(uk|pl|en|ru)(\/payment\/.*)$/);
+  if (localePaymentMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localePaymentMatch[2];
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ── Payment pages: skip intl middleware (no locale prefix needed) ─────────
+  if (pathname.startsWith("/payment/")) {
+    return NextResponse.next();
+  }
+
   // ── Admin pages + admin API: JWT protection ───────────────────────────────
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     // Login page and auth endpoints are public
