@@ -47,18 +47,18 @@ export function StatCard({ icon, value, label, sub }) {
 
 /* ---------- бейдж статуса ---------- */
 const BADGE = {
-  active: ["kc-badge-green", "Активен"],
-  pending: ["kc-badge-brass", "Ожидает"],
-  suspended: ["kc-badge-red", "Заблокирован"],
-  new: ["kc-badge-blue", "Новый"],
-  in_progress: ["kc-badge-brass", "В работе"],
-  converted: ["kc-badge-green", "Конверсия"],
-  closed: ["kc-badge-dim", "Закрыт"],
-  open: ["kc-badge-blue", "Открыто"],
-  resolved: ["kc-badge-green", "Решено"],
+  active: ["kc-badge-green", "Активний"],
+  pending: ["kc-badge-brass", "Очікує"],
+  suspended: ["kc-badge-red", "Заблокований"],
+  new: ["kc-badge-blue", "Новий"],
+  in_progress: ["kc-badge-brass", "В роботі"],
+  converted: ["kc-badge-green", "Конверсія"],
+  closed: ["kc-badge-dim", "Закрито"],
+  open: ["kc-badge-blue", "Відкрито"],
+  resolved: ["kc-badge-green", "Вирішено"],
   paid: ["kc-badge-green", "Оплачено"],
   unpaid: ["kc-badge-red", "Не оплачено"],
-  exempt: ["kc-badge-dim", "Освобождён"],
+  exempt: ["kc-badge-dim", "Звільнений"],
   // универсальные тона (с обязательным text)
   brass: ["kc-badge-brass", ""],
   blue: ["kc-badge-blue", ""],
@@ -95,7 +95,7 @@ export function Spinner() {
     </div>
   );
 }
-export function Empty({ text = "Нет данных" }) {
+export function Empty({ text = "Немає даних" }) {
   return <div className="kc-empty">{text}</div>;
 }
 

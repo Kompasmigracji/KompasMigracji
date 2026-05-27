@@ -1,5 +1,5 @@
 "use client";
-/* Дашборд /admin — кастомная аналитика проекта Kompas Migracji. */
+/* Дашборд /admin — аналiтика проекту Kompas Migracji. */
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -8,7 +8,7 @@ import {
 
 const SOURCE_LABEL = {
   bot: "Telegram-бот", site: "Сайт", facebook: "Facebook",
-  instagram: "Instagram", other: "Другое",
+  instagram: "Instagram", other: "Iнше",
 };
 const SOURCE_COLOR = {
   bot: "#5f9bd5", site: "#d99e54", facebook: "#5f9bd5",
@@ -23,7 +23,7 @@ export default function Dashboard() {
     fetch("/api/admin/stats")
       .then((r) => r.json())
       .then((d) => (d.error ? setError(d.error) : setStats(d)))
-      .catch(() => setError("Не удалось загрузить аналитику"));
+      .catch(() => setError("Не вдалося завантажити аналiтику"));
   }, []);
 
   if (error) {
@@ -49,80 +49,80 @@ export default function Dashboard() {
 
   return (
     <div>
-      {/* верхние метрики */}
+      {/* верхнi метрики */}
       <div className="kc-grid kc-grid-4" style={{ marginBottom: 14 }}>
-        <StatCard icon="users" value={stats.members.total} label="Участников профсоюза"
-          sub={`${stats.members.active} активных · ${stats.members.pending} ожидают`} />
-        <StatCard icon="inbox" value={stats.leads.new} label="Новых лидов"
-          sub={`всего ${stats.leads.total} · конверсия ${conv}%`} />
-        <StatCard icon="briefcase" value={stats.cases.active} label="Активных дел"
-          sub={`${stats.cases.resolved} решено`} />
-        <StatCard icon="cash" value={stats.duesCollected.toLocaleString("ru-RU") + " zł"}
-          label="Собрано взносов" sub={`собираемость ${duesRate}%`} />
+        <StatCard icon="users" value={stats.members.total} label="Учасникiв профспiлки"
+          sub={`${stats.members.active} активних · ${stats.members.pending} очiкують`} />
+        <StatCard icon="inbox" value={stats.leads.new} label="Нових лiдiв"
+          sub={`усього ${stats.leads.total} · конверсiя ${conv}%`} />
+        <StatCard icon="briefcase" value={stats.cases.active} label="Активних справ"
+          sub={`${stats.cases.resolved} вирiшено`} />
+        <StatCard icon="cash" value={stats.duesCollected.toLocaleString("uk-UA") + " zł"}
+          label="Зiбрано внескiв" sub={`збираннiсть ${duesRate}%`} />
       </div>
 
-      {/* аналитика: динамика + воронка */}
+      {/* аналiтика: динамiка + воронка */}
       <div className="kc-grid kc-grid-2" style={{ marginBottom: 14 }}>
         <div className="kc-card">
-          <div className="kc-card-cap">Регистрации участников · 14 дней</div>
+          <div className="kc-card-cap">Реєстрацiї учасникiв · 14 днiв</div>
           <Sparkline data={stats.series} />
           <div className="kc-row" style={{ justifyContent: "space-between", marginTop: 8 }}>
-            <span className="kc-stat-sub">14 дней назад</span>
+            <span className="kc-stat-sub">14 днiв тому</span>
             <span className="kc-stat-sub">
-              всего за период: {stats.series.reduce((a, b) => a + b, 0)}
+              усього за перiод: {stats.series.reduce((a, b) => a + b, 0)}
             </span>
-            <span className="kc-stat-sub">сегодня</span>
+            <span className="kc-stat-sub">сьогоднi</span>
           </div>
         </div>
 
         <div className="kc-card">
-          <div className="kc-card-cap">Воронка лидов · по источникам</div>
+          <div className="kc-card-cap">Воронка лiдiв · за джерелами</div>
           {sources.length
             ? <BarList items={sources} />
-            : <Empty text="Лидов пока нет" />}
+            : <Empty text="Лiдiв поки немає" />}
         </div>
       </div>
 
-      {/* сбор взносов + последние лиды */}
+      {/* збiр внескiв + останнi лiди */}
       <div className="kc-grid kc-grid-2">
         <div className="kc-card">
-          <div className="kc-card-cap">Членские взносы</div>
+          <div className="kc-card-cap">Членськi внески</div>
           <div className="kc-row" style={{ gap: 22, marginBottom: 12 }}>
             <div>
               <div style={{ fontFamily: "var(--display)", fontSize: 26, fontWeight: 600 }}>
-                {stats.duesCollected.toLocaleString("ru-RU")} zł
+                {stats.duesCollected.toLocaleString("uk-UA")} zł
               </div>
-              <div className="kc-stat-sub">собрано</div>
+              <div className="kc-stat-sub">зiбрано</div>
             </div>
             <div>
               <div style={{ fontFamily: "var(--display)", fontSize: 26, fontWeight: 600, color: "#d96c6c" }}>
-                {(stats.duesOutstanding || 0).toLocaleString("ru-RU")} zł
+                {(stats.duesOutstanding || 0).toLocaleString("uk-UA")} zł
               </div>
-              <div className="kc-stat-sub">к доплате</div>
+              <div className="kc-stat-sub">до оплати</div>
             </div>
           </div>
           <div style={{ height: 8, background: "var(--bg)", borderRadius: 5, overflow: "hidden" }}>
             <div style={{ height: 8, width: duesRate + "%", background: "var(--green)", borderRadius: 5 }} />
           </div>
           <div className="kc-stat-sub" style={{ marginTop: 6 }}>
-            Собираемость взносов: {duesRate}%
+            Збираннiсть внескiв: {duesRate}%
           </div>
         </div>
 
         <div className="kc-card">
-          <div className="kc-card-cap">Последние лиды</div>
+          <div className="kc-card-cap">Останнi лiди</div>
           {stats.recentLeads.length ? stats.recentLeads.map((l) => (
             <div key={l.id} className="kc-row"
               style={{ padding: "9px 0", borderBottom: "1px solid var(--border)" }}>
               <Badge status={l.source === "bot" ? "in_progress" : "new"}
                 text={SOURCE_LABEL[l.source] || l.source} />
-              <span style={{ flex: 1, fontSize: 13.5 }}>{l.name || "Без имени"}</span>
+              <span style={{ flex: 1, fontSize: 13.5 }}>{l.name || "Без iменi"}</span>
               <Badge status={l.status} />
             </div>
-          )) : <Empty text="Лидов пока нет" />}
+          )) : <Empty text="Лiдiв поки немає" />}
           <Link href="/admin/leads" className="kc-link"
             style={{ fontSize: 13, display: "inline-block", marginTop: 10 }}>
-            Все лиды →
+            Всi лiди →
           </Link>
         </div>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-/* /admin/settings — настройки CMS: команда, смена пароля, безопасность. */
+/* /admin/settings — налаштування CRM: команда, змiна пароля, безпека. */
 import React, { useEffect, useState } from "react";
 import { Icon, Spinner, Badge, Empty } from "@/components/admin/ui";
 import { ROLE_LABEL } from "@/lib/rbac";
@@ -9,13 +9,13 @@ export default function SettingsPage() {
   const [team, setTeam] = useState(null);
   const [error, setError] = useState("");
 
-  /* приглашение */
+  /* запрошення */
   const [invite, setInvite] = useState(null); // {full_name,email,role} | null
   const [inviteBusy, setInviteBusy] = useState(false);
   const [inviteErr, setInviteErr] = useState("");
   const [created, setCreated] = useState(null); // {email,temp_password,role}
 
-  /* смена пароля */
+  /* змiна пароля */
   const [pwd, setPwd] = useState({ current: "", next: "", confirm: "" });
   const [pwdBusy, setPwdBusy] = useState(false);
   const [pwdMsg, setPwdMsg] = useState("");
@@ -24,7 +24,7 @@ export default function SettingsPage() {
     fetch("/api/admin/team")
       .then((r) => r.json())
       .then((d) => (d.error ? null : setTeam(d.team)))
-      .catch(() => setError("Не удалось загрузить команду"));
+      .catch(() => setError("Не вдалося завантажити команду"));
   };
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function SettingsPage() {
 
   const sendInvite = async () => {
     if (!invite.full_name.trim() || !invite.email.trim()) {
-      setInviteErr("Имя и email обязательны");
+      setInviteErr("Iм'я та email обов'язковi");
       return;
     }
     setInviteBusy(true); setInviteErr("");
@@ -50,15 +50,15 @@ export default function SettingsPage() {
       setInvite(null);
       loadTeam();
     } catch {
-      setInviteErr("Сеть недоступна");
+      setInviteErr("Мережа недоступна");
     } finally {
       setInviteBusy(false);
     }
   };
 
   const changePwd = async () => {
-    if (pwd.next.length < 6) { setPwdMsg("⚠ Новый пароль — минимум 6 символов"); return; }
-    if (pwd.next !== pwd.confirm) { setPwdMsg("⚠ Пароли не совпадают"); return; }
+    if (pwd.next.length < 6) { setPwdMsg("⚠ Новий пароль — мiнiмум 6 символiв"); return; }
+    if (pwd.next !== pwd.confirm) { setPwdMsg("⚠ Паролi не збiгаються"); return; }
     setPwdBusy(true); setPwdMsg("");
     try {
       const res = await fetch("/api/admin/auth/password", {
@@ -69,9 +69,9 @@ export default function SettingsPage() {
       const d = await res.json();
       if (d.error) { setPwdMsg("⚠ " + d.error); return; }
       setPwd({ current: "", next: "", confirm: "" });
-      setPwdMsg("Пароль изменён");
+      setPwdMsg("Пароль змiнено");
     } catch {
-      setPwdMsg("⚠ Сеть недоступна");
+      setPwdMsg("⚠ Мережа недоступна");
     } finally {
       setPwdBusy(false);
     }
@@ -87,16 +87,16 @@ export default function SettingsPage() {
       )}
 
       <div className="kc-grid kc-grid-2">
-        {/* команда CMS */}
+        {/* команда CRM */}
         <div className="kc-card">
           <div className="kc-row" style={{ justifyContent: "space-between", marginBottom: 12 }}>
-            <div className="kc-card-cap" style={{ margin: 0 }}>Команда CMS</div>
+            <div className="kc-card-cap" style={{ margin: 0 }}>Команда CRM</div>
             <button className="kc-btn kc-btn-primary"
               onClick={() => { setInvite({ full_name: "", email: "", role: "moderator" }); setInviteErr(""); }}>
-              <Icon name="plus" size={14} /> Пригласить
+              <Icon name="plus" size={14} /> Запросити
             </button>
           </div>
-          {!team ? <Spinner /> : team.length === 0 ? <Empty text="Команда пуста" /> : (
+          {!team ? <Spinner /> : team.length === 0 ? <Empty text="Команда порожня" /> : (
             <div>
               {team.map((u) => (
                 <div key={u.id} className="kc-row"
@@ -116,9 +116,9 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* смена пароля */}
+        {/* змiна пароля */}
         <div className="kc-card">
-          <div className="kc-card-cap">Смена пароля</div>
+          <div className="kc-card-cap">Змiна пароля</div>
           {me && (
             <div style={{ marginBottom: 12 }}>
               <span style={{ fontWeight: 600, fontSize: 14 }}>{me.name}</span>
@@ -126,17 +126,17 @@ export default function SettingsPage() {
             </div>
           )}
           <div className="kc-field">
-            <label className="kc-label">Текущий пароль</label>
+            <label className="kc-label">Поточний пароль</label>
             <input className="kc-input" type="password" value={pwd.current}
               onChange={(e) => setPwd({ ...pwd, current: e.target.value })} />
           </div>
           <div className="kc-field">
-            <label className="kc-label">Новый пароль</label>
+            <label className="kc-label">Новий пароль</label>
             <input className="kc-input" type="password" value={pwd.next}
               onChange={(e) => setPwd({ ...pwd, next: e.target.value })} />
           </div>
           <div className="kc-field">
-            <label className="kc-label">Повторите новый пароль</label>
+            <label className="kc-label">Повторiть новий пароль</label>
             <input className="kc-input" type="password" value={pwd.confirm}
               onChange={(e) => setPwd({ ...pwd, confirm: e.target.value })} />
           </div>
@@ -148,40 +148,40 @@ export default function SettingsPage() {
           )}
           <button className="kc-btn kc-btn-primary" disabled={pwdBusy}
             onClick={changePwd} style={{ width: "100%", justifyContent: "center" }}>
-            {pwdBusy ? "Сохранение…" : "Изменить пароль"}
+            {pwdBusy ? "Збереження…" : "Змiнити пароль"}
           </button>
         </div>
 
-        {/* безопасность */}
+        {/* безпека */}
         <div className="kc-card">
-          <div className="kc-card-cap">Безопасность</div>
+          <div className="kc-card-cap">Безпека</div>
           <ul style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.8, paddingLeft: 18, margin: 0 }}>
-            <li>JWT в httpOnly-cookie, срок 7 дней</li>
-            <li>Пароли — bcrypt, 10 раундов</li>
-            <li>Защита маршрутов — middleware.js + requireAuth</li>
-            <li>Журнал действий — таблица kompas_audit_log</li>
-            <li>Изоляция: префиксы kompas_ / /api/admin / kc-</li>
+            <li>JWT в httpOnly-cookie, термiн 7 днiв</li>
+            <li>Паролi — bcrypt, 10 раундiв</li>
+            <li>Захист маршрутiв — middleware.js + requireAuth</li>
+            <li>Журнал дiй — таблиця kompas_audit_log</li>
+            <li>Iзоляцiя: префiкси kompas_ / /api/admin / kc-</li>
           </ul>
         </div>
 
-        {/* дорожная карта */}
+        {/* дорожня карта */}
         <div className="kc-card">
-          <div className="kc-card-cap">Дорожная карта</div>
+          <div className="kc-card-cap">Дорожня карта</div>
           <ul style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.8, paddingLeft: 18, margin: 0 }}>
-            <li>Refresh-токены и отзыв сессий</li>
-            <li>Модуль юридических дел /admin/cases</li>
-            <li>Экспорт реестра участников в CSV</li>
-            <li>Оплата взносов через Przelewy24</li>
-            <li>Двухфакторная аутентификация</li>
+            <li>Refresh-токени та вiдкликання сесiй</li>
+            <li>Модуль юридичних справ /admin/cases</li>
+            <li>Експорт реєстру учасникiв у CSV</li>
+            <li>Оплата внескiв через Przelewy24</li>
+            <li>Двофакторна автентифiкацiя</li>
           </ul>
         </div>
       </div>
 
-      {/* модалка приглашения */}
+      {/* модалка запрошення */}
       {invite && (
         <div className="kc-modal-bg" onClick={() => setInvite(null)}>
           <div className="kc-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="kc-modal-title">Пригласить в команду</div>
+            <div className="kc-modal-title">Запросити в команду</div>
             {inviteErr && (
               <div className="kc-error" style={{ marginBottom: 12 }}>
                 <Icon name="settings" size={15} color="#d96c6c" />
@@ -189,10 +189,10 @@ export default function SettingsPage() {
               </div>
             )}
             <div className="kc-field">
-              <label className="kc-label">Имя и фамилия</label>
+              <label className="kc-label">Iм'я та прiзвище</label>
               <input className="kc-input" value={invite.full_name}
                 onChange={(e) => setInvite({ ...invite, full_name: e.target.value })}
-                placeholder="Юлия Онищак" />
+                placeholder="Юлiя Онищак" />
             </div>
             <div className="kc-field">
               <label className="kc-label">Email</label>
@@ -205,36 +205,36 @@ export default function SettingsPage() {
               <label className="kc-label">Роль</label>
               <select className="kc-select" value={invite.role}
                 onChange={(e) => setInvite({ ...invite, role: e.target.value })}>
-                <option value="moderator">Модератор — участники и лиды</option>
-                <option value="admin">Администратор — полный доступ</option>
+                <option value="moderator">Модератор — учасники та лiди</option>
+                <option value="admin">Адмiнiстратор — повний доступ</option>
               </select>
             </div>
             <div className="kc-row" style={{ justifyContent: "flex-end", gap: 8, marginTop: 6 }}>
               <button className="kc-btn kc-btn-ghost" onClick={() => setInvite(null)}>
-                Отмена
+                Скасувати
               </button>
               <button className="kc-btn kc-btn-primary" disabled={inviteBusy}
                 onClick={sendInvite}>
-                {inviteBusy ? "Создание…" : "Создать доступ"}
+                {inviteBusy ? "Створення…" : "Створити доступ"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* временный пароль нового члена команды */}
+      {/* тимчасовий пароль нового члена команди */}
       {created && (
         <div className="kc-modal-bg" onClick={() => setCreated(null)}>
           <div className="kc-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="kc-modal-title">Доступ создан</div>
+            <div className="kc-modal-title">Доступ створено</div>
             <p style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.6 }}>
-              Передай эти данные коллеге лично. Временный пароль показывается
-              один раз — он сменит его в разделе «Настройки».
+              Передайте цi данi колезi особисто. Тимчасовий пароль показується
+              один раз — вiн змiнить його в роздiлi «Налаштування».
             </p>
             <div className="kc-card" style={{ background: "var(--bg)", marginTop: 6 }}>
               <div style={{ fontSize: 12, color: "#828c9b" }}>Email</div>
               <div className="kc-mono" style={{ marginBottom: 8 }}>{created.email}</div>
-              <div style={{ fontSize: 12, color: "#828c9b" }}>Временный пароль</div>
+              <div style={{ fontSize: 12, color: "#828c9b" }}>Тимчасовий пароль</div>
               <div className="kc-mono" style={{ color: "#d99e54", fontSize: 16 }}>
                 {created.temp_password}
               </div>

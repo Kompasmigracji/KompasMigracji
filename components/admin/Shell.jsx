@@ -52,7 +52,7 @@ export default function Shell({ children }) {
           </div>
 
           <nav className="kc-nav">
-            <div className="kc-nav-cap">Управление</div>
+            <div className="kc-nav-cap">Управління</div>
             {nav.map((n) => {
               const on = n.href === "/admin"
                 ? pathname === "/admin"
@@ -74,7 +74,7 @@ export default function Shell({ children }) {
                 <div className="kc-user-name">{user?.name}</div>
                 <div className="kc-user-role">{ROLE_LABEL[user?.role] || user?.role}</div>
               </div>
-              <button onClick={logout} title="Выйти"
+              <button onClick={logout} title="Вийти"
                 style={{ background: "none", border: "none", cursor: "pointer", color: "#5a6470" }}>
                 <Icon name="logout" size={17} />
               </button>

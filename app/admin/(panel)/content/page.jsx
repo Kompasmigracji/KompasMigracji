@@ -1,14 +1,14 @@
 "use client";
-/* /admin/content — управление блоками контента сайта kompasmigracji.com.
-   Юридический чек-лист: оферта, цены, регламент, политика приватности. */
+/* /admin/content — управлiння блоками контенту сайту kompasmigracji.com.
+   Юридичний чек-лист: оферта, цiни, регламент, полiтика приватностi. */
 import React, { useEffect, useState } from "react";
 import { Icon, Spinner, Badge } from "@/components/admin/ui";
 
 const DESC = {
-  offer: "Описание услуг портала",
-  pricing: "Прайс юридических консультаций",
-  regulamin: "Правила — ссылка из чекбокса в оплате",
-  privacy: "Политика приватности — обязательна по закону",
+  offer: "Опис послуг порталу",
+  pricing: "Прайс юридичних консультацiй",
+  regulamin: "Правила — посилання з чекбокса в оплатi",
+  privacy: "Полiтика приватностi — обов'язкова за законом",
 };
 
 export default function ContentPage() {
@@ -21,7 +21,7 @@ export default function ContentPage() {
     fetch("/api/admin/content")
       .then((r) => r.json())
       .then((d) => (d.error ? setError(d.error) : setBlocks(d.blocks)))
-      .catch(() => setError("Не удалось загрузить контент"));
+      .catch(() => setError("Не вдалося завантажити контент"));
   };
   useEffect(load, []);
 
@@ -50,12 +50,12 @@ export default function ContentPage() {
       if (d.error) { flash("⚠ " + d.error); return; }
       patch(block.slug, d.block);
       flash(
-        publishedOverride === true ? "Опубликовано: " + d.block.title
-        : publishedOverride === false ? "Снято с публикации: " + d.block.title
-        : "Сохранено: " + d.block.title
+        publishedOverride === true ? "Опублiковано: " + d.block.title
+        : publishedOverride === false ? "Знято з публiкацiї: " + d.block.title
+        : "Збережено: " + d.block.title
       );
     } catch {
-      flash("⚠ Сеть недоступна");
+      flash("⚠ Мережа недоступна");
     } finally {
       setBusy("");
     }
@@ -76,10 +76,10 @@ export default function ContentPage() {
   return (
     <div>
       <div className="kc-note" style={{ marginBottom: 14 }}>
-        Юридический чек-лист kompasmigracji.com: опубликовать четыре блока ниже,
-        исправить данные фирмы в футере сайта (NIP, REGON, KRS) и добавить
-        чекбокс согласия с регламентом в процесс оплаты. Опубликовано:{" "}
-        {publishedCount} из {blocks.length}.
+        Юридичний чек-лист kompasmigracji.com: опублiкувати чотири блоки нижче,
+        виправити данi фiрми у футерi сайту (NIP, REGON, KRS) i додати
+        чекбокс згоди з регламентом у процес оплати. Опублiковано:{" "}
+        {publishedCount} з {blocks.length}.
       </div>
 
       {toast && (
@@ -97,12 +97,12 @@ export default function ContentPage() {
                 <div>
                   <div style={{ fontWeight: 600 }}>{DESC[b.slug] ? b.title : b.slug}</div>
                   <div style={{ color: "#5a6470", fontSize: 12 }}>
-                    {DESC[b.slug] || "Блок контента"}
+                    {DESC[b.slug] || "Блок контенту"}
                   </div>
                 </div>
               </div>
               <Badge status={b.published ? "paid" : "unpaid"}
-                text={b.published ? "Опубликовано" : "Черновик"} />
+                text={b.published ? "Опублiковано" : "Чернетка"} />
             </div>
 
             <div className="kc-field" style={{ marginTop: 12, marginBottom: 10 }}>
@@ -113,29 +113,29 @@ export default function ContentPage() {
 
             <textarea className="kc-textarea" value={b.body || ""}
               onChange={(e) => patch(b.slug, { body: e.target.value })}
-              placeholder={"Содержимое блока «" + b.title + "»…"} />
+              placeholder={"Змiст блоку «" + b.title + "»…"} />
 
             <div className="kc-row"
               style={{ justifyContent: "space-between", marginTop: 10 }}>
               <span className="kc-stat-sub">
                 {b.updated_at
-                  ? "изменён " + new Date(b.updated_at).toLocaleDateString("ru-RU")
-                  : "не сохранён"}
+                  ? "змiнено " + new Date(b.updated_at).toLocaleDateString("uk-UA")
+                  : "не збережено"}
               </span>
               <div className="kc-row" style={{ gap: 8 }}>
                 <button className="kc-btn kc-btn-ghost" disabled={busy === b.slug}
                   onClick={() => save(b)}>
-                  Сохранить
+                  Зберегти
                 </button>
                 {b.published ? (
                   <button className="kc-btn kc-btn-danger" disabled={busy === b.slug}
                     onClick={() => save(b, false)}>
-                    Снять с публикации
+                    Зняти з публiкацiї
                   </button>
                 ) : (
                   <button className="kc-btn kc-btn-primary" disabled={busy === b.slug}
                     onClick={() => save(b, true)}>
-                    <Icon name="check" size={14} /> Опубликовать
+                    <Icon name="check" size={14} /> Опублiкувати
                   </button>
                 )}
               </div>

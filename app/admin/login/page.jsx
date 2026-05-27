@@ -1,5 +1,5 @@
-﻿"use client";
-/* Сторінка входу /admin/login */
+"use client";
+/* Сторiнка входу /admin/login */
 import "@/styles/kompascrm.css";
 import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,7 +14,7 @@ function LoginForm() {
   const [loading, setLoading]   = useState(false);
 
   const submit = async () => {
-    if (!email || !password) { setError("Введите email и пароль"); return; }
+    if (!email || !password) { setError("Введiть email та пароль"); return; }
     setLoading(true);
     setError("");
     try {
@@ -24,12 +24,12 @@ function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
-      // Безпечно читаємо тіло — навіть якщо сервер повернув не-JSON (500 HTML)
+      // Безпечно читаємо тiло — навiть якщо сервер повернув не-JSON (500 HTML)
       let data = {};
       try { data = await res.json(); } catch { /* ignore parse errors */ }
 
       if (!res.ok) {
-        setError(data.error || `Ошибка сервера (${res.status})`);
+        setError(data.error || `Помилка сервера (${res.status})`);
         setLoading(false);
         return;
       }
@@ -37,7 +37,7 @@ function LoginForm() {
       const next = params.get("next") || "/admin";
       router.push(data.user?.role === "member" ? "/admin/me" : next);
     } catch {
-      setError("Сеть недоступна — проверьте подключение");
+      setError("Мережа недоступна — перевiрте пiдключення");
       setLoading(false);
     }
   };
@@ -50,7 +50,7 @@ function LoginForm() {
             <Icon name="compass" size={27} color="#d99e54" />
           </div>
           <div className="kc-login-title">KompasCRM</div>
-          <div className="kc-login-sub">Командный центр Kompas Migracji</div>
+          <div className="kc-login-sub">Командний центр Kompas Migracji</div>
 
           {error && (
             <div className="kc-error" style={{ marginBottom: 14 }}>
@@ -90,7 +90,7 @@ function LoginForm() {
             disabled={loading}
             style={{ width: "100%", justifyContent: "center", marginTop: 6 }}
           >
-            {loading ? "Вход…" : "Войти"}
+            {loading ? "Вхiд…" : "Увiйти"}
           </button>
         </div>
       </div>
