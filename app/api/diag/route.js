@@ -66,6 +66,24 @@ export async function GET(req) {
       which = "POSTGRES_HOST";
     }
 
+    // Дополнительно: тест с parsed URL (новый подход lib/db.js)
+    let parsedConfig = null;
+    if (process.env.POSTGRES_URL) {
+      try {
+        const u = new URL(process.env.POSTGRES_URL);
+        parsedConfig = {
+          host: u.hostname,
+          port: parseInt(u.port) || 5432,
+          user: decodeURIComponent(u.username),
+          password: decodeURIComponent(u.password),
+          database: (u.pathname || "/postgres").replace(/^\//, "") || "postgres",
+          ssl: { rejectUnauthorized: false },
+        };
+      } catch (e) {
+        parsedConfig = { parseError: e.message };
+      }
+    }
+
     if (connConfig) {
       const pool = new Pool({ ...connConfig, max: 1, connectionTimeoutMillis: 8000 });
       try {
@@ -74,14 +92,28 @@ export async function GET(req) {
       } catch (e) {
         dbResult = { ok: false, which, error: e.message };
       } finally {
-        await pool.end();
+        await pool.end().catch(() => {});
       }
     } else {
       dbResult = { ok: false, which: "none", error: "no db env vars found" };
+    }
+
+    // Тест parsed URL
+    let parsedDbResult = "skipped";
+    if (parsedConfig && !parsedConfig.parseError) {
+      const pool2 = new Pool({ ...parsedConfig, max: 1, connectionTimeoutMillis: 8000 });
+      try {
+        const r = await pool2.query("select current_user");
+        parsedDbResult = { ok: true, user: r.rows[0].current_user };
+      } catch (e) {
+        parsedDbResult = { ok: false, error: e.message };
+      } finally {
+        await pool2.end().catch(() => {});
+      }
     }
   } catch (e) {
     dbResult = { ok: false, error: "import failed: " + e.message };
   }
 
-  return NextResponse.json({ vars, dbResult });
+  return NextResponse.json({ vars, dbResult, parsedDbResult, parsedConfig: parsedConfig ? { host: parsedConfig.host, port: parsedConfig.port, user: parsedConfig.user, database: parsedConfig.database } : null });
 }
