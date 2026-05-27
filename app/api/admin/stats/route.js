@@ -65,7 +65,7 @@ export async function GET() {
     SELECT
       id,
       CASE WHEN chat_id IS NOT NULL THEN 'bot' ELSE 'site' END AS source,
-      COALESCE(first_name, name)  AS name,
+      first_name   AS name,
       COALESCE(status, 'new')     AS status,
       created_at
     FROM leads ORDER BY created_at DESC LIMIT 6`);

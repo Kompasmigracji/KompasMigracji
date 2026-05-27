@@ -151,7 +151,12 @@ export default function ChatBot() {
         try {
           const lead = JSON.parse(match[1]);
           if (supabase && lead.name && lead.phone) {
-            await supabase.from('leads').insert({ ...lead, source: 'chatbot' });
+            // Таблиця leads: first_name, contact, situation (немає name/phone/source)
+            await supabase.from('leads').insert({
+              first_name: lead.name,
+              contact: lead.phone,
+              situation: 'Заявка через AI-чат',
+            });
           }
         } catch (err) {
           console.error('Failed to save lead:', err);
