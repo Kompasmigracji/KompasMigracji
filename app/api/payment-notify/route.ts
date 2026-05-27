@@ -8,7 +8,10 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { one, q } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
+import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
+
+const ADMIN_WA_PHONE = "48729417050";
 
 export async function POST(req: NextRequest) {
   const merchantId = parseInt(process.env.P24_MERCHANT_ID ?? "", 10);

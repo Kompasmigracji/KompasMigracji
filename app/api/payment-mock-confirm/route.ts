@@ -1,13 +1,16 @@
 /* /api/payment-mock-confirm — симулює IPN від Przelewy24.
    Використовується ТІЛЬКИ в мок-режимі (P24_SANDBOX=mock або без ключів P24).
    POST { sessionId, success: boolean }
-   → оновлює lead, надсилає Telegram-повідомлення */
+   → оновлює lead, надсилає Telegram + WhatsApp повідомлення */
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
+import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
+
+const ADMIN_WA_PHONE = "48729417050"; // WhatsApp для нотифікацій про оплату
 
 function isMockMode(): boolean {
   return (
@@ -59,10 +62,12 @@ export async function POST(req: NextRequest) {
     chat_id: number | null;
     first_name: string | null;
     service: string | null;
+    contact: string | null;
+    situation: string | null;
   };
 
   const lead = (await one(
-    `SELECT id, chat_id, first_name, service
+    `SELECT id, chat_id, first_name, service, contact, situation
        FROM leads
       WHERE session_id = $1 AND deleted_at IS NULL
       LIMIT 1`,
@@ -72,16 +77,23 @@ export async function POST(req: NextRequest) {
   /* ── Якщо ліда немає (публічний платіж без ліда) ────────────────── */
   if (!lead) {
     const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+    const tgText =
+      `💳 <b>[ТЕСТ] Оплата з сайту підтверджена!</b>\n` +
+      `Session: <code>${sessionId}</code>\n` +
+      `(лід не знайдено — публічний платіж)`;
+
     if (adminChat) {
-      try {
-        await sendMessage(
-          adminChat,
-          `💳 <b>[ТЕСТ] Оплата з сайту підтверджена!</b>\n` +
-          `Session: <code>${sessionId}</code>\n` +
-          `(лід не знайдено — публічний платіж)`,
-        );
-      } catch { /* ігноруємо */ }
+      try { await sendMessage(adminChat, tgText); } catch { /* ігноруємо */ }
     }
+
+    // WhatsApp нотифікація навіть без ліда
+    try {
+      await sendWhatsApp(
+        ADMIN_WA_PHONE,
+        `💳 [ТЕСТ] Оплата підтверджена!\nSession: ${sessionId}\n(лід не знайдено)`,
+      );
+    } catch { /* ігноруємо */ }
+
     return NextResponse.json({ ok: true, status: "confirmed" });
   }
 
@@ -114,22 +126,38 @@ export async function POST(req: NextRequest) {
         );
       }
     } catch (err) {
-      console.error("payment-mock-confirm: Telegram send failed", err);
+      console.error("payment-mock-confirm: Telegram client send failed", err);
     }
   }
 
   /* ── Telegram адміну ─────────────────────────────────────────────── */
   const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+  const tgAdminText =
+    `💳 <b>[ТЕСТ] Нова оплата!</b>\n` +
+    `👤 Клієнт: ${lead.first_name ?? "—"}\n` +
+    (lead.contact  ? `📞 Телефон: ${lead.contact}\n`  : "") +
+    (lead.situation ? `📝 Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
+    (lead.service  ? `🏷 Сервіс: ${lead.service}\n`   : "") +
+    `🔑 Session: <code>${sessionId}</code>`;
+
   if (adminChat) {
     try {
-      await sendMessage(
-        adminChat,
-        `💳 <b>[ТЕСТ] Оплата підтверджена!</b>\n` +
-        `Клієнт: ${lead.first_name ?? "—"}\n` +
-        `Session: <code>${sessionId}</code>`,
-      );
+      await sendMessage(adminChat, tgAdminText);
     } catch { /* ігноруємо */ }
   }
+
+  /* ── WhatsApp адміну ─────────────────────────────────────────────── */
+  try {
+    const waText =
+      `💳 [ТЕСТ] Нова оплата!\n` +
+      `Клієнт: ${lead.first_name ?? "—"}\n` +
+      (lead.contact   ? `Телефон: ${lead.contact}\n`                  : "") +
+      (lead.situation ? `Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
+      (lead.service   ? `Сервіс: ${lead.service}\n`                   : "") +
+      `Session: ${sessionId}`;
+
+    await sendWhatsApp(ADMIN_WA_PHONE, waText);
+  } catch { /* ігноруємо */ }
 
   return NextResponse.json({ ok: true, status: "confirmed" });
 }
