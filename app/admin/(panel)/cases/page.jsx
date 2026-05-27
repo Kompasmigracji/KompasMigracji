@@ -341,11 +341,12 @@ export default function CasesPage() {
       {form && (
         <div style={{
           position:"fixed", inset:0, background:"rgba(0,0,0,0.45)",
-          display:"flex", alignItems:"center", justifyContent:"center", zIndex:200,
+          display:"flex", alignItems:"flex-start", justifyContent:"center", zIndex:200,
+          overflowY:"auto", padding:"32px 16px",
         }}
           onClick={e => { if (e.target===e.currentTarget) setForm(null); }}
         >
-          <div className="kc-card" style={{ width:"100%", maxWidth:480, margin:16, maxHeight:"90vh", overflowY:"auto" }}>
+          <div className="kc-card" style={{ width:"100%", maxWidth:480, flexShrink:0 }}>
             <div style={{ fontWeight:700, fontSize:16, marginBottom:16 }}>Нова справа Понаглення</div>
 
             <div className="kc-row" style={{ gap:10, marginBottom:10 }}>
