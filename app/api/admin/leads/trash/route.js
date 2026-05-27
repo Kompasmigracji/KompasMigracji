@@ -15,11 +15,16 @@ export async function GET() {
   const rows = await q(
     `SELECT
        id,
-       CASE WHEN chat_id IS NOT NULL THEN 'bot' ELSE 'site' END AS source,
-       first_name    AS name,
-       contact,
-       situation     AS message,
-       COALESCE(status, 'new') AS status,
+       CASE
+         WHEN chat_id IS NOT NULL THEN 'bot'
+         WHEN source = 'main'     THEN 'site'
+         WHEN source IS NOT NULL AND source != '' THEN source
+         ELSE 'site'
+       END AS source,
+       COALESCE(first_name, '') AS name,
+       COALESCE(contact, '')    AS contact,
+       COALESCE(situation, '')  AS message,
+       COALESCE(status, 'new')  AS status,
        country,
        service,
        username,

@@ -16,6 +16,8 @@ const FILTERS = [
 const SOURCE_LABEL = {
   bot:       "Telegram",
   site:      "Сайт",
+  main:      "Сайт",        // застаріле значення
+  pricing:   "Прайс",
   facebook:  "Facebook",
   instagram: "Instagram",
   other:     "Iнше",
@@ -24,8 +26,21 @@ const SOURCE_LABEL = {
 const SOURCE_COLOR = {
   bot:       "#5f9bd5",
   site:      "#7cbf8e",
+  main:      "#7cbf8e",
+  pricing:   "#d99e54",
   facebook:  "#7b8fd4",
   instagram: "#d47bb0",
+};
+
+/* куди відправляється заявка */
+const SENT_TO = {
+  bot:       null,           // Telegram-бот, не WhatsApp
+  site:      "+48 729 271 848",
+  main:      "+48 729 271 848",
+  pricing:   "+48 729 271 848",
+  facebook:  "+48 729 271 848",
+  instagram: "+48 729 271 848",
+  other:     "+48 729 271 848",
 };
 
 /* ── форматируем дату ── */
@@ -295,8 +310,14 @@ export default function LeadsPage() {
                     }}>
                       {SOURCE_LABEL[l.source] || l.source}
                     </span>
+                    {/* Куди відправлено */}
+                    {SENT_TO[l.source] && (
+                      <div style={{ fontSize: 10, color: "#25d366", marginTop: 3, whiteSpace: "nowrap" }}>
+                        → WA {SENT_TO[l.source]}
+                      </div>
+                    )}
                     {l.country && (
-                      <div style={{ color: "#5a6470", fontSize: 11, marginTop: 3 }}>{l.country}</div>
+                      <div style={{ color: "#5a6470", fontSize: 11, marginTop: 2 }}>{l.country}</div>
                     )}
                   </td>
 
@@ -312,8 +333,21 @@ export default function LeadsPage() {
                   </td>
 
                   {/* Контакт */}
-                  <td className="kc-mono" style={{ color: "#828c9b", fontSize: 12 }}>
-                    {l.contact || "—"}
+                  <td className="kc-mono" style={{ fontSize: 12 }}>
+                    {l.contact ? (
+                      l.source !== "bot" ? (
+                        <a
+                          href={"https://wa.me/" + l.contact.replace(/\D/g, "")}
+                          target="_blank" rel="noreferrer"
+                          title="Написати в WhatsApp"
+                          style={{ color: "#25d366", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                          {l.contact}
+                        </a>
+                      ) : (
+                        <span style={{ color: "#828c9b" }}>{l.contact}</span>
+                      )
+                    ) : "—"}
                   </td>
 
                   {/* Сообщение */}

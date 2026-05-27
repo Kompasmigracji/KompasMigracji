@@ -17,7 +17,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (supabase) { try { await supabase.from('leads').insert({ name, phone, service, message, source: 'main' }); } catch {} }
+    if (supabase) { try { await supabase.from('leads').insert({ first_name: name.trim(), contact: phone.trim(), situation: message.trim(), service, source: 'site' }); } catch {} }
     const text =
       `Kompas Migracji — Новий запит\nІм'я: ${name}\nТелефон: ${phone}\nПослуга: ${service}\nПовідомлення: ${message}`;
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(text)}`, '_blank');
