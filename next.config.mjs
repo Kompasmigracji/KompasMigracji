@@ -1,4 +1,4 @@
-import createNextIntlPlugin from 'next-intl/plugin';
+﻿import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n.ts');
 
@@ -6,7 +6,7 @@ const withNextIntl = createNextIntlPlugin('./i18n.ts');
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  // Include .jsx/.js for KompasCMS admin pages alongside .tsx/.ts
+  // Include .jsx/.js for KompasCRM admin pages alongside .tsx/.ts
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
 };
 

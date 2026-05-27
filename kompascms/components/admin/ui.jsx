@@ -1,5 +1,5 @@
-"use client";
-/* KompasCMS — переиспользуемые UI-компоненты. */
+﻿"use client";
+/* KompasCRM — переиспользуемые UI-компоненты. */
 import React from "react";
 
 /* ---------- иконки (минимальный SVG-набор) ---------- */

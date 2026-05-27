@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 /* Страница входа /admin/login — вне каркаса CMS. */
-import "@/styles/kompascms.css";
+import "@/styles/kompascrm.css";
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Icon } from "@/components/admin/ui";
@@ -37,7 +37,7 @@ export default function LoginPage() {
       <div className="kc-login">
         <div className="kc-login-card kc-page-enter">
           <div className="kc-login-mark"><Icon name="compass" size={27} color="#d99e54" /></div>
-          <div className="kc-login-title">KompasCMS</div>
+          <div className="kc-login-title">KompasCRM</div>
           <div className="kc-login-sub">Командный центр Kompas Migracji</div>
 
           {error && (

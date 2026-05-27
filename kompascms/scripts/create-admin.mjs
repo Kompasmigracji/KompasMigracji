@@ -1,4 +1,4 @@
-/* Создание / обновление администратора KompasCMS.
+﻿/* Создание / обновление администратора KompasCRM.
    Запуск:  node scripts/create-admin.mjs admin@kompasmigracji.com МойПароль "Александр" */
 import bcrypt from "bcryptjs";
 import pg from "pg";

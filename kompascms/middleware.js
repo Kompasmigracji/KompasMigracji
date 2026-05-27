@@ -1,4 +1,4 @@
-/* KompasCMS — middleware. Защищает /admin/*.
+﻿/* KompasCRM — middleware. Защищает /admin/*.
    Кладётся в КОРЕНЬ проекта (рядом с app/) или в src/ если используешь src-каталог.
    Если у тебя уже есть middleware.js — слей логику вручную. */
 import { NextResponse } from "next/server";
@@ -14,7 +14,7 @@ export async function middleware(req) {
   // страница входа доступна всем
   if (pathname === "/admin/login") return NextResponse.next();
 
-  const token = req.cookies.get("kompascms_session")?.value;
+  const token = req.cookies.get("kompascrm_session")?.value;
   let payload = null;
   if (token) {
     try {

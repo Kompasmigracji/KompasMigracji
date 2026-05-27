@@ -1,5 +1,5 @@
-/* /api/admin/leads — лиды из существующей таблицы leads (бот + сайт).
-   Адаптировано для KompasCMS: маппим поля leads → компас CMS-формат.
+﻿/* /api/admin/leads — лиды из существующей таблицы leads (бот + сайт).
+   Адаптировано для KompasCRM: маппим поля leads → компас CMS-формат.
    GET: список с фильтром по статусу. PATCH: смена статуса. */
 export const runtime = "nodejs";
 

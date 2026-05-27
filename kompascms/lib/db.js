@@ -1,4 +1,4 @@
-/* KompasCMS — пул подключений к Postgres.
+﻿/* KompasCRM — пул подключений к Postgres.
    Если в проекте уже есть db-слой — можно заменить экспорт q() на свой. */
 import { Pool } from "pg";
 

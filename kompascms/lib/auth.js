@@ -1,9 +1,9 @@
-/* KompasCMS — авторизация: JWT в httpOnly-cookie, bcrypt, проверки доступа. */
+﻿/* KompasCRM — авторизация: JWT в httpOnly-cookie, bcrypt, проверки доступа. */
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 
-export const COOKIE = "kompascms_session";
+export const COOKIE = "kompascrm_session";
 const SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "dev-secret-change-me-in-production"
 );

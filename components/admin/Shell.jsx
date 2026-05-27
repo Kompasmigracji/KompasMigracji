@@ -1,5 +1,5 @@
-"use client";
-/* KompasCMS — каркас панели: сайдбар + топбар. Оборачивает все страницы (panel). */
+﻿"use client";
+/* KompasCRM — каркас панели: сайдбар + топбар. Оборачивает все страницы (panel). */
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export default function Shell({ children }) {
           <div className="kc-brand">
             <div className="kc-brand-mark"><Icon name="compass" size={21} color="#d99e54" /></div>
             <div>
-              <div className="kc-brand-name">KompasCMS</div>
+              <div className="kc-brand-name">KompasCRM</div>
               <div className="kc-brand-sub">KOMPAS MIGRACJI</div>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function Shell({ children }) {
         {/* ОСНОВНАЯ ОБЛАСТЬ */}
         <div className="kc-main">
           <header className="kc-topbar">
-            <h1>{current?.label || "KompasCMS"}</h1>
+            <h1>{current?.label || "KompasCRM"}</h1>
           </header>
           <main className="kc-content kc-page-enter">{children}</main>
         </div>

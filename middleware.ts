@@ -1,4 +1,4 @@
-/* middleware.ts — KompasCMS + next-intl.
+﻿/* middleware.ts — KompasCRM + next-intl.
    • /admin/* и /api/admin/* — защита JWT (кроме /admin/login и /api/admin/auth/*)
    • Все остальные маршруты — next-intl локализация.
 */
@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { jwtVerify } from "jose";
 
-const COOKIE = "kompascms_session";
+const COOKIE = "kompascrm_session";
 
 /** Видаляє BOM (U+FEFF, charCode 65279) та \r — захист від PowerShell pipe артефактів. */
 function cleanEnv(s: string | undefined): string {
