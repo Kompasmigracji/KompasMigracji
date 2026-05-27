@@ -89,11 +89,11 @@ export async function POST(req: NextRequest) {
   if (!verified) return NextResponse.json({ status: "ok" });
 
   /* ── 3. Знайти лід за session_id ───────────────────────────────── */
-  type LeadRow = { id: string; chat_id: number | null; first_name: string | null; service: string | null };
+  type LeadRow = { id: string; chat_id: number | null; first_name: string | null; service: string | null; contact: string | null; situation: string | null };
   let lead: LeadRow | null = null;
   try {
     lead = (await one(
-      `SELECT id, chat_id, first_name, service
+      `SELECT id, chat_id, first_name, service, contact, situation
          FROM leads
         WHERE session_id = $1 AND deleted_at IS NULL
         LIMIT 1`,
@@ -141,20 +141,34 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    /* ── 6. Сповіщення адмін-чату ──────────────────────────────── */
+    /* ── 6. Сповіщення адмін-чату (Telegram + WhatsApp) ───────── */
     const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+    const amountFormatted = ((Number(amount) || 0) / 100).toFixed(2);
+
+    const tgAdminText =
+      `💳 <b>Нова оплата!</b>\n` +
+      `👤 Клієнт: ${lead.first_name ?? "—"}\n` +
+      (lead.contact   ? `📞 Телефон: ${lead.contact}\n`                  : "") +
+      (lead.situation ? `📝 Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
+      (lead.service   ? `🏷 Сервіс: ${lead.service}\n`                   : "") +
+      `💰 Сума: ${amountFormatted} ${currency}\n` +
+      `🔑 Session: <code>${sessionId}</code>`;
+
     if (adminChat) {
-      try {
-        const amountFormatted = ((Number(amount) || 0) / 100).toFixed(2);
-        await sendMessage(
-          adminChat,
-          `💳 <b>Нова оплата!</b>\n` +
-          `Клієнт: ${lead.first_name ?? "—"}\n` +
-          `Сума: ${amountFormatted} ${currency}\n` +
-          `Session: <code>${sessionId}</code>`,
-        );
-      } catch { /* ігноруємо */ }
+      try { await sendMessage(adminChat, tgAdminText); } catch { /* ігноруємо */ }
     }
+
+    // WhatsApp нотифікація
+    try {
+      const waText =
+        `💳 Нова оплата!\n` +
+        `Клієнт: ${lead.first_name ?? "—"}\n` +
+        (lead.contact   ? `Телефон: ${lead.contact}\n`                  : "") +
+        (lead.situation ? `Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
+        `Сума: ${amountFormatted} ${currency}`;
+      await sendWhatsApp(ADMIN_WA_PHONE, waText);
+    } catch { /* ігноруємо */ }
+
   } else {
     // Лід не знайдено — просто сповіщаємо адміна
     const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
@@ -166,6 +180,12 @@ export async function POST(req: NextRequest) {
         );
       } catch { /* ігноруємо */ }
     }
+    try {
+      await sendWhatsApp(
+        ADMIN_WA_PHONE,
+        `💳 Нова оплата!\n(лід не знайдено)\nSession: ${sessionId}`,
+      );
+    } catch { /* ігноруємо */ }
   }
 
   return NextResponse.json({ status: "ok" });
