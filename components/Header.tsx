@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import { useRouter, usePathname } from '@/lib/navigation';
@@ -88,7 +89,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[62px] gap-3">
 
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
-          <img src="/logo.svg" alt="logo" className="w-8 h-8 spin-slow" />
+          <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-8 h-8 spin-slow" />
           <span className="font-bold text-navy text-base tracking-tight hidden sm:block">Kompas Migracji</span>
         </Link>
 

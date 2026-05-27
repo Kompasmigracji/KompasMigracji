@@ -8,6 +8,16 @@ const nextConfig = {
   poweredByHeader: false,
   // Include .jsx/.js for KompasCRM admin pages alongside .tsx/.ts
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  images: {
+    // Allow Next.js <Image> to serve SVGs from /public unoptimised (safe for logos)
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // External photo domains used in Team.tsx
+    remotePatterns: [
+      { protocol: 'https', hostname: 'yt3.ggpht.com' },
+    ],
+  },
 };
 
 export default withNextIntl(nextConfig);

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 const PHOTO = 'https://yt3.ggpht.com/lu2REm3NMXphDWjWEz1mM9Ja8fUjdLNxMLr6pNHw5nPIcoK_vTFi9a9IAc8o173f5lGhhKlwl8LO=s1024-rw-nd-v1';
 
 const STATS = [
@@ -19,7 +21,7 @@ export default function Team() {
         <div className="max-w-3xl mx-auto">
           <div className="bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row card-hover">
             <div className="md:w-72 flex-shrink-0 relative">
-              <img src={PHOTO} alt="Олександр Василишин" className="w-full h-72 md:h-full object-cover object-top" />
+              <Image src={PHOTO} alt="Олександр Василишин" width={288} height={288} className="w-full h-72 md:h-full object-cover object-top" />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent md:bg-gradient-to-r" />
             </div>
             <div className="p-8 md:p-10 flex flex-col justify-between">

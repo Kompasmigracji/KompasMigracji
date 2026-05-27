@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
 export default function Footer() {
@@ -11,7 +12,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src="/logo.svg" alt="logo" className="w-9 h-9" />
+              <Image src="/logo.svg" alt="logo" width={36} height={36} className="w-9 h-9" />
               <span className="font-semibold text-lg">Kompas Migracji</span>
             </div>
             <p className="text-sm text-white/60 leading-relaxed">{t('footer_about_text')}</p>
