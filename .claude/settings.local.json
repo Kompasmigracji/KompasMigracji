@@ -64,13 +64,15 @@
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://www.kompasmigracji.com/api/diag?s=kompas2024&v=3\")",
       "Bash(mkdir -p \"C:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\api\\\\admin\\\\cases\\\\[id]\")",
-      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/admin/leads/[id]/payment-link\")"
+      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/admin/leads/[id]/payment-link\")",
+      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/payment/mock/[sessionId]\" \"c:/Users/user/Documents/GitHub/KompasMigracji/app/payment/failed\" \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/payment-mock-confirm\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\members\\[id]",
       "C:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\cases",
-      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\leads\\[id]"
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\leads\\[id]",
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\payment\\mock"
     ]
   }
 }

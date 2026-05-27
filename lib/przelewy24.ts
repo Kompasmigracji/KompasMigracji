@@ -51,12 +51,44 @@ export interface RegisterResult {
 }
 
 /**
+ * Повертає true, якщо P24 не налаштований або увімкнений мок-режим.
+ * Мок: P24_SANDBOX=mock  АБО  P24_MERCHANT_ID не задано.
+ */
+function isMockMode(): boolean {
+  return (
+    process.env.P24_SANDBOX === "mock" ||
+    !process.env.P24_MERCHANT_ID ||
+    process.env.P24_MERCHANT_ID === "0"
+  );
+}
+
+/**
  * Реєструє нову транзакцію в P24 і повертає URL для оплати.
  * Клієнт відкриває paymentUrl і завершує оплату на сайті P24.
+ * Якщо P24 не налаштований — використовує вбудований мок.
  */
 export async function registerTransaction(
   params: RegisterParams,
 ): Promise<RegisterResult> {
+  /* ── Мок-режим: без реального P24 ──────────────────────────────── */
+  if (isMockMode()) {
+    const appUrl = (
+      process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+    ).replace(/\/$/, "");
+
+    const mockUrl = new URL(`${appUrl}/payment/mock/${params.sessionId}`);
+    mockUrl.searchParams.set("amount", String(params.amount));
+    mockUrl.searchParams.set("desc",   params.description);
+    mockUrl.searchParams.set("cur",    params.currency ?? "PLN");
+
+    return {
+      token:      `mock-${params.sessionId}`,
+      paymentUrl: mockUrl.toString(),
+      sessionId:  params.sessionId,
+    };
+  }
+
+  /* ── Реальний P24 ───────────────────────────────────────────────── */
   const { merchantId, apiKey, crc, base } = getConfig();
   const currency = params.currency ?? "PLN";
 
