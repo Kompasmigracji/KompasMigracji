@@ -31,6 +31,7 @@ export async function GET(req) {
        service,
        urgency,
        username,
+       chat_id,
        created_at
      FROM leads
      WHERE deleted_at IS NULL

@@ -1,8 +1,9 @@
 "use client";
 /* /admin/leads — лиды воронки + корзина (soft-delete).
    Нормальный вид: фильтр по статусу, поиск, кнопка удаления в корзину.
-   Корзина: восстановление и окончательное удаление (только admin). */
-import React, { useEffect, useState, useCallback } from "react";
+   Корзина: восстановление и окончательное удаление (только admin).
+   MessageComposer: "/" quick-insert шаблонів із відправкою в Telegram. */
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { Spinner, Empty, Icon } from "@/components/admin/ui";
 
 const FILTERS = [
@@ -16,7 +17,7 @@ const FILTERS = [
 const SOURCE_LABEL = {
   bot:       "Telegram",
   site:      "Сайт",
-  main:      "Сайт",        // застаріле значення
+  main:      "Сайт",
   pricing:   "Прайс",
   facebook:  "Facebook",
   instagram: "Instagram",
@@ -32,9 +33,8 @@ const SOURCE_COLOR = {
   instagram: "#d47bb0",
 };
 
-/* куди відправляється заявка */
 const SENT_TO = {
-  bot:       null,           // Telegram-бот, не WhatsApp
+  bot:       null,
   site:      "+48 729 271 848",
   main:      "+48 729 271 848",
   pricing:   "+48 729 271 848",
@@ -43,13 +43,11 @@ const SENT_TO = {
   other:     "+48 729 271 848",
 };
 
-/* ── форматируем дату ── */
 function fmtDate(ts) {
   if (!ts) return "—";
   return new Date(ts).toLocaleDateString("uk-UA", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
-/* ── кнопка-иконка ── */
 function IconBtn({ icon, title, color = "#828c9b", hoverColor, onClick, size = 15 }) {
   const [hover, setHover] = useState(false);
   return (
@@ -59,15 +57,11 @@ function IconBtn({ icon, title, color = "#828c9b", hoverColor, onClick, size = 1
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        padding: "4px 5px",
-        borderRadius: 6,
+        background: "none", border: "none", cursor: "pointer",
+        padding: "4px 5px", borderRadius: 6,
         color: hover && hoverColor ? hoverColor : color,
         transition: "color 0.15s, background 0.15s",
-        display: "inline-flex",
-        alignItems: "center",
+        display: "inline-flex", alignItems: "center",
       }}
     >
       <Icon name={icon} size={size} color={hover && hoverColor ? hoverColor : color} />
@@ -75,7 +69,6 @@ function IconBtn({ icon, title, color = "#828c9b", hoverColor, onClick, size = 1
   );
 }
 
-/* ── диалог подтверждения ── */
 function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <div style={{
@@ -106,15 +99,226 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   MessageComposer — модальний редактор повiдомлення з / quick-insert
+   ══════════════════════════════════════════════════════════════════ */
+function MessageComposer({ lead, onClose }) {
+  const [text, setText]           = useState("");
+  const [templates, setTemplates] = useState(null);
+  const [query, setQuery]         = useState("");       // текст пiсля /
+  const [showMenu, setShowMenu]   = useState(false);
+  const [menuIdx, setMenuIdx]     = useState(0);
+  const [sending, setSending]     = useState(false);
+  const [toast, setToast]         = useState("");
+  const [sent, setSent]           = useState(false);
+  const taRef = useRef(null);
+
+  /* Завантажити шаблони */
+  useEffect(() => {
+    fetch("/api/admin/templates")
+      .then(r => r.json())
+      .then(d => setTemplates(d.templates || []));
+  }, []);
+
+  const flash = (msg) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
+
+  /* Фiльтрованi шаблони для дроп-дауну */
+  const filtered = (templates || []).filter(t =>
+    query === "" ||
+    t.title.toLowerCase().includes(query.toLowerCase()) ||
+    t.slug.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 8);
+
+  /* Рендер шаблону з пiдставленими змiнними */
+  function applyTemplate(tpl) {
+    const vars = {
+      name:    lead.name    || "клієнте",
+      service: lead.service || "",
+      contact: lead.contact || "+48 729 271 848",
+    };
+    let body = tpl.body;
+    body = body.replace(/\{\{(\w+)\}\}/g, (_, k) => vars[k] !== undefined ? vars[k] : `{{${k}}}`);
+
+    // Замiнити все пiсля останнього "/" на шаблон
+    const slashIdx = text.lastIndexOf("/");
+    const before   = slashIdx >= 0 ? text.slice(0, slashIdx) : text;
+    setText(before + body);
+    setShowMenu(false);
+    setQuery("");
+    setTimeout(() => taRef.current?.focus(), 0);
+  }
+
+  /* Обробка клавiатури у textarea */
+  function handleKeyDown(e) {
+    if (showMenu) {
+      if (e.key === "ArrowDown") { e.preventDefault(); setMenuIdx(i => Math.min(i + 1, filtered.length - 1)); }
+      if (e.key === "ArrowUp")   { e.preventDefault(); setMenuIdx(i => Math.max(i - 1, 0)); }
+      if (e.key === "Enter")     { e.preventDefault(); if (filtered[menuIdx]) applyTemplate(filtered[menuIdx]); }
+      if (e.key === "Escape")    { setShowMenu(false); setQuery(""); }
+    }
+  }
+
+  function handleChange(e) {
+    const val = e.target.value;
+    setText(val);
+
+    // Перевiрити, чи є активний "/"
+    const cursor = e.target.selectionStart;
+    const before = val.slice(0, cursor);
+    const match  = before.match(/\/(\w*)$/);
+    if (match) {
+      setQuery(match[1]);
+      setShowMenu(true);
+      setMenuIdx(0);
+    } else {
+      setShowMenu(false);
+      setQuery("");
+    }
+  }
+
+  async function doSend() {
+    if (!text.trim()) { flash("Введiть текст повiдомлення"); return; }
+    if (!lead.chat_id) { flash("Цей лiд не пiдключений до Telegram"); return; }
+    setSending(true);
+    try {
+      const res = await fetch("/api/admin/telegram-send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead_id: lead.id, text }),
+      });
+      const d = await res.json();
+      if (d.error) { flash("Помилка: " + d.error); return; }
+      setSent(true);
+      flash("Повiдомлення вiдправлено!");
+      setTimeout(() => onClose(), 1500);
+    } catch { flash("Мережа недоступна"); }
+    finally { setSending(false); }
+  }
+
+  function doCopy() {
+    navigator.clipboard?.writeText(text).then(() => flash("Скопiйовано!"));
+  }
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      display: "flex", alignItems: "center", justifyContent: "center", zIndex: 300,
+    }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="kc-card" style={{
+        width: "100%", maxWidth: 520, margin: 16,
+        display: "flex", flexDirection: "column", gap: 12,
+      }}>
+        {/* Заголовок */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: 15 }}>
+              ✈️ Telegram: {lead.name || "Без iменi"}
+            </div>
+            {lead.username && (
+              <div style={{ fontSize: 12, color: "#5f9bd5" }}>@{lead.username}</div>
+            )}
+          </div>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 20, color: "#8a96a3" }}>✕</button>
+        </div>
+
+        {toast && (
+          <div className="kc-note" style={{
+            background: sent ? "rgba(34,197,94,0.12)" : undefined,
+            color: sent ? "#22c55e" : undefined,
+          }}>{toast}</div>
+        )}
+
+        {/* Textarea з / quick-insert */}
+        <div style={{ position: "relative" }}>
+          <textarea
+            ref={taRef}
+            className="kc-textarea"
+            rows={6}
+            value={text}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            placeholder={"Введiть текст або напишiть / для вибору шаблону…"}
+            style={{ width: "100%", boxSizing: "border-box" }}
+          />
+
+          {/* Дроп-даун шаблонiв */}
+          {showMenu && filtered.length > 0 && (
+            <div style={{
+              position: "absolute", bottom: "calc(100% + 4px)", left: 0, right: 0,
+              background: "#1c2433", border: "1px solid #2d3748",
+              borderRadius: 10, overflow: "hidden",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.4)", zIndex: 10,
+            }}>
+              {templates === null && (
+                <div style={{ padding: "10px 14px", color: "#8a96a3", fontSize: 13 }}>Завантаження…</div>
+              )}
+              {filtered.map((t, i) => (
+                <div
+                  key={t.id}
+                  onClick={() => applyTemplate(t)}
+                  style={{
+                    padding: "9px 14px", cursor: "pointer", fontSize: 13,
+                    background: i === menuIdx ? "rgba(217,158,84,0.15)" : "transparent",
+                    borderBottom: "1px solid #2d3748",
+                    display: "flex", justifyContent: "space-between", alignItems: "center",
+                  }}
+                  onMouseEnter={() => setMenuIdx(i)}
+                >
+                  <span>
+                    <span style={{ fontWeight: 600, color: "#e2e8f0" }}>{t.title}</span>
+                    <code style={{ marginLeft: 8, fontSize: 11, color: "#5a6470" }}>/{t.slug}</code>
+                  </span>
+                  <span style={{
+                    fontSize: 10, padding: "2px 7px", borderRadius: 10,
+                    background: "#2d3748", color: "#8a96a3",
+                  }}>{t.category}</span>
+                </div>
+              ))}
+              <div style={{ padding: "6px 14px", fontSize: 11, color: "#5a6470" }}>
+                ↑↓ навiгацiя · Enter вставити · Esc закрити
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Пiдказка */}
+        <div style={{ fontSize: 11, color: "#5a6470" }}>
+          Введiть <code>/</code> для вибору шаблону.
+          Плейсхолдери <code>{"{{name}}"}</code> <code>{"{{service}}"}</code> замiняються автоматично.
+        </div>
+
+        {/* Дiї */}
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+          <button className="kc-btn kc-btn-ghost" onClick={doCopy} disabled={!text.trim()}>
+            Копiювати
+          </button>
+          {lead.chat_id ? (
+            <button className="kc-btn kc-btn-primary" onClick={doSend} disabled={sending || !text.trim()}>
+              {sending ? "Вiдправка…" : "✈️ Надiслати в Telegram"}
+            </button>
+          ) : (
+            <button className="kc-btn kc-btn-ghost" disabled title="Немає Telegram chat_id">
+              Telegram недоступний
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LeadsPage
+   ══════════════════════════════════════════════════════════════════ */
 export default function LeadsPage() {
   const [leads, setLeads]       = useState(null);
   const [filter, setFilter]     = useState("");
   const [search, setSearch]     = useState("");
   const [isTrash, setIsTrash]   = useState(false);
   const [trashCount, setTrashCount] = useState(0);
-  const [confirm, setConfirm]   = useState(null); // { id } | null
+  const [confirm, setConfirm]   = useState(null);
+  const [composer, setComposer] = useState(null); // лiд для MessageComposer
 
-  /* ── загрузка активных лидов ── */
   const loadLeads = useCallback(async (st) => {
     setLeads(null);
     const res = await fetch("/api/admin/leads?status=" + encodeURIComponent(st));
@@ -122,7 +326,6 @@ export default function LeadsPage() {
     setLeads(d.leads || []);
   }, []);
 
-  /* ── загрузка корзины ── */
   const loadTrash = useCallback(async () => {
     setLeads(null);
     const res = await fetch("/api/admin/leads/trash");
@@ -131,7 +334,6 @@ export default function LeadsPage() {
     setTrashCount((d.leads || []).length);
   }, []);
 
-  /* ── получить кол-во в корзине (для бейджа) ── */
   const refreshTrashCount = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/leads/trash");
@@ -149,7 +351,6 @@ export default function LeadsPage() {
     }
   }, [isTrash, filter, loadLeads, loadTrash, refreshTrashCount]);
 
-  /* ── смена статуса ── */
   const setStatus = async (id, status) => {
     await fetch("/api/admin/leads", {
       method: "PATCH",
@@ -159,7 +360,6 @@ export default function LeadsPage() {
     setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, status } : l)));
   };
 
-  /* ── переместить в корзину ── */
   const moveToTrash = async (id) => {
     await fetch("/api/admin/leads", {
       method: "DELETE",
@@ -170,7 +370,6 @@ export default function LeadsPage() {
     setTrashCount((c) => c + 1);
   };
 
-  /* ── восстановить из корзины ── */
   const restore = async (id) => {
     await fetch("/api/admin/leads/trash", {
       method: "PATCH",
@@ -181,7 +380,6 @@ export default function LeadsPage() {
     setTrashCount((c) => Math.max(0, c - 1));
   };
 
-  /* ── окончательное удаление ── */
   const deletePermanently = async (id) => {
     await fetch("/api/admin/leads/trash", {
       method: "DELETE",
@@ -193,7 +391,6 @@ export default function LeadsPage() {
     setConfirm(null);
   };
 
-  /* ── фильтрация по поиску ── */
   const visible = leads
     ? (!isTrash && search.trim())
       ? leads.filter((l) => {
@@ -217,6 +414,10 @@ export default function LeadsPage() {
           onConfirm={() => deletePermanently(confirm.id)}
           onCancel={() => setConfirm(null)}
         />
+      )}
+
+      {composer && (
+        <MessageComposer lead={composer} onClose={() => setComposer(null)} />
       )}
 
       {/* ── Панель фильтров ── */}
@@ -248,7 +449,6 @@ export default function LeadsPage() {
           </div>
         )}
 
-        {/* Кнопка «Кошик» */}
         <button
           onClick={() => { setIsTrash((v) => !v); setSearch(""); }}
           style={{
@@ -269,7 +469,6 @@ export default function LeadsPage() {
         </button>
       </div>
 
-      {/* ── Заголовок корзины ── */}
       {isTrash && (
         <div style={{
           background: "rgba(220,38,38,0.08)", border: "1px solid rgba(220,38,38,0.2)",
@@ -310,7 +509,6 @@ export default function LeadsPage() {
                     }}>
                       {SOURCE_LABEL[l.source] || l.source}
                     </span>
-                    {/* Куди відправлено */}
                     {SENT_TO[l.source] && (
                       <div style={{ fontSize: 10, color: "#25d366", marginTop: 3, whiteSpace: "nowrap" }}>
                         → WA {SENT_TO[l.source]}
@@ -323,7 +521,23 @@ export default function LeadsPage() {
 
                   {/* Имя */}
                   <td>
-                    <div style={{ fontWeight: 500 }}>{l.name || "—"}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontWeight: 500 }}>{l.name || "—"}</span>
+                      {/* Кнопка Telegram для bot-лiдiв */}
+                      {l.chat_id && !isTrash && (
+                        <button
+                          onClick={() => setComposer(l)}
+                          title="Надiслати повiдомлення в Telegram"
+                          style={{
+                            background: "rgba(95,155,213,0.15)", border: "none",
+                            borderRadius: 6, padding: "2px 6px", cursor: "pointer",
+                            fontSize: 12, color: "#5f9bd5", fontWeight: 600,
+                            lineHeight: 1.4,
+                          }}>
+                          ✈️
+                        </button>
+                      )}
+                    </div>
                     {l.username && (
                       <a href={"https://t.me/" + l.username} target="_blank" rel="noreferrer"
                         style={{ color: "#5f9bd5", fontSize: 11, textDecoration: "none" }}>
@@ -360,7 +574,7 @@ export default function LeadsPage() {
                     </div>
                   </td>
 
-                  {/* Дата / Дата удаления */}
+                  {/* Дата */}
                   <td style={{ color: "#5a6470", fontSize: 12, whiteSpace: "nowrap" }}>
                     {isTrash ? fmtDate(l.deleted_at) : fmtDate(l.created_at)}
                   </td>
@@ -369,7 +583,6 @@ export default function LeadsPage() {
                   <td>
                     {isTrash ? (
                       <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-                        {/* Восстановить */}
                         <button
                           onClick={() => restore(l.id)}
                           title="Вiдновити"
@@ -382,7 +595,6 @@ export default function LeadsPage() {
                           <Icon name="restore" size={13} color="#22c55e" />
                           Вiдновити
                         </button>
-                        {/* Удалить навсегда */}
                         <button
                           onClick={() => setConfirm({ id: l.id })}
                           title="Видалити назавжди"
@@ -407,7 +619,6 @@ export default function LeadsPage() {
                           <option value="closed">Закрито</option>
                           <option value="dropped">Вiдмова</option>
                         </select>
-                        {/* Кнопка в корзину */}
                         <IconBtn
                           icon="trash"
                           title="Перемiстити в кошик"
