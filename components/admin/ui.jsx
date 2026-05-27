@@ -20,6 +20,8 @@ const PATHS = {
   check: "M20 6 9 17l-5-5",
   trash: "M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6",
   restore: "M1 4v6h6M3.51 15a9 9 0 1 0 .49-4.46",
+  alert:  "M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01",
+  layers: "M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5",
 };
 export function Icon({ name, size = 18, color = "currentColor", fill = false }) {
   return (
