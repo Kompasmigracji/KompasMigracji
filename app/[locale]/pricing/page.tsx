@@ -11,90 +11,90 @@ const NAVY   = '#0f172a';
 
 const CATEGORIES = [
   {
-    id: 'notary',
-    title: 'Нотаріальні послуги',
-    icon: '✍️',
+    id: ‘notary’,
+    title: ‘Нотаріальні послуги’,
+    icon: ‘✍️’,
     rows: [
-      { name: 'Разова довіреність',                                   price: '250',      amountGrosze: 25000 },
-      { name: 'Довіреність на транспортний засіб',                    price: '350',      amountGrosze: 35000 },
-      { name: 'Довіреність на нерухомість',                           price: '450',      amountGrosze: 45000 },
-      { name: 'Довіреність на представлення інтересів',               price: '450',      amountGrosze: 45000 },
-      { name: 'Довіреність за участю неповнолітніх',                  price: '260',      amountGrosze: 26000 },
-      { name: 'Заява',                                                price: '380',      amountGrosze: 38000 },
-      { name: 'Довіреність на спадщину',                              price: '450',      amountGrosze: 45000 },
-      { name: 'Комплект «Спадщина» (заява + довіреність)',            price: '720',      amountGrosze: 72000 },
-      { name: 'Довіреність у фінансових установах / бізнес',          price: '580',      amountGrosze: 58000 },
-      { name: 'Підбір адвоката або нотаріуса в Україні',               price: '150',      amountGrosze: 15000 },
+      { name: ‘Разова довіреність’,                                   price: ‘175’,      amountGrosze: 17500,  oldPrice: ‘250’ },
+      { name: ‘Довіреність на транспортний засіб’,                    price: ‘245’,      amountGrosze: 24500,  oldPrice: ‘350’ },
+      { name: ‘Довіреність на нерухомість’,                           price: ‘315’,      amountGrosze: 31500,  oldPrice: ‘450’ },
+      { name: ‘Довіреність на представлення інтересів’,               price: ‘315’,      amountGrosze: 31500,  oldPrice: ‘450’ },
+      { name: ‘Довіреність за участю неповнолітніх’,                  price: ‘182’,      amountGrosze: 18200,  oldPrice: ‘260’ },
+      { name: ‘Заява’,                                                price: ‘266’,      amountGrosze: 26600,  oldPrice: ‘380’ },
+      { name: ‘Довіреність на спадщину’,                              price: ‘315’,      amountGrosze: 31500,  oldPrice: ‘450’ },
+      { name: ‘Комплект «Спадщина» (заява + довіреність)’,            price: ‘504’,      amountGrosze: 50400,  oldPrice: ‘720’ },
+      { name: ‘Довіреність у фінансових установах / бізнес’,          price: ‘406’,      amountGrosze: 40600,  oldPrice: ‘580’ },
+      { name: ‘Підбір адвоката або нотаріуса в Україні’,               price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
     ],
   },
   {
-    id: 'legalization',
-    title: 'Легалізація побуту',
-    icon: '🏠',
+    id: ‘legalization’,
+    title: ‘Легалізація побуту’,
+    icon: ‘🏠’,
     rows: [
-      { name: 'Часовий побут',                                        price: '950',      amountGrosze: 95000 },
-      { name: 'Часовий побут (ускладнені обставини)',                 price: '1400',     amountGrosze: 140000 },
-      { name: 'Часовий побут (діти)',                                 price: '800',      amountGrosze: 80000 },
-      { name: 'Сталий побут',                                         price: '1800',     amountGrosze: 180000 },
-      { name: 'Резидент ЄС',                                          price: '1800',     amountGrosze: 180000 },
-      { name: 'Громадянство Польщі (Воєвода)',                        price: '2000',     amountGrosze: 200000 },
-      { name: 'Громадянство Польщі (Президент)',                      price: '2500',     amountGrosze: 250000 },
-      { name: 'Резидент + Громадянство',                              price: '4000',     amountGrosze: 400000 },
-      { name: 'Прискорення карти побуту (вивід на комітет рішень)',   price: '300',      amountGrosze: 30000 },
-      { name: 'Прискорення карти побуту (апеляція / складна справа)', price: '900',      amountGrosze: 90000 },
-      { name: 'Прискорення Резидента ЄС',                             price: '900',      amountGrosze: 90000 },
-      { name: 'Консультація телефонічна',                             price: '150',      amountGrosze: 15000 },
-      { name: 'Консультація + узасаднення',                          price: '450',      amountGrosze: 45000 },
+      { name: ‘Часовий побут’,                                        price: ‘665’,      amountGrosze: 66500,  oldPrice: ‘950’ },
+      { name: ‘Часовий побут (ускладнені обставини)’,                 price: ‘980’,      amountGrosze: 98000,  oldPrice: ‘1400’ },
+      { name: ‘Часовий побут (діти)’,                                 price: ‘560’,      amountGrosze: 56000,  oldPrice: ‘800’ },
+      { name: ‘Сталий побут’,                                         price: ‘1260’,     amountGrosze: 126000, oldPrice: ‘1800’ },
+      { name: ‘Резидент ЄС’,                                          price: ‘1260’,     amountGrosze: 126000, oldPrice: ‘1800’ },
+      { name: ‘Громадянство Польщі (Воєвода)’,                        price: ‘1400’,     amountGrosze: 140000, oldPrice: ‘2000’ },
+      { name: ‘Громадянство Польщі (Президент)’,                      price: ‘1750’,     amountGrosze: 175000, oldPrice: ‘2500’ },
+      { name: ‘Резидент + Громадянство’,                              price: ‘2800’,     amountGrosze: 280000, oldPrice: ‘4000’ },
+      { name: ‘Прискорення карти побуту (вивід на комітет рішень)’,   price: ‘210’,      amountGrosze: 21000,  oldPrice: ‘300’ },
+      { name: ‘Прискорення карти побуту (апеляція / складна справа)’, price: ‘630’,      amountGrosze: 63000,  oldPrice: ‘900’ },
+      { name: ‘Прискорення Резидента ЄС’,                             price: ‘630’,      amountGrosze: 63000,  oldPrice: ‘900’ },
+      { name: ‘Консультація телефонічна’,                             price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
+      { name: ‘Консультація + узасаднення’,                          price: ‘315’,      amountGrosze: 31500,  oldPrice: ‘450’ },
     ],
   },
   {
-    id: 'marriage',
-    title: 'Шлюб та сімейне право',
-    icon: '💍',
+    id: ‘marriage’,
+    title: ‘Шлюб та сімейне право’,
+    icon: ‘💍’,
     rows: [
-      { name: 'Супровід по шлюбу',                                    price: '800',      amountGrosze: 80000 },
-      { name: 'Довідка для шлюбу без консульства',                    price: '200–350',  amountGrosze: null },
-      { name: 'Розлучення в Україні без присутності сторін',          price: '1800',     amountGrosze: 180000 },
-      { name: 'Медіація між сторонами',                               price: '1–2 юридичні години', amountGrosze: null },
+      { name: ‘Супровід по шлюбу’,                                    price: ‘560’,      amountGrosze: 56000,  oldPrice: ‘800’ },
+      { name: ‘Довідка для шлюбу без консульства’,                    price: ‘200–350’,  amountGrosze: null },
+      { name: ‘Розлучення в Україні без присутності сторін’,          price: ‘1260’,     amountGrosze: 126000, oldPrice: ‘1800’ },
+      { name: ‘Медіація між сторонами’,                               price: ‘1–2 юридичні години’, amountGrosze: null },
     ],
   },
   {
-    id: 'translations',
-    title: 'Переклади',
-    icon: '📄',
+    id: ‘translations’,
+    title: ‘Переклади’,
+    icon: ‘📄’,
     rows: [
-      { name: 'Переклад (свідоцтва, посвідчення водія)',              price: '100',      amountGrosze: 10000 },
-      { name: 'Індивідуальні тексти',                                 price: 'до оцінки', amountGrosze: null },
-      { name: 'Доставка InPost',                                      price: '25',       amountGrosze: 2500 },
-      { name: 'Доставка кур’єром',                                    price: '35',       amountGrosze: 3500 },
+      { name: ‘Переклад (свідоцтва, посвідчення водія)’,              price: ‘70’,       amountGrosze: 7000,   oldPrice: ‘100’ },
+      { name: ‘Індивідуальні тексти’,                                 price: ‘до оцінки’, amountGrosze: null },
+      { name: ‘Доставка InPost’,                                      price: ‘18’,       amountGrosze: 1800,   oldPrice: ‘25’ },
+      { name: ‘Доставка кур’єром’,                                    price: ‘25’,       amountGrosze: 2500,   oldPrice: ‘35’ },
     ],
   },
   {
-    id: 'bureaucracy',
-    title: 'Бюрократичні справи',
-    icon: '📋',
+    id: ‘bureaucracy’,
+    title: ‘Бюрократичні справи’,
+    icon: ‘📋’,
     rows: [
-      { name: 'Відновлення 800+',                                     price: '800',      amountGrosze: 80000 },
-      { name: 'Розробка договору',                                    price: '450',      amountGrosze: 45000 },
-      { name: 'Вичитка договору',                                     price: '150',      amountGrosze: 15000 },
-      { name: 'Лист-запит до держустанови',                           price: '150',      amountGrosze: 15000 },
-      { name: 'Підписання / розірвання договорів',                    price: '150',      amountGrosze: 15000 },
-      { name: 'Нетипове резюме PL / ENG',                             price: '150',      amountGrosze: 15000 },
+      { name: ‘Відновлення 800+’,                                     price: ‘560’,      amountGrosze: 56000,  oldPrice: ‘800’ },
+      { name: ‘Розробка договору’,                                    price: ‘315’,      amountGrosze: 31500,  oldPrice: ‘450’ },
+      { name: ‘Вичитка договору’,                                     price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
+      { name: ‘Лист-запит до держустанови’,                           price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
+      { name: ‘Підписання / розірвання договорів’,                    price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
+      { name: ‘Нетипове резюме PL / ENG’,                             price: ‘105’,      amountGrosze: 10500,  oldPrice: ‘150’ },
     ],
   },
   {
-    id: 'legal',
-    title: 'Юридичні послуги',
-    icon: '⚖️',
+    id: ‘legal’,
+    title: ‘Юридичні послуги’,
+    icon: ‘⚖️’,
     rows: [
-      { name: 'Підготовка та подача документів (візи, дозволи)',      price: 'індивідуальна оцінка', amountGrosze: null },
-      { name: 'Міжнародний захист',                                   price: '1600',     amountGrosze: 160000 },
-      { name: 'Захист прав мігрантів',                                price: 'юридичні години', amountGrosze: null },
-      { name: 'Медіація',                                             price: '1–2 юридичні години', amountGrosze: null },
-      { name: 'Грошовий спір з роботодавцем',                        price: '1–2 юридичні години', amountGrosze: null },
-      { name: 'Колекторський спір',                                   price: '1–2 юридичні години', amountGrosze: null },
-      { name: 'Підготовка та аналіз бізнес-плану',                  price: '1–2 юридичні години', amountGrosze: null },
-      { name: 'Аналіз ринку та пошук партнерів',                     price: '4 юридичні години',   amountGrosze: null },
+      { name: ‘Підготовка та подача документів (візи, дозволи)’,      price: ‘індивідуальна оцінка’, amountGrosze: null },
+      { name: ‘Міжнародний захист’,                                   price: ‘1120’,     amountGrosze: 112000, oldPrice: ‘1600’ },
+      { name: ‘Захист прав мігрантів’,                                price: ‘юридичні години’, amountGrosze: null },
+      { name: ‘Медіація’,                                             price: ‘1–2 юридичні години’, amountGrosze: null },
+      { name: ‘Грошовий спір з роботодавцем’,                        price: ‘1–2 юридичні години’, amountGrosze: null },
+      { name: ‘Колекторський спір’,                                   price: ‘1–2 юридичні години’, amountGrosze: null },
+      { name: ‘Підготовка та аналіз бізнес-плану’,                  price: ‘1–2 юридичні години’, amountGrosze: null },
+      { name: ‘Аналіз ринку та пошук партнерів’,                     price: ‘4 юридичні години’,   amountGrosze: null },
     ],
   },
   {
@@ -112,7 +112,7 @@ const CATEGORIES = [
   },
 ];
 
-type ServiceRow = { name: string; price: string; amountGrosze: number | null };
+type ServiceRow = { name: string; price: string; amountGrosze: number | null; oldPrice?: string };
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
   const [email, setEmail] = useState('');
@@ -171,6 +171,12 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 
           <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.14em', color:ORANGE, textTransform:'uppercase', margin:'0 0 14px' }}>Przelewy24</p>
           <p style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 4px', lineHeight:1.4 }}>{service.name}</p>
+          {service.oldPrice && (
+            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
+              <span style={{ fontSize:16, color:'#475569', textDecoration:'line-through' }}>{service.oldPrice} PLN</span>
+              <span style={{ fontSize:11, fontWeight:700, color:'#22c55e', background:'rgba(34,197,94,0.12)', padding:'2px 8px', borderRadius:20 }}>−30%</span>
+            </div>
+          )}
           <div style={{ display:'flex', alignItems:'baseline', gap:5, margin:'0 0 24px' }}>
             <span style={{ fontSize:40, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>{amountZl}</span>
             <span style={{ fontSize:20, fontWeight:900, color:ORANGE }}>PLN</span>
@@ -219,8 +225,19 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
   return (
     <tr style={{ background: isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '14px 16px', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{row.name}</td>
-      <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap', fontSize: 14, fontWeight: 700, color: isFree ? '#059669' : NAVY }}>
-        {isFree ? row.price : (isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
+      <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+        {isFree ? (
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#059669' }}>{row.price}</span>
+        ) : row.oldPrice ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+            <span style={{ fontSize: 11, color: '#94a3b8', textDecoration: 'line-through' }}>{row.oldPrice} zł</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>{row.price} zł</span>
+          </div>
+        ) : (
+          <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>
+            {(isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
+          </span>
+        )}
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
