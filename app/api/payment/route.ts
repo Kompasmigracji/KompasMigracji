@@ -31,12 +31,13 @@ async function createLeadForPayment(opts: {
   try {
     const { sessionId, description, email, source, firstName, lastName, phone } = opts;
     const fullName = [firstName, lastName].filter(Boolean).join(' ') || null;
-    /* Email та опис зберігаємо у message щоб адмін бачив контакт */
-    const message = `${description}\n📧 ${email}`;
+    /* contact = телефон (відображається в колонці "Контакт" CRM)
+       situation = опис + email (відображається в колонці "Повідомлення" CRM) */
+    const situation = `${description}\n📧 ${email}`;
     await q(
-      `INSERT INTO leads (first_name, phone, message, source, session_id, status)
+      `INSERT INTO leads (first_name, contact, situation, source, session_id, status)
        VALUES ($1, $2, $3, $4, $5, 'new')`,
-      [fullName, phone || null, message, source, sessionId],
+      [fullName, phone || null, situation, source, sessionId],
     );
   } catch (err) {
     // Не блокуємо платіж якщо запис ліда не вдався
