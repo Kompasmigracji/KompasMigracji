@@ -225,13 +225,19 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
   return (
     <tr style={{ background: isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
       <td style={{ padding: '14px 16px', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>{row.name}</td>
-      <td style={{ padding: '14px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+      <td style={{ padding: '10px 16px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
           <span style={{ fontSize: 14, fontWeight: 700, color: '#059669' }}>{row.price}</span>
         ) : row.oldPrice ? (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
-            <span style={{ fontSize: 11, color: '#94a3b8', textDecoration: 'line-through' }}>{row.oldPrice} zł</span>
-            <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>{row.price} zł</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(34,197,94,0.13)', color: '#059669', padding: '1px 6px', borderRadius: 20 }}>−30%</span>
+              <span style={{ fontSize: 12, color: '#94a3b8', textDecoration: 'line-through' }}>{row.oldPrice} zł</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
+              <span style={{ fontSize: 22, fontWeight: 900, color: ORANGE, letterSpacing: '-0.03em', lineHeight: 1 }}>{row.price}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: ORANGE }}>zł</span>
+            </div>
           </div>
         ) : (
           <span style={{ fontSize: 14, fontWeight: 700, color: NAVY }}>
@@ -246,11 +252,11 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
           </a>
         ) : isFixed ? (
           <button onClick={() => onBuy(row)}
-            style={{ padding: '6px 16px', borderRadius: 8, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit', transition: 'opacity 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.82'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+            style={{ padding: '8px 20px', borderRadius: 9, border: 'none', background: ORANGE, color: '#fff', fontWeight: 800, fontSize: 13, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit', transition: 'transform 0.12s, box-shadow 0.12s', boxShadow: '0 2px 8px rgba(249,115,22,0.35)' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(249,115,22,0.5)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(249,115,22,0.35)'; }}
           >
-            Купити
+            Купити →
           </button>
         ) : (
           <button onClick={handleWhatsApp}
