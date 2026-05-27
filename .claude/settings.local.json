@@ -56,7 +56,9 @@
       "Bash(npx next *)",
       "Bash(del .env.vercel.check .env.vercel.prod)",
       "mcp__claude_ai_Vercel__get_deployment",
-      "Bash(vercel env *)"
+      "Bash(vercel env *)",
+      "Bash(node -e ' *)",
+      "mcp__claude_ai_Vercel__deploy_to_vercel"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",

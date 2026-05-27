@@ -7,8 +7,16 @@ import createMiddleware from "next-intl/middleware";
 import { jwtVerify } from "jose";
 
 const COOKIE = "kompascms_session";
+
+/** Видаляє BOM (U+FEFF, charCode 65279) та \r — захист від PowerShell pipe артефактів. */
+function cleanEnv(s: string | undefined): string {
+  let r = s || "";
+  while (r.length > 0 && r.charCodeAt(0) === 65279) r = r.slice(1);
+  return r.split(String.fromCharCode(13)).join("").trim();
+}
+
 const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "dev-secret-change-me-in-production"
+  cleanEnv(process.env.JWT_SECRET) || "dev-secret-change-me-in-production"
 );
 
 const intlMiddleware = createMiddleware({
