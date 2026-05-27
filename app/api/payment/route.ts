@@ -1,8 +1,12 @@
 /* /api/payment — публічний ендпоінт для P24-оплати з сайту (pricing, karta тощо).
-   Коли P24 не налаштований — автоматично повертає мок-URL для тестів. */
+   Коли P24 не налаштований — автоматично повертає мок-URL для тестів.
+   При реєстрації платежу створює лід у БД (щоб mock-confirm міг його оновити). */
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { randomUUID } from 'crypto';
+import { q } from '@/lib/db';
 
 function isMockMode(): boolean {
   const mid = parseInt(process.env.P24_MERCHANT_ID ?? '', 10);
@@ -14,19 +18,42 @@ function isMockMode(): boolean {
   );
 }
 
+/** Зберігає лід у БД з session_id щоб payment-mock-confirm міг його знайти */
+async function createLeadForPayment(
+  sessionId: string,
+  description: string,
+  email: string,
+  source: string,
+): Promise<void> {
+  try {
+    /* Зберігаємо email у message щоб адмін бачив контакт */
+    const message = `${description}\n📧 ${email}`;
+    await q(
+      `INSERT INTO leads (message, source, session_id, status)
+       VALUES ($1, $2, $3, 'new')`,
+      [message, source, sessionId],
+    );
+  } catch (err) {
+    // Не блокуємо платіж якщо запис ліда не вдався
+    console.error('payment/route: failed to create lead', err);
+  }
+}
+
 export async function POST(req: NextRequest) {
-  let body: { amount?: unknown; description?: unknown; email?: unknown; lang?: unknown };
+  let body: { amount?: unknown; description?: unknown; email?: unknown; lang?: unknown; source?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { amount, description, email, lang } = body;
+  const { amount, description, email, lang, source } = body;
 
   if (!amount || !description || !email) {
     return NextResponse.json({ error: 'Відсутні обов\'язкові параметри' }, { status: 400 });
   }
+
+  const leadSource = String(source || 'pricing');
 
   /* ── Мок-режим: P24 не налаштований ─────────────────────────────── */
   if (isMockMode()) {
@@ -35,6 +62,10 @@ export async function POST(req: NextRequest) {
     if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
       appUrl = `https://${appUrl}`;
     }
+
+    /* Зберігаємо лід щоб mock-confirm міг оновити статус */
+    await createLeadForPayment(sessionId, String(description), String(email), leadSource);
+
     const qs = new URLSearchParams({
       amount: String(amount),
       desc:   String(description),
@@ -55,6 +86,9 @@ export async function POST(req: NextRequest) {
     : 'https://secure.przelewy24.pl';
 
   const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  /* Зберігаємо лід і для реального P24 */
+  await createLeadForPayment(sessionId, String(description), String(email), leadSource);
 
   const sign = crypto
     .createHash('sha384')
