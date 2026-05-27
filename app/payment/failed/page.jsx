@@ -39,7 +39,7 @@ export default function PaymentFailedPage() {
         </h1>
 
         <p style={{ color: "#94a3b8", fontSize: 15, lineHeight: 1.6, margin: "0 0 28px" }}>
-          На жаль, оплату не було завершено. Спробуйте ще раз або зв'яжіться з менеджером.
+          На жаль, оплату не було завершено. Спробуйте ще раз або зв&apos;яжіться з менеджером.
         </p>
 
         <div style={{
@@ -48,7 +48,7 @@ export default function PaymentFailedPage() {
           borderRadius: 12, padding: "16px 20px", marginBottom: 28,
         }}>
           <div style={{ color: "#8a96a3", fontSize: 12, marginBottom: 4 }}>
-            Зв'яжіться з нами:
+            Зв&apos;яжіться з нами:
           </div>
           <a href="tel:+48729271848" style={{ color: "#f87171", fontSize: 18, fontWeight: 700, textDecoration: "none" }}>
             +48 729 271 848

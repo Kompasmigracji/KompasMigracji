@@ -409,7 +409,7 @@ function PaymentLinkModal({ lead, onClose }) {
               </div>
               <div>
                 <label style={{ fontSize: 12, color: "#8a96a3", display: "block", marginBottom: 4 }}>
-                  Email клiєнта <span style={{ color: "#5a6470" }}>(необов'язково)</span>
+                  Email клiєнта <span style={{ color: "#5a6470" }}>(необов&apos;язково)</span>
                 </label>
                 <input
                   className="kc-input"

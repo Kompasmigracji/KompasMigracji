@@ -65,7 +65,7 @@ export default function PaymentSuccessPage() {
           lineHeight: 1.6,
           margin: "0 0 32px",
         }}>
-          Ваш менеджер зв'яжеться з вами найближчим часом для підтвердження деталей.
+          Ваш менеджер зв&apos;яжеться з вами найближчим часом для підтвердження деталей.
         </p>
 
         {/* Контакт */}
@@ -77,7 +77,7 @@ export default function PaymentSuccessPage() {
           marginBottom: 28,
         }}>
           <div style={{ color: "#8a96a3", fontSize: 12, marginBottom: 4 }}>
-            Питання? Зв'яжіться з нами:
+            Питання? Зв&apos;яжіться з нами:
           </div>
           <a href="tel:+48729271848" style={{ color: "#a78bfa", fontSize: 18, fontWeight: 700, textDecoration: "none" }}>
             +48 729 271 848
