@@ -72,18 +72,29 @@ export async function registerTransaction(
 ): Promise<RegisterResult> {
   /* ── Мок-режим: без реального P24 ──────────────────────────────── */
   if (isMockMode()) {
-    const appUrl = (
+    let appUrl = (
       process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
     ).replace(/\/$/, "");
 
-    const mockUrl = new URL(`${appUrl}/payment/mock/${params.sessionId}`);
-    mockUrl.searchParams.set("amount", String(params.amount));
-    mockUrl.searchParams.set("desc",   params.description);
-    mockUrl.searchParams.set("cur",    params.currency ?? "PLN");
+    /* Якщо URL без протоколу — додаємо https:// */
+    if (appUrl && !appUrl.startsWith("http://") && !appUrl.startsWith("https://")) {
+      appUrl = `https://${appUrl}`;
+    }
+    /* Fallback якщо змінна порожня або не задана */
+    if (!appUrl) appUrl = "http://localhost:3000";
+
+    /* Будуємо URL через рядки (не кидає, на відміну від new URL()) */
+    const qs = new URLSearchParams({
+      amount: String(params.amount),
+      desc:   params.description,
+      cur:    params.currency ?? "PLN",
+    }).toString();
+
+    const paymentUrl = `${appUrl}/payment/mock/${params.sessionId}?${qs}`;
 
     return {
       token:      `mock-${params.sessionId}`,
-      paymentUrl: mockUrl.toString(),
+      paymentUrl,
       sessionId:  params.sessionId,
     };
   }
