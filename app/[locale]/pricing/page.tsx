@@ -115,14 +115,39 @@ const CATEGORIES = [
 type ServiceRow = { name: string; price: string; amountGrosze: number | null; oldPrice?: string };
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
-  const [email, setEmail] = useState('');
-  const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError]   = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName,  setLastName]  = useState('');
+  const [phone,     setPhone]     = useState('');
+  const [email,     setEmail]     = useState('');
+  const [agreed,    setAgreed]    = useState(false);
+  const [loading,   setLoading]   = useState(false);
+  const [error,     setError]     = useState('');
 
   const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString('uk-UA');
+  const hasCyrillic = /[а-яА-ЯіІїЇєЄ]/;
+
+  const inp: React.CSSProperties = {
+    width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14,
+    border: '1.5px solid #1e293b', background: '#1e293b', color: '#fff',
+    outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 12,
+  };
+  const lbl: React.CSSProperties = {
+    display: 'block', fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 6,
+  };
 
   const pay = async () => {
+    if (!firstName.trim() || firstName.trim().length < 2 || hasCyrillic.test(firstName)) {
+      setError("Введіть ім’я латиницею (напр. Ivan)");
+      return;
+    }
+    if (!lastName.trim() || lastName.trim().length < 2 || hasCyrillic.test(lastName)) {
+      setError('Введіть прізвище латиницею (напр. Petrenko)');
+      return;
+    }
+    if (!phone.trim() || phone.replace(/\D/g, '').length < 9) {
+      setError('Введіть контактний номер телефону');
+      return;
+    }
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setError('Введіть коректний email');
       return;
@@ -137,18 +162,22 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
           amount: service.amountGrosze,
           description: `${service.name} — Kompas Migracji`,
           email,
-          lang: 'uk',
+          firstName: firstName.trim(),
+          lastName:  lastName.trim(),
+          phone:     phone.trim(),
+          lang:      'uk',
+          source:    'pricing',
         }),
       });
       const data = await res.json();
       if (data.redirectUrl) {
         window.location.href = data.redirectUrl;
       } else {
-        setError(data.error || "Помилка з'єднання. Спробуйте ще раз.");
+        setError(data.error || "Помилка з’єднання. Спробуйте ще раз.");
         setLoading(false);
       }
     } catch {
-      setError("Помилка з'єднання. Спробуйте ще раз.");
+      setError("Помилка з’єднання. Спробуйте ще раз.");
       setLoading(false);
     }
   };
@@ -158,11 +187,11 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
       <style>{`@keyframes pm-in { from { opacity:0; transform:translateY(20px) scale(0.97) } to { opacity:1; transform:none } }`}</style>
       <div
         onClick={onClose}
-        style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,0.65)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}
+        style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,0.65)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflowY:'auto' }}
       >
         <div
           onClick={e => e.stopPropagation()}
-          style={{ background:NAVY, borderRadius:20, padding:'36px 32px', maxWidth:440, width:'100%', position:'relative', border:'1px solid rgba(249,115,22,0.25)', fontFamily:"'Syne', sans-serif", animation:'pm-in 0.32s cubic-bezier(0.22,1,0.36,1) both' }}
+          style={{ background:NAVY, borderRadius:20, padding:'36px 32px', maxWidth:440, width:'100%', position:'relative', border:'1px solid rgba(249,115,22,0.25)', fontFamily:"'Syne', sans-serif", animation:'pm-in 0.32s cubic-bezier(0.22,1,0.36,1) both', margin:'auto' }}
         >
           <button onClick={onClose} style={{ position:'absolute', top:14, right:16, background:'none', border:'none', color:'#475569', fontSize:22, cursor:'pointer', lineHeight:1, padding:4 }}
             onMouseEnter={e => { e.currentTarget.style.color='#fff'; }}
@@ -177,17 +206,33 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
               <span style={{ fontSize:11, fontWeight:700, color:'#22c55e', background:'rgba(34,197,94,0.12)', padding:'2px 8px', borderRadius:20 }}>−30%</span>
             </div>
           )}
-          <div style={{ display:'flex', alignItems:'baseline', gap:5, margin:'0 0 24px' }}>
+          <div style={{ display:'flex', alignItems:'baseline', gap:5, margin:'0 0 20px' }}>
             <span style={{ fontSize:40, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>{amountZl}</span>
             <span style={{ fontSize:20, fontWeight:900, color:ORANGE }}>PLN</span>
           </div>
 
-          <label style={{ display:'block', fontSize:12, fontWeight:600, color:'#94a3b8', marginBottom:6 }}>Email для чеку</label>
+          {/* Ім'я */}
+          <label style={lbl}>Ім&apos;я (латиницею)</label>
+          <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}
+            placeholder="Ivan" autoFocus style={inp} />
+
+          {/* Прізвище */}
+          <label style={lbl}>Прізвище (латиницею)</label>
+          <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}
+            placeholder="Petrenko" style={inp} />
+
+          {/* Телефон */}
+          <label style={lbl}>Контактний телефон</label>
+          <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
+            placeholder="+48 123 456 789" style={inp} />
+
+          {/* Email */}
+          <label style={lbl}>Email для чеку</label>
           <input
             type="email" value={email} onChange={e => setEmail(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && pay()}
-            placeholder="example@gmail.com" autoFocus
-            style={{ width:'100%', padding:'11px 14px', borderRadius:10, fontSize:14, border:`1.5px solid ${error ? '#ef4444' : '#1e293b'}`, background:'#1e293b', color:'#fff', outline:'none', fontFamily:'inherit', boxSizing:'border-box', marginBottom: error ? 6 : 16 }}
+            placeholder="example@gmail.com"
+            style={{ ...inp, marginBottom: error ? 6 : 16 }}
           />
           {error && <p style={{ fontSize:12, color:'#ef4444', margin:'0 0 12px' }}>{error}</p>}
 

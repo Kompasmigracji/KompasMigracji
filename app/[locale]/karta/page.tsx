@@ -196,10 +196,10 @@ const LANGS = {
 type LangKey = keyof typeof LANGS;
 
 const PAY_TEXT = {
-  ua: { btn: 'Оплатити через Przelewy24', emailLabel: 'Ваш email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз.", regText: 'Оплачуючи, ви погоджуєтесь з' },
-  pl: { btn: 'Zapłać przez Przelewy24', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
-  ru: { btn: 'Оплатить через Przelewy24', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
-  en: { btn: 'Pay via Przelewy24', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
+  ua: { btn: 'Оплатити через Przelewy24', firstNameLabel: "Ім'я (латиницею)", firstNamePh: 'Ivan', lastNameLabel: 'Прізвище (латиницею)', lastNamePh: 'Petrenko', phoneLabel: 'Контактний телефон', phonePh: '+48 123 456 789', emailLabel: 'Email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errFirstName: "Введіть ім'я латиницею (напр. Ivan)", errLastName: 'Введіть прізвище латиницею (напр. Petrenko)', errPhone: 'Введіть контактний номер телефону', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз.", regText: 'Оплачуючи, ви погоджуєтесь з' },
+  pl: { btn: 'Zapłać przez Przelewy24', firstNameLabel: 'Imię (łacińskie litery)', firstNamePh: 'Ivan', lastNameLabel: 'Nazwisko (łacińskie litery)', lastNamePh: 'Petrenko', phoneLabel: 'Telefon kontaktowy', phonePh: '+48 123 456 789', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errFirstName: 'Wpisz imię łacińskimi literami (np. Ivan)', errLastName: 'Wpisz nazwisko łacińskimi literami (np. Petrenko)', errPhone: 'Wpisz numer telefonu kontaktowego', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
+  ru: { btn: 'Оплатить через Przelewy24', firstNameLabel: 'Имя (латиницей)', firstNamePh: 'Ivan', lastNameLabel: 'Фамилия (латиницей)', lastNamePh: 'Petrenko', phoneLabel: 'Контактный телефон', phonePh: '+48 123 456 789', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errFirstName: 'Введите имя латиницей (напр. Ivan)', errLastName: 'Введите фамилию латиницей (напр. Petrenko)', errPhone: 'Введите контактный номер телефона', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
+  en: { btn: 'Pay via Przelewy24', firstNameLabel: 'First name (Latin)', firstNamePh: 'Ivan', lastNameLabel: 'Last name (Latin)', lastNamePh: 'Petrenko', phoneLabel: 'Contact phone', phonePh: '+48 123 456 789', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errFirstName: 'Enter first name in Latin (e.g. Ivan)', errLastName: 'Enter last name in Latin (e.g. Petrenko)', errPhone: 'Enter your contact phone number', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
 };
 
 function Tag({ color, children }: { color: string; children: React.ReactNode }) {
@@ -228,6 +228,9 @@ export default function KartaPage(): React.JSX.Element {
   const pt = PAY_TEXT[lang];
 
   const [payStep, setPayStep] = useState<{ pkg: string; amount: number; desc: string } | null>(null);
+  const [payFirstName, setPayFirstName] = useState('');
+  const [payLastName,  setPayLastName]  = useState('');
+  const [payPhone,     setPayPhone]     = useState('');
   const [payEmail, setPayEmail] = useState('');
   const [payLoading, setPayLoading] = useState(false);
   const [payError, setPayError] = useState('');
@@ -238,19 +241,27 @@ export default function KartaPage(): React.JSX.Element {
 
   const openPay = (pkg: string, amount: number, desc: string): void => {
     setPayStep({ pkg, amount, desc });
-    setPayEmail('');
-    setPayError('');
-    setPayAgreed(false);
+    setPayFirstName(''); setPayLastName(''); setPayPhone('');
+    setPayEmail(''); setPayError(''); setPayAgreed(false);
   };
 
   const closePay = (): void => {
     setPayStep(null);
-    setPayEmail('');
-    setPayError('');
-    setPayLoading(false);
+    setPayFirstName(''); setPayLastName(''); setPayPhone('');
+    setPayEmail(''); setPayError(''); setPayLoading(false);
   };
 
   const proceedPay = async () => {
+    const hasCyrillic = /[а-яА-ЯіІїЇєЄ]/;
+    if (!payFirstName.trim() || payFirstName.trim().length < 2 || hasCyrillic.test(payFirstName)) {
+      setPayError(pt.errFirstName); return;
+    }
+    if (!payLastName.trim() || payLastName.trim().length < 2 || hasCyrillic.test(payLastName)) {
+      setPayError(pt.errLastName); return;
+    }
+    if (!payPhone.trim() || payPhone.replace(/\D/g, '').length < 9) {
+      setPayError(pt.errPhone); return;
+    }
     if (!payEmail || !/\S+@\S+\.\S+/.test(payEmail)) {
       setPayError(pt.errEmail);
       return;
@@ -266,7 +277,7 @@ export default function KartaPage(): React.JSX.Element {
       const res = await fetch('/api/payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: payStep.amount, description: payStep.desc, email: payEmail, lang }),
+        body: JSON.stringify({ amount: payStep.amount, description: payStep.desc, email: payEmail, firstName: payFirstName.trim(), lastName: payLastName.trim(), phone: payPhone.trim(), lang, source: 'karta' }),
       });
       const data = await res.json();
       if (data.redirectUrl) {
@@ -632,11 +643,30 @@ export default function KartaPage(): React.JSX.Element {
               {payStep.pkg === 'p1' ? '300 PLN' : '900 PLN'}
             </p>
 
+            {/* Ім'я */}
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: GRAY, marginBottom: 6 }}>{pt.firstNameLabel}</label>
+            <input type="text" value={payFirstName} onChange={e => setPayFirstName(e.target.value)}
+              placeholder={pt.firstNamePh} autoFocus
+              style={{ width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 12 }}
+            />
+            {/* Прізвище */}
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: GRAY, marginBottom: 6 }}>{pt.lastNameLabel}</label>
+            <input type="text" value={payLastName} onChange={e => setPayLastName(e.target.value)}
+              placeholder={pt.lastNamePh}
+              style={{ width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 12 }}
+            />
+            {/* Телефон */}
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: GRAY, marginBottom: 6 }}>{pt.phoneLabel}</label>
+            <input type="tel" value={payPhone} onChange={e => setPayPhone(e.target.value)}
+              placeholder={pt.phonePh}
+              style={{ width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14, border: '1.5px solid #e2e8f0', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 12 }}
+            />
+            {/* Email */}
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: GRAY, marginBottom: 6 }}>{pt.emailLabel}</label>
             <input
               type="email" value={payEmail} onChange={e => setPayEmail(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && proceedPay()}
-              placeholder={pt.emailPh} autoFocus
+              placeholder={pt.emailPh}
               style={{ width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14, border: `1.5px solid ${payError ? '#ef4444' : '#e2e8f0'}`, outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: payError ? 6 : 20 }}
             />
             {payError && <p style={{ fontSize: 12, color: '#ef4444', margin: '0 0 16px' }}>{payError}</p>}

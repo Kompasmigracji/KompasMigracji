@@ -19,19 +19,24 @@ function isMockMode(): boolean {
 }
 
 /** Зберігає лід у БД з session_id щоб payment-mock-confirm міг його знайти */
-async function createLeadForPayment(
-  sessionId: string,
-  description: string,
-  email: string,
-  source: string,
-): Promise<void> {
+async function createLeadForPayment(opts: {
+  sessionId: string;
+  description: string;
+  email: string;
+  source: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+}): Promise<void> {
   try {
-    /* Зберігаємо email у message щоб адмін бачив контакт */
+    const { sessionId, description, email, source, firstName, lastName, phone } = opts;
+    const fullName = [firstName, lastName].filter(Boolean).join(' ') || null;
+    /* Email та опис зберігаємо у message щоб адмін бачив контакт */
     const message = `${description}\n📧 ${email}`;
     await q(
-      `INSERT INTO leads (message, source, session_id, status)
-       VALUES ($1, $2, $3, 'new')`,
-      [message, source, sessionId],
+      `INSERT INTO leads (first_name, phone, message, source, session_id, status)
+       VALUES ($1, $2, $3, $4, $5, 'new')`,
+      [fullName, phone || null, message, source, sessionId],
     );
   } catch (err) {
     // Не блокуємо платіж якщо запис ліда не вдався
@@ -40,14 +45,14 @@ async function createLeadForPayment(
 }
 
 export async function POST(req: NextRequest) {
-  let body: { amount?: unknown; description?: unknown; email?: unknown; lang?: unknown; source?: unknown };
+  let body: { amount?: unknown; description?: unknown; email?: unknown; lang?: unknown; source?: unknown; firstName?: unknown; lastName?: unknown; phone?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { amount, description, email, lang, source } = body;
+  const { amount, description, email, lang, source, firstName, lastName, phone } = body;
 
   if (!amount || !description || !email) {
     return NextResponse.json({ error: 'Відсутні обов\'язкові параметри' }, { status: 400 });
@@ -64,7 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     /* Зберігаємо лід щоб mock-confirm міг оновити статус */
-    await createLeadForPayment(sessionId, String(description), String(email), leadSource);
+    await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
 
     const qs = new URLSearchParams({
       amount: String(amount),
@@ -88,7 +93,7 @@ export async function POST(req: NextRequest) {
   const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   /* Зберігаємо лід і для реального P24 */
-  await createLeadForPayment(sessionId, String(description), String(email), leadSource);
+  await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
 
   const sign = crypto
     .createHash('sha384')
