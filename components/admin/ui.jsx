@@ -18,6 +18,8 @@ const PATHS = {
   plus: "M12 5v14M5 12h14",
   back: "M19 12H5M12 19l-7-7 7-7",
   check: "M20 6 9 17l-5-5",
+  trash: "M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6",
+  restore: "M1 4v6h6M3.51 15a9 9 0 1 0 .49-4.46",
 };
 export function Icon({ name, size = 18, color = "currentColor", fill = false }) {
   return (
