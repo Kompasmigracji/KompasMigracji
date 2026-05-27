@@ -69,8 +69,20 @@ export async function POST(req: NextRequest) {
     [sessionId],
   )) as LeadRow | null;
 
+  /* ── Якщо ліда немає (публічний платіж без ліда) ────────────────── */
   if (!lead) {
-    return NextResponse.json({ error: "Лід не знайдено" }, { status: 404 });
+    const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+    if (adminChat) {
+      try {
+        await sendMessage(
+          adminChat,
+          `💳 <b>[ТЕСТ] Оплата з сайту підтверджена!</b>\n` +
+          `Session: <code>${sessionId}</code>\n` +
+          `(лід не знайдено — публічний платіж)`,
+        );
+      } catch { /* ігноруємо */ }
+    }
+    return NextResponse.json({ ok: true, status: "confirmed" });
   }
 
   /* ── Оновити статус ліда ─────────────────────────────────────────── */
