@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const host = process.env.NEXT_PUBLIC_APP_URL ?? `https://${req.headers.get("host")}`;
+  const host = (process.env.NEXT_PUBLIC_APP_URL ?? `https://${req.headers.get("host")}`).replace(/\/$/, "");
   const webhookUrl = `${host}/api/bot/webhook`;
 
   try {
