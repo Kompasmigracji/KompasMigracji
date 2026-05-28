@@ -2,6 +2,7 @@
 /* /admin/cases — Воронка Понаглення (3 щаблi).
    Аналiз документiв → Понаглення подано → Пiдготовка до суду */
 import React, { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Icon, Spinner } from "@/components/admin/ui";
 
 const STAGES = [
@@ -39,6 +40,9 @@ export default function CasesPage() {
   const [detail, setDetail]   = useState(null);     // { case, logs } | null
   const [busy, setBusy]       = useState("");
   const [toast, setToast]     = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const flash = (msg) => { setToast(msg); setTimeout(() => setToast(""), 2800); };
 
@@ -263,7 +267,7 @@ export default function CasesPage() {
       </div>
 
       {/* Бiчна панель деталей справи */}
-      {detail && (
+      {mounted && detail && createPortal(
         <div style={{
           position:"fixed", top:0, right:0, bottom:0, width:400,
           background:"#fff", boxShadow:"-4px 0 24px rgba(0,0,0,0.12)",
@@ -334,11 +338,12 @@ export default function CasesPage() {
               ))}
             </div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Форма нової справи */}
-      {form && (
+      {mounted && form && createPortal(
         <div style={{
           position:"fixed", inset:0, background:"rgba(0,0,0,0.45)",
           overflowY:"auto", zIndex:200,
@@ -406,7 +411,8 @@ export default function CasesPage() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
