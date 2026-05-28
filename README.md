@@ -129,19 +129,6 @@ KompasMigracji/
 | Сторінка `/pricing` | CTA-форма |
 | Telegram-бот | поле `chat_id` / `username` |
 
-**Адмін-панель** `/admin`:
-- Пароль через `NEXT_PUBLIC_ADMIN_PASSWORD` (сесія у `sessionStorage`)
-- Фільтрація: `new / contacted / closed / dropped`
-- Пошук по імені, телефону, країні, послузі
-- Оперативна зміна статусу ліда
-
-### Оплата Przelewy24
-
-- **Ініціювання:** `POST /api/payment` → отримує посилання на оплату
-- **Підтвердження:** `POST /api/payment-notify` (webhook від P24)
-- Підпис: SHA-384 HMAC
-- Режим: sandbox (`P24_SANDBOX=true`) або production
-
 ### Сторінки та послуги
 
 | Сторінка | Маршрут | Опис |
@@ -161,59 +148,7 @@ KompasMigracji/
 - Перемикач у Header
 - Збереження у `localStorage` за ключем `theme`
 - Атрибут `data-theme` на `<html>`, CSS custom properties
-- Фон dark: `#070c1a`
-
----
-
-## Змінні середовища
-
-Створіть `.env.local` у корені проєкту:
-
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_KEY=
-
-# Anthropic (Claude API)
-ANTHROPIC_API_KEY=
-
-# Przelewy24
-P24_MERCHANT_ID=
-P24_CRC=
-P24_API_KEY=
-P24_SANDBOX=true
-
-# Загальне
-SITE_URL=https://kompasmigracji.com
-NEXT_PUBLIC_ADMIN_PASSWORD=kompas2026
-```
-
----
-
-## Схема бази даних
-
-```sql
--- supabase/bot_schema.sql
-CREATE TABLE leads (
-  id          SERIAL PRIMARY KEY,
-  name        TEXT,
-  phone       TEXT,
-  email       TEXT,
-  service     TEXT,
-  message     TEXT,
-  situation   TEXT,
-  contact     TEXT,
-  country     TEXT,
-  urgency     TEXT,
-  source      TEXT,           -- chatbot | form | pricing-page | karta | telegram
-  status      TEXT DEFAULT 'new', -- new | contacted | closed | dropped
-  chat_id     BIGINT,         -- Telegram chat id
-  first_name  TEXT,
-  username    TEXT,
-  created_at  TIMESTAMPTZ DEFAULT now(),
-  updated_at  TIMESTAMPTZ DEFAULT now()
-);
+- Фон dark: `#070c1a
 ```
 
 ---
@@ -227,66 +162,6 @@ pnpm install
 # Запустити dev-сервер
 pnpm dev
 ```
-
-Відкрити [http://localhost:3000](http://localhost:3000) — автоматично редиректить на `/uk`.
-
-```bash
-# TypeScript перевірка
-pnpm typecheck
-
-# Лінтер
-pnpm lint
-
-# Production build
-pnpm build
-pnpm start
-```
-
----
-
-## Деплой на Vercel
-
-1. Push до `main` гілки → Vercel автоматично збирає та деплоїть.
-2. Додайте всі env-змінні у **Vercel → Settings → Environment Variables**.
-3. Webhooks Przelewy24 вказувати на `https://kompasmigracji.com/api/payment-notify`.
-
----
-
-## Архітектура APIЖ
-
-```
-POST /api/chat
-  body: { messages: Message[], locale: string }
-  → stream text/event-stream (Claude 3.5 Haiku)
-  → автозбереження ліда у Supabase при детекції [[LEAD:{...}]]
-
-POST /api/payment
-  body: { amount, email, description, returnUrl, locale }
-  → { paymentUrl: string }
-
-POST /api/payment-notify
-  body: Przelewy24 notification (IPN)
-  → верифікація підпису → 200 OK
-
-GET  /api/admin/leads?status=new&search=...
-  → { leads: Lead[] }
-
-PATCH /api/admin/status
-  body: { id, status }
-  → { success: true }
-```
-
----
-
-## Безпека
-
-- Адмін-панель: `sessionStorage` токен + env-пароль
-- `/api/chat`: rate limit 10 req/хв по IP
-- Przelewy24 webhook: SHA-384 верифікація підпису
-- Supabase service key використовується тільки на server-side (API routes)
-- RODO/GDPR: мінімальний збір даних, банер згоди на cookies
-
----
 
 ## Компоненти: короткий опис
 
