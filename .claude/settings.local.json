@@ -69,7 +69,10 @@
       "Bash(Get-ChildItem \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\" -Directory)",
       "Bash(Select-Object Name)",
       "Bash(dir \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\")",
-      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" log --oneline -5)"
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" log --oneline -5)",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" add .github/workflows/deploy.yml)",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" commit -m \"ci: auto-deploy to Vercel on push to main via GitHub Actions\")",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" push)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
