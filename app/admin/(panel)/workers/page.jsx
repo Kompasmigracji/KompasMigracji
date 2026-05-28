@@ -491,7 +491,7 @@ function KanbanBoard({
 }) {
   const toggleCollapse = (key) => setCollapsed(prev => {
     const s = new Set(prev);
-    s.has(key) ? s.delete(key) : s.add(key);
+    if (s.has(key)) s.delete(key); else s.add(key);
     return s;
   });
 
