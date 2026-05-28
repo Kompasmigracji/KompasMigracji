@@ -2,7 +2,6 @@
 /* /admin/workers — командний канбан: всi справи з призначенням по спiвробiтниках */
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
-import { createPortal } from "react-dom";
 import { Icon, Spinner } from "@/components/admin/ui";
 
 const STAGES = [
@@ -42,10 +41,7 @@ export default function WorkersKanban() {
   const [assigning, setAssigning] = useState(null);
   const [busy, setBusy]           = useState("");
   const [toast, setToast]         = useState("");
-  const [mounted, setMounted]     = useState(false);
   const dropRef = useRef(null);
-
-  useEffect(() => { setMounted(true); }, []);
 
   const flash = (msg) => { setToast(msg); setTimeout(() => setToast(""), 2800); };
 
