@@ -86,7 +86,9 @@
       "WebFetch(domain:docs.przelewy24.pl)",
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:brandfetch.com)"
+      "WebFetch(domain:brandfetch.com)",
+      "WebFetch(domain:www.thefinestack.com)",
+      "WebFetch(domain:www.svgrepo.com)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
