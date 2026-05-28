@@ -11,6 +11,25 @@ html:has(.kc-root), body:has(.kc-root) {
   padding: 0;
 }
 
+/* CSS-змінні на body — щоб портали (createPortal → document.body) також мали доступ до теми */
+body:has(.kc-root) {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel-2: #1c232e;
+  --border: #2c3644;
+  --text: #e6e8eb;
+  --dim: #828c9b;
+  --faint: #5a6470;
+  --brass: #d99e54;
+  --brass-bg: #2a2316;
+  --green: #5fb87a;
+  --red: #d96c6c;
+  --blue: #5f9bd5;
+  --font: 'IBM Plex Sans', system-ui, sans-serif;
+  --display: 'Fraunces', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
 .kc-root {
   --bg: #0d1117;
   --panel: #161b22;
@@ -33,7 +52,7 @@ html:has(.kc-root), body:has(.kc-root) {
   font-family: var(--font);
   min-height: 100vh;
 }
-.kc-root * { box-sizing: border-box; }
+body:has(.kc-root) * { box-sizing: border-box; }
 .kc-root ::-webkit-scrollbar { width: 7px; height: 7px; }
 .kc-root ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
