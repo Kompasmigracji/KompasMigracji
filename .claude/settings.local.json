@@ -88,7 +88,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:brandfetch.com)",
       "WebFetch(domain:www.thefinestack.com)",
-      "WebFetch(domain:www.svgrepo.com)"
+      "WebFetch(domain:www.svgrepo.com)",
+      "Bash(python3 -c ' *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
