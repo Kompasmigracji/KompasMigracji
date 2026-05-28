@@ -92,7 +92,7 @@ export default function Regulamin() {
         <Section num={7} title="Дані компанії">
           <div style={{ background: '#1e293b', borderRadius: 12, padding: '20px 24px', marginBottom: 10 }}>
             <p style={{ fontSize: 16, fontWeight: 800, color: '#f1f5f9', margin: '0 0 12px' }}>DOMUS V Sp. z o.o.</p>
-            {[['Адреса','02-495 Warszawa, ul. Dzieci Warszawy 27'],['NIP','522-335-00-30'],['WhatsApp / Viber','+48 729 271 848'],['Сайт','kompasmigracji.com'],['PKD','82.10z, 63.92z, 69.10z, 69.20a, 70.20z, 74.30z, 78.10z, 85.59d, 88.99z']].map(([label, val]) => (
+            {[['Адреса','02-495 Warszawa, ul. Dzieci Warszawy 27c/49'],['KRS','0001198474'],['NIP','522-335-00-30'],['WhatsApp / Viber','+48 729 271 848'],['Сайт','kompasmigracji.com'],['PKD','82.10z, 63.92z, 69.10z, 69.20a, 70.20z, 74.30z, 78.10z, 85.59d, 88.99z']].map(([label, val]) => (
               <div key={label} style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
                 <span style={{ fontSize: 12, color: '#64748b', fontWeight: 700, letterSpacing: '0.06em', minWidth: 110, paddingTop: 1 }}>{label}</span>
                 <span style={{ fontSize: 14, color: '#cbd5e1' }}>{val}</span>

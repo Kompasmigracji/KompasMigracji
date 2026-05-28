@@ -31,7 +31,7 @@ export default function Privacy() {
         <Section num={1} title="Administrator danych">
           <div style={{ background: '#1e293b', borderRadius: 12, padding: '20px 24px', marginBottom: 10 }}>
             <p style={{ fontSize: 16, fontWeight: 800, color: '#f1f5f9', margin: '0 0 12px' }}>DOMUS V Sp. z o.o.</p>
-            {[['Adres','ul. Dzieci Warszawy 27, 02-495 Warszawa'],['NIP','5223350030'],['KRS','0001198474'],['E-mail','info@kompasmigracji.com']].map(([label, val]) => (
+            {[['Adres','ul. Dzieci Warszawy 27c/49, 02-495 Warszawa'],['NIP','5223350030'],['KRS','0001198474'],['E-mail','info@kompasmigracji.com']].map(([label, val]) => (
               <div key={label} style={{ display: 'flex', gap: 12, marginBottom: 6 }}>
                 <span style={{ fontSize: 12, color: '#64748b', fontWeight: 700, letterSpacing: '0.06em', minWidth: 110, paddingTop: 1 }}>{label}</span>
                 <span style={{ fontSize: 14, color: '#cbd5e1' }}>{val}</span>

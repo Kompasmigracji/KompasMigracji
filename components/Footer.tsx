@@ -43,7 +43,7 @@ export default function Footer() {
             <span className="font-semibold text-white/60">DOMUS V Sp. z o.o.</span>
             <span>NIP: <span className="text-white/55">5223350030</span></span>
             <span>KRS: <span className="text-white/55">0001198474</span></span>
-            <span>ul. Dzieci Warszawy 27, 02-495 Warszawa</span>
+            <span>ul. Dzieci Warszawy 27c/49, 02-495 Warszawa</span>
             <span>Nr konta: <span className="text-white/55 font-mono tracking-wide">10 1050 1025 1000 0090 8594 6938</span></span>
           </div>
         </div>

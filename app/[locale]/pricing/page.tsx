@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabase';
 
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
@@ -113,6 +112,37 @@ const CATEGORIES = [
 ];
 
 type ServiceRow = { name: string; price: string; amountGrosze: number | null; oldPrice?: string };
+
+function ContactModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
+  const waMsg = encodeURIComponent(`Цікавить послуга: ${service.name}`);
+  return (
+    <>
+      <style>{`@keyframes cm-in { from { opacity:0; transform:translateY(20px) scale(0.97) } to { opacity:1; transform:none } }`}</style>
+      <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,0.65)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+        <div onClick={e => e.stopPropagation()} style={{ background:NAVY, borderRadius:20, padding:'32px', maxWidth:400, width:'100%', position:'relative', border:'1px solid rgba(249,115,22,0.25)', fontFamily:"'Syne', sans-serif", animation:'cm-in 0.32s cubic-bezier(0.22,1,0.36,1) both' }}>
+          <button onClick={onClose} style={{ position:'absolute', top:14, right:16, background:'none', border:'none', color:'#475569', fontSize:22, cursor:'pointer', lineHeight:1 }}>✕</button>
+          <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.14em', color:ORANGE, textTransform:'uppercase', margin:'0 0 12px' }}>Запис на послугу</p>
+          <p style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px', lineHeight:1.4 }}>{service.name}</p>
+          <p style={{ fontSize:13, color:'#64748b', margin:'0 0 20px', lineHeight:1.6 }}>Ціна розраховується індивідуально. Оберіть зручний спосіб зв&apos;язку — і наш спеціаліст відповість протягом 2 годин:</p>
+          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+            <a href={`https://wa.me/48729271848?text=${waMsg}`} target="_blank" rel="noreferrer"
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(37,211,102,0.12)', border:'1px solid rgba(37,211,102,0.3)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              <span style={{ fontSize:18 }}>💬</span> WhatsApp · +48 729 271 848
+            </a>
+            <a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer"
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(41,182,246,0.12)', border:'1px solid rgba(41,182,246,0.3)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              <span style={{ fontSize:18 }}>✈️</span> Telegram · @kompasmigracji
+            </a>
+            <a href="mailto:info@kompasmigracji.com"
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              <span style={{ fontSize:18 }}>📧</span> info@kompasmigracji.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
   const [firstName, setFirstName] = useState('');
@@ -258,14 +288,9 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
   );
 }
 
-function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: ServiceRow) => void; isEven: boolean }) {
+function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (row: ServiceRow) => void; onContact: (row: ServiceRow) => void; isEven: boolean }) {
   const isFixed = row.amountGrosze !== null && row.amountGrosze > 0;
   const isFree = row.amountGrosze === null && row.price.toLowerCase().includes('безкоштовно');
-
-  const handleWhatsApp = async () => {
-    if (supabase) { try { await supabase.from('leads').insert({ service: row.name, source: 'pricing-page' }); } catch {} }
-    window.open(`https://wa.me/48729271848?text=${encodeURIComponent(`Цікавить послуга: ${row.name}`)}`, '_blank');
-  };
 
   return (
     <tr style={{ background: isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom: '1px solid #f1f5f9' }}>
@@ -292,8 +317,8 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
       </td>
       <td style={{ padding: '14px 16px 14px 8px', textAlign: 'right', whiteSpace: 'nowrap' }}>
         {isFree ? (
-          <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
-            WhatsApp →
+          <a href="/blog" style={{ fontSize: 12, color: '#059669', fontWeight: 600, textDecoration: 'none' }}>
+            Читати →
           </a>
         ) : isFixed ? (
           <button onClick={() => onBuy(row)}
@@ -304,7 +329,7 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
             Купити →
           </button>
         ) : (
-          <button onClick={handleWhatsApp}
+          <button onClick={() => onContact(row)}
             style={{ padding: '6px 14px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: 'transparent', color: '#64748b', fontWeight: 600, fontSize: 12, cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit', transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = ORANGE; e.currentTarget.style.color = ORANGE; }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; }}
@@ -318,7 +343,8 @@ function PriceRow({ row, onBuy, isEven }: { row: ServiceRow; onBuy: (row: Servic
 }
 
 export default function PricingPage() {
-  const [payService, setPayService] = useState<ServiceRow | null>(null);
+  const [payService,     setPayService]     = useState<ServiceRow | null>(null);
+  const [contactService, setContactService] = useState<ServiceRow | null>(null);
   return (
     <div className="min-h-screen bg-white text-navy">
       <Header />
@@ -397,7 +423,7 @@ export default function PricingPage() {
                   </thead>
                   <tbody>
                     {cat.rows.map((row, i) => (
-                      <PriceRow key={row.name + i} row={row} isEven={i % 2 === 0} onBuy={setPayService} />
+                      <PriceRow key={row.name + i} row={row} isEven={i % 2 === 0} onBuy={setPayService} onContact={setContactService} />
                     ))}
                   </tbody>
                 </table>
@@ -410,23 +436,44 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* WhatsApp CTA */}
-        <section style={{ background: '#f8fafc', borderTop: '1px solid #f1f5f9', padding: '48px 24px', textAlign: 'center' }}>
-          <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 8px', fontFamily: "'Syne', sans-serif" }}>
-            Не знаєте з чого почати?
-          </p>
-          <h3 style={{ fontSize: 'clamp(20px,3.5vw,28px)', fontWeight: 800, color: NAVY, margin: '0 0 20px', fontFamily: "'Syne', sans-serif", letterSpacing: '-0.02em' }}>
-            Перші 2 хвилини — безкоштовно
-          </h3>
-          <a
-            href="https://wa.me/48729271848"
-            target="_blank" rel="noreferrer"
-            style={{ display: 'inline-block', padding: '14px 32px', borderRadius: 12, background: '#25d366', color: '#fff', fontWeight: 700, fontSize: 15, textDecoration: 'none', fontFamily: "'Syne', sans-serif", transition: 'opacity 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
-          >
-            💬 Написати у WhatsApp
-          </a>
+        {/* Jak działają płatności */}
+        <section style={{ background: '#f8fafc', borderTop: '1px solid #f1f5f9', padding: 'clamp(48px,7vw,72px) 24px' }}>
+          <div style={{ maxWidth: 860, margin: '0 auto' }}>
+            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.15em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 12px', fontFamily: "'Syne', sans-serif", textAlign: 'center' }}>
+              Jak działają płatności
+            </p>
+            <h2 style={{ fontSize: 'clamp(24px,4vw,36px)', fontWeight: 900, color: NAVY, margin: '0 0 48px', fontFamily: "'Syne', sans-serif", letterSpacing: '-0.03em', textAlign: 'center' }}>
+              Як працює процес оплати
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 24 }}>
+              {[
+                { step: '01', icon: '🛒', title: 'Вибір послуги', desc: 'Знайдіть потрібну послугу в таблиці і натисніть «Купити».' },
+                { step: '02', icon: '👤', title: 'Дані клієнта', desc: 'Заповніть ім\'я, прізвище, телефон і email для чека — латиницею.' },
+                { step: '03', icon: '💳', title: 'Оплата Przelewy24', desc: 'Безпечний платіж через Przelewy24 — картка, BLIK, переказ. SSL 256-bit.' },
+                { step: '04', icon: '✅', title: 'Підтвердження', desc: 'Отримуєте email-чек, а спеціаліст зв\'яжеться протягом 2 годин.' },
+              ].map(({ step, icon, title, desc }) => (
+                <div key={step} style={{ background: '#fff', borderRadius: 16, padding: '24px 20px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', position: 'relative' }}>
+                  <span style={{ position: 'absolute', top: 16, right: 16, fontSize: 11, fontWeight: 800, color: '#e2e8f0', letterSpacing: '0.06em' }}>{step}</span>
+                  <div style={{ fontSize: 28, marginBottom: 12 }}>{icon}</div>
+                  <p style={{ fontSize: 14, fontWeight: 800, color: NAVY, margin: '0 0 8px', fontFamily: "'Syne', sans-serif" }}>{title}</p>
+                  <p style={{ fontSize: 13, color: '#64748b', margin: 0, lineHeight: 1.6 }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 32, background: '#fff', border: '1px solid rgba(249,115,22,0.2)', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <span style={{ fontSize: 22, flexShrink: 0 }}>🔒</span>
+              <p style={{ fontSize: 13, color: '#64748b', margin: 0, lineHeight: 1.6 }}>
+                <strong style={{ color: NAVY }}>Безпечна оплата</strong> · Przelewy24 — ліцензований платіжний оператор Польщі · Дані картки не зберігаються на нашому сервері · Шифрування SSL 256-bit
+              </p>
+            </div>
+            <div style={{ marginTop: 24, textAlign: 'center' }}>
+              <p style={{ fontSize: 13, color: '#94a3b8', margin: '0 0 12px' }}>Є питання щодо оплати?</p>
+              <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer"
+                style={{ display: 'inline-block', padding: '12px 28px', borderRadius: 10, background: '#25d366', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none', fontFamily: "'Syne', sans-serif" }}>
+                💬 WhatsApp · +48 729 271 848
+              </a>
+            </div>
+          </div>
         </section>
 
         {/* Company info */}
@@ -434,7 +481,7 @@ export default function PricingPage() {
           <p style={{ fontSize: 13, fontWeight: 700, color: '#64748b', margin: '0 0 6px', fontFamily: "'Syne', sans-serif" }}>DOMUS V Sp. z o.o.</p>
           <p style={{ fontSize: 12, color: '#94a3b8', margin: 0, lineHeight: 1.8 }}>
             NIP: 5223350030 · KRS: 0001198474<br />
-            ul. Dzieci Warszawy 27, 02-495 Warszawa<br />
+            ul. Dzieci Warszawy 27c/49, 02-495 Warszawa<br />
             Nr konta: <span style={{ fontFamily: 'monospace', letterSpacing: '0.04em' }}>10 1050 1025 1000 0090 8594 6938</span>
           </p>
         </section>
@@ -442,7 +489,8 @@ export default function PricingPage() {
 
       <Footer />
 
-      {payService && <PayModal service={payService} onClose={() => setPayService(null)} />}
+      {payService     && <PayModal     service={payService}     onClose={() => setPayService(null)} />}
+      {contactService && <ContactModal service={contactService} onClose={() => setContactService(null)} />}
     </div>
   );
 }
