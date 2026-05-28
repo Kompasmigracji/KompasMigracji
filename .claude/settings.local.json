@@ -68,7 +68,8 @@
       "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/payment/mock/[sessionId]\" \"c:/Users/user/Documents/GitHub/KompasMigracji/app/payment/failed\" \"c:/Users/user/Documents/GitHub/KompasMigracji/app/api/payment-mock-confirm\")",
       "Bash(Get-ChildItem \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\" -Directory)",
       "Bash(Select-Object Name)",
-      "Bash(dir \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\")"
+      "Bash(dir \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\")",
+      "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" log --oneline -5)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
