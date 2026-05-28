@@ -48,7 +48,7 @@ export async function PATCH(req, { params }) {
   const allowed = [
     "full_name","contact","case_number","submission_date","urzad",
     "stage","status","has_dodatek_1","has_zus_cert",
-    "ponaglenie_sent_at","deadline_date","notes","alert_sent",
+    "ponaglenie_sent_at","deadline_date","notes","alert_sent","assigned_to",
   ];
 
   const sets = [];
@@ -78,6 +78,18 @@ export async function PATCH(req, { params }) {
       `INSERT INTO case_logs (case_id, event, actor, details)
        VALUES ($1,$2,'manager',$3)`,
       [params.id, `Етап: ${STAGE_LABEL[b.stage] || b.stage}`, JSON.stringify({ stage: b.stage })]
+    );
+  }
+
+  // Лог призначення на працiвника
+  if ("assigned_to" in b) {
+    const label = b.assigned_to
+      ? `Призначено виконавця (id=${b.assigned_to})`
+      : "Призначення знято";
+    await q(
+      `INSERT INTO case_logs (case_id, event, actor)
+       VALUES ($1,$2,'manager')`,
+      [params.id, label]
     );
   }
 

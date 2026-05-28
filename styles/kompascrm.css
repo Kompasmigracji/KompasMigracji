@@ -139,9 +139,11 @@ body:has(.kc-root) * { box-sizing: border-box; }
 }
 .kc-grid { display: grid; gap: 14px; }
 .kc-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.kc-grid-3 { grid-template-columns: repeat(3, 1fr); }
 .kc-grid-2 { grid-template-columns: repeat(2, 1fr); }
 @media (max-width: 900px) {
   .kc-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .kc-grid-3 { grid-template-columns: repeat(2, 1fr); }
   .kc-grid-2 { grid-template-columns: 1fr; }
   .kc-side { width: 64px; }
   .kc-brand-name, .kc-brand-sub, .kc-nav-item span, .kc-nav-cap,
