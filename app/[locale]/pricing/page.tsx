@@ -144,11 +144,21 @@ function ContactModal({ service, onClose }: { service: ServiceRow; onClose: () =
   );
 }
 
+type Channel = 'whatsapp' | 'telegram' | 'viber' | 'email';
+
+const CHANNELS: { id: Channel; icon: string; label: string }[] = [
+  { id: 'whatsapp', icon: '💬', label: 'WhatsApp' },
+  { id: 'telegram', icon: '✈️', label: 'Telegram' },
+  { id: 'viber',    icon: '📳', label: 'Viber'    },
+  { id: 'email',    icon: '📧', label: 'Email'    },
+];
+
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
   const [firstName, setFirstName] = useState('');
   const [lastName,  setLastName]  = useState('');
   const [phone,     setPhone]     = useState('');
   const [email,     setEmail]     = useState('');
+  const [channel,   setChannel]   = useState<Channel>('whatsapp');
   const [agreed,    setAgreed]    = useState(false);
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState('');
@@ -195,8 +205,9 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
           firstName: firstName.trim(),
           lastName:  lastName.trim(),
           phone:     phone.trim(),
-          lang:      'uk',
-          source:    'pricing',
+          lang:           'uk',
+          source:         'pricing',
+          contactChannel: channel,
         }),
       });
       const data = await res.json();
@@ -255,6 +266,32 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
           <label style={lbl}>Контактний телефон</label>
           <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
             placeholder="+48 123 456 789" style={inp} />
+
+          {/* Канал зв'язку */}
+          <label style={{ ...lbl, marginBottom: 8 }}>Зручний канал для зв&apos;язку зі спеціалістом</label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
+            {CHANNELS.map(ch => {
+              const active = channel === ch.id;
+              return (
+                <button
+                  key={ch.id}
+                  type="button"
+                  onClick={() => setChannel(ch.id)}
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                    padding: '10px 4px', borderRadius: 10, cursor: 'pointer',
+                    border: active ? `2px solid ${ORANGE}` : '2px solid #1e293b',
+                    background: active ? 'rgba(249,115,22,0.12)' : '#1e293b',
+                    color: active ? ORANGE : '#64748b',
+                    fontFamily: 'inherit', transition: 'all 0.15s',
+                  }}
+                >
+                  <span style={{ fontSize: 18, lineHeight: 1 }}>{ch.icon}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>{ch.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
           {/* Email */}
           <label style={lbl}>Email для чеку</label>
