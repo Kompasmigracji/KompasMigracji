@@ -67,7 +67,7 @@ export default function Footer() {
             >
               iPhoenixGSM®
             </a>
-            {' '}·{' '}<span style={{ letterSpacing: '0.02em' }}>Oleksandr Khrystodul</span>{' '}· © 2026
+            {' '}·{' '}<span style={{ letterSpacing: '0.02em' }}>Alex Khrysto</span>{' '}· © 2026
           </span>
         </div>
       </div>
