@@ -13,8 +13,10 @@ export async function GET(req) {
 
   const { searchParams } = new URL(req.url);
   const stage    = searchParams.get("stage")     || "";
-  const status   = searchParams.get("status")    || "active";
   const workerId = parseInt(searchParams.get("worker_id") || "0") || 0;
+  // null = param absent → default to "active"; "" = param present but empty → all statuses
+  const statusParam = searchParams.get("status");
+  const status      = statusParam === null ? "active" : statusParam;
 
   const rows = await q(
     `SELECT
