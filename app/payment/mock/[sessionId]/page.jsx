@@ -1,9 +1,29 @@
 "use client";
-/* /payment/mock/[sessionId] — Тестова сторінка оплати.
-   Використовується коли P24_SANDBOX=mock або ключі P24 не задані.
-   Відтворює вигляд платіжної сторінки, але без реальних грошей. */
+/* /payment/mock/[sessionId] — симулятор P24 checkout (тільки в мок-режимі) */
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
+
+const P24_RED   = "#D8232A";
+const P24_GREEN = "#44A649";
+const P24_BG    = "#F8F9FA";
+const P24_BORDER = "#DEE2E6";
+const P24_TEXT  = "#212529";
+const P24_MUTED = "#6C757D";
+
+function P24Logo() {
+  return (
+    <svg width="126" height="30" viewBox="0 0 126 30" fill="none" aria-label="Przelewy24">
+      <rect width="126" height="30" rx="5" fill={P24_RED}/>
+      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
+    </svg>
+  );
+}
+
+const METHODS = [
+  { id: "blik",     label: "BLIK",             icon: "📱", desc: "Kod BLIK z aplikacji bankowej" },
+  { id: "card",     label: "Karta płatnicza",   icon: "💳", desc: "Visa, Mastercard, Maestro" },
+  { id: "transfer", label: "Przelew bankowy",   icon: "🏦", desc: "Szybki przelew online" },
+];
 
 export default function MockPaymentPage() {
   const { sessionId } = useParams();
@@ -11,168 +31,143 @@ export default function MockPaymentPage() {
   const router        = useRouter();
 
   const amountGroszy = parseInt(sp.get("amount") || "0", 10);
-  const amountPln    = (amountGroszy / 100).toFixed(2);
+  const amountPln    = (amountGroszy / 100).toLocaleString("pl-PL", { minimumFractionDigits: 2 });
   const description  = sp.get("desc") || "Послуга";
-  const currency     = sp.get("cur")  || "PLN";
 
-  const [loading, setLoading] = useState(false);
-  const [step,    setStep]    = useState("idle"); // idle | confirming | done | rejected
+  const [method,   setMethod]  = useState("blik");
+  const [blikCode, setBlik]    = useState("");
+  const [loading,  setLoading] = useState(false);
+  const [step,     setStep]    = useState("idle"); // idle | processing | done | rejected
 
   async function handlePay(success) {
     setLoading(true);
-    setStep(success ? "confirming" : "rejected");
+    setStep(success ? "processing" : "rejected");
     try {
-      const res = await fetch("/api/payment-mock-confirm", {
+      await fetch("/api/payment-mock-confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId, success }),
       });
-      const d = await res.json();
-      if (!d.ok && d.error) {
-        alert("Помилка: " + d.error);
-        setStep("idle");
-        setLoading(false);
-        return;
-      }
-    } catch {
-      alert("Мережа недоступна");
-      setStep("idle");
-      setLoading(false);
-      return;
-    }
+    } catch { /* network */ }
     setTimeout(() => {
       router.push(success ? "/payment/success" : "/payment/failed");
-    }, 800);
+    }, success ? 1200 : 600);
   }
 
-  return (
-    <main style={{
-      minHeight: "100vh",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      background: "#0f172a",
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      padding: 20,
-    }}>
-      <div style={{ width: "100%", maxWidth: 440 }}>
+  const disabled = loading || step !== "idle";
 
-        {/* Банер "ТЕСТ" */}
-        <div style={{
-          background: "rgba(251,191,36,0.15)",
-          border: "1px solid rgba(251,191,36,0.4)",
-          borderRadius: 10, padding: "8px 16px",
-          marginBottom: 16, textAlign: "center",
-          color: "#fbbf24", fontSize: 13, fontWeight: 700,
-          letterSpacing: "0.05em",
-        }}>
-          ⚠️ ТЕСТОВИЙ РЕЖИМ — гроші не списуються
+  return (
+    <main style={{ minHeight:"100vh", background:"#EBEEF2", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"'Segoe UI',Arial,sans-serif", padding:"20px 16px" }}>
+
+      {/* ── TEST banner ───────────────────────────────────────────── */}
+      <div style={{ width:"100%", maxWidth:480, marginBottom:12, background:"rgba(234,179,8,0.18)", border:"1.5px solid rgba(234,179,8,0.55)", borderRadius:8, padding:"8px 16px", textAlign:"center", color:"#92400E", fontSize:13, fontWeight:700, letterSpacing:"0.04em" }}>
+        ⚠️ TRYB TESTOWY — pieniądze nie są pobierane
+      </div>
+
+      {/* ── Card ──────────────────────────────────────────────────── */}
+      <div style={{ width:"100%", maxWidth:480, background:"#fff", borderRadius:12, boxShadow:"0 8px 40px rgba(0,0,0,0.12)", overflow:"hidden" }}>
+
+        {/* Header */}
+        <div style={{ background:"#fff", borderBottom:`1px solid ${P24_BORDER}`, padding:"14px 20px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <P24Logo />
+          <div style={{ display:"flex", alignItems:"center", gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Bezpieczna płatność
+          </div>
         </div>
 
-        {/* Картка */}
-        <div style={{
-          background: "#1c2433",
-          border: "1px solid #2d3748",
-          borderRadius: 20, padding: "36px 32px",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-        }}>
-          {/* Лого P24 (текст) */}
-          <div style={{
-            textAlign: "center", marginBottom: 24,
-            color: "#5a6470", fontSize: 13, fontWeight: 600, letterSpacing: "0.05em",
-          }}>
-            🔵 Przelewy24 — Symulator płatności
-          </div>
+        <div style={{ padding:"20px" }}>
 
-          {/* Сума */}
-          <div style={{
-            background: "#0f1623", border: "1px solid #2d3748",
-            borderRadius: 12, padding: "20px 24px", marginBottom: 24,
-            textAlign: "center",
-          }}>
-            <div style={{ color: "#8a96a3", fontSize: 13, marginBottom: 6 }}>
-              Сума до сплати:
-            </div>
-            <div style={{ color: "#e2e8f0", fontSize: 36, fontWeight: 800, letterSpacing: "-0.02em" }}>
-              {amountPln} <span style={{ fontSize: 22, color: "#8a96a3" }}>{currency}</span>
-            </div>
-            <div style={{ color: "#5a6470", fontSize: 12, marginTop: 8 }}>
-              {description}
+          {/* Order summary */}
+          <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:"14px 16px", marginBottom:20 }}>
+            <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Sklep</div>
+            <div style={{ fontSize:14, fontWeight:700, color:P24_TEXT, marginBottom:10 }}>Kompas Migracji</div>
+            <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:"uppercase", letterSpacing:"0.08em", marginBottom:4 }}>Opis zamówienia</div>
+            <div style={{ fontSize:13, color:P24_TEXT, marginBottom:12 }}>{description}</div>
+            <div style={{ display:"flex", alignItems:"baseline", gap:5 }}>
+              <span style={{ fontSize:11, color:P24_MUTED, fontWeight:600 }}>Do zapłaty:</span>
+              <span style={{ fontSize:28, fontWeight:900, color:P24_RED, letterSpacing:"-0.03em", lineHeight:1 }}>{amountPln}</span>
+              <span style={{ fontSize:15, fontWeight:800, color:P24_RED }}>PLN</span>
             </div>
           </div>
 
-          {/* ID сесії */}
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ fontSize: 11, color: "#5a6470", marginBottom: 4 }}>Session ID:</div>
-            <code style={{
-              display: "block", background: "#0f1623",
-              border: "1px solid #2d3748", borderRadius: 8,
-              padding: "6px 10px", fontSize: 11,
-              color: "#8a96a3", wordBreak: "break-all",
-            }}>
-              {sessionId}
-            </code>
-          </div>
-
-          {/* Кнопки */}
           {step === "idle" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <button
-                onClick={() => handlePay(true)}
-                disabled={loading}
-                style={{
-                  width: "100%", padding: "14px 20px",
-                  borderRadius: 12, border: "none", cursor: "pointer",
-                  background: "linear-gradient(135deg, #22c55e, #16a34a)",
-                  color: "#fff", fontSize: 16, fontWeight: 700,
-                  boxShadow: "0 4px 20px rgba(34,197,94,0.3)",
-                  transition: "opacity 0.15s",
-                  opacity: loading ? 0.6 : 1,
-                }}
+            <>
+              {/* Payment method selector */}
+              <div style={{ fontSize:11, fontWeight:700, color:P24_MUTED, textTransform:"uppercase", letterSpacing:"0.06em", marginBottom:10 }}>Wybierz metodę płatności</div>
+              <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:20 }}>
+                {METHODS.map(m => {
+                  const active = method === m.id;
+                  return (
+                    <label key={m.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 14px", borderRadius:8, border:`2px solid ${active ? P24_GREEN : P24_BORDER}`, background: active ? "rgba(68,166,73,0.06)" : "#fff", cursor:"pointer", transition:"all 0.15s" }}>
+                      <input type="radio" name="method" value={m.id} checked={active} onChange={() => setMethod(m.id)} style={{ accentColor:P24_GREEN, width:16, height:16, flexShrink:0 }} />
+                      <span style={{ fontSize:20, flexShrink:0 }}>{m.icon}</span>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:14, fontWeight:700, color:P24_TEXT, lineHeight:1.2 }}>{m.label}</div>
+                        <div style={{ fontSize:11, color:P24_MUTED, marginTop:2 }}>{m.desc}</div>
+                      </div>
+                    </label>
+                  );
+                })}
+              </div>
+
+              {/* BLIK input */}
+              {method === "blik" && (
+                <div style={{ marginBottom:16 }}>
+                  <label style={{ display:"block", fontSize:11, fontWeight:700, color:P24_MUTED, textTransform:"uppercase", letterSpacing:"0.05em", marginBottom:6 }}>Kod BLIK (6 cyfr)</label>
+                  <input
+                    type="text" inputMode="numeric" maxLength={6} value={blikCode}
+                    onChange={e => setBlik(e.target.value.replace(/\D/g, "").slice(0,6))}
+                    placeholder="_ _ _ _ _ _"
+                    style={{ width:"100%", padding:"12px 16px", borderRadius:8, border:`2px solid ${P24_BORDER}`, fontSize:22, fontWeight:700, letterSpacing:"0.3em", textAlign:"center", fontFamily:"monospace", boxSizing:"border-box", outline:"none", color:P24_TEXT }}
+                  />
+                </div>
+              )}
+
+              {/* Buttons */}
+              <button onClick={() => handlePay(true)} disabled={disabled || (method === "blik" && blikCode.length < 6)}
+                style={{ width:"100%", padding:"13px 0", borderRadius:8, border:"none", cursor: disabled || (method === "blik" && blikCode.length < 6) ? "not-allowed" : "pointer", background: disabled || (method === "blik" && blikCode.length < 6) ? "#E9ECEF" : P24_GREEN, color: disabled || (method === "blik" && blikCode.length < 6) ? "#9CA3AF" : "#fff", fontWeight:800, fontSize:15, letterSpacing:"0.01em", transition:"filter 0.15s", marginBottom:10 }}
               >
-                ✅ Підтвердити оплату
+                Zapłać {amountPln} PLN →
               </button>
-              <button
-                onClick={() => handlePay(false)}
-                disabled={loading}
-                style={{
-                  width: "100%", padding: "12px 20px",
-                  borderRadius: 12, border: "1px solid rgba(220,38,38,0.3)",
-                  cursor: "pointer", background: "rgba(220,38,38,0.1)",
-                  color: "#dc2626", fontSize: 14, fontWeight: 600,
-                  transition: "opacity 0.15s", opacity: loading ? 0.6 : 1,
-                }}
+
+              <button onClick={() => handlePay(false)} disabled={disabled}
+                style={{ width:"100%", padding:"10px 0", borderRadius:8, border:`1.5px solid ${P24_BORDER}`, cursor:"pointer", background:"transparent", color:P24_MUTED, fontWeight:600, fontSize:13 }}
               >
-                ❌ Відхилити (симулювати помилку)
+                Anuluj płatność
               </button>
-            </div>
+            </>
           )}
 
-          {step === "confirming" && (
-            <div style={{
-              textAlign: "center", padding: "16px 0",
-              color: "#22c55e", fontSize: 15, fontWeight: 600,
-            }}>
-              ⏳ Обробка платежу…
+          {step === "processing" && (
+            <div style={{ textAlign:"center", padding:"24px 0" }}>
+              <div style={{ fontSize:40, marginBottom:12 }}>⏳</div>
+              <div style={{ fontSize:16, fontWeight:700, color:P24_GREEN }}>Przetwarzanie płatności…</div>
+              <div style={{ fontSize:13, color:P24_MUTED, marginTop:6 }}>Nie zamykaj tej strony</div>
             </div>
           )}
 
           {step === "rejected" && (
-            <div style={{
-              textAlign: "center", padding: "16px 0",
-              color: "#dc2626", fontSize: 15, fontWeight: 600,
-            }}>
-              ❌ Платіж відхилено…
+            <div style={{ textAlign:"center", padding:"24px 0" }}>
+              <div style={{ fontSize:40, marginBottom:12 }}>❌</div>
+              <div style={{ fontSize:16, fontWeight:700, color:P24_RED }}>Płatność odrzucona</div>
+              <div style={{ fontSize:13, color:P24_MUTED, marginTop:6 }}>Przekierowujemy…</div>
             </div>
           )}
-
-          {/* Підказка */}
-          <div style={{
-            marginTop: 20, padding: "10px 14px",
-            background: "rgba(251,191,36,0.07)", borderRadius: 8,
-            fontSize: 11, color: "#92400e", lineHeight: 1.5,
-          }}>
-            💡 Це тестова сторінка. Реальна P24 буде підключена після реєстрації.
-          </div>
         </div>
+
+        {/* Footer */}
+        <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:"10px 20px", textAlign:"center" }}>
+          <span style={{ fontSize:10, color:"#9CA3AF", display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            SSL 256-bit · Przelewy24 sp. z o.o. · Nadzór KNF
+          </span>
+        </div>
+      </div>
+
+      {/* Session ID (dev info) */}
+      <div style={{ marginTop:12, fontSize:10, color:"rgba(0,0,0,0.3)", textAlign:"center" }}>
+        Session: {sessionId}
       </div>
     </main>
   );

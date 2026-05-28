@@ -1,106 +1,96 @@
-/* /payment/success — сторiнка пiсля успiшної оплати через Przelewy24.
-   P24 перенаправляє клiєнта сюди пiсля завершення платежу.
-   IPN-вебхук (/api/payment-notify) вже оновив статус ліда. */
+/* /payment/success — P24 redirects here after successful payment */
 import Link from "next/link";
 
 export const metadata = {
-  title: "Оплата прийнята — KompasMigracji",
-  description: "Ваш платіж успішно оброблено.",
+  title: "Płatność zakończona sukcesem — Kompas Migracji",
 };
+
+const P24_RED   = "#D8232A";
+const P24_GREEN = "#44A649";
+const P24_BORDER = "#DEE2E6";
+const P24_BG    = "#F8F9FA";
+const P24_TEXT  = "#212529";
+const P24_MUTED = "#6C757D";
+
+function P24Logo() {
+  return (
+    <svg width="110" height="26" viewBox="0 0 126 30" fill="none" aria-label="Przelewy24">
+      <rect width="126" height="30" rx="5" fill={P24_RED}/>
+      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
+    </svg>
+  );
+}
 
 export default function PaymentSuccessPage() {
   return (
-    <main style={{
-      minHeight: "100vh",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
-      fontFamily: "system-ui, -apple-system, sans-serif",
-      padding: "20px",
-    }}>
-      <div style={{
-        background: "#1c2433",
-        border: "1px solid #2d3748",
-        borderRadius: 20,
-        padding: "48px 40px",
-        maxWidth: 480,
-        width: "100%",
-        textAlign: "center",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-      }}>
-        {/* Іконка успіху */}
-        <div style={{
-          width: 80, height: 80,
-          background: "rgba(34,197,94,0.15)",
-          border: "2px solid rgba(34,197,94,0.3)",
-          borderRadius: "50%",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          margin: "0 auto 24px",
-          fontSize: 36,
-        }}>
-          ✅
-        </div>
+    <main style={{ minHeight:"100vh", background:"#EBEEF2", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"'Segoe UI',Arial,sans-serif", padding:"20px 16px" }}>
+      <div style={{ width:"100%", maxWidth:460, background:"#fff", borderRadius:12, boxShadow:"0 8px 40px rgba(0,0,0,0.12)", overflow:"hidden" }}>
 
-        <h1 style={{
-          color: "#e2e8f0",
-          fontSize: 26,
-          fontWeight: 700,
-          margin: "0 0 12px",
-        }}>
-          Оплату прийнято!
-        </h1>
-
-        <p style={{
-          color: "#94a3b8",
-          fontSize: 15,
-          lineHeight: 1.6,
-          margin: "0 0 8px",
-        }}>
-          Дякуємо за довіру до <strong style={{ color: "#a78bfa" }}>KompasMigracji</strong>.
-        </p>
-        <p style={{
-          color: "#94a3b8",
-          fontSize: 15,
-          lineHeight: 1.6,
-          margin: "0 0 32px",
-        }}>
-          Ваш менеджер зв&apos;яжеться з вами найближчим часом для підтвердження деталей.
-        </p>
-
-        {/* Контакт */}
-        <div style={{
-          background: "rgba(167,139,250,0.08)",
-          border: "1px solid rgba(167,139,250,0.2)",
-          borderRadius: 12,
-          padding: "16px 20px",
-          marginBottom: 28,
-        }}>
-          <div style={{ color: "#8a96a3", fontSize: 12, marginBottom: 4 }}>
-            Питання? Зв&apos;яжіться з нами:
+        {/* Header */}
+        <div style={{ background:"#fff", borderBottom:`1px solid ${P24_BORDER}`, padding:"14px 20px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+          <P24Logo />
+          <div style={{ fontSize:11, color:P24_MUTED, fontWeight:600, display:"flex", alignItems:"center", gap:4 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Bezpieczna płatność
           </div>
-          <a href="tel:+48729271848" style={{ color: "#a78bfa", fontSize: 18, fontWeight: 700, textDecoration: "none" }}>
-            +48 729 271 848
-          </a>
         </div>
 
-        <Link
-          href="/"
-          style={{
-            display: "inline-block",
-            background: "rgba(167,139,250,0.2)",
-            color: "#a78bfa",
-            border: "1px solid rgba(167,139,250,0.3)",
-            borderRadius: 10,
-            padding: "12px 28px",
-            textDecoration: "none",
-            fontWeight: 600,
-            fontSize: 14,
-            transition: "background 0.15s",
-          }}
-        >
-          На головну →
-        </Link>
+        <div style={{ padding:"32px 28px" }}>
+          {/* Big green checkmark */}
+          <div style={{ width:76, height:76, borderRadius:"50%", background:"rgba(68,166,73,0.12)", border:`2px solid ${P24_GREEN}`, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px" }}>
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+
+          <h1 style={{ fontSize:22, fontWeight:800, color:P24_TEXT, textAlign:"center", margin:"0 0 8px" }}>
+            Płatność zakończona sukcesem!
+          </h1>
+          <p style={{ fontSize:14, color:P24_MUTED, textAlign:"center", lineHeight:1.7, margin:"0 0 24px" }}>
+            Оплата підтверджена. Дякуємо за довіру до <strong style={{ color:P24_TEXT }}>Kompas Migracji</strong>.
+            <br/>Наш спеціаліст зв&apos;яжеться з вами найближчим часом.
+          </p>
+
+          {/* Info box */}
+          <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:"14px 16px", marginBottom:24 }}>
+            <div style={{ fontSize:11, fontWeight:700, color:P24_MUTED, textTransform:"uppercase", letterSpacing:"0.07em", marginBottom:8 }}>Що далі?</div>
+            {[
+              "Чек надіслано на вказаний email",
+              "Спеціаліст зв'яжеться протягом 2 годин",
+              "Розпочнемо роботу над вашою справою",
+            ].map((item, i) => (
+              <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:8, marginBottom: i < 2 ? 8 : 0 }}>
+                <span style={{ width:20, height:20, borderRadius:"50%", background:P24_GREEN, color:"#fff", fontSize:10, fontWeight:800, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:1 }}>{i+1}</span>
+                <span style={{ fontSize:13, color:P24_TEXT, lineHeight:1.5 }}>{item}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Contact */}
+          <div style={{ textAlign:"center", marginBottom:24 }}>
+            <div style={{ fontSize:12, color:P24_MUTED, marginBottom:8 }}>Питання? Зв&apos;яжіться з нами:</div>
+            <div style={{ display:"flex", justifyContent:"center", gap:10, flexWrap:"wrap" }}>
+              <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 14px", borderRadius:7, background:"rgba(37,211,102,0.1)", border:"1px solid rgba(37,211,102,0.3)", color:"#16a34a", fontSize:13, fontWeight:700, textDecoration:"none" }}>
+                💬 WhatsApp
+              </a>
+              <a href="tel:+48729271848" style={{ display:"flex", alignItems:"center", gap:6, padding:"8px 14px", borderRadius:7, background:P24_BG, border:`1px solid ${P24_BORDER}`, color:P24_TEXT, fontSize:13, fontWeight:700, textDecoration:"none" }}>
+                📞 +48 729 271 848
+              </a>
+            </div>
+          </div>
+
+          <Link href="/" style={{ display:"block", textAlign:"center", padding:"12px 0", borderRadius:8, background:P24_GREEN, color:"#fff", fontWeight:700, fontSize:14, textDecoration:"none" }}>
+            На головну →
+          </Link>
+        </div>
+
+        {/* Footer */}
+        <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:"10px 20px", textAlign:"center" }}>
+          <span style={{ fontSize:10, color:"#9CA3AF", display:"flex", alignItems:"center", justifyContent:"center", gap:4 }}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            SSL 256-bit · Przelewy24 sp. z o.o. · Nadzór KNF
+          </span>
+        </div>
       </div>
     </main>
   );

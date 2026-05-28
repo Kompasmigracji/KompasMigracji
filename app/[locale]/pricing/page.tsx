@@ -153,60 +153,103 @@ const CHANNELS: { id: Channel; icon: string; label: string }[] = [
   { id: 'email',    icon: '📧', label: 'Email'    },
 ];
 
+/* ── Przelewy24 brand tokens ───────────────────────────────────────── */
+const P24_RED    = ‘#D8232A’;
+const P24_GREEN  = ‘#44A649’;
+const P24_BORDER = ‘#DEE2E6’;
+const P24_BG     = ‘#F8F9FA’;
+const P24_TEXT   = ‘#212529’;
+const P24_MUTED  = ‘#6C757D’;
+
+function P24Logo() {
+  return (
+    <svg width="126" height="30" viewBox="0 0 126 30" fill="none" aria-label="Przelewy24">
+      <rect width="126" height="30" rx="5" fill={P24_RED}/>
+      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="’Arial Black’,Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
+    </svg>
+  );
+}
+
+function PaymentBadges() {
+  return (
+    <div style={{ display:’flex’, alignItems:’center’, gap:8, flexWrap:’wrap’, justifyContent:’center’ }}>
+      {/* BLIK */}
+      <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
+        <rect width="44" height="22" rx="3" fill="#E30613"/>
+        <text x="22" y="15" textAnchor="middle" fill="#fff" fontFamily="Arial" fontSize="9" fontWeight="900">BLIK</text>
+      </svg>
+      {/* Visa */}
+      <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
+        <rect width="44" height="22" rx="3" fill="#fff" stroke="#DEE2E6"/>
+        <text x="22" y="15" textAnchor="middle" fill="#1A1F71" fontFamily="Arial" fontSize="11" fontWeight="900" letterSpacing="0.5">VISA</text>
+      </svg>
+      {/* Mastercard */}
+      <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
+        <rect width="44" height="22" rx="3" fill="#fff" stroke="#DEE2E6"/>
+        <circle cx="17" cy="11" r="7" fill="#EB001B"/>
+        <circle cx="27" cy="11" r="7" fill="#F79E1B"/>
+        <ellipse cx="22" cy="11" rx="3" ry="7" fill="#FF5F00"/>
+      </svg>
+      {/* P24 mini badge */}
+      <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
+        <rect width="44" height="22" rx="3" fill={P24_RED}/>
+        <text x="22" y="15" textAnchor="middle" fill="#fff" fontFamily="Arial" fontSize="10" fontWeight="900">P24</text>
+      </svg>
+    </div>
+  );
+}
+
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
-  const [firstName, setFirstName] = useState('');
-  const [lastName,  setLastName]  = useState('');
-  const [phone,     setPhone]     = useState('');
-  const [email,     setEmail]     = useState('');
-  const [channel,   setChannel]   = useState<Channel>('whatsapp');
+  const [firstName, setFirstName] = useState(‘’);
+  const [lastName,  setLastName]  = useState(‘’);
+  const [phone,     setPhone]     = useState(‘’);
+  const [email,     setEmail]     = useState(‘’);
+  const [channel,   setChannel]   = useState<Channel>(‘whatsapp’);
   const [agreed,    setAgreed]    = useState(false);
   const [loading,   setLoading]   = useState(false);
-  const [error,     setError]     = useState('');
+  const [error,     setError]     = useState(‘’);
 
-  const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString('uk-UA');
+  const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString(‘pl-PL’, { minimumFractionDigits: 2 });
   const hasCyrillic = /[а-яА-ЯіІїЇєЄ]/;
 
   const inp: React.CSSProperties = {
-    width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 14,
-    border: '1.5px solid #1e293b', background: '#1e293b', color: '#fff',
-    outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', marginBottom: 12,
+    width: ‘100%’, padding: ‘10px 13px’, borderRadius: 7, fontSize: 14,
+    border: `1.5px solid ${P24_BORDER}`, background: ‘#fff’, color: P24_TEXT,
+    outline: ‘none’, fontFamily: ‘inherit’, boxSizing: ‘border-box’,
+    transition: ‘border-color 0.15s, box-shadow 0.15s’,
   };
   const lbl: React.CSSProperties = {
-    display: 'block', fontSize: 12, fontWeight: 600, color: '#94a3b8', marginBottom: 6,
+    display: ‘block’, fontSize: 11, fontWeight: 700, color: P24_MUTED,
+    marginBottom: 5, textTransform: ‘uppercase’, letterSpacing: ‘0.05em’,
   };
 
   const pay = async () => {
     if (!firstName.trim() || firstName.trim().length < 2 || hasCyrillic.test(firstName)) {
-      setError("Введіть ім’я латиницею (напр. Ivan)");
-      return;
+      setError("Введіть ім’я латиницею (напр. Ivan)"); return;
     }
     if (!lastName.trim() || lastName.trim().length < 2 || hasCyrillic.test(lastName)) {
-      setError('Введіть прізвище латиницею (напр. Petrenko)');
-      return;
+      setError(‘Введіть прізвище латиницею (напр. Petrenko)’); return;
     }
-    if (!phone.trim() || phone.replace(/\D/g, '').length < 9) {
-      setError('Введіть контактний номер телефону');
-      return;
+    if (!phone.trim() || phone.replace(/\D/g, ‘’).length < 9) {
+      setError(‘Введіть контактний номер телефону’); return;
     }
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError('Введіть коректний email');
-      return;
+      setError(‘Введіть коректний email’); return;
     }
-    setLoading(true);
-    setError('');
+    setLoading(true); setError(‘’);
     try {
-      const res = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch(‘/api/payment’, {
+        method: ‘POST’,
+        headers: { ‘Content-Type’: ‘application/json’ },
         body: JSON.stringify({
           amount: service.amountGrosze,
           description: `${service.name} — Kompas Migracji`,
           email,
-          firstName: firstName.trim(),
-          lastName:  lastName.trim(),
-          phone:     phone.trim(),
-          lang:           'uk',
-          source:         'pricing',
+          firstName:      firstName.trim(),
+          lastName:       lastName.trim(),
+          phone:          phone.trim(),
+          lang:           ‘uk’,
+          source:         ‘pricing’,
           contactChannel: channel,
         }),
       });
@@ -225,102 +268,117 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 
   return (
     <>
-      <style>{`@keyframes pm-in { from { opacity:0; transform:translateY(20px) scale(0.97) } to { opacity:1; transform:none } }`}</style>
-      <div
-        onClick={onClose}
-        style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,0.65)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflowY:'auto' }}
-      >
-        <div
-          onClick={e => e.stopPropagation()}
-          style={{ background:NAVY, borderRadius:20, padding:'36px 32px', maxWidth:440, width:'100%', position:'relative', border:'1px solid rgba(249,115,22,0.25)', fontFamily:"'Syne', sans-serif", animation:'pm-in 0.32s cubic-bezier(0.22,1,0.36,1) both', margin:'auto' }}
-        >
-          <button onClick={onClose} style={{ position:'absolute', top:14, right:16, background:'none', border:'none', color:'#475569', fontSize:22, cursor:'pointer', lineHeight:1, padding:4 }}
-            onMouseEnter={e => { e.currentTarget.style.color='#fff'; }}
-            onMouseLeave={e => { e.currentTarget.style.color='#475569'; }}
-          >✕</button>
+      <style>{`
+        @keyframes pm-in { from{opacity:0;transform:translateY(24px) scale(0.97)} to{opacity:1;transform:none} }
+        .p24-inp:focus { border-color:${P24_GREEN} !important; box-shadow:0 0 0 3px rgba(68,166,73,0.18) !important; }
+        .p24-ch:hover  { border-color:${P24_GREEN} !important; }
+        .p24-pay:hover:not(:disabled) { filter:brightness(1.07); }
+      `}</style>
 
-          <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.14em', color:ORANGE, textTransform:'uppercase', margin:'0 0 14px' }}>Przelewy24</p>
-          <p style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 4px', lineHeight:1.4 }}>{service.name}</p>
-          {service.oldPrice && (
-            <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
-              <span style={{ fontSize:16, color:'#475569', textDecoration:'line-through' }}>{service.oldPrice} PLN</span>
-              <span style={{ fontSize:11, fontWeight:700, color:'#22c55e', background:'rgba(34,197,94,0.12)', padding:'2px 8px', borderRadius:20 }}>−30%</span>
+      {/* Overlay */}
+      <div onClick={onClose} style={{ position:’fixed’, inset:0, zIndex:9999, background:’rgba(15,23,42,0.72)’, display:’flex’, alignItems:’center’, justifyContent:’center’, padding:16, overflowY:’auto’ }}>
+        <div onClick={e => e.stopPropagation()} style={{ background:’#fff’, borderRadius:12, maxWidth:460, width:’100%’, overflow:’hidden’, fontFamily:"’Syne’,sans-serif", animation:’pm-in 0.3s cubic-bezier(0.22,1,0.36,1) both’, margin:’auto’, boxShadow:’0 24px 80px rgba(0,0,0,0.35)’ }}>
+
+          {/* ── Header ─────────────────────────────────────────────── */}
+          <div style={{ background:’#fff’, borderBottom:`1px solid ${P24_BORDER}`, padding:’14px 20px’, display:’flex’, alignItems:’center’, justifyContent:’space-between’, gap:12 }}>
+            <P24Logo />
+            <div style={{ display:’flex’, alignItems:’center’, gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Bezpieczna płatność
             </div>
-          )}
-          <div style={{ display:'flex', alignItems:'baseline', gap:5, margin:'0 0 20px' }}>
-            <span style={{ fontSize:40, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>{amountZl}</span>
-            <span style={{ fontSize:20, fontWeight:900, color:ORANGE }}>PLN</span>
+            <button onClick={onClose} style={{ background:’none’, border:’none’, color:’#9CA3AF’, fontSize:20, cursor:’pointer’, lineHeight:1, padding:’2px 4px’, marginLeft:’auto’ }}
+              onMouseEnter={e => { e.currentTarget.style.color = P24_TEXT; }}
+              onMouseLeave={e => { e.currentTarget.style.color = ‘#9CA3AF’; }}
+            >✕</button>
           </div>
 
-          {/* Ім'я */}
-          <label style={lbl}>Ім&apos;я (латиницею)</label>
-          <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}
-            placeholder="Ivan" autoFocus style={inp} />
+          <div style={{ padding:’20px 24px 0’ }}>
+            {/* ── Order summary ───────────────────────────────────── */}
+            <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:’14px 16px’, marginBottom:20 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:’uppercase’, letterSpacing:’0.08em’, marginBottom:6 }}>Kompas Migracji</div>
+              <div style={{ fontSize:14, fontWeight:700, color:P24_TEXT, marginBottom:10, lineHeight:1.4 }}>{service.name}</div>
+              {service.oldPrice && (
+                <div style={{ display:’flex’, alignItems:’center’, gap:8, marginBottom:4 }}>
+                  <span style={{ fontSize:13, color:’#9CA3AF’, textDecoration:’line-through’ }}>{service.oldPrice} PLN</span>
+                  <span style={{ fontSize:10, fontWeight:800, color:’#fff’, background:’#22C55E’, padding:’2px 7px’, borderRadius:20 }}>−30%</span>
+                </div>
+              )}
+              <div style={{ display:’flex’, alignItems:’baseline’, gap:4 }}>
+                <span style={{ fontSize:34, fontWeight:900, color:P24_RED, letterSpacing:’-0.03em’, lineHeight:1 }}>{amountZl}</span>
+                <span style={{ fontSize:17, fontWeight:800, color:P24_RED }}>PLN</span>
+              </div>
+            </div>
 
-          {/* Прізвище */}
-          <label style={lbl}>Прізвище (латиницею)</label>
-          <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}
-            placeholder="Petrenko" style={inp} />
+            {/* ── Name row ────────────────────────────────────────── */}
+            <div style={{ display:’grid’, gridTemplateColumns:’1fr 1fr’, gap:10, marginBottom:12 }}>
+              <div>
+                <label style={lbl}>Ім&apos;я *</label>
+                <input className="p24-inp" type="text" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Ivan" autoFocus style={inp} />
+              </div>
+              <div>
+                <label style={lbl}>Прізвище *</label>
+                <input className="p24-inp" type="text" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Petrenko" style={inp} />
+              </div>
+            </div>
 
-          {/* Телефон */}
-          <label style={lbl}>Контактний телефон</label>
-          <input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-            placeholder="+48 123 456 789" style={inp} />
+            {/* ── Phone ───────────────────────────────────────────── */}
+            <label style={{ ...lbl, marginBottom:5 }}>Телефон *</label>
+            <input className="p24-inp" type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+48 123 456 789" style={{ ...inp, marginBottom:12 }} />
 
-          {/* Канал зв'язку */}
-          <label style={{ ...lbl, marginBottom: 8 }}>Зручний канал для зв&apos;язку зі спеціалістом</label>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 12 }}>
-            {CHANNELS.map(ch => {
-              const active = channel === ch.id;
-              return (
-                <button
-                  key={ch.id}
-                  type="button"
-                  onClick={() => setChannel(ch.id)}
-                  style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                    padding: '10px 4px', borderRadius: 10, cursor: 'pointer',
-                    border: active ? `2px solid ${ORANGE}` : '2px solid #1e293b',
-                    background: active ? 'rgba(249,115,22,0.12)' : '#1e293b',
-                    color: active ? ORANGE : '#64748b',
-                    fontFamily: 'inherit', transition: 'all 0.15s',
-                  }}
-                >
-                  <span style={{ fontSize: 18, lineHeight: 1 }}>{ch.icon}</span>
-                  <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.04em' }}>{ch.label}</span>
-                </button>
-              );
-            })}
+            {/* ── Contact channel ─────────────────────────────────── */}
+            <label style={{ ...lbl, marginBottom:8 }}>Зручний канал для зв&apos;язку</label>
+            <div style={{ display:’grid’, gridTemplateColumns:’repeat(4,1fr)’, gap:7, marginBottom:12 }}>
+              {CHANNELS.map(ch => {
+                const active = channel === ch.id;
+                return (
+                  <button key={ch.id} type="button" className="p24-ch" onClick={() => setChannel(ch.id)}
+                    style={{ display:’flex’, flexDirection:’column’, alignItems:’center’, gap:4, padding:’9px 4px’, borderRadius:8, cursor:’pointer’, border:`2px solid ${active ? P24_GREEN : P24_BORDER}`, background: active ? ‘rgba(68,166,73,0.08)’ : ‘#fff’, color: active ? P24_GREEN : P24_MUTED, fontFamily:’inherit’, transition:’all 0.15s’ }}
+                  >
+                    <span style={{ fontSize:17, lineHeight:1 }}>{ch.icon}</span>
+                    <span style={{ fontSize:10, fontWeight:700 }}>{ch.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Email ───────────────────────────────────────────── */}
+            <label style={{ ...lbl, marginBottom:5 }}>Email для чека *</label>
+            <input className="p24-inp" type="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === ‘Enter’ && pay()} placeholder="example@gmail.com" style={{ ...inp, marginBottom: error ? 6 : 14 }} />
+            {error && <p style={{ fontSize:12, color:’#DC2626’, margin:’0 0 10px’, display:’flex’, alignItems:’center’, gap:5 }}>⚠ {error}</p>}
+
+            {/* ── Checkbox ────────────────────────────────────────── */}
+            <label style={{ display:’flex’, gap:10, alignItems:’flex-start’, cursor:’pointer’, margin:’0 0 16px’, userSelect:’none’ }}>
+              <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ marginTop:3, accentColor:P24_GREEN, width:16, height:16, flexShrink:0, cursor:’pointer’ }} />
+              <span style={{ fontSize:12, color:P24_MUTED, lineHeight:1.6 }}>
+                Погоджуюсь з{‘ ‘}
+                <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:P24_GREEN, textDecoration:’none’, fontWeight:700 }}>Regulamin</Link>
+                {‘ ‘}та обробкою персональних даних
+              </span>
+            </label>
+
+            {/* ── CTA button ──────────────────────────────────────── */}
+            <button className="p24-pay" onClick={pay} disabled={loading || !agreed}
+              style={{ width:’100%’, padding:’13px 0’, borderRadius:8, border:’none’, cursor: loading || !agreed ? ‘not-allowed’ : ‘pointer’, background: loading || !agreed ? ‘#E9ECEF’ : P24_GREEN, color: loading || !agreed ? ‘#9CA3AF’ : ‘#fff’, fontWeight:800, fontSize:15, fontFamily:’inherit’, transition:’filter 0.15s’, letterSpacing:’0.01em’ }}
+            >
+              {loading
+                ? <span style={{ display:’flex’, alignItems:’center’, justifyContent:’center’, gap:8 }}><svg style={{ animation:’spin 0.8s linear infinite’ }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Переадресація…</span>
+                : ‘Перейти до Przelewy24 →’}
+            </button>
           </div>
 
-          {/* Email */}
-          <label style={lbl}>Email для чеку</label>
-          <input
-            type="email" value={email} onChange={e => setEmail(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && pay()}
-            placeholder="example@gmail.com"
-            style={{ ...inp, marginBottom: error ? 6 : 16 }}
-          />
-          {error && <p style={{ fontSize:12, color:'#ef4444', margin:'0 0 12px' }}>{error}</p>}
-
-          <label style={{ display:'flex', gap:10, alignItems:'flex-start', cursor:'pointer', margin:'0 0 16px', userSelect:'none' }}>
-            <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
-              style={{ marginTop:3, accentColor:ORANGE, width:16, height:16, flexShrink:0, cursor:'pointer' }}
-            />
-            <span style={{ fontSize:12, color:'#64748b', lineHeight:1.6 }}>
-              Я ознайомився та погоджуюсь з{' '}
-              <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:ORANGE, textDecoration:'none', fontWeight:600 }}>Regulamin</Link>
+          {/* ── Footer: payment badges + SSL ────────────────────────── */}
+          <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:’12px 24px’, marginTop:20, display:’flex’, flexDirection:’column’, alignItems:’center’, gap:8 }}>
+            <PaymentBadges />
+            <span style={{ fontSize:10, color:’#9CA3AF’, display:’flex’, alignItems:’center’, gap:4 }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Szyfrowanie SSL 256-bit · Przelewy24 sp. z o.o. · licencja KNF
             </span>
-          </label>
+          </div>
 
-          <button onClick={pay} disabled={loading || !agreed}
-            style={{ width:'100%', padding:'13px 0', borderRadius:10, border:'none', cursor: loading || !agreed ? 'not-allowed' : 'pointer', background: loading || !agreed ? '#1e293b' : ORANGE, color: loading || !agreed ? '#475569' : '#fff', fontWeight:700, fontSize:14, fontFamily:'inherit', transition:'background 0.15s' }}
-          >
-            {loading ? 'Перенаправлення...' : 'Перейти до оплати →'}
-          </button>
-          <p style={{ fontSize:10, color:'#334155', textAlign:'center', margin:'10px 0 0' }}>🔒 Безпечна оплата · Przelewy24 · SSL</p>
         </div>
       </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </>
   );
 }

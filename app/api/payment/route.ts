@@ -101,18 +101,24 @@ export async function POST(req: NextRequest) {
     .update(`${sessionId}|${merchantId}|${amount}|PLN|${crc}`)
     .digest('hex');
 
+  const clientName = [firstName, lastName].filter(Boolean).map(String).join(' ').trim() || undefined;
+
   const payload = {
     merchantId,
-    posId: merchantId,
+    posId:       merchantId,
     sessionId,
     amount,
-    currency: 'PLN',
+    currency:    'PLN',
     description,
     email,
-    country: 'PL',
-    language: lang === 'pl' ? 'pl' : 'uk',
-    urlReturn: `${siteUrl}/payment/success`,
-    urlStatus: `${siteUrl}/api/payment-notify`,
+    client:      clientName,
+    phone:       phone ? String(phone) : undefined,
+    country:     'PL',
+    language:    lang === 'pl' ? 'pl' : 'uk',
+    urlReturn:   `${siteUrl}/payment/success`,
+    urlStatus:   `${siteUrl}/api/payment-notify`,
+    timeLimit:   15,
+    encoding:    'UTF-8',
     sign,
   };
 
