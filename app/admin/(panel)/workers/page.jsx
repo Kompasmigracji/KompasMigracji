@@ -545,7 +545,7 @@ function CloseTaskModal({ task, saving, onClose, onConfirm }) {
 
 /* ── KanbanBoard ── */
 function KanbanBoard({
-  workers, tasks, filter, setFilter, search, setSearch,
+  workers, filter, setFilter, search, setSearch,
   showClosed, setShowClosed, closedCount, activeTasks,
   assigning, setAssigning, busy, assign, dropRef,
   byStage, unassignedCount, isAdmin,
