@@ -425,7 +425,7 @@ function WorkerModal({ title, form, setForm, isEdit, error, saving, tempPwd, onS
         ) : (
           <>
             <div className="kc-field">
-              <label className="kc-label">Повне ім'я</label>
+              <label className="kc-label">{"Повне ім'я"}</label>
               <input className="kc-input" value={form.full_name || ""}
                 onChange={e => f("full_name")(e.target.value)}
                 placeholder="Іваненко Іван Іванович" />
@@ -589,7 +589,7 @@ function CloseCaseModal({ c, saving, onClose, onConfirm }) {
         <div className="kc-modal-title" style={{ color: "var(--red)" }}>Закрити справу?</div>
         <p style={{ color: "var(--dim)", fontSize: 14, marginBottom: 16, lineHeight: 1.6 }}>
           <strong style={{ color: "var(--text)" }}>{c?.full_name}</strong> буде позначена як закрита.
-          Відновити можна через сторінку "Всі справи".
+          {"Відновити можна через сторінку \"Всі справи\"."}
         </p>
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
           <button className="kc-btn kc-btn-ghost" onClick={onClose} disabled={saving}>Скасувати</button>
