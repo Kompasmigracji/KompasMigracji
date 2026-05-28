@@ -75,14 +75,21 @@
       "Bash(git -C \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" push)",
       "Bash(gh secret *)",
       "PowerShell(Get-Command gh -ErrorAction SilentlyContinue)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(xargs grep -l \"cases\")",
+      "Bash(mkdir -p \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\api\\\\admin\\\\workers\\\\[id]\")",
+      "Bash(mkdir -p \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\admin\\\\\\(panel\\)\\\\workers\\\\[id]\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\members\\[id]",
       "C:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\cases",
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\leads\\[id]",
-      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\payment\\mock"
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\payment\\mock",
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\workers",
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\workers"
     ]
   }
 }
