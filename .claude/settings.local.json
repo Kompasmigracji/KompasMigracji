@@ -80,7 +80,10 @@
       "Bash(Select-Object Name, FullName)",
       "Bash(xargs grep -l \"cases\")",
       "Bash(mkdir -p \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\api\\\\admin\\\\workers\\\\[id]\")",
-      "Bash(mkdir -p \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\admin\\\\\\(panel\\)\\\\workers\\\\[id]\")"
+      "Bash(mkdir -p \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\admin\\\\\\(panel\\)\\\\workers\\\\[id]\")",
+      "WebFetch(domain:www.przelewy24.pl)",
+      "WebFetch(domain:developers.przelewy24.pl)",
+      "WebFetch(domain:docs.przelewy24.pl)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
