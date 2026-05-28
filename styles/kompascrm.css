@@ -217,7 +217,8 @@ body:has(.kc-root) * { box-sizing: border-box; }
 
 /* ---------- прочее ---------- */
 .kc-error {
-  background: #2a1a1a; border: 1px solid color-mix(in srgb, var(--red) 40%, transparent);
+  background: color-mix(in srgb, var(--red) 10%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--red) 40%, transparent);
   color: var(--red); border-radius: 10px; padding: 11px 13px; font-size: 13px;
   display: flex; gap: 8px; align-items: flex-start;
 }
@@ -250,3 +251,95 @@ body:has(.kc-root) * { box-sizing: border-box; }
 .kc-mono { font-family: var(--mono); }
 .kc-h2 { font-family: var(--display); font-size: 17px; font-weight: 600; margin: 0 0 12px; }
 .kc-link { color: var(--brass); cursor: pointer; text-decoration: none; }
+
+/* ─── Перемикач теми ──────────────────────────────────────── */
+.kc-theme-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px; border-radius: 20px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--panel-2);
+  color: var(--dim); font-size: 12.5px; font-weight: 500;
+  transition: border-color .2s, color .2s, background .2s;
+  font-family: var(--font); white-space: nowrap;
+}
+.kc-theme-btn:hover { color: var(--text); border-color: var(--brass); background: var(--bg); }
+
+/* ─── Світла тема ─────────────────────────────────────────── */
+
+.kc-root[data-theme="light"] {
+  --bg:       #f0f4fb;
+  --panel:    #ffffff;
+  --panel-2:  #eaeff8;
+  --border:   #cdd5e4;
+  --text:     #1a2338;
+  --dim:      #506080;
+  --faint:    #8898b0;
+  --brass:    #8c5f12;
+  --brass-bg: #fef8ec;
+  --green:    #16703a;
+  --red:      #b02d3c;
+  --blue:     #1d5fa8;
+}
+
+html:has(.kc-root[data-theme="light"]),
+body:has(.kc-root[data-theme="light"]) {
+  background: #f0f4fb !important;
+}
+
+body:has(.kc-root[data-theme="light"]) {
+  --bg:       #f0f4fb;
+  --panel:    #ffffff;
+  --panel-2:  #eaeff8;
+  --border:   #cdd5e4;
+  --text:     #1a2338;
+  --dim:      #506080;
+  --faint:    #8898b0;
+  --brass:    #8c5f12;
+  --brass-bg: #fef8ec;
+  --green:    #16703a;
+  --red:      #b02d3c;
+  --blue:     #1d5fa8;
+}
+
+/* Тінь сайдбара у світлій темі */
+.kc-root[data-theme="light"] .kc-side {
+  box-shadow: 2px 0 12px rgba(100, 130, 180, 0.08);
+}
+
+/* Топбар — легка тінь знизу */
+.kc-root[data-theme="light"] .kc-topbar {
+  box-shadow: 0 1px 8px rgba(100, 130, 180, 0.1);
+}
+
+/* Картки — м'яка тінь замість різкого бордера */
+.kc-root[data-theme="light"] .kc-card,
+.kc-root[data-theme="light"] .kc-stat,
+.kc-root[data-theme="light"] .kc-table-wrap {
+  box-shadow: 0 2px 10px rgba(100, 130, 180, 0.09);
+}
+
+/* Логін сторінка */
+.kc-root[data-theme="light"] .kc-login {
+  background: radial-gradient(circle at 30% 20%, #dae4f5, var(--bg) 65%);
+}
+
+/* Фон модального вікна */
+.kc-root[data-theme="light"] .kc-modal-bg {
+  background: rgba(20, 40, 80, 0.38);
+}
+
+/* Активний елемент навігації — трохи яскравіший бордер */
+.kc-root[data-theme="light"] .kc-nav-item.kc-on {
+  background: var(--brass-bg);
+  color: var(--brass);
+  box-shadow: inset 2px 0 0 var(--brass);
+}
+
+/* Скролбар у світлій темі */
+.kc-root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #bbc8da;
+}
+
+/* Avatar у світлій темі — текст білий */
+.kc-root[data-theme="light"] .kc-avatar {
+  color: #ffffff;
+}

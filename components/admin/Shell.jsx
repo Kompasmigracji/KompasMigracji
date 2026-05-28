@@ -8,6 +8,7 @@ import { Icon, Spinner } from "./ui";
 
 export default function Shell({ children }) {
   const [user, setUser] = useState(undefined); // undefined=загрузка, null=нет
+  const [theme, setTheme] = useState("dark");
   const pathname = usePathname();
   const router = useRouter();
 
@@ -16,7 +17,15 @@ export default function Shell({ children }) {
       .then((r) => r.json())
       .then((d) => setUser(d.user || null))
       .catch(() => setUser(null));
+    const saved = localStorage.getItem("kc-theme");
+    if (saved === "light" || saved === "dark") setTheme(saved);
   }, []);
+
+  const toggleTheme = () => {
+    const next = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    localStorage.setItem("kc-theme", next);
+  };
 
   const logout = async () => {
     await fetch("/api/admin/auth/logout", { method: "POST" });
@@ -25,7 +34,7 @@ export default function Shell({ children }) {
 
   if (user === undefined) {
     return (
-      <div className="kc-root" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div className="kc-root" data-theme={theme} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Spinner />
       </div>
     );
@@ -39,7 +48,7 @@ export default function Shell({ children }) {
   );
 
   return (
-    <div className="kc-root">
+    <div className="kc-root" data-theme={theme}>
       <div className="kc-shell">
         {/* САЙДБАР */}
         <aside className="kc-side">
@@ -86,6 +95,11 @@ export default function Shell({ children }) {
         <div className="kc-main">
           <header className="kc-topbar">
             <h1>{current?.label || "KompasCRM"}</h1>
+            <div style={{ flex: 1 }} />
+            <button onClick={toggleTheme} className="kc-theme-btn" title="Змінити тему">
+              <Icon name={theme === "dark" ? "sun" : "moon"} size={14} />
+              {theme === "dark" ? "Світла" : "Темна"}
+            </button>
           </header>
           <main className="kc-content kc-page-enter">{children}</main>
         </div>
