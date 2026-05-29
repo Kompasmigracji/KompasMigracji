@@ -154,25 +154,25 @@ const CHANNELS: { id: Channel; icon: string; label: string }[] = [
 ];
 
 /* ── Przelewy24 brand tokens ───────────────────────────────────────── */
-const P24_RED    = ‘#D8232A’;
-const P24_GREEN  = ‘#44A649’;
-const P24_BORDER = ‘#DEE2E6’;
-const P24_BG     = ‘#F8F9FA’;
-const P24_TEXT   = ‘#212529’;
-const P24_MUTED  = ‘#6C757D’;
+const P24_RED    = '#D8232A';
+const P24_GREEN  = '#44A649';
+const P24_BORDER = '#DEE2E6';
+const P24_BG     = '#F8F9FA';
+const P24_TEXT   = '#212529';
+const P24_MUTED  = '#6C757D';
 
 function P24Logo() {
   return (
     <svg width="126" height="30" viewBox="0 0 126 30" fill="none" aria-label="Przelewy24">
       <rect width="126" height="30" rx="5" fill={P24_RED}/>
-      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="’Arial Black’,Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
+      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
     </svg>
   );
 }
 
 function PaymentBadges() {
   return (
-    <div style={{ display:’flex’, alignItems:’center’, gap:8, flexWrap:’wrap’, justifyContent:’center’ }}>
+    <div style={{ display:'flex', alignItems:'center', gap:8, flexWrap:'wrap', justifyContent:'center' }}>
       {/* BLIK */}
       <svg width="44" height="22" viewBox="0 0 44 22" fill="none">
         <rect width="44" height="22" rx="3" fill="#E30613"/>
@@ -200,47 +200,47 @@ function PaymentBadges() {
 }
 
 function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => void }) {
-  const [firstName, setFirstName] = useState(‘’);
-  const [lastName,  setLastName]  = useState(‘’);
-  const [phone,     setPhone]     = useState(‘’);
-  const [email,     setEmail]     = useState(‘’);
-  const [channel,   setChannel]   = useState<Channel>(‘whatsapp’);
+  const [firstName, setFirstName] = useState('');
+  const [lastName,  setLastName]  = useState('');
+  const [phone,     setPhone]     = useState('');
+  const [email,     setEmail]     = useState('');
+  const [channel,   setChannel]   = useState<Channel>('whatsapp');
   const [agreed,    setAgreed]    = useState(false);
   const [loading,   setLoading]   = useState(false);
-  const [error,     setError]     = useState(‘’);
+  const [error,     setError]     = useState('');
 
-  const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString(‘pl-PL’, { minimumFractionDigits: 2 });
+  const amountZl = ((service.amountGrosze ?? 0) / 100).toLocaleString('pl-PL', { minimumFractionDigits: 2 });
   const hasCyrillic = /[а-яА-ЯіІїЇєЄ]/;
 
   const inp: React.CSSProperties = {
-    width: ‘100%’, padding: ‘10px 13px’, borderRadius: 7, fontSize: 14,
-    border: `1.5px solid ${P24_BORDER}`, background: ‘#fff’, color: P24_TEXT,
-    outline: ‘none’, fontFamily: ‘inherit’, boxSizing: ‘border-box’,
-    transition: ‘border-color 0.15s, box-shadow 0.15s’,
+    width: '100%', padding: '10px 13px', borderRadius: 7, fontSize: 14,
+    border: `1.5px solid ${P24_BORDER}`, background: '#fff', color: P24_TEXT,
+    outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box',
+    transition: 'border-color 0.15s, box-shadow 0.15s',
   };
   const lbl: React.CSSProperties = {
-    display: ‘block’, fontSize: 11, fontWeight: 700, color: P24_MUTED,
-    marginBottom: 5, textTransform: ‘uppercase’, letterSpacing: ‘0.05em’,
+    display: 'block', fontSize: 11, fontWeight: 700, color: P24_MUTED,
+    marginBottom: 5, textTransform: 'uppercase', letterSpacing: '0.05em',
   };
 
   const pay = async () => {
     if (!firstName.trim() || firstName.trim().length < 2 || hasCyrillic.test(firstName)) {
-      setError("Введіть ім’я латиницею (напр. Ivan)"); return;
+      setError("Введіть ім'я латиницею (напр. Ivan)"); return;
     }
     if (!lastName.trim() || lastName.trim().length < 2 || hasCyrillic.test(lastName)) {
-      setError(‘Введіть прізвище латиницею (напр. Petrenko)’); return;
+      setError('Введіть прізвище латиницею (напр. Petrenko)'); return;
     }
-    if (!phone.trim() || phone.replace(/\D/g, ‘’).length < 9) {
-      setError(‘Введіть контактний номер телефону’); return;
+    if (!phone.trim() || phone.replace(/\D/g, '').length < 9) {
+      setError('Введіть контактний номер телефону'); return;
     }
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
-      setError(‘Введіть коректний email’); return;
+      setError('Введіть коректний email'); return;
     }
-    setLoading(true); setError(‘’);
+    setLoading(true); setError('');
     try {
-      const res = await fetch(‘/api/payment’, {
-        method: ‘POST’,
-        headers: { ‘Content-Type’: ‘application/json’ },
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           amount: service.amountGrosze,
           description: `${service.name} — Kompas Migracji`,
@@ -248,8 +248,8 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
           firstName:      firstName.trim(),
           lastName:       lastName.trim(),
           phone:          phone.trim(),
-          lang:           ‘uk’,
-          source:         ‘pricing’,
+          lang:           'uk',
+          source:         'pricing',
           contactChannel: channel,
         }),
       });
@@ -257,11 +257,11 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
       if (data.redirectUrl) {
         window.location.href = data.redirectUrl;
       } else {
-        setError(data.error || "Помилка з’єднання. Спробуйте ще раз.");
+        setError(data.error || "Помилка з'єднання. Спробуйте ще раз.");
         setLoading(false);
       }
     } catch {
-      setError("Помилка з’єднання. Спробуйте ще раз.");
+      setError("Помилка з'єднання. Спробуйте ще раз.");
       setLoading(false);
     }
   };
@@ -276,41 +276,41 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
       `}</style>
 
       {/* Overlay */}
-      <div onClick={onClose} style={{ position:’fixed’, inset:0, zIndex:9999, background:’rgba(15,23,42,0.72)’, display:’flex’, alignItems:’center’, justifyContent:’center’, padding:16, overflowY:’auto’ }}>
-        <div onClick={e => e.stopPropagation()} style={{ background:’#fff’, borderRadius:12, maxWidth:460, width:’100%’, overflow:’hidden’, fontFamily:"’Syne’,sans-serif", animation:’pm-in 0.3s cubic-bezier(0.22,1,0.36,1) both’, margin:’auto’, boxShadow:’0 24px 80px rgba(0,0,0,0.35)’ }}>
+      <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(15,23,42,0.72)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflowY:'auto' }}>
+        <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:12, maxWidth:460, width:'100%', overflow:'hidden', fontFamily:"'Syne',sans-serif", animation:'pm-in 0.3s cubic-bezier(0.22,1,0.36,1) both', margin:'auto', boxShadow:'0 24px 80px rgba(0,0,0,0.35)' }}>
 
           {/* ── Header ─────────────────────────────────────────────── */}
-          <div style={{ background:’#fff’, borderBottom:`1px solid ${P24_BORDER}`, padding:’14px 20px’, display:’flex’, alignItems:’center’, justifyContent:’space-between’, gap:12 }}>
+          <div style={{ background:'#fff', borderBottom:`1px solid ${P24_BORDER}`, padding:'14px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
             <P24Logo />
-            <div style={{ display:’flex’, alignItems:’center’, gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
+            <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Bezpieczna płatność
             </div>
-            <button onClick={onClose} style={{ background:’none’, border:’none’, color:’#9CA3AF’, fontSize:20, cursor:’pointer’, lineHeight:1, padding:’2px 4px’, marginLeft:’auto’ }}
+            <button onClick={onClose} style={{ background:'none', border:'none', color:'#9CA3AF', fontSize:20, cursor:'pointer', lineHeight:1, padding:'2px 4px', marginLeft:'auto' }}
               onMouseEnter={e => { e.currentTarget.style.color = P24_TEXT; }}
-              onMouseLeave={e => { e.currentTarget.style.color = ‘#9CA3AF’; }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#9CA3AF'; }}
             >✕</button>
           </div>
 
-          <div style={{ padding:’20px 24px 0’ }}>
+          <div style={{ padding:'20px 24px 0' }}>
             {/* ── Order summary ───────────────────────────────────── */}
-            <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:’14px 16px’, marginBottom:20 }}>
-              <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:’uppercase’, letterSpacing:’0.08em’, marginBottom:6 }}>Kompas Migracji</div>
+            <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:'14px 16px', marginBottom:20 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:6 }}>Kompas Migracji</div>
               <div style={{ fontSize:14, fontWeight:700, color:P24_TEXT, marginBottom:10, lineHeight:1.4 }}>{service.name}</div>
               {service.oldPrice && (
-                <div style={{ display:’flex’, alignItems:’center’, gap:8, marginBottom:4 }}>
-                  <span style={{ fontSize:13, color:’#9CA3AF’, textDecoration:’line-through’ }}>{service.oldPrice} PLN</span>
-                  <span style={{ fontSize:10, fontWeight:800, color:’#fff’, background:’#22C55E’, padding:’2px 7px’, borderRadius:20 }}>−30%</span>
+                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+                  <span style={{ fontSize:13, color:'#9CA3AF', textDecoration:'line-through' }}>{service.oldPrice} PLN</span>
+                  <span style={{ fontSize:10, fontWeight:800, color:'#fff', background:'#22C55E', padding:'2px 7px', borderRadius:20 }}>−30%</span>
                 </div>
               )}
-              <div style={{ display:’flex’, alignItems:’baseline’, gap:4 }}>
-                <span style={{ fontSize:34, fontWeight:900, color:P24_RED, letterSpacing:’-0.03em’, lineHeight:1 }}>{amountZl}</span>
+              <div style={{ display:'flex', alignItems:'baseline', gap:4 }}>
+                <span style={{ fontSize:34, fontWeight:900, color:P24_RED, letterSpacing:'-0.03em', lineHeight:1 }}>{amountZl}</span>
                 <span style={{ fontSize:17, fontWeight:800, color:P24_RED }}>PLN</span>
               </div>
             </div>
 
             {/* ── Name row ────────────────────────────────────────── */}
-            <div style={{ display:’grid’, gridTemplateColumns:’1fr 1fr’, gap:10, marginBottom:12 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom:12 }}>
               <div>
                 <label style={lbl}>Ім&apos;я *</label>
                 <input className="p24-inp" type="text" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="Ivan" autoFocus style={inp} />
@@ -327,12 +327,12 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 
             {/* ── Contact channel ─────────────────────────────────── */}
             <label style={{ ...lbl, marginBottom:8 }}>Зручний канал для зв&apos;язку</label>
-            <div style={{ display:’grid’, gridTemplateColumns:’repeat(4,1fr)’, gap:7, marginBottom:12 }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:7, marginBottom:12 }}>
               {CHANNELS.map(ch => {
                 const active = channel === ch.id;
                 return (
                   <button key={ch.id} type="button" className="p24-ch" onClick={() => setChannel(ch.id)}
-                    style={{ display:’flex’, flexDirection:’column’, alignItems:’center’, gap:4, padding:’9px 4px’, borderRadius:8, cursor:’pointer’, border:`2px solid ${active ? P24_GREEN : P24_BORDER}`, background: active ? ‘rgba(68,166,73,0.08)’ : ‘#fff’, color: active ? P24_GREEN : P24_MUTED, fontFamily:’inherit’, transition:’all 0.15s’ }}
+                    style={{ display:'flex', flexDirection:'column', alignItems:'center', gap:4, padding:'9px 4px', borderRadius:8, cursor:'pointer', border:`2px solid ${active ? P24_GREEN : P24_BORDER}`, background: active ? 'rgba(68,166,73,0.08)' : '#fff', color: active ? P24_GREEN : P24_MUTED, fontFamily:'inherit', transition:'all 0.15s' }}
                   >
                     <span style={{ fontSize:17, lineHeight:1 }}>{ch.icon}</span>
                     <span style={{ fontSize:10, fontWeight:700 }}>{ch.label}</span>
@@ -343,33 +343,33 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
 
             {/* ── Email ───────────────────────────────────────────── */}
             <label style={{ ...lbl, marginBottom:5 }}>Email для чека *</label>
-            <input className="p24-inp" type="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === ‘Enter’ && pay()} placeholder="example@gmail.com" style={{ ...inp, marginBottom: error ? 6 : 14 }} />
-            {error && <p style={{ fontSize:12, color:’#DC2626’, margin:’0 0 10px’, display:’flex’, alignItems:’center’, gap:5 }}>⚠ {error}</p>}
+            <input className="p24-inp" type="email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && pay()} placeholder="example@gmail.com" style={{ ...inp, marginBottom: error ? 6 : 14 }} />
+            {error && <p style={{ fontSize:12, color:'#DC2626', margin:'0 0 10px', display:'flex', alignItems:'center', gap:5 }}>⚠ {error}</p>}
 
             {/* ── Checkbox ────────────────────────────────────────── */}
-            <label style={{ display:’flex’, gap:10, alignItems:’flex-start’, cursor:’pointer’, margin:’0 0 16px’, userSelect:’none’ }}>
-              <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ marginTop:3, accentColor:P24_GREEN, width:16, height:16, flexShrink:0, cursor:’pointer’ }} />
+            <label style={{ display:'flex', gap:10, alignItems:'flex-start', cursor:'pointer', margin:'0 0 16px', userSelect:'none' }}>
+              <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ marginTop:3, accentColor:P24_GREEN, width:16, height:16, flexShrink:0, cursor:'pointer' }} />
               <span style={{ fontSize:12, color:P24_MUTED, lineHeight:1.6 }}>
-                Погоджуюсь з{‘ ‘}
-                <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:P24_GREEN, textDecoration:’none’, fontWeight:700 }}>Regulamin</Link>
-                {‘ ‘}та обробкою персональних даних
+                Погоджуюсь з{' '}
+                <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:P24_GREEN, textDecoration:'none', fontWeight:700 }}>Regulamin</Link>
+                {' '}та обробкою персональних даних
               </span>
             </label>
 
             {/* ── CTA button ──────────────────────────────────────── */}
             <button className="p24-pay" onClick={pay} disabled={loading || !agreed}
-              style={{ width:’100%’, padding:’13px 0’, borderRadius:8, border:’none’, cursor: loading || !agreed ? ‘not-allowed’ : ‘pointer’, background: loading || !agreed ? ‘#E9ECEF’ : P24_GREEN, color: loading || !agreed ? ‘#9CA3AF’ : ‘#fff’, fontWeight:800, fontSize:15, fontFamily:’inherit’, transition:’filter 0.15s’, letterSpacing:’0.01em’ }}
+              style={{ width:'100%', padding:'13px 0', borderRadius:8, border:'none', cursor: loading || !agreed ? 'not-allowed' : 'pointer', background: loading || !agreed ? '#E9ECEF' : P24_GREEN, color: loading || !agreed ? '#9CA3AF' : '#fff', fontWeight:800, fontSize:15, fontFamily:'inherit', transition:'filter 0.15s', letterSpacing:'0.01em' }}
             >
               {loading
-                ? <span style={{ display:’flex’, alignItems:’center’, justifyContent:’center’, gap:8 }}><svg style={{ animation:’spin 0.8s linear infinite’ }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Переадресація…</span>
-                : ‘Перейти до Przelewy24 →’}
+                ? <span style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:8 }}><svg style={{ animation:'spin 0.8s linear infinite' }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Переадресація…</span>
+                : 'Перейти до Przelewy24 →'}
             </button>
           </div>
 
           {/* ── Footer: payment badges + SSL ────────────────────────── */}
-          <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:’12px 24px’, marginTop:20, display:’flex’, flexDirection:’column’, alignItems:’center’, gap:8 }}>
+          <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:'12px 24px', marginTop:20, display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
             <PaymentBadges />
-            <span style={{ fontSize:10, color:’#9CA3AF’, display:’flex’, alignItems:’center’, gap:4 }}>
+            <span style={{ fontSize:10, color:'#9CA3AF', display:'flex', alignItems:'center', gap:4 }}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Szyfrowanie SSL 256-bit · Przelewy24 sp. z o.o. · licencja KNF
             </span>
