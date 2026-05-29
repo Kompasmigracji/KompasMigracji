@@ -59,11 +59,14 @@ export default function Header() {
   const dropRef = useRef<HTMLDivElement>(null);
 
   const SERVICES = [
-    { label: t('nav_svc_karta'), href: '/#services' },
-    { label: t('nav_svc_resident'), href: '/#services' },
-    { label: t('nav_svc_consult'), href: '/#pricing' },
-    { label: t('nav_svc_hour'), href: '/#pricing' },
-    { label: t('nav_svc_express'), href: '/karta', accent: true },
+    { label: t('pcat_legalization'), href: '/pricing#legalization', icon: '🏠' },
+    { label: t('pcat_notary'),       href: '/pricing#notary',       icon: '✍️' },
+    { label: t('pcat_legal'),        href: '/pricing#legal',        icon: '⚖️' },
+    { label: t('pcat_marriage'),     href: '/pricing#marriage',     icon: '💍' },
+    { label: t('pcat_translations'), href: '/pricing#translations', icon: '📄' },
+    { label: t('pcat_bureaucracy'),  href: '/pricing#bureaucracy',  icon: '📋' },
+    { label: t('pcat_free'),         href: '/pricing#free',         icon: '🎁' },
+    { label: t('nav_svc_express'),   href: '/karta',                icon: '⚡', accent: true },
   ];
 
   const changeLang = (lng: string) => {
@@ -105,13 +108,29 @@ export default function Header() {
               </svg>
             </button>
             {dropOpen && (
-              <div style={{ top: 'calc(100% + 6px)', minWidth: 240 }} className="absolute left-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
-                {SERVICES.map((s, i) => (
-                  <a key={i} href={s.href} onClick={() => setDropOpen(false)}
-                    className={`block px-4 py-2.5 text-sm no-underline transition-colors hover:bg-gray-50 ${s.accent ? 'text-primary font-semibold' : 'text-gray-700'}`}>
-                    {s.label}
+              <div style={{ top: 'calc(100% + 6px)', minWidth: 320 }} className="absolute left-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0 }}>
+                  {SERVICES.filter(s => !s.accent).map((s, i) => (
+                    <a key={i} href={s.href} onClick={() => setDropOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm no-underline text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                      <span style={{ fontSize: 15, lineHeight: 1, flexShrink: 0 }}>{s.icon}</span>
+                      <span style={{ lineHeight: 1.3 }}>{s.label}</span>
+                    </a>
+                  ))}
+                </div>
+                <div style={{ borderTop: '1px solid #f1f5f9', margin: '4px 8px 0' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 4px 2px' }}>
+                  {SERVICES.filter(s => s.accent).map((s, i) => (
+                    <a key={i} href={s.href} onClick={() => setDropOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2 text-sm font-semibold no-underline text-primary hover:bg-orange-50 rounded-lg transition-colors">
+                      <span>{s.icon}</span>{s.label}
+                    </a>
+                  ))}
+                  <a href="/pricing" onClick={() => setDropOpen(false)}
+                    className="flex items-center gap-1 px-3 py-2 text-sm font-semibold no-underline text-gray-500 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors ml-auto">
+                    {t('nav_pricelist')} →
                   </a>
-                ))}
+                </div>
               </div>
             )}
           </div>
@@ -166,7 +185,8 @@ export default function Header() {
           <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 py-1">{t('nav_services')}</div>
           {SERVICES.map((s, i) => (
             <a key={i} href={s.href} onClick={() => setMobileOpen(false)}
-              className={`block px-3 py-2.5 rounded-lg text-sm no-underline ${s.accent ? 'text-primary font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}>
+              className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm no-underline ${s.accent ? 'text-primary font-semibold' : 'text-gray-700 hover:bg-gray-50'}`}>
+              <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0 }}>{s.icon}</span>
               {s.label}
             </a>
           ))}

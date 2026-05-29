@@ -386,7 +386,7 @@ export default function PricingPage() {
         {/* Categories */}
         <section style={{ maxWidth:900, margin:'0 auto', padding:'56px 24px 80px' }}>
           {CATEGORIES.map(cat => (
-            <div key={cat.id} style={{ marginBottom:48 }}>
+            <div key={cat.id} id={cat.id} style={{ marginBottom:48, scrollMarginTop: 80 }}>
               <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
                 <span style={{ fontSize:22 }}>{cat.icon}</span>
                 <h2 style={{ fontSize:'clamp(18px,3vw,24px)', fontWeight:800, color:NAVY, margin:0, fontFamily:"'Syne', sans-serif", letterSpacing:'-0.02em' }}>{cat.title}</h2>
