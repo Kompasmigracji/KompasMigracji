@@ -640,6 +640,21 @@ export default function LeadsPage() {
             }}>{trashCount}</span>
           )}
         </button>
+
+        <a
+          href="/pl/strategy"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            display: "flex", alignItems: "center", gap: 6,
+            padding: "7px 14px", borderRadius: 8, border: "none", cursor: "pointer",
+            background: "rgba(99,102,241,0.12)",
+            color: "#818cf8",
+            fontSize: 13, fontWeight: 600, textDecoration: "none",
+            transition: "background 0.15s",
+          }}>
+          📊 Стратегія
+        </a>
       </div>
 
       {isTrash && (
