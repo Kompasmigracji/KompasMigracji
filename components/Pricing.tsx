@@ -52,6 +52,20 @@ export default function Pricing() {
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('pricing_tag')}</div>
           <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('pricing_title')}</h2>
         </div>
+        {/* Subscription plans banner */}
+        <div className="mb-10 rounded-2xl border-2 border-primary/30 bg-primary/5 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Subskrypcje miesięczne</div>
+            <p className="text-navy font-semibold text-base leading-snug">Nieograniczone wsparcie od 49 zł/mies. — wybierz plan i opłać online</p>
+          </div>
+          <a
+            href="/plans"
+            className="shrink-0 px-6 py-3 rounded-xl text-sm font-bold text-white gradient-btn hover:opacity-90 transition-opacity no-underline"
+          >
+            Zobacz plany →
+          </a>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {cards.map((card, i) => (
             <div
@@ -89,8 +103,8 @@ export default function Pricing() {
               </button>
               {card.currency && (
                 <p className="text-center mt-2" style={{ fontSize: 10, color: '#9ca3af' }}>
-                  Замовляючи, ви погоджуєтесь з{' '}
-                  <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: '#9ca3af', textDecoration: 'underline' }}>Regulamin</a>
+                  Składając zamówienie, akceptujesz{' '}
+                  <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: '#9ca3af', textDecoration: 'underline' }}>Regulamin Sklepu</a>
                 </p>
               )}
             </div>

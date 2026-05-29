@@ -21,7 +21,7 @@ const SECRET = new TextEncoder().encode(
 
 const intlMiddleware = createMiddleware({
   locales: ["uk", "pl", "en", "ru"],
-  defaultLocale: "uk",
+  defaultLocale: "pl",
   localePrefix: "always",
   localeDetection: true,
 });

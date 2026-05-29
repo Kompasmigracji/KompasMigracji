@@ -288,7 +288,7 @@ function ContentPL() {
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 export default function Regulamin() {
-  const [lang, setLang] = useState<Lang>('uk');
+  const [lang, setLang] = useState<Lang>('pl');
 
   return (
     <div className="min-h-screen bg-white text-black py-16 px-4 font-display">
