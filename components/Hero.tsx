@@ -10,8 +10,7 @@ function TrustBadges() {
         { label: 'Przelewy24', icon: '🔐' },
         { label: 'SSL захист', icon: '🛡️' },
         { label: 'RODO/GDPR', icon: '📋' },
-        { label: '5★ Google', icon: '⭐' },
-        { label: '6 років досвіду', icon: '🏆' },
+        { label: '10+ років досвіду', icon: '🏆' },
       ].map((b, i) => (
         <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600">
           <span>{b.icon}</span>
@@ -26,7 +25,7 @@ function PanicStrip() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mb-8 rounded-xl border-2 border-red-200 bg-red-50/50 p-4">
+    <div className="mt-8 rounded-xl border-2 border-red-200 bg-red-50/50 p-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <span className="text-2xl">🆘</span>
@@ -78,8 +77,6 @@ export default function Hero() {
         style={{ background: 'radial-gradient(circle, rgba(5,150,105,0.08), transparent)', transform: 'translate(-30%, 30%)' }}
       />
       <div className="max-w-4xl mx-auto px-6 relative z-10">
-        <PanicStrip />
-
         <div className="animate-slide-down">
           <span className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-primary mb-10 shadow-sm">
             <span>✦</span>
@@ -119,6 +116,8 @@ export default function Hero() {
             Viber
           </a>
         </div>
+
+        <PanicStrip />
 
         <TrustBadges />
       </div>
