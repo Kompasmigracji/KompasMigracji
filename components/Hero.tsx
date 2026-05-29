@@ -117,9 +117,9 @@ export default function Hero() {
           </a>
         </div>
 
-        <PanicStrip />
-
         <TrustBadges />
+
+        <PanicStrip />
       </div>
     </section>
   );
