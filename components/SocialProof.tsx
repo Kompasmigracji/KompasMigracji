@@ -1,6 +1,6 @@
 "use client";
-// F10: Social proof live counters — fetches /api/stats/public and animates numbers
 import { useState, useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 interface Stats {
   members: number;
@@ -59,6 +59,7 @@ function Counter({ value, suffix = "", label, icon }: { value: number; suffix?: 
 }
 
 export default function SocialProof() {
+  const t = useTranslations();
   const [stats, setStats] = useState<Stats | null>(null);
 
   useEffect(() => {
@@ -81,10 +82,10 @@ export default function SocialProof() {
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "#D8232A", textTransform: "uppercase",
             letterSpacing: "0.1em", marginBottom: 8 }}>
-            Zaufali nam
+            {t("sp_tag")}
           </div>
           <h2 style={{ fontSize: 28, fontWeight: 800, color: "#fff", margin: 0 }}>
-            Liczby mowia same za siebie
+            {t("sp_title")}
           </h2>
         </div>
 
@@ -94,11 +95,11 @@ export default function SocialProof() {
           gap: 4,
         }}>
           {[
-            { value: stats.members, suffix: "+", label: "Zaufanych klientow", icon: "👥" },
-            { value: stats.casesSolved, suffix: "+", label: "Zalatwionych spraw", icon: "✅" },
-            { value: stats.successRate, suffix: "%", label: "Skutecznosci", icon: "🎯" },
-            { value: stats.countries, suffix: "", label: "Krajow obslugi", icon: "🌍" },
-            { value: stats.yearsActive, suffix: "", label: "Lat doswiadczenia", icon: "🏆" },
+            { value: stats.members,     suffix: "+", label: t("sp_clients"),  icon: "👥" },
+            { value: stats.casesSolved, suffix: "+", label: t("sp_cases"),    icon: "✅" },
+            { value: stats.successRate, suffix: "%", label: t("sp_success"),  icon: "🎯" },
+            { value: stats.countries,   suffix: "",  label: t("sp_countries"),icon: "🌍" },
+            { value: stats.yearsActive, suffix: "",  label: t("sp_years"),    icon: "🏆" },
           ].map((item, i) => (
             <div key={i} style={{
               background: "rgba(255,255,255,0.05)", borderRadius: 12,

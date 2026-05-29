@@ -94,5 +94,22 @@
   "pricing_hour_f1": "Lawyer or specialist",
   "pricing_hour_f2": "Documents and strategy",
   "pricing_hour_f3": "Written guarantees",
-  "pricing_hour_cta": "Find out more"
+  "pricing_hour_cta": "Find out more",
+  "sp_tag": "Trusted by",
+  "sp_title": "Numbers speak for themselves",
+  "sp_clients": "Trusted clients",
+  "sp_cases": "Cases solved",
+  "sp_success": "Success rate",
+  "sp_countries": "Countries served",
+  "sp_years": "Years of experience",
+  "wa_cta": "Question? Let's chat!",
+  "exit_title": "Wait! We have a gift for you",
+  "exit_desc": "Leave your email and get a free consultation with our migration expert (worth 150 PLN).",
+  "exit_name_ph": "Your name",
+  "exit_email_ph": "Your email *",
+  "exit_sending": "Sending...",
+  "exit_cta": "Get free consultation",
+  "exit_no": "No thanks — close",
+  "exit_done_title": "Done! We'll contact you tomorrow",
+  "exit_done_desc": "Also check WhatsApp — we often respond faster:"
 }

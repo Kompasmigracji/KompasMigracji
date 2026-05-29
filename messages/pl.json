@@ -94,5 +94,22 @@
   "pricing_hour_f1": "Adwokat lub specjalista",
   "pricing_hour_f2": "Dokumenty i strategia",
   "pricing_hour_f3": "Gwarancje na piśmie",
-  "pricing_hour_cta": "Dowiedz się więcej"
+  "pricing_hour_cta": "Dowiedz się więcej",
+  "sp_tag": "Zaufali nam",
+  "sp_title": "Liczby mówią same za siebie",
+  "sp_clients": "Zaufanych klientów",
+  "sp_cases": "Załatwionych spraw",
+  "sp_success": "Skuteczności",
+  "sp_countries": "Krajów obsługi",
+  "sp_years": "Lat doświadczenia",
+  "wa_cta": "Pytanie? Piszemy!",
+  "exit_title": "Poczekaj! Mamy dla Ciebie prezent",
+  "exit_desc": "Zostaw email i odbierz bezpłatną konsultację z ekspertem ds. migracji (wartość 150 PLN).",
+  "exit_name_ph": "Twoje imię",
+  "exit_email_ph": "Twój email *",
+  "exit_sending": "Wysyłamy...",
+  "exit_cta": "Odbierz bezpłatną konsultację",
+  "exit_no": "Nie, dziękuję — zamknij",
+  "exit_done_title": "Gotowe! Skontaktujemy się jutro",
+  "exit_done_desc": "Sprawdź też WhatsApp — często odpowiadamy szybciej:"
 }

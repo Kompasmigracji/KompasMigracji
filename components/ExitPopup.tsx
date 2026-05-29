@@ -1,11 +1,12 @@
 "use client";
-// F12: Exit-intent popup — shows on mouse-leave or 45s idle; captures email for free consultation
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 const STORAGE_KEY = "km_exit_popup_shown";
 const BRAND = "#D8232A";
 
 export default function ExitPopup() {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -19,11 +20,9 @@ export default function ExitPopup() {
   }, []);
 
   useEffect(() => {
-    // Mouse-leave intent (desktop)
     const onLeave = (e: MouseEvent) => {
       if (e.clientY <= 0) show();
     };
-    // Idle timer fallback (45s)
     const timer = setTimeout(show, 45000);
     document.addEventListener("mouseleave", onLeave);
     return () => {
@@ -76,27 +75,27 @@ export default function ExitPopup() {
             border: "none", cursor: "pointer", fontSize: 20, color: "#9CA3AF",
             lineHeight: 1, padding: 4,
           }}
-          aria-label="Zamknij"
+          aria-label="Close"
         >
-          &#x2715;
+          ✕
         </button>
 
         {!sent ? (
           <>
             <div style={{ textAlign: "center", marginBottom: 20 }}>
-              <div style={{ fontSize: 36, marginBottom: 8 }}>&#x1F381;</div>
+              <div style={{ fontSize: 36, marginBottom: 8 }}>🎁</div>
               <h2 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 800, color: "#111" }}>
-                Poczekaj! Mamy dla Ciebie prezent
+                {t("exit_title")}
               </h2>
               <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>
-                Zostaw swoj email i odbierz <strong style={{ color: BRAND }}>bezplatna konsultacje</strong> z naszym ekspertem ds. migracji (wartosci 150 PLN).
+                {t("exit_desc")}
               </p>
             </div>
 
             <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <input
                 type="text"
-                placeholder="Twoje imie"
+                placeholder={t("exit_name_ph")}
                 value={name}
                 onChange={e => setName(e.target.value)}
                 style={{
@@ -107,7 +106,7 @@ export default function ExitPopup() {
               />
               <input
                 type="email"
-                placeholder="Twoj email *"
+                placeholder={t("exit_email_ph")}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
@@ -126,7 +125,7 @@ export default function ExitPopup() {
                   opacity: (!email.trim() || loading) ? 0.6 : 1, transition: "opacity 0.2s",
                 }}
               >
-                {loading ? "Wysylamy..." : "Odbierz bezplatna konsultacje "}
+                {loading ? t("exit_sending") : t("exit_cta")}
               </button>
             </form>
 
@@ -135,18 +134,18 @@ export default function ExitPopup() {
                 onClick={() => setOpen(false)}
                 style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#9CA3AF" }}
               >
-                Nie, dziekuje — zamknij
+                {t("exit_no")}
               </button>
             </div>
           </>
         ) : (
           <div style={{ textAlign: "center", padding: "12px 0" }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>&#x2705;</div>
+            <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
             <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "#111" }}>
-              Gotowe! Skontaktujemy sie jutro
+              {t("exit_done_title")}
             </h3>
             <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>
-              Sprawdz rowniez WhatsApp — czesto odpowiadamy szybciej:
+              {t("exit_done_desc")}
             </p>
             <a
               href="https://wa.me/48729271848"
@@ -158,7 +157,7 @@ export default function ExitPopup() {
                 textDecoration: "none", fontWeight: 700, fontSize: 14,
               }}
             >
-              &#x1F4AC; WhatsApp
+              💬 WhatsApp
             </a>
           </div>
         )}
