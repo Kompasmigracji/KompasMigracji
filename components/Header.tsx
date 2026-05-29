@@ -119,6 +119,9 @@ export default function Header() {
           {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
+          <Link href="/pricing" className="px-3 py-2 text-sm font-semibold text-primary hover:bg-orange-50 rounded-lg transition-colors no-underline">
+            {t('nav_pricelist')}
+          </Link>
           <Link href="/plans" className="px-4 py-2 text-sm font-bold text-white gradient-btn rounded-lg transition-opacity hover:opacity-90 no-underline">
             Plany
           </Link>
@@ -171,6 +174,9 @@ export default function Header() {
           {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}</a>
           ))}
+          <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
+            {t('nav_pricelist')}
+          </Link>
           <Link href="/plans" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-bold text-white gradient-btn text-center no-underline mt-1">
             Plany subskrypcji
           </Link>
