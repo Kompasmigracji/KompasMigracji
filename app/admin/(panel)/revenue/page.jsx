@@ -107,7 +107,7 @@ export default function RevenuePage() {
             <span style={{ fontSize:12, color:"var(--dim)" }}>F3: Ризик відтоку</span>
           </div>
           <div style={{ fontSize:22, fontWeight:700, color: churnRisk > 0 ? WARN : ACCENT }}>{churnRisk}</div>
-          <div style={{ fontSize:11, color:"var(--dim)", marginTop:2 }}>неактивних > 45 днів</div>
+          <div style={{ fontSize:11, color:"var(--dim)", marginTop:2 }}>{"неактивних > 45 днів"}</div>
         </div>
       </div>
 
