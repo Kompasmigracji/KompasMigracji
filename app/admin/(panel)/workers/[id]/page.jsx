@@ -211,7 +211,7 @@ export default function WorkerCabinet() {
         <div className="kc-card" style={{ textAlign:"center", padding:"40px 0", color:"var(--faint)" }}>
           <Icon name="briefcase" size={32} color="var(--border)"/>
           <div style={{ marginTop:12, fontSize:14 }}>Нема активних справ</div>
-          <div style={{ marginTop:4, fontSize:12, color:"var(--faint)" }}>Справи з'являться після призначення</div>
+          <div style={{ marginTop:4, fontSize:12, color:"var(--faint)" }}>{"Справи з'являться після призначення"}</div>
         </div>
       ) : (
         <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14, alignItems:"start" }}>
