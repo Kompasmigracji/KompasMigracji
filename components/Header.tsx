@@ -12,14 +12,6 @@ const WA_LINK = 'https://wa.me/48729271848';
 const TG_LINK = 'https://t.me/kompasmigracji';
 const VB_LINK = 'viber://chat?number=48729271848';
 
-const SERVICES = [
-  { label: 'Карта побуту (тимчасова)', href: '/#services' },
-  { label: 'Карта резидента ЄС', href: '/#services' },
-  { label: 'Консультація 15 хв — 150 zł', href: '/#pricing' },
-  { label: 'Юридична година — 300 zł', href: '/#pricing' },
-  { label: 'Пакет "Прискорення" →', href: '/karta', accent: true },
-];
-
 const LANG_LABELS: Record<string, string> = { uk: 'UA', pl: 'PL', en: 'EN', ru: 'RU' };
 
 function TgIcon() {
@@ -65,6 +57,14 @@ export default function Header() {
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
+
+  const SERVICES = [
+    { label: t('nav_svc_karta'), href: '/#services' },
+    { label: t('nav_svc_resident'), href: '/#services' },
+    { label: t('nav_svc_consult'), href: '/#pricing' },
+    { label: t('nav_svc_hour'), href: '/#pricing' },
+    { label: t('nav_svc_express'), href: '/karta', accent: true },
+  ];
 
   const changeLang = (lng: string) => {
     router.replace(pathname, { locale: lng as Locale });
@@ -116,11 +116,11 @@ export default function Header() {
             )}
           </div>
 
-          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', 'Блог'], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
           <Link href="/pricing" className="px-3 py-2 text-sm font-semibold text-primary hover:bg-orange-50 rounded-lg transition-colors no-underline">
-            Прайс-лист
+            {t('nav_pricelist')}
           </Link>
         </nav>
 
@@ -168,11 +168,11 @@ export default function Header() {
             </a>
           ))}
           <div className="my-1 border-t border-gray-100" />
-          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', 'Блог'], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}</a>
           ))}
           <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
-            Прайс-лист
+            {t('nav_pricelist')}
           </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>

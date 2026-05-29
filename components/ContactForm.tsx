@@ -39,48 +39,48 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
             <div>
-              <label className={labelCls}>Ім&apos;я</label>
-              <input required value={name} onChange={e => setName(e.target.value)} placeholder="Іван Петренко" className={inputCls} />
+              <label className={labelCls}>{t('form_name')}</label>
+              <input required value={name} onChange={e => setName(e.target.value)} placeholder={t('form_name_ph')} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Телефон WhatsApp</label>
-              <input required value={phone} onChange={e => setPhone(e.target.value)} placeholder="+48 xxx xxx xxx" className={inputCls} />
+              <label className={labelCls}>{t('form_phone')}</label>
+              <input required value={phone} onChange={e => setPhone(e.target.value)} placeholder={t('form_phone_ph')} className={inputCls} />
             </div>
           </div>
           <div className="mb-5">
-            <label className={labelCls}>Послуга</label>
+            <label className={labelCls}>{t('form_service')}</label>
             <select value={service} onChange={e => setService(e.target.value)} className={inputCls}>
-              <option value="">Оберіть послугу</option>
-              <optgroup label="Консультації">
-                <option>Безкоштовна консультація (2 хв)</option>
-                <option>Консультація телефонічна (150 zł)</option>
-                <option>Консультація + узасаднення (450 zł)</option>
-                <option>Юридична година (300 zł)</option>
+              <option value="">{t('form_service_ph')}</option>
+              <optgroup label={t('form_consult_group')}>
+                <option>{t('form_consult_free')}</option>
+                <option>{t('form_consult_phone')}</option>
+                <option>{t('form_consult_full')}</option>
+                <option>{t('form_consult_hour')}</option>
               </optgroup>
-              <optgroup label="Нотаріальні послуги">
-                <option>Разова довіреність (250 zł)</option>
-                <option>Довіреність на транспортний засіб (350 zł)</option>
-                <option>Довіреність на нерухомість (450 zł)</option>
-                <option>Довіреність на представлення інтересів (450 zł)</option>
-                <option>Заява (380 zł)</option>
-                <option>Комплект «Спадщина» (720 zł)</option>
+              <optgroup label={t('form_notary_group')}>
+                <option>{t('form_notary_poa1')}</option>
+                <option>{t('form_notary_poa2')}</option>
+                <option>{t('form_notary_poa3')}</option>
+                <option>{t('form_notary_poa4')}</option>
+                <option>{t('form_notary_stmt')}</option>
+                <option>{t('form_notary_inherit')}</option>
               </optgroup>
-              <option>Прискорення карти побуту (комітет) (300 zł)</option>
-              <option>Прискорення карти побуту (апеляція) (900 zł)</option>
-              <option>Прискорення Резидента ЄС (900 zł)</option>
-              <option>Інше</option>
+              <option>{t('form_express1')}</option>
+              <option>{t('form_express2')}</option>
+              <option>{t('form_express3')}</option>
+              <option>{t('form_other')}</option>
             </select>
           </div>
           <div className="mb-5">
-            <label className={labelCls}>Опис ситуації</label>
-            <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder="Коротко опишіть що сталося..." rows={4} className={inputCls + ' resize-none'} />
+            <label className={labelCls}>{t('form_situation')}</label>
+            <textarea value={message} onChange={e => setMessage(e.target.value)} placeholder={t('form_situation_ph')} rows={4} className={inputCls + ' resize-none'} />
           </div>
           <label className="flex items-start gap-3 mb-6 text-sm text-gray-500 cursor-pointer">
             <input type="checkbox" required className="mt-0.5 accent-primary" />
-            Я погоджуюсь з обробкою персональних даних згідно з RODO
+            {t('form_rodo')}
           </label>
           <button type="submit" className="w-full gradient-btn text-white font-semibold py-3.5 rounded-lg text-sm transition-all hover:opacity-90 hover:shadow-lg">
-            Відправити через WhatsApp →
+            {t('form_submit')}
           </button>
         </form>
       </div>

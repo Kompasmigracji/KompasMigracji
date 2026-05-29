@@ -23,6 +23,7 @@ const intlMiddleware = createMiddleware({
   locales: ["uk", "pl", "en", "ru"],
   defaultLocale: "uk",
   localePrefix: "always",
+  localeDetection: true,
 });
 
 export async function middleware(req: NextRequest) {
