@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
     if (adminChat) {
       const lines = stale.slice(0, 10).map(
-        l => `• ${l.first_name || "?"} | ${l.service || "—"} | score: ${l.score}`,
+        (l: any) => `• ${l.first_name || "?"} | ${l.service || "—"} | score: ${l.score}`,
       ).join("\n");
       try {
         await sendMessage(
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Mark as escalated
-    const ids = stale.map(l => l.id);
+    const ids = stale.map((l: any) => l.id);
     await q(
       `UPDATE leads SET escalated_at=now() WHERE id = ANY($1::bigint[])`,
       [ids],
@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
   const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
   if (adminChat && overdueCases.length > 0) {
     const lines = overdueCases.slice(0, 5).map(
-      c => `• ${c.title} (${c.worker_name || "без виконавця"})`,
+      (c: any) => `• ${c.title} (${c.worker_name || "без виконавця"})`,
     ).join("\n");
     try {
       await sendMessage(

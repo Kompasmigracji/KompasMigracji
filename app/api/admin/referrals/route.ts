@@ -30,7 +30,7 @@ export async function GET() {
     FROM kompas_referrals`);
 
   return NextResponse.json({
-    referrals: rows.map(r => ({
+    referrals: rows.map((r: any) => ({
       ...r,
       clicks: Number(r.clicks),
       conversions: Number(r.conversions),

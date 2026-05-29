@@ -99,17 +99,15 @@ export async function POST(req: NextRequest) {
   // Real P24 registration
   try {
     const { registerTransaction } = await import("@/lib/przelewy24");
-    const url = await registerTransaction({
+    const result = await registerTransaction({
       sessionId,
       amount: Math.round(Number(plan.price_pln) * 100),
       description: `Subskrypcja ${plan.name} - Kompas Migracji`,
       email,
-      clientName: name,
-      phone,
-      returnUrl: `${SITE}/payment-success?session=${sessionId}&type=subscription`,
-      notifyUrl: `${SITE}/api/payment-notify`,
+      urlReturn: `${SITE}/payment-success?session=${sessionId}&type=subscription`,
+      urlStatus: `${SITE}/api/payment-notify`,
     });
-    return NextResponse.json({ redirectUrl: url, sessionId });
+    return NextResponse.json({ redirectUrl: result.paymentUrl, sessionId });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 502 });
   }

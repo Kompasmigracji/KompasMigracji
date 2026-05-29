@@ -81,7 +81,7 @@ export async function GET() {
     leadsPaid: Number(leadsStats?.paid || 0),
     convRate,
     churnRisk: Number(churnRisk?.cnt || 0),
-    snapshots: snapshots.map(s => ({
+    snapshots: snapshots.map((s: any) => ({
       date: s.date,
       mrr: Number(s.mrr),
       members: Number(s.members_active),
@@ -89,7 +89,7 @@ export async function GET() {
       leadsConverted: Number(s.leads_converted),
       churnRisk: Number(s.churn_risk),
     })),
-    topMonths: topMonths.map(m => ({
+    topMonths: topMonths.map((m: any) => ({
       month: m.month,
       revenue: Number(m.revenue),
       paidCount: Number(m.paid_count),
