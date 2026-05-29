@@ -10,6 +10,33 @@ interface Stats {
   yearsActive: number;
 }
 
+const ICONS = [
+  <svg key="users" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>,
+  <svg key="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>,
+  <svg key="target" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="6"/>
+    <circle cx="12" cy="12" r="2"/>
+  </svg>,
+  <svg key="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <circle cx="12" cy="12" r="10"/>
+    <line x1="2" y1="12" x2="22" y2="12"/>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+  </svg>,
+  <svg key="award" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+    <circle cx="12" cy="8" r="6"/>
+    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+  </svg>,
+];
+
 function useCountUp(target: number, duration = 1800, active = false): number {
   const [val, setVal] = useState(0);
   const raf = useRef<number>(0);
@@ -30,7 +57,9 @@ function useCountUp(target: number, duration = 1800, active = false): number {
   return val;
 }
 
-function Counter({ value, suffix = "", label, icon }: { value: number; suffix?: string; label: string; icon: string }) {
+function StatCard({
+  value, suffix = "", label, icon,
+}: { value: number; suffix?: string; label: string; icon: React.ReactNode }) {
   const [active, setActive] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const animated = useCountUp(value, 1600, active);
@@ -38,22 +67,27 @@ function Counter({ value, suffix = "", label, icon }: { value: number; suffix?: 
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) setActive(true); },
-      { threshold: 0.4 },
+      { threshold: 0.3 },
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
 
   return (
-    <div ref={ref} style={{ textAlign: "center", padding: "20px 16px" }}>
-      <div style={{ fontSize: 32, marginBottom: 6 }}>{icon}</div>
-      <div style={{
-        fontSize: 40, fontWeight: 800, color: "#D8232A",
-        fontFamily: "'Syne', sans-serif", lineHeight: 1,
-      }}>
+    <div
+      ref={ref}
+      className="card-hover flex flex-col items-center text-center py-8 px-5 rounded-2xl border border-white/10 bg-white/5 group"
+    >
+      <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-primary bg-primary/10 group-hover:bg-primary/20 transition-colors">
+        {icon}
+      </div>
+      <div
+        className="gradient-text font-display font-extrabold leading-none"
+        style={{ fontSize: "clamp(34px, 4vw, 52px)" }}
+      >
         {animated.toLocaleString("pl-PL")}{suffix}
       </div>
-      <div style={{ fontSize: 13, color: "#6B7280", marginTop: 6, fontWeight: 500 }}>{label}</div>
+      <div className="text-sm text-muted mt-3 font-medium leading-snug">{label}</div>
     </div>
   );
 }
@@ -73,45 +107,41 @@ export default function SocialProof() {
 
   if (!stats) return null;
 
+  const items = [
+    { value: stats.members,     suffix: "+", label: t("sp_clients"),   icon: ICONS[0] },
+    { value: stats.casesSolved, suffix: "+", label: t("sp_cases"),     icon: ICONS[1] },
+    { value: stats.successRate, suffix: "%", label: t("sp_success"),   icon: ICONS[2] },
+    { value: stats.countries,   suffix: "",  label: t("sp_countries"), icon: ICONS[3] },
+    { value: stats.yearsActive, suffix: "",  label: t("sp_years"),     icon: ICONS[4] },
+  ];
+
   return (
-    <section style={{
-      background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
-      padding: "56px 16px",
-    }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "#D8232A", textTransform: "uppercase",
-            letterSpacing: "0.1em", marginBottom: 8 }}>
+    <section className="py-24 bg-navy relative overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.13) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-16">
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
             {t("sp_tag")}
           </div>
-          <h2 style={{ fontSize: 28, fontWeight: 800, color: "#fff", margin: 0 }}>
+          <h2
+            className="font-serif font-light text-white"
+            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
+          >
             {t("sp_title")}
           </h2>
         </div>
 
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: 4,
-        }}>
-          {[
-            { value: stats.members,     suffix: "+", label: t("sp_clients"),  icon: "👥" },
-            { value: stats.casesSolved, suffix: "+", label: t("sp_cases"),    icon: "✅" },
-            { value: stats.successRate, suffix: "%", label: t("sp_success"),  icon: "🎯" },
-            { value: stats.countries,   suffix: "",  label: t("sp_countries"),icon: "🌍" },
-            { value: stats.yearsActive, suffix: "",  label: t("sp_years"),    icon: "🏆" },
-          ].map((item, i) => (
-            <div key={i} style={{
-              background: "rgba(255,255,255,0.05)", borderRadius: 12,
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}>
-              <Counter
-                value={item.value}
-                suffix={item.suffix}
-                label={item.label}
-                icon={item.icon}
-              />
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {items.map((item, i) => (
+            <StatCard key={i} {...item} />
           ))}
         </div>
       </div>

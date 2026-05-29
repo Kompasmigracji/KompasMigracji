@@ -26,10 +26,10 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
-        <SocialProof />
         <PromoSection />
         <Team />
         <Reviews />
+        <SocialProof />
         <ServicesGrid />
         <HowItWorks />
         <Pricing />

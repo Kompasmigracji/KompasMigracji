@@ -95,7 +95,8 @@
       "Bash(xargs grep -l \"next-intl\\\\|next-i18next\\\\|i18n\")",
       "Bash(xargs grep -l \"locales.*=\\\\|export.*locales\")",
       "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" -Directory)",
-      "Bash(Select-Object -ExpandProperty Name)"
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(npx tsc *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
