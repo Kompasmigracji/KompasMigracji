@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS automation_states (
   updated_at    TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Додаємо meta до leads якщо ще немає (для score tracking)
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS meta JSONB DEFAULT '{}';
+
 -- Лог виконання автоматизацій
 CREATE TABLE IF NOT EXISTS automation_logs (
   id             BIGSERIAL PRIMARY KEY,

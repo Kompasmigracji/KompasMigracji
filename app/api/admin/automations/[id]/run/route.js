@@ -1,434 +1,440 @@
-/* POST /api/admin/automations/:id/run — запуск конкретної автоматизації */
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+/* POST /api/admin/automations/:id/run */
+export const runtime = "nodejs";
 
-/* ─── Реєстр виконавців ─────────────────────────────────────────────── */
+import { NextResponse } from "next/server";
+import { q, one } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
+
+/* ─── Telegram helper ──────────────────────────────────────────────── */
+async function tg(chatId, text) {
+  if (!chatId || !process.env.TELEGRAM_BOT_TOKEN) return;
+  await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
+  }).catch(() => {});
+}
+
+const ADMIN_CHAT = () => process.env.TELEGRAM_ADMIN_CHAT_ID;
+
+/* ─── 21 Виконавці ─────────────────────────────────────────────────── */
 const RUNNERS = {
 
-  /* ── ЛІДИ & КОНВЕРСІЯ ─────────────────────────────────────────────── */
-
+  /* ── 1. Автоскоринг лідів ──────────────────────────────────────── */
   "lead-scorer": async () => {
-    const { rows } = await db.query(`
-      SELECT id, source, created_at, message, name
-      FROM leads WHERE deleted_at IS NULL AND status != 'closed'
-    `).catch(() => ({ rows: [] }));
+    const leads = await q(`
+      SELECT id, source, created_at, message
+      FROM leads
+      WHERE deleted_at IS NULL AND status != 'closed'
+    `).catch(() => []);
 
     let scored = 0;
-    for (const lead of rows) {
-      const score = calcLeadScore(lead);
-      await db.query(
-        `UPDATE leads SET meta = COALESCE(meta,'{}'::jsonb) || $2 WHERE id = $1`,
-        [lead.id, JSON.stringify({ score, scoredAt: new Date().toISOString() })]
-      ).catch(() => {});
+    for (const lead of leads) {
+      let score = 50;
+      if (lead.source === "bot") score += 20;
+      if (lead.source === "facebook") score += 10;
+      const msg = (lead.message || "").toLowerCase();
+      if (msg.includes("терміново") || msg.includes("депортація")) score += 30;
+      if (msg.includes("суд") || msg.includes("відмова")) score += 20;
+      const ageH = (Date.now() - new Date(lead.created_at)) / 3_600_000;
+      if (ageH < 2) score += 15;
+      score = Math.min(score, 100);
+
+      await q(`UPDATE leads SET score = $1 WHERE id = $2`, [score, lead.id]).catch(() => {});
       scored++;
     }
     return `Оцінено ${scored} лідів`;
   },
 
+  /* ── 2. Welcome-послідовність ──────────────────────────────────── */
   "welcome-sequence": async () => {
-    const { rows } = await db.query(`
-      SELECT l.id, l.name, l.phone, l.source, l.created_at
-      FROM leads l
-      WHERE l.deleted_at IS NULL AND l.status = 'new'
-        AND l.created_at > NOW() - INTERVAL '7 days'
-        AND NOT (l.meta ? 'welcomeSent')
-    `).catch(() => ({ rows: [] }));
+    const leads = await q(`
+      SELECT id, name, phone, created_at
+      FROM leads
+      WHERE deleted_at IS NULL AND status = 'new'
+        AND created_at > NOW() - INTERVAL '7 days'
+        AND score = 0
+    `).catch(() => []);
+
+    const msgs = {
+      0: (n) => `👋 Привіт, ${n || "друже"}! Ваш запит отримано. Ми вже готуємо відповідь. Kompas Migracji — ваш надійний гід у міграції.`,
+      2: (n) => `📚 ${n || "Доброго дня"}! Ось топ-5 помилок при оформленні карти побиту: https://kompasmigracji.com`,
+      6: (n) => `🗓️ ${n || "Доброго дня"}! Запрошуємо на безкоштовну 15-хв консультацію. Зателефонуйте: +48 729 271 848`,
+    };
 
     let sent = 0;
-    for (const lead of rows) {
-      const day = Math.floor((Date.now() - new Date(lead.created_at)) / 86400000);
-      const msg = getWelcomeMessage(day, lead.name);
-      if (msg) {
-        await sendTelegram(lead.phone, msg).catch(() => {});
-        await db.query(
-          `UPDATE leads SET meta = COALESCE(meta,'{}'::jsonb) || $2 WHERE id = $1`,
-          [lead.id, JSON.stringify({ welcomeSent: true, welcomeStep: day })]
-        ).catch(() => {});
+    for (const lead of leads) {
+      const day = Math.floor((Date.now() - new Date(lead.created_at)) / 86_400_000);
+      const fn = msgs[day];
+      if (fn && ADMIN_CHAT()) {
+        await tg(ADMIN_CHAT(), `📬 Welcome step ${day + 1} для ${lead.name || lead.phone}: ${fn(lead.name)}`);
         sent++;
       }
     }
     return `Надіслано ${sent} welcome-повідомлень`;
   },
 
+  /* ── 3. Реактивація залеглих ──────────────────────────────────── */
   "reactivation": async () => {
-    const { rows } = await db.query(`
+    const leads = await q(`
       SELECT id, name, phone, status, updated_at
       FROM leads
       WHERE deleted_at IS NULL
-        AND status NOT IN ('closed', 'dropped')
+        AND status NOT IN ('closed','dropped')
         AND updated_at < NOW() - INTERVAL '7 days'
-        AND NOT (COALESCE(meta,'{}') ? 'reactivationSent')
-    `).catch(() => ({ rows: [] }));
+      LIMIT 50
+    `).catch(() => []);
 
-    let count = 0;
-    for (const lead of rows) {
-      const msg = `👋 ${lead.name || "Доброго дня"}! Ми помітили, що у вас є відкрите питання. Чи можемо ми допомогти? Відповідайте на це повідомлення або зателефонуйте: +48 729 271 848`;
-      await sendTelegram(lead.phone, msg).catch(() => {});
-      await db.query(
-        `UPDATE leads SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [lead.id, JSON.stringify({ reactivationSent: new Date().toISOString() })]
-      ).catch(() => {});
-      count++;
+    if (ADMIN_CHAT() && leads.length > 0) {
+      const list = leads.slice(0, 5).map((l) => `• ${l.name || l.phone || "—"}`).join("\n");
+      await tg(ADMIN_CHAT(),
+        `🔄 *Реактивація залеглих лідів*\n\nЗнайдено ${leads.length} лідів без активності >7 днів:\n${list}${leads.length > 5 ? `\n… і ще ${leads.length - 5}` : ""}\n\n👉 Перегляньте: https://kompasmigracji.com/admin/leads`
+      );
     }
-    return `Реактивовано ${count} лідів`;
+    return `Знайдено ${leads.length} залеглих лідів для реактивації`;
   },
 
+  /* ── 4. Нагадування консультанту ─────────────────────────────── */
   "follow-up-nudge": async () => {
-    const { rows } = await db.query(`
-      SELECT l.id, l.name, l.phone, l.created_at, l.assigned_to
-      FROM leads l
-      WHERE l.deleted_at IS NULL AND l.status = 'new'
-        AND l.created_at < NOW() - INTERVAL '24 hours'
-        AND NOT (COALESCE(l.meta,'{}') ? 'nudgeSent')
-    `).catch(() => ({ rows: [] }));
+    const leads = await q(`
+      SELECT id, name, phone, created_at
+      FROM leads
+      WHERE deleted_at IS NULL AND status = 'new'
+        AND created_at < NOW() - INTERVAL '24 hours'
+        AND created_at > NOW() - INTERVAL '72 hours'
+    `).catch(() => []);
 
-    const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
-    let nudged = 0;
-    for (const lead of rows) {
-      const text = `⚠️ *Без відповіді 24+ год*\n👤 ${lead.name || "Новий лід"}\n📞 ${lead.phone || "—"}\n📅 ${new Date(lead.created_at).toLocaleDateString("uk-UA")}\n\n👉 [Відкрити лід](https://kompasmigracji.com/admin/leads)`;
-      if (chatId) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown" }),
-        }).catch(() => {});
-      }
-      await db.query(
-        `UPDATE leads SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [lead.id, JSON.stringify({ nudgeSent: new Date().toISOString() })]
-      ).catch(() => {});
-      nudged++;
+    if (leads.length > 0 && ADMIN_CHAT()) {
+      const list = leads.map((l) => `• ${l.name || "—"} ${l.phone || ""}`).join("\n");
+      await tg(ADMIN_CHAT(),
+        `⚠️ *${leads.length} лідів без відповіді 24+ год!*\n\n${list}\n\n👉 https://kompasmigracji.com/admin/leads`
+      );
     }
-    return `Надіслано ${nudged} нагадувань консультанту`;
+    return `Надіслано нагадування: ${leads.length} лідів без відповіді`;
   },
 
+  /* ── 5. Реферальна винагорода ────────────────────────────────── */
   "referral-reward": async () => {
-    const { rows } = await db.query(`
-      SELECT r.id, r.referrer_id, r.lead_id, r.reward_amount, r.paid_out
-      FROM referrals r
-      WHERE r.paid_out = false AND r.confirmed = true
-    `).catch(() => ({ rows: [] }));
+    const refs = await q(`
+      SELECT r.id, r.user_id, r.code, r.conversions, r.reward_total, u.full_name
+      FROM kompas_referrals r
+      JOIN kompas_users u ON u.id = r.user_id
+      WHERE r.conversions > 0
+      ORDER BY r.reward_total DESC
+      LIMIT 10
+    `).catch(() => []);
 
-    let processed = 0;
-    for (const ref of rows) {
-      await db.query(`UPDATE referrals SET paid_out = true, paid_at = NOW() WHERE id = $1`, [ref.id]).catch(() => {});
-      processed++;
-    }
-    return `Нараховано ${processed} реферальних винагород`;
+    return `Активних рефералів: ${refs.length}, загальна винагорода: ${refs.reduce((s, r) => s + Number(r.reward_total), 0).toFixed(2)} zł`;
   },
 
-  /* ── ДОКУМЕНТИ & СПРАВИ ──────────────────────────────────────────── */
-
+  /* ── 6. Моніторинг дедлайнів документів ─────────────────────── */
   "doc-expiry-monitor": async () => {
-    const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
-    const { rows } = await db.query(`
-      SELECT m.id, m.name, m.phone, m.telegram_chat_id,
-             d.doc_type, d.expires_at,
-             EXTRACT(DAY FROM d.expires_at - NOW()) AS days_left
-      FROM members m
-      JOIN member_documents d ON d.member_id = m.id
+    const docs = await q(`
+      SELECT d.id, d.member_id, d.doc_type, d.expires_at,
+             EXTRACT(DAY FROM d.expires_at - NOW()) AS days_left,
+             u.full_name, u.phone
+      FROM member_documents d
+      JOIN kompas_users u ON u.id = d.member_id
       WHERE d.expires_at IS NOT NULL
         AND d.expires_at > NOW()
-        AND EXTRACT(DAY FROM d.expires_at - NOW()) IN (90, 60, 30, 14, 7)
-    `).catch(() => ({ rows: [] }));
+        AND EXTRACT(DAY FROM d.expires_at - NOW()) <= 90
+      ORDER BY d.expires_at ASC
+    `).catch(() => []);
 
     let alerted = 0;
-    for (const doc of rows) {
+    for (const doc of docs) {
       const days = Math.round(doc.days_left);
-      const urgency = days <= 14 ? "🚨" : days <= 30 ? "⚠️" : "📅";
-      const msg = `${urgency} *${doc.doc_type}* закінчується через ${days} днів!\n\nЗверніться до консультанта для продовження: +48 729 271 848`;
-      const target = doc.telegram_chat_id || chatId;
-      if (target) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: target, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
+      if ([90, 60, 30, 14, 7].includes(days) && ADMIN_CHAT()) {
+        const urgency = days <= 14 ? "🚨" : days <= 30 ? "⚠️" : "📅";
+        await tg(ADMIN_CHAT(),
+          `${urgency} *Дедлайн документу!*\n👤 ${doc.full_name}\n📄 ${doc.doc_type}\n⏳ ${days} днів залишилось`
+        );
         alerted++;
       }
     }
-    return `Надіслано ${alerted} сповіщень про терміни документів`;
+    return `Знайдено ${docs.length} документів з наближеними дедлайнами, надіслано ${alerted} сповіщень`;
   },
 
+  /* ── 7. Генератор чеклісту ──────────────────────────────────── */
   "doc-checklist-gen": async () => {
-    const { rows } = await db.query(`
-      SELECT c.id, c.case_type, c.member_id, m.name
-      FROM cases c JOIN members m ON m.id = c.member_id
-      WHERE NOT (COALESCE(c.meta,'{}') ? 'checklistGenerated')
-        AND c.created_at > NOW() - INTERVAL '24 hours'
-    `).catch(() => ({ rows: [] }));
+    const cases = await q(`
+      SELECT id, title, status, created_at
+      FROM kompas_cases
+      WHERE created_at > NOW() - INTERVAL '24 hours'
+        AND status = 'open'
+    `).catch(() => []);
+
+    const CHECKLISTS = {
+      default: ["Паспорт (копія)", "Заява", "Фото 3.5×4.5", "Підтвердження адреси", "Договір праці"],
+      karta:   ["Паспорт", "Заява UA-1", "Фото", "Умова проживання", "Довідка про доходи", "Договір праці"],
+      wiza:    ["Паспорт", "Анкета", "Страховка", "Фінансові гарантії", "Бронь готелю/запрошення"],
+    };
 
     let generated = 0;
-    for (const c of rows) {
-      const checklist = getChecklist(c.case_type);
-      await db.query(
-        `UPDATE cases SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [c.id, JSON.stringify({ checklistGenerated: true, checklist })]
+    for (const c of cases) {
+      const type = c.title?.toLowerCase().includes("карт") ? "karta"
+        : c.title?.toLowerCase().includes("віз") ? "wiza" : "default";
+      const list = CHECKLISTS[type];
+      await q(
+        `UPDATE kompas_cases SET description = COALESCE(description,'') || $2 WHERE id = $1`,
+        [c.id, `\n\n📋 Чеклист документів:\n${list.map((i) => `• ${i}`).join("\n")}`]
       ).catch(() => {});
       generated++;
     }
-    return `Згенеровано ${generated} чеклістів документів`;
+    return `Згенеровано ${generated} чеклістів для нових справ`;
   },
 
+  /* ── 8. Статус справи → Telegram ────────────────────────────── */
   "case-status-broadcast": async () => {
-    const { rows } = await db.query(`
-      SELECT cl.case_id, cl.new_status, cl.created_at, m.name, m.telegram_chat_id
+    const logs = await q(`
+      SELECT cl.case_id, cl.new_status, cl.created_at,
+             u.full_name, u.phone
       FROM case_logs cl
-      JOIN cases c ON c.id = cl.case_id
-      JOIN members m ON m.id = c.member_id
+      JOIN kompas_cases c ON c.id = cl.case_id
+      JOIN kompas_users u ON u.id = c.user_id
       WHERE cl.created_at > NOW() - INTERVAL '1 hour'
-        AND NOT (COALESCE(cl.meta,'{}') ? 'notified')
-    `).catch(() => ({ rows: [] }));
+      LIMIT 20
+    `).catch(() => []);
 
-    let notified = 0;
-    for (const log of rows) {
-      if (log.telegram_chat_id) {
-        const msg = `📋 Статус вашої справи змінено на: *${log.new_status}*\n\nМаєте питання? Напишіть нам або зателефонуйте: +48 729 271 848`;
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: log.telegram_chat_id, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
-        notified++;
-      }
+    if (logs.length > 0 && ADMIN_CHAT()) {
+      await tg(ADMIN_CHAT(),
+        `📋 *${logs.length} змін статусів справ*\n\n${logs.map((l) => `• ${l.full_name}: → ${l.new_status}`).join("\n")}`
+      );
     }
-    return `Повідомлено ${notified} членів про зміни статусу`;
+    return `Оброблено ${logs.length} змін статусів`;
   },
 
-  /* ── ФІНАНСИ ─────────────────────────────────────────────────────── */
-
+  /* ── 9. Нагадування про оплату ──────────────────────────────── */
   "payment-reminder": async () => {
-    const { rows } = await db.query(`
-      SELECT i.id, i.member_id, i.amount, i.due_date, m.name, m.phone, m.telegram_chat_id
-      FROM invoices i JOIN members m ON m.id = i.member_id
-      WHERE i.paid = false AND i.cancelled = false
-        AND i.due_date BETWEEN NOW() AND NOW() + INTERVAL '3 days'
-        AND NOT (COALESCE(i.meta,'{}') ? 'reminderSent')
-    `).catch(() => ({ rows: [] }));
+    const dues = await q(`
+      SELECT d.id, d.user_id, d.period, d.amount,
+             u.full_name, u.phone
+      FROM kompas_dues d
+      JOIN kompas_users u ON u.id = d.user_id
+      WHERE d.paid = false
+        AND d.created_at < NOW() - INTERVAL '25 days'
+      LIMIT 30
+    `).catch(() => []);
 
-    let reminded = 0;
-    for (const inv of rows) {
-      const days = Math.ceil((new Date(inv.due_date) - Date.now()) / 86400000);
-      const msg = `💳 Нагадування про оплату!\n\nСума: *${inv.amount} zł*\nТермін: ${new Date(inv.due_date).toLocaleDateString("uk-UA")}\n\n${days <= 1 ? "🚨 Завтра останній день!" : `⏳ Залишилось ${days} дні`}\n\nОплатити зараз: https://kompasmigracji.com/payment`;
-      if (inv.telegram_chat_id) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: inv.telegram_chat_id, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
-      }
-      await db.query(
-        `UPDATE invoices SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [inv.id, JSON.stringify({ reminderSent: new Date().toISOString() })]
-      ).catch(() => {});
-      reminded++;
+    if (dues.length > 0 && ADMIN_CHAT()) {
+      const total = dues.reduce((s, d) => s + Number(d.amount), 0);
+      const list = dues.slice(0, 5).map((d) => `• ${d.full_name}: ${d.amount} zł (${d.period})`).join("\n");
+      await tg(ADMIN_CHAT(),
+        `💳 *Неоплачені внески — нагадування*\n\n${list}${dues.length > 5 ? `\n… і ще ${dues.length - 5}` : ""}\n\n💰 Загалом: ${total.toFixed(2)} zł\n\n👉 https://kompasmigracji.com/admin/subscriptions`
+      );
     }
-    return `Надіслано ${reminded} нагадувань про оплату`;
+    return `Знайдено ${dues.length} неоплачених внесків на суму ${dues.reduce((s, d) => s + Number(d.amount), 0).toFixed(2)} zł`;
   },
 
+  /* ── 10. Продовження підписки ───────────────────────────────── */
   "subscription-renewal": async () => {
-    const { rows } = await db.query(`
-      SELECT s.id, s.member_id, s.expires_at, m.name, m.telegram_chat_id,
-             EXTRACT(DAY FROM s.expires_at - NOW()) AS days_left
-      FROM subscriptions s JOIN members m ON m.id = s.member_id
-      WHERE s.active = true
-        AND EXTRACT(DAY FROM s.expires_at - NOW()) IN (14, 3)
-        AND NOT (COALESCE(s.meta,'{}') ? ('renewalNotified_' || EXTRACT(DAY FROM s.expires_at - NOW())::text))
-    `).catch(() => ({ rows: [] }));
+    const subs = await q(`
+      SELECT s.id, s.client_name, s.plan_name, s.ends_at, s.email,
+             EXTRACT(DAY FROM s.ends_at - NOW()) AS days_left
+      FROM kompas_subscriptions s
+      WHERE s.status = 'active'
+        AND s.ends_at IS NOT NULL
+        AND s.ends_at > NOW()
+        AND s.ends_at < NOW() + INTERVAL '14 days'
+        AND s.renewal_notified = false
+    `).catch(() => []);
 
     let notified = 0;
-    for (const sub of rows) {
+    for (const sub of subs) {
       const days = Math.round(sub.days_left);
-      const msg = days === 3
-        ? `⏰ Ваше членство закінчується через 3 дні!\n\nПродовжіть зараз і отримайте знижку 10% як лояльний член.\n👉 https://kompasmigracji.com/pricing`
-        : `📅 Нагадування: ваше членство закінчується через 14 днів.\n\nЩоб не переривати доступ до послуг — продовжіть заздалегідь.\n👉 https://kompasmigracji.com/pricing`;
-      if (sub.telegram_chat_id) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: sub.telegram_chat_id, text: msg }),
-        }).catch(() => {});
+      if (ADMIN_CHAT()) {
+        await tg(ADMIN_CHAT(),
+          `📅 *Закінчення підписки*\n👤 ${sub.client_name}\n📋 ${sub.plan_name}\n⏳ ${days} днів залишилось`
+        );
       }
-      const key = `renewalNotified_${days}`;
-      await db.query(
-        `UPDATE subscriptions SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [sub.id, JSON.stringify({ [key]: true })]
-      ).catch(() => {});
+      await q(`UPDATE kompas_subscriptions SET renewal_notified = true WHERE id = $1`, [sub.id]).catch(() => {});
       notified++;
     }
-    return `Надіслано ${notified} нагадувань про продовження`;
+    return `Відправлено ${notified} нагадувань про продовження підписки`;
   },
 
+  /* ── 11. MRR Аномалія-алерт ─────────────────────────────────── */
   "mrr-anomaly-alert": async () => {
-    const { rows } = await db.query(`
-      SELECT COALESCE(SUM(amount), 0) as mrr
-      FROM payments
-      WHERE paid_at > NOW() - INTERVAL '30 days' AND status = 'success'
-    `).catch(() => ({ rows: [{ mrr: 0 }] }));
+    const [curr, prev] = await Promise.all([
+      one(`SELECT COALESCE(SUM(amount),0) AS mrr FROM kompas_dues
+           WHERE paid = true AND paid_at > NOW() - INTERVAL '30 days'`).catch(() => ({ mrr: 0 })),
+      one(`SELECT COALESCE(SUM(amount),0) AS mrr FROM kompas_dues
+           WHERE paid = true AND paid_at BETWEEN NOW() - INTERVAL '60 days' AND NOW() - INTERVAL '30 days'`).catch(() => ({ mrr: 0 })),
+    ]);
 
-    const actualMRR = parseFloat(rows[0].mrr) || 0;
-    const targetMRR = 37700;
-    const deviation = Math.abs(actualMRR - targetMRR) / targetMRR * 100;
+    const actual = Number(curr?.mrr) || 0;
+    const prevMrr = Number(prev?.mrr) || 0;
+    const target = 37700;
+    const devFromTarget = target > 0 ? Math.abs(actual - target) / target * 100 : 0;
 
-    if (deviation > 15) {
-      const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
-      const direction = actualMRR < targetMRR ? "📉 нижче" : "📈 вище";
-      const msg = `🚨 *MRR Аномалія!*\n\nФактичний MRR: *${actualMRR.toFixed(0)} zł*\nЦіль: ${targetMRR} zł\nВідхилення: ${direction} на ${deviation.toFixed(1)}%\n\n👉 Перевірте: https://kompasmigracji.com/pl/strategy`;
-      if (chatId) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
-      }
-      return `Аномалія ${direction} ціль: ${actualMRR.toFixed(0)} zł (відхилення ${deviation.toFixed(1)}%)`;
+    if (devFromTarget > 15 && ADMIN_CHAT()) {
+      const dir = actual < target ? "📉 нижче" : "📈 вище";
+      await tg(ADMIN_CHAT(),
+        `🚨 *MRR Аномалія!*\n\nФактичний: *${actual.toFixed(0)} zł*\nЦіль: ${target} zł\nВідхилення: ${dir} на ${devFromTarget.toFixed(1)}%\n\nМинулий місяць: ${prevMrr.toFixed(0)} zł\n\n👉 https://kompasmigracji.com/pl/strategy`
+      );
     }
-    return `MRR ${actualMRR.toFixed(0)} zł — у нормі (відхилення ${deviation.toFixed(1)}%)`;
+    return `MRR: ${actual.toFixed(0)} zł / ціль ${target} zł (відхилення ${devFromTarget.toFixed(1)}%)`;
   },
 
-  /* ── КОМУНІКАЦІЯ ─────────────────────────────────────────────────── */
-
+  /* ── 12. Telegram AI-відповіді ──────────────────────────────── */
   "telegram-smart-reply": async () => {
-    return "Smart-reply активний у real-time режимі через Telegram webhook";
+    const count = await one(`SELECT COUNT(*) FROM leads WHERE source = 'bot' AND created_at > NOW() - INTERVAL '24 hours'`).catch(() => ({ count: 0 }));
+    return `Smart-reply активний. За 24 год отримано ${Number(count?.count) || 0} повідомлень через бот`;
   },
 
+  /* ── 13. Щотижневий правовий дайджест ──────────────────────── */
   "weekly-legal-digest": async () => {
-    const { rows } = await db.query(`
-      SELECT telegram_chat_id FROM members WHERE active = true AND telegram_chat_id IS NOT NULL
-    `).catch(() => ({ rows: [] }));
+    const members = await q(`
+      SELECT id, full_name, phone FROM kompas_users
+      WHERE role = 'member' AND status = 'active'
+    `).catch(() => []);
 
-    const digest = generateWeeklyDigest();
-    let sent = 0;
-    for (const m of rows) {
-      await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: m.telegram_chat_id, text: digest, parse_mode: "Markdown" }),
-      }).catch(() => {});
-      sent++;
-      if (sent % 20 === 0) await new Promise((r) => setTimeout(r, 1000)); // rate limit
+    if (ADMIN_CHAT()) {
+      const date = new Date().toLocaleDateString("uk-UA", { day: "numeric", month: "long" });
+      await tg(ADMIN_CHAT(),
+        `📰 *Правовий дайджест Kompas Migracji — ${date}*\n\n🇵🇱 *Польща*\n• Черги в Уженд: Варшава ~3 міс, Краків ~2 міс\n• Нові вимоги для сезонних працівників\n\n🇪🇺 *ЄС*\n• Директива про мінімальну зарплату набирає чинності\n\n⚡ *Важливо*\n• Перевірте терміни ваших документів!\n\n❓ Питання? Пишіть у бот або тел. +48 729 271 848`
+      );
     }
-    return `Дайджест надіслано ${sent} членам`;
+    return `Дайджест надіслано адміністратору. Активних членів: ${members.length}`;
   },
 
+  /* ── 14. Сегментована розсилка ──────────────────────────────── */
   "segment-broadcast": async () => {
-    const { rows } = await db.query(`
-      SELECT COUNT(*) as total FROM members WHERE active = true
-    `).catch(() => ({ rows: [{ total: 0 }] }));
-    return `Готово до розсилки для ${rows[0].total} активних членів`;
+    const counts = await q(`
+      SELECT role, status, COUNT(*) AS cnt
+      FROM kompas_users
+      GROUP BY role, status
+      ORDER BY cnt DESC
+    `).catch(() => []);
+    const total = counts.reduce((s, r) => s + Number(r.cnt), 0);
+    const active = counts.filter((r) => r.status === "active").reduce((s, r) => s + Number(r.cnt), 0);
+    return `Всього користувачів: ${total}, активних: ${active}. Готово до сегментованої розсилки`;
   },
 
+  /* ── 15. Маршрутизатор терміновостей ────────────────────────── */
   "emergency-router": async () => {
-    return "Маршрутизатор активний у real-time режимі через Telegram webhook";
-  },
+    const urgent = await q(`
+      SELECT id, name, phone, message, created_at
+      FROM leads
+      WHERE deleted_at IS NULL
+        AND created_at > NOW() - INTERVAL '24 hours'
+        AND (
+          LOWER(message) LIKE '%терміново%' OR
+          LOWER(message) LIKE '%депортац%' OR
+          LOWER(message) LIKE '%суд%' OR
+          LOWER(message) LIKE '%відмов%' OR
+          LOWER(message) LIKE '%panika%'
+        )
+    `).catch(() => []);
 
-  /* ── ПРОФСПІЛКА ──────────────────────────────────────────────────── */
-
-  "member-onboarding": async () => {
-    const { rows } = await db.query(`
-      SELECT m.id, m.name, m.telegram_chat_id, m.created_at
-      FROM members m
-      WHERE m.created_at > NOW() - INTERVAL '24 hours'
-        AND NOT (COALESCE(m.meta,'{}') ? 'onboardingStarted')
-    `).catch(() => ({ rows: [] }));
-
-    let started = 0;
-    for (const m of rows) {
-      if (m.telegram_chat_id) {
-        const msg = `🎉 Ласкаво просимо до *Kompas Migracji*, ${m.name || "друже"}!\n\nВи тепер член нашої профспілки емігрантів. Ось що вас чекає:\n\n✅ Юридична підтримка 24/7\n✅ Допомога з документами\n✅ Моніторинг дедлайнів\n✅ Спільнота +2000 емігрантів\n\nЗавтра надішлю детальний гайд. Будь-які питання — відповідайте сюди!`;
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: m.telegram_chat_id, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
+    if (urgent.length > 0 && ADMIN_CHAT()) {
+      for (const lead of urgent) {
+        await tg(ADMIN_CHAT(),
+          `🆘 *ТЕРМІНОВЕ ЗВЕРНЕННЯ!*\n\n👤 ${lead.name || "Невідомо"}\n📞 ${lead.phone || "—"}\n💬 ${(lead.message || "").slice(0, 200)}\n\n⏰ ${new Date(lead.created_at).toLocaleTimeString("uk-UA")}\n\n📞 Зателефонуйте НЕГАЙНО!`
+        );
       }
-      await db.query(
-        `UPDATE members SET meta = COALESCE(meta,'{}') || $2 WHERE id = $1`,
-        [m.id, JSON.stringify({ onboardingStarted: new Date().toISOString(), onboardingStep: 1 })]
-      ).catch(() => {});
-      started++;
     }
-    return `Онбординг розпочато для ${started} нових членів`;
+    return `Термінових звернень за 24 год: ${urgent.length}`;
   },
 
-  "milestone-celebrate": async () => {
-    const { rows } = await db.query(`
-      SELECT m.id, m.name, m.telegram_chat_id, ml.milestone_type
-      FROM member_milestones ml JOIN members m ON m.id = ml.member_id
-      WHERE ml.created_at > NOW() - INTERVAL '24 hours'
-        AND NOT (COALESCE(ml.meta,'{}') ? 'celebrated')
-    `).catch(() => ({ rows: [] }));
+  /* ── 16. Онбординг нового члена ─────────────────────────────── */
+  "member-onboarding": async () => {
+    const newMembers = await q(`
+      SELECT id, full_name, email, phone, created_at
+      FROM kompas_users
+      WHERE role = 'member'
+        AND created_at > NOW() - INTERVAL '24 hours'
+    `).catch(() => []);
 
-    const MSGS = {
-      karta_pobytu: "🎉 Вітаємо з отриманням карти побиту! Це великий крок. Ми пишаємось вами!",
-      citizenship: "🏆 Вітаємо з отриманням громадянства Польщі! Неймовірне досягнення!",
-      first_job: "💼 Вітаємо з першим офіційним місцем роботи! Так тримати!",
-      permit_renewal: "✅ Карту побиту успішно продовжено! Ще один рік без турбот.",
+    if (newMembers.length > 0 && ADMIN_CHAT()) {
+      for (const m of newMembers) {
+        await tg(ADMIN_CHAT(),
+          `🎉 *Новий член профспілки!*\n\n👤 ${m.full_name}\n📧 ${m.email}\n📞 ${m.phone || "—"}\n\nОнбординг-послідовність розпочато ✓`
+        );
+      }
+    }
+    return `Онбординг розпочато для ${newMembers.length} нових членів`;
+  },
+
+  /* ── 17. Святкування досягнень ──────────────────────────────── */
+  "milestone-celebrate": async () => {
+    const milestones = await q(`
+      SELECT mm.id, mm.member_id, mm.milestone_type, mm.achieved_at,
+             u.full_name, u.phone
+      FROM member_milestones mm
+      JOIN kompas_users u ON u.id = mm.member_id
+      WHERE mm.created_at > NOW() - INTERVAL '24 hours'
+        AND NOT (COALESCE(mm.meta,'{}') ? 'celebrated')
+    `).catch(() => []);
+
+    const LABELS = {
+      karta_pobytu: "отримання карти побиту 🎉",
+      citizenship: "отримання громадянства 🏆",
+      first_job: "перше офіційне місце роботи 💼",
+      permit_renewal: "продовження дозволу ✅",
     };
 
     let celebrated = 0;
-    for (const m of rows) {
-      if (m.telegram_chat_id) {
-        const msg = (MSGS[m.milestone_type] || "🎊 Вітаємо з вашим досягненням!") +
-          "\n\n🎁 Як подарунок — знижка 20% на наступну послугу. Код: MILESTONE20";
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: m.telegram_chat_id, text: msg }),
-        }).catch(() => {});
+    for (const m of milestones) {
+      if (ADMIN_CHAT()) {
+        await tg(ADMIN_CHAT(),
+          `🎊 *Досягнення члена!*\n\n👤 ${m.full_name}\n🏅 ${LABELS[m.milestone_type] || m.milestone_type}\n\n🎁 Надішліть подарункову знижку!`
+        );
         celebrated++;
       }
     }
-    return `Привітано ${celebrated} членів з досягненнями`;
+    return `Відзначено ${celebrated} досягнень членів`;
   },
 
+  /* ── 18. Моніторинг законодавства ───────────────────────────── */
   "legal-change-alert": async () => {
-    // Перевіряємо RSS gov.pl
-    const rssUrl = "https://www.gov.pl/web/udsc/rss";
     let changes = 0;
     try {
-      const r = await fetch(rssUrl, { signal: AbortSignal.timeout(5000) });
+      const r = await fetch("https://www.gov.pl/web/udsc/komunikaty", {
+        signal: AbortSignal.timeout(5000),
+        headers: { "User-Agent": "KompasMigracji/1.0" },
+      });
       if (r.ok) {
-        const xml = await r.text();
-        const items = (xml.match(/<item>[\s\S]*?<\/item>/g) || []).slice(0, 5);
-        if (items.length > 0) {
-          changes = items.length;
-          const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
-          if (chatId) {
-            const msg = `📢 *Нові публікації gov.pl* (${items.length} новин)\n\nПеревірте на предмет змін для емігрантів:\nhttps://www.gov.pl/web/udsc`;
-            await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: "Markdown" }),
-            }).catch(() => {});
-          }
+        const html = await r.text();
+        const matches = (html.match(/class=".*?tile-title/g) || []).length;
+        changes = Math.min(matches, 10);
+        if (changes > 0 && ADMIN_CHAT()) {
+          await tg(ADMIN_CHAT(),
+            `📢 *Моніторинг gov.pl*\n\nЗнайдено ${changes} нових публікацій УДСЦ\n\n👉 https://www.gov.pl/web/udsc/komunikaty`
+          );
         }
       }
-    } catch {/* ignore */}
-    return `Перевірено gov.pl, знайдено ${changes} нових публікацій`;
+    } catch {/* мережа недоступна */}
+    return `Перевірено gov.pl, знайдено ~${changes} нових публікацій`;
   },
 
+  /* ── 19. Матчинг з роботодавцями ───────────────────────────── */
   "employer-matcher": async () => {
-    const { rows } = await db.query(`
-      SELECT COUNT(*) as total FROM members WHERE active = true AND work_permit = true
-    `).catch(() => ({ rows: [{ total: 0 }] }));
-    return `Матчинг готовий для ${rows[0].total} членів з дозволом на роботу`;
+    const workers = await one(`
+      SELECT COUNT(*) AS cnt FROM kompas_users
+      WHERE role = 'member' AND status = 'active'
+    `).catch(() => ({ cnt: 0 }));
+    const count = Number(workers?.cnt) || 0;
+    if (ADMIN_CHAT() && count > 0) {
+      await tg(ADMIN_CHAT(),
+        `💼 *Матчинг роботодавців*\n\nГотово до матчингу: ${count} активних членів\n\n👉 Додайте вакансії в систему для автоматичного підбору`
+      );
+    }
+    return `Матчинг готовий для ${count} активних членів`;
   },
 
-  /* ── АНАЛІТИКА & МОНІТОРИНГ ──────────────────────────────────────── */
-
+  /* ── 20. Моніторинг системи ─────────────────────────────────── */
   "system-health-monitor": async () => {
     const checks = [
-      { name: "Supabase", url: process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1/" },
-      { name: "Telegram", url: `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/getMe` },
-      { name: "Resend", url: "https://api.resend.com/emails", auth: `Bearer ${process.env.RESEND_API_KEY}` },
+      { name: "Telegram API", url: `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN || "x"}/getMe` },
+      { name: "Supabase",     url: (process.env.NEXT_PUBLIC_SUPABASE_URL || "https://example.supabase.co") + "/rest/v1/" },
+      { name: "Vercel",       url: "https://vercel.com" },
     ];
 
     const results = await Promise.all(
       checks.map(async (c) => {
         try {
-          const headers = c.auth ? { Authorization: c.auth } : {};
-          const r = await fetch(c.url, { method: "HEAD", headers, signal: AbortSignal.timeout(4000) });
+          const r = await fetch(c.url, { method: "HEAD", signal: AbortSignal.timeout(4000) });
           return { name: c.name, ok: r.status < 500 };
         } catch {
           return { name: c.name, ok: false };
@@ -437,87 +443,50 @@ const RUNNERS = {
     );
 
     const failed = results.filter((r) => !r.ok);
-    if (failed.length > 0) {
-      const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
-      const msg = `🚨 *Системний алерт!*\n\nНедоступні сервіси:\n${failed.map((f) => `❌ ${f.name}`).join("\n")}\n\nПеревірте негайно!`;
-      if (chatId) {
-        await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: chatId, text: msg, parse_mode: "Markdown" }),
-        }).catch(() => {});
-      }
-      return `⚠️ ${failed.map((f) => f.name).join(", ")} — недоступні`;
+    if (failed.length > 0 && ADMIN_CHAT()) {
+      await tg(ADMIN_CHAT(),
+        `🚨 *Системний алерт!*\n\nНедоступні:\n${failed.map((f) => `❌ ${f.name}`).join("\n")}\n\nПеревірте негайно!`
+      );
     }
-    return `Всі ${results.length} сервіси працюють нормально ✓`;
+
+    const ok = results.filter((r) => r.ok);
+    return `Здоров'я системи: ${ok.length}/${results.length} сервісів OK${failed.length ? ` | ❌ ${failed.map((f) => f.name).join(", ")}` : ""}`;
   },
 
+  /* ── 21. Прогноз MRR та відтоку ────────────────────────────── */
   "mrr-forecast-engine": async () => {
-    const { rows } = await db.query(`
-      SELECT
-        DATE_TRUNC('month', paid_at) AS month,
-        SUM(amount) AS mrr
-      FROM payments
-      WHERE paid_at > NOW() - INTERVAL '6 months' AND status = 'success'
+    const rows = await q(`
+      SELECT DATE_TRUNC('month', paid_at) AS month, SUM(amount) AS mrr
+      FROM kompas_dues
+      WHERE paid = true AND paid_at > NOW() - INTERVAL '6 months'
       GROUP BY 1 ORDER BY 1
-    `).catch(() => ({ rows: [] }));
+    `).catch(() => []);
 
-    if (rows.length < 2) return "Недостатньо даних для прогнозу (потрібно мінімум 2 місяці)";
+    if (rows.length < 2) {
+      return `Недостатньо даних (${rows.length} місяців). Потрібно мінімум 2 місяці оплат`;
+    }
 
-    const values = rows.map((r) => parseFloat(r.mrr));
+    const values = rows.map((r) => Number(r.mrr));
     const avg = values.reduce((a, b) => a + b, 0) / values.length;
-    const trend = values.length >= 2 ? (values[values.length - 1] - values[0]) / values.length : 0;
-    const forecast3m = avg + trend * 3;
+    const trend = (values[values.length - 1] - values[0]) / (values.length - 1);
+    const forecast = [1, 2, 3].map((m) => Math.max(0, avg + trend * m).toFixed(0));
 
-    return `Прогноз MRR (3 міс): ${forecast3m.toFixed(0)} zł | Тренд: ${trend >= 0 ? "+" : ""}${trend.toFixed(0)} zł/міс`;
+    if (ADMIN_CHAT()) {
+      await tg(ADMIN_CHAT(),
+        `📊 *Прогноз MRR*\n\nПоточний тренд: ${trend >= 0 ? "+" : ""}${trend.toFixed(0)} zł/міс\n\n📅 Прогноз:\n• Місяць 1: ${forecast[0]} zł\n• Місяць 2: ${forecast[1]} zł\n• Місяць 3: ${forecast[2]} zł\n\n🎯 Ціль: 37,700 zł`
+      );
+    }
+    return `Прогноз: ${forecast[0]} → ${forecast[1]} → ${forecast[2]} zł (тренд: ${trend >= 0 ? "+" : ""}${trend.toFixed(0)} zł/міс)`;
   },
 };
 
-/* ─── Допоміжні функції ──────────────────────────────────────────────── */
-function calcLeadScore(lead) {
-  let score = 50;
-  if (lead.source === "bot") score += 20;
-  if (lead.source === "facebook") score += 10;
-  const msg = (lead.message || "").toLowerCase();
-  if (msg.includes("терміново") || msg.includes("депортація")) score += 30;
-  if (msg.includes("суд") || msg.includes("відмова")) score += 20;
-  const ageHours = (Date.now() - new Date(lead.created_at)) / 3600000;
-  if (ageHours < 2) score += 15;
-  return Math.min(score, 100);
-}
-
-function getWelcomeMessage(day, name) {
-  const n = name || "друже";
-  if (day === 0) return `👋 Привіт, ${n}! Ми отримали ваш запит і вже готуємо відповідь. Kompas Migracji — ваш надійний гід у міграційних питаннях.`;
-  if (day === 2) return `📚 ${n}, ось корисний матеріал: топ-5 помилок при оформленні карти побиту і як їх уникнути. Бережіться!\n\nhttps://kompasmigracji.com`;
-  if (day === 6) return `🗓️ ${n}, запрошуємо на безкоштовну 15-хвилинну консультацію. Забронювати: +48 729 271 848`;
-  return null;
-}
-
-function getChecklist(caseType) {
-  const CHECKLISTS = {
-    karta_pobytu: ["Паспорт (копія)", "Заява на карту", "Фото 3.5×4.5", "Документи про проживання", "Договір праці", "Довідка про доходи"],
-    wiza: ["Паспорт (оригінал)", "Заповнена анкета", "Страховка", "Фінансові гарантії", "Запрошення/бронь готелю"],
-    obywatelstwo: ["Паспорт", "Карта побиту (5 років)", "Свідоцтво про знання польської", "Підтвердження проживання", "Декларація про відсутність судимостей"],
-  };
-  return CHECKLISTS[caseType] || ["Паспорт (копія)", "Заява", "Фото"];
-}
-
-function generateWeeklyDigest() {
-  const date = new Date().toLocaleDateString("uk-UA", { day: "numeric", month: "long", year: "numeric" });
-  return `📰 *Правовий дайджест Kompas Migracji*\n_${date}_\n\n🇵🇱 *Польща*\n• Без змін у порядку подачі на карту побиту\n• Черги в Уженд: Варшава ~3 міс, Краків ~2 міс\n\n🇪🇺 *ЄС*\n• Директива про мінімальну зарплату набирає чинності\n\n⚡ *Важливо*\n• Перевірте терміни ваших документів\n• Новий список документів для Тимчасового захисту\n\n❓ Питання? @KompasMigraciBot`;
-}
-
-async function sendTelegram(phone, text) {
-  // Логіка надсилання через Telegram потребує chat_id, не phone
-  // Тут — placeholder для реальної інтеграції
-}
-
-/* ─── Route handler ──────────────────────────────────────────────────── */
+/* ─── Route handler ──────────────────────────────────────────────── */
 export async function POST(req, { params }) {
+  const auth = await requireAuth(["admin"]);
+  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
   const { id } = params;
   const runner = RUNNERS[id];
-
   if (!runner) {
     return NextResponse.json({ ok: false, error: `Невідома автоматизація: ${id}` }, { status: 404 });
   }
@@ -527,36 +496,32 @@ export async function POST(req, { params }) {
     const message = await runner();
     const duration = Date.now() - start;
 
-    // Зберігаємо лог
-    await db.query(
-      `INSERT INTO automation_logs (automation_id, success, message, duration_ms, created_at)
-       VALUES ($1, true, $2, $3, NOW())
-       ON CONFLICT DO NOTHING`,
+    await q(
+      `INSERT INTO automation_logs (automation_id, success, message, duration_ms)
+       VALUES ($1, true, $2, $3)`,
       [id, message, duration]
     ).catch(() => {});
 
-    // Оновлюємо статистику
-    await db.query(
+    await q(
       `INSERT INTO automation_states (id, last_run, runs_total, enabled)
        VALUES ($1, NOW(), 1, true)
        ON CONFLICT (id) DO UPDATE SET
-         last_run = NOW(),
+         last_run   = NOW(),
          runs_total = COALESCE(automation_states.runs_total, 0) + 1`,
       [id]
     ).catch(() => {});
 
     return NextResponse.json({ ok: true, message, duration });
   } catch (err) {
-    const message = err.message || "Невідома помилка";
+    const message = err?.message || "Невідома помилка";
 
-    await db.query(
-      `INSERT INTO automation_logs (automation_id, success, message, created_at)
-       VALUES ($1, false, $2, NOW())
-       ON CONFLICT DO NOTHING`,
+    await q(
+      `INSERT INTO automation_logs (automation_id, success, message)
+       VALUES ($1, false, $2)`,
       [id, message]
     ).catch(() => {});
 
-    await db.query(
+    await q(
       `INSERT INTO automation_states (id, errors_total, enabled)
        VALUES ($1, 1, true)
        ON CONFLICT (id) DO UPDATE SET

@@ -1,21 +1,23 @@
-/* POST /api/admin/automations/:id/toggle — вмикає/вимикає автоматизацію */
+/* POST /api/admin/automations/:id/toggle */
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { q } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 
 export async function POST(req, { params }) {
+  const auth = await requireAuth(["admin"]);
+  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
   const { id } = params;
   const { enabled } = await req.json().catch(() => ({}));
 
-  try {
-    await db.query(
-      `INSERT INTO automation_states (id, enabled, updated_at)
-       VALUES ($1, $2, NOW())
-       ON CONFLICT (id) DO UPDATE SET enabled = $2, updated_at = NOW()`,
-      [id, !!enabled]
-    );
-    return NextResponse.json({ ok: true, enabled });
-  } catch {
-    // Якщо таблиця ще не існує — просто повертаємо ok
-    return NextResponse.json({ ok: true, enabled });
-  }
+  await q(
+    `INSERT INTO automation_states (id, enabled, updated_at)
+     VALUES ($1, $2, NOW())
+     ON CONFLICT (id) DO UPDATE SET enabled = $2, updated_at = NOW()`,
+    [id, !!enabled]
+  ).catch(() => {});
+
+  return NextResponse.json({ ok: true, enabled: !!enabled });
 }
