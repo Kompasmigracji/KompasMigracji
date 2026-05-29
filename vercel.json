@@ -1,6 +1,24 @@
 {
   "framework": "nextjs",
   "installCommand": "pnpm install --ignore-scripts",
+  "crons": [
+    {
+      "path": "/api/cron/daily-snapshot",
+      "schedule": "0 23 * * *"
+    },
+    {
+      "path": "/api/cron/dues-reminders",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/lead-followup",
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-digest",
+      "schedule": "0 8 * * 1"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
