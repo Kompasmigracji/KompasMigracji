@@ -103,7 +103,8 @@
       "Bash(sed -i 's/\"pricing_consult_cta\": \"Book now\"/\"pricing_consult_cta\": \"Buy now\"/' \"c:/Users/user/Documents/GitHub/KompasMigracji/messages/en.json\")",
       "Bash(sed -i 's/\"pricing_consult_cta\": \"Записаться сейчас\"/\"pricing_consult_cta\": \"Купить сейчас\"/' \"c:/Users/user/Documents/GitHub/KompasMigracji/messages/ru.json\")",
       "Bash(sed -i 's/\"pricing_consult_cta\": \"Записатися зараз\"/\"pricing_consult_cta\": \"Купити зараз\"/' \"c:/Users/user/Documents/GitHub/KompasMigracji/messages/uk.json\")",
-      "Bash(Get-ChildItem -Path . -Depth 0)"
+      "Bash(Get-ChildItem -Path . -Depth 0)",
+      "Bash(git check-ignore *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
