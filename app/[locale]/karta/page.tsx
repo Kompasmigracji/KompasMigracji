@@ -613,7 +613,7 @@ export default function KartaPage(): React.JSX.Element {
           <div style={{ borderTop: `1px solid ${LGRAY}`, paddingTop: 20 }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: '#9ca3af', margin: '0 0 14px', letterSpacing: '0.08em' }}>DOMUS V Sp. z o.o.</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 28px', marginBottom: 10 }}>
-              {[['NIP', '5223350030'], ['KRS', '0001198474'], ['ADRES SIEDZIBY', 'Dzieci Warszawy 27, 02-495 Warszawa']].map(([label, val]) => (
+              {[['NIP', '5223350030'], ['KRS', '0001198474'], ['ADRES SIEDZIBY', 'ul. Dzieci Warszawy 27c/49, 02-495 Warszawa']].map(([label, val]) => (
                 <div key={label}>
                   <p style={{ fontSize: 9, color: '#9ca3af', margin: '0 0 2px', letterSpacing: '0.08em' }}>{label}</p>
                   <p style={{ fontSize: 11, fontWeight: 700, color: GRAY, margin: 0 }}>{val}</p>
