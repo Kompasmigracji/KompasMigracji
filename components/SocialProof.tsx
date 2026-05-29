@@ -83,7 +83,7 @@ function StatCard({
       </div>
       <div
         className="gradient-text font-display font-extrabold leading-none"
-        style={{ fontSize: "clamp(34px, 4vw, 52px)" }}
+        style={{ fontSize: "clamp(22px, 2.6vw, 36px)" }}
       >
         {animated.toLocaleString("pl-PL")}{suffix}
       </div>
