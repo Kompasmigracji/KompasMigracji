@@ -481,54 +481,65 @@ const RUNNERS = {
 };
 
 /* ─── Route handler ──────────────────────────────────────────────── */
-export async function POST(req, { params }) {
-  const auth = await requireAuth(["admin"]);
-  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
-
-  const { id } = params;
-  const runner = RUNNERS[id];
-  if (!runner) {
-    return NextResponse.json({ ok: false, error: `Невідома автоматизація: ${id}` }, { status: 404 });
-  }
-
-  const start = Date.now();
+export async function POST(req, context) {
+  /* Outer try/catch ensures we ALWAYS return JSON — never HTML error pages */
   try {
-    const message = await runner();
-    const duration = Date.now() - start;
+    const auth = await requireAuth(["admin"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-    await q(
-      `INSERT INTO automation_logs (automation_id, success, message, duration_ms)
-       VALUES ($1, true, $2, $3)`,
-      [id, message, duration]
-    ).catch(() => {});
+    /* In Next.js 14.2+ params may be a Promise — await to be safe */
+    const { id } = await Promise.resolve(context.params);
+    const runner = RUNNERS[id];
+    if (!runner) {
+      return NextResponse.json({ ok: false, error: `Невідома автоматизація: ${id}` }, { status: 404 });
+    }
 
-    await q(
-      `INSERT INTO automation_states (id, last_run, runs_total, enabled)
-       VALUES ($1, NOW(), 1, true)
-       ON CONFLICT (id) DO UPDATE SET
-         last_run   = NOW(),
-         runs_total = COALESCE(automation_states.runs_total, 0) + 1`,
-      [id]
-    ).catch(() => {});
+    const start = Date.now();
+    let message, duration;
+    try {
+      message = await runner();
+      duration = Date.now() - start;
 
-    return NextResponse.json({ ok: true, message, duration });
-  } catch (err) {
-    const message = err?.message || "Невідома помилка";
+      await q(
+        `INSERT INTO automation_logs (automation_id, success, message, duration_ms)
+         VALUES ($1, true, $2, $3)`,
+        [id, message, duration]
+      ).catch(() => {});
 
-    await q(
-      `INSERT INTO automation_logs (automation_id, success, message)
-       VALUES ($1, false, $2)`,
-      [id, message]
-    ).catch(() => {});
+      await q(
+        `INSERT INTO automation_states (id, last_run, runs_total, enabled)
+         VALUES ($1, NOW(), 1, true)
+         ON CONFLICT (id) DO UPDATE SET
+           last_run   = NOW(),
+           runs_total = COALESCE(automation_states.runs_total, 0) + 1`,
+        [id]
+      ).catch(() => {});
 
-    await q(
-      `INSERT INTO automation_states (id, errors_total, enabled)
-       VALUES ($1, 1, true)
-       ON CONFLICT (id) DO UPDATE SET
-         errors_total = COALESCE(automation_states.errors_total, 0) + 1`,
-      [id]
-    ).catch(() => {});
+      return NextResponse.json({ ok: true, message, duration });
+    } catch (err) {
+      message = err?.message || String(err) || "Невідома помилка runner";
+      duration = Date.now() - start;
 
-    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+      await q(
+        `INSERT INTO automation_logs (automation_id, success, message)
+         VALUES ($1, false, $2)`,
+        [id, message]
+      ).catch(() => {});
+
+      await q(
+        `INSERT INTO automation_states (id, errors_total, enabled)
+         VALUES ($1, 1, true)
+         ON CONFLICT (id) DO UPDATE SET
+           errors_total = COALESCE(automation_states.errors_total, 0) + 1`,
+        [id]
+      ).catch(() => {});
+
+      return NextResponse.json({ ok: false, error: message });
+    }
+  } catch (topErr) {
+    console.error("[automations/run] top-level error:", topErr);
+    return NextResponse.json(
+      { ok: false, error: topErr?.message || String(topErr) || "Внутрішня помилка сервера" }
+    );
   }
 }
