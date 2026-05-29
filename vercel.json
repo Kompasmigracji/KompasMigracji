@@ -12,7 +12,7 @@
     },
     {
       "path": "/api/cron/lead-followup",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 9 * * *"
     },
     {
       "path": "/api/cron/weekly-digest",
@@ -28,7 +28,7 @@
     },
     {
       "path": "/api/cron/appointment-reminders",
-      "schedule": "0 */2 * * *"
+      "schedule": "0 7 * * *"
     }
   ],
   "headers": [
