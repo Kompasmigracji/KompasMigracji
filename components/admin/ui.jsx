@@ -32,6 +32,14 @@ const PATHS = {
   "chevron-down": "M6 9l6 6 6-6",
   "chevron-up":   "M18 15l-6-6-6 6",
   filter: "M22 3H2l8 9.46V19l4 2v-8.54z",
+  zap: "M13 2 3 14h9l-1 8 10-12h-9l1-8z",
+  play: "M5 3l14 9-14 9V3z",
+  pause: "M6 4h4v16H6zM14 4h4v16h-4z",
+  activity: "M22 12h-4l-3 9L9 3l-3 9H2",
+  clock: "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM12 6v6l4 2",
+  bell: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0",
+  target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+  cpu: "M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3",
 };
 export function Icon({ name, size = 18, color = "currentColor", fill = false }) {
   return (
