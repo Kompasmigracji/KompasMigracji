@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
 
   const segment = String(body.segment || "all");
   const channel = String(body.channel || "telegram");
-  const userId = (auth as any).userId;
+  const userId = (auth.user as any)?.sub ? Number((auth.user as any).sub) : null;
 
   const row = await one(
     `INSERT INTO kompas_broadcasts (title, body, segment, channel, scheduled_at, created_by)

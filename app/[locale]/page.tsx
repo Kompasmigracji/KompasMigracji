@@ -15,6 +15,9 @@ import ChatBot from '@/components/ChatBot';
 import KompasAI from '@/components/KompasAI';
 import PromoBanner from '@/components/PromoBanner';
 import StarField from '@/components/StarField';
+import SocialProof from '@/components/SocialProof';
+import WhatsAppFloat from '@/components/WhatsAppFloat';
+import ExitPopup from '@/components/ExitPopup';
 
 export default function HomePage() {
   return (
@@ -23,6 +26,7 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <SocialProof />
         <PromoSection />
         <Team />
         <Reviews />
@@ -38,6 +42,8 @@ export default function HomePage() {
       <ChatBot />
       <KompasAI />
       <PromoBanner />
+      <WhatsAppFloat />
+      <ExitPopup />
     </>
   );
 }
