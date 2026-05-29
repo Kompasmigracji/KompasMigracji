@@ -21,9 +21,12 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4 text-sm uppercase tracking-wider text-white/80">{t('footer_services_col')}</h4>
             <ul className="flex flex-col gap-2">
-              <li><span className="text-sm text-white/60 hover:text-white cursor-pointer transition-colors">{t('footer_legal')}</span></li>
-              <li><span className="text-sm text-white/60 hover:text-white cursor-pointer transition-colors">{t('footer_documents')}</span></li>
-              <li><span className="text-sm text-white/60 hover:text-white cursor-pointer transition-colors">{t('footer_support')}</span></li>
+              <li><Link href="/pricing#legal" className="text-sm text-white/60 hover:text-white transition-colors no-underline">{t('footer_legal')}</Link></li>
+              <li><Link href="/pricing#translations" className="text-sm text-white/60 hover:text-white transition-colors no-underline">{t('footer_documents')}</Link></li>
+              <li><Link href="/pricing#legalization" className="text-sm text-white/60 hover:text-white transition-colors no-underline">{t('footer_support')}</Link></li>
+              <li><Link href="/plans" className="text-sm text-white/60 hover:text-white transition-colors no-underline">📋 Subskrypcje miesięczne</Link></li>
+              <li><Link href="/book" className="text-sm text-white/60 hover:text-white transition-colors no-underline">📅 Zapisz się na konsultację</Link></li>
+              <li><Link href="/portal" className="text-sm text-white/60 hover:text-white transition-colors no-underline">🔑 Portal klienta — status sprawy</Link></li>
             </ul>
           </div>
 
