@@ -1,16 +1,48 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+
+const PROMO_END = new Date('2026-06-06T23:59:59');
+
+function useCountdown(target: Date) {
+  const calc = () => {
+    const diff = target.getTime() - Date.now();
+    if (diff <= 0) return { d: 0, h: 0, m: 0, s: 0, expired: true };
+    return {
+      d: Math.floor(diff / 86400000),
+      h: Math.floor((diff % 86400000) / 3600000),
+      m: Math.floor((diff % 3600000) / 60000),
+      s: Math.floor((diff % 60000) / 1000),
+      expired: false,
+    };
+  };
+  const [time, setTime] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setTime(calc()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return time;
+}
+
+function CountdownUnit({ value, label }: { value: number; label: string }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg"
+        style={{ background: 'rgba(255,255,255,0.15)' }}
+      >
+        {String(value).padStart(2, '0')}
+      </div>
+      <span className="text-xs text-white/60 mt-1">{label}</span>
+    </div>
+  );
+}
 
 export default function Pricing() {
   const t = useTranslations();
   const [contactOpen, setContactOpen] = useState<string | null>(null);
-
-  const handleCta = async (label: string) => {
-    if (supabase) { try { await supabase.from('leads').insert({ service: label, source: 'pricing' }); } catch {} }
-    setContactOpen(label);
-  };
+  const countdown = useCountdown(PROMO_END);
 
   const cards = [
     {
@@ -54,6 +86,27 @@ export default function Pricing() {
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('pricing_tag')}</div>
           <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('pricing_title')}</h2>
         </div>
+
+        {/* Promo countdown banner */}
+        {!countdown.expired && (
+          <div
+            className="mb-10 rounded-2xl p-6 text-center"
+            style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)' }}
+          >
+            <div className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-2">Акція закінчується через</div>
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <CountdownUnit value={countdown.d} label="днів" />
+              <span className="text-white/40 text-2xl font-light mb-4">:</span>
+              <CountdownUnit value={countdown.h} label="годин" />
+              <span className="text-white/40 text-2xl font-light mb-4">:</span>
+              <CountdownUnit value={countdown.m} label="хвилин" />
+              <span className="text-white/40 text-2xl font-light mb-4">:</span>
+              <CountdownUnit value={countdown.s} label="секунд" />
+            </div>
+            <p className="text-white/70 text-sm">Юридична година зі знижкою 33% — 300 zł замість 450 zł</p>
+          </div>
+        )}
+
         {/* Subscription plans banner */}
         <div className="mb-10 rounded-2xl border-2 border-primary/30 bg-primary/5 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
@@ -124,7 +177,7 @@ export default function Pricing() {
                 </div>
               ) : (
                 <button
-                  onClick={() => handleCta(card.label)}
+                  onClick={() => setContactOpen(card.label)}
                   className={`text-center py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer border-0 ${card.featured ? 'gradient-btn text-white hover:opacity-90' : 'bg-primary text-white hover:bg-secondary'}`}
                 >
                   {card.cta}

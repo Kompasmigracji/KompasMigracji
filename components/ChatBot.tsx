@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const GREETING = 'Привіт! Я AI-асистент Kompas Migracji 👋\n\nДопоможу з питаннями про Карту побуту, легалізацію та наші послуги. Запитуйте!';
+const GREETING = 'Привіт! Я AI-асистент Kompas Migracji 👋\n\nДопоможу з питаннями про Карту побуту, легалізацію та наші послуги.\n\nОберіть тему або напишіть своє питання:';
 const LEAD_RE = /\[\[LEAD:(\{[^}]*\})\]\]/;
 
 interface Msg { 
@@ -217,6 +217,30 @@ export default function ChatBot() {
             <div style={styles.messagesContainer}>
               {messages.map((msg) => <Bubble key={msg.id} msg={msg} />)}
               {loading && <TypingDots />}
+              {messages.length === 1 && !loading && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+                  {[
+                    '🚨 Загрожує депортація',
+                    '📋 Карта побуту',
+                    '💰 Скільки коштує?',
+                    '📅 Записатися',
+                  ].map(chip => (
+                    <button
+                      key={chip}
+                      onClick={() => { setInput(chip); setTimeout(() => { setInput(''); const t = chip; const messageId = `chip-${Date.now()}`; const history = [...messages, { id: messageId, role: 'user' as const, content: t }]; setMessages(history); setLoading(true); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.filter(m => !m.greeting) }) }).then(r => r.json()).then(data => { const assistantId = `msg-${Date.now()}`; setMessages([...history, { id: assistantId, role: 'assistant', content: data.content || 'Вибачте, спробуйте пізніше.' }]); setLoading(false); }).catch(() => setLoading(false)); }, 10); }}
+                      style={{
+                        padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e2e8f0',
+                        background: '#f8fafc', color: '#1e293b', fontSize: 12, cursor: 'pointer',
+                        fontFamily: 'inherit', transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#f97316'; (e.currentTarget as HTMLButtonElement).style.background = '#fff7ed'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLButtonElement).style.background = '#f8fafc'; }}
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+              )}
               <div ref={bottomRef} />
             </div>
 

@@ -3,12 +3,19 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { supabase } from '@/lib/supabase';
 
+const URGENCY_OPTIONS = [
+  { value: 'normal', label: 'Звичайний', desc: 'Відповімо протягом 24 год', color: '#2563eb' },
+  { value: 'urgent', label: 'Терміново (3-7 днів)', desc: 'Пріоритетна обробка', color: '#d97706' },
+  { value: 'critical', label: 'КРИТИЧНО — сьогодні', desc: 'Відповімо протягом 2 год', color: '#dc2626' },
+];
+
 export default function ContactForm({ preselectedPlan }: { preselectedPlan?: string }) {
   const t = useTranslations();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [service, setService] = useState(preselectedPlan || '');
   const [message, setMessage] = useState('');
+  const [urgency, setUrgency] = useState('normal');
 
   useEffect(() => {
     const p = new URLSearchParams(window.location.search).get('plan');
@@ -17,9 +24,20 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (supabase) { try { await supabase.from('leads').insert({ first_name: name.trim(), contact: phone.trim(), situation: message.trim(), service, source: 'site' }); } catch {} }
+    const situationWithUrgency = `[${urgency.toUpperCase()}] ${message.trim()}`;
+    if (supabase) {
+      try {
+        await supabase.from('leads').insert({
+          first_name: name.trim(),
+          contact: phone.trim(),
+          situation: situationWithUrgency,
+          service,
+          source: 'site',
+        });
+      } catch {}
+    }
     const text =
-      `Kompas Migracji — Новий запит\nІм'я: ${name}\nТелефон: ${phone}\nПослуга: ${service}\nПовідомлення: ${message}`;
+      `Kompas Migracji — Новий запит [${urgency.toUpperCase()}]\nІм’я: ${name}\nТелефон: ${phone}\nПослуга: ${service}\nПовідомлення: ${message}`;
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -37,6 +55,39 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
           onSubmit={handleSubmit}
           className="max-w-xl mx-auto bg-white border border-gray-200 rounded-2xl p-8 shadow-sm"
         >
+          {/* Urgency selector */}
+          <div className="mb-6">
+            <label className={labelCls}>Терміновість ситуації</label>
+            <div className="flex flex-col gap-2">
+              {URGENCY_OPTIONS.map(opt => (
+                <label
+                  key={opt.value}
+                  className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${urgency === opt.value ? 'border-opacity-100' : 'border-gray-200 hover:border-gray-300'}`}
+                  style={urgency === opt.value ? { borderColor: opt.color, background: opt.color + '08' } : {}}
+                >
+                  <input
+                    type="radio"
+                    name="urgency"
+                    value={opt.value}
+                    checked={urgency === opt.value}
+                    onChange={() => setUrgency(opt.value)}
+                    className="sr-only"
+                  />
+                  <div
+                    className="w-4 h-4 rounded-full border-2 shrink-0 transition-all"
+                    style={urgency === opt.value ? { borderColor: opt.color, background: opt.color } : { borderColor: '#d1d5db' }}
+                  />
+                  <div className="flex-1">
+                    <div className="font-semibold text-navy text-sm" style={urgency === opt.value ? { color: opt.color } : {}}>
+                      {opt.label}
+                    </div>
+                    <div className="text-xs text-gray-400">{opt.desc}</div>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
             <div>
               <label className={labelCls}>{t('form_name')}</label>
@@ -79,8 +130,12 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             <input type="checkbox" required className="mt-0.5 accent-primary" />
             {t('form_rodo')}
           </label>
-          <button type="submit" className="w-full gradient-btn text-white font-semibold py-3.5 rounded-lg text-sm transition-all hover:opacity-90 hover:shadow-lg">
-            {t('form_submit')}
+          <button
+            type="submit"
+            className="w-full gradient-btn text-white font-semibold py-3.5 rounded-lg text-sm transition-all hover:opacity-90 hover:shadow-lg"
+            style={urgency === 'critical' ? { background: 'linear-gradient(135deg, #dc2626, #b91c1c)' } : {}}
+          >
+            {urgency === 'critical' ? '🚨 Відправити — ТЕРМІНОВО' : t('form_submit')}
           </button>
         </form>
       </div>

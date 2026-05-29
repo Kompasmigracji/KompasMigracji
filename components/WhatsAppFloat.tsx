@@ -1,28 +1,28 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
 
-const WA_URL = "https://wa.me/48729271848?text=Dzien+dobry!+Chcialabym+zapytac+o+Panstwa+uslugi.";
+const WA_URL =
+  "https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням+в+Польщі";
 
 export default function WhatsAppFloat() {
-  const t = useTranslations();
   const [visible, setVisible] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
-    const t1 = setTimeout(() => setVisible(true), 3000);
-    const t2 = setTimeout(() => setPulse(true), 5000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const t1 = setTimeout(() => {
+      setVisible(true);
+      setShowTooltip(true);
+    }, 4000);
+    const t2 = setTimeout(() => setPulse(true), 6000);
+    const t3 = setTimeout(() => setShowTooltip(false), 10000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   if (!visible) return null;
 
   return (
-    <a
-      href={WA_URL}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Napisz do nas na WhatsApp"
+    <div
       style={{
         position: "fixed",
         bottom: 96,
@@ -31,37 +31,75 @@ export default function WhatsAppFloat() {
         display: "flex",
         alignItems: "center",
         gap: 10,
-        background: "#25D366",
-        color: "#fff",
-        borderRadius: 50,
-        boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
-        textDecoration: "none",
-        fontFamily: "'Segoe UI', Arial, sans-serif",
-        fontWeight: 700,
-        fontSize: 14,
-        padding: "12px 20px 12px 14px",
-        transition: "transform 0.2s, box-shadow 0.2s",
-        animation: pulse ? "wa-pulse 2s infinite" : "none",
-      }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.05)";
-        (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 28px rgba(37,211,102,0.55)";
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
-        (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 20px rgba(37,211,102,0.4)";
       }}
     >
-      <style>{`
-        @keyframes wa-pulse {
-          0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
-          50%      { box-shadow: 0 4px 32px rgba(37,211,102,0.7), 0 0 0 8px rgba(37,211,102,0.1); }
-        }
-      `}</style>
-      <svg width={22} height={22} viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
-      <span>{t("wa_cta")}</span>
-    </a>
+      {showTooltip && (
+        <div
+          style={{
+            background: "#fff",
+            border: "1px solid #e5e7eb",
+            borderRadius: 12,
+            padding: "10px 14px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.12)",
+            fontSize: 13,
+            color: "#1e293b",
+            maxWidth: 200,
+            lineHeight: 1.4,
+            animation: "tooltip-in 0.3s ease-out",
+          }}
+        >
+          <strong>Потрібна допомога?</strong>
+          <br />
+          <span style={{ fontSize: 12, color: "#6b7280" }}>Відповідаємо протягом 2 год</span>
+        </div>
+      )}
+
+      <a
+        href={WA_URL}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Написати нам у WhatsApp"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          background: "#25D366",
+          color: "#fff",
+          borderRadius: 50,
+          boxShadow: "0 4px 20px rgba(37,211,102,0.4)",
+          textDecoration: "none",
+          fontFamily: "'Segoe UI', Arial, sans-serif",
+          fontWeight: 700,
+          fontSize: 14,
+          padding: "12px 20px 12px 14px",
+          transition: "transform 0.2s, box-shadow 0.2s",
+          animation: pulse ? "wa-pulse 2s infinite" : "none",
+          whiteSpace: "nowrap",
+        }}
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1.05)";
+          (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 6px 28px rgba(37,211,102,0.55)";
+        }}
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLAnchorElement).style.transform = "scale(1)";
+          (e.currentTarget as HTMLAnchorElement).style.boxShadow = "0 4px 20px rgba(37,211,102,0.4)";
+        }}
+      >
+        <style>{`
+          @keyframes wa-pulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); }
+            50%      { box-shadow: 0 4px 32px rgba(37,211,102,0.7), 0 0 0 8px rgba(37,211,102,0.1); }
+          }
+          @keyframes tooltip-in {
+            from { opacity: 0; transform: translateX(10px); }
+            to   { opacity: 1; transform: translateX(0); }
+          }
+        `}</style>
+        <svg width={22} height={22} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        <span>Написати зараз</span>
+      </a>
+    </div>
   );
 }
