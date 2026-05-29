@@ -21,12 +21,13 @@ CREATE TABLE IF NOT EXISTS automation_logs (
   created_at     TIMESTAMPTZ DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS automation_logs_created ON automation_logs (created_at DESC);
-CREATE INDEX IF NOT EXISTS automation_logs_auto ON automation_logs (automation_id);
+CREATE INDEX IF NOT EXISTS automation_logs_auto    ON automation_logs (automation_id);
 
 -- Документи членів (для doc-expiry-monitor)
+-- member_id — bigint, відповідає kompas_users.id
 CREATE TABLE IF NOT EXISTS member_documents (
   id         BIGSERIAL PRIMARY KEY,
-  member_id  UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+  member_id  BIGINT NOT NULL,
   doc_type   TEXT NOT NULL,         -- karta_pobytu, wiza, praca, paszport
   expires_at TIMESTAMPTZ,
   issued_at  TIMESTAMPTZ,
@@ -34,30 +35,31 @@ CREATE TABLE IF NOT EXISTS member_documents (
   meta       JSONB DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS member_docs_member ON member_documents (member_id);
+CREATE INDEX IF NOT EXISTS member_docs_member  ON member_documents (member_id);
 CREATE INDEX IF NOT EXISTS member_docs_expires ON member_documents (expires_at);
 
 -- Досягнення членів (для milestone-celebrate)
 CREATE TABLE IF NOT EXISTS member_milestones (
   id             BIGSERIAL PRIMARY KEY,
-  member_id      UUID NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+  member_id      BIGINT NOT NULL,
   milestone_type TEXT NOT NULL,    -- karta_pobytu, citizenship, first_job, permit_renewal
   achieved_at    TIMESTAMPTZ DEFAULT NOW(),
   meta           JSONB DEFAULT '{}',
   created_at     TIMESTAMPTZ DEFAULT NOW()
 );
+CREATE INDEX IF NOT EXISTS member_milestones_member ON member_milestones (member_id);
 
 -- Логи змін статусів справ (для case-status-broadcast)
 CREATE TABLE IF NOT EXISTS case_logs (
   id         BIGSERIAL PRIMARY KEY,
-  case_id    UUID NOT NULL,
+  case_id    BIGINT NOT NULL,
   old_status TEXT,
   new_status TEXT NOT NULL,
-  changed_by UUID,
+  changed_by BIGINT,
   meta       JSONB DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
-CREATE INDEX IF NOT EXISTS case_logs_case ON case_logs (case_id);
+CREATE INDEX IF NOT EXISTS case_logs_case    ON case_logs (case_id);
 CREATE INDEX IF NOT EXISTS case_logs_created ON case_logs (created_at DESC);
 
 -- Початкові записи для всіх 21 автоматизацій
