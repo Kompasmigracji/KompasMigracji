@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { randomUUID } from 'crypto';
 import { q } from '@/lib/db';
+import { createTaskFromLead } from '@/lib/task-from-lead';
 
 function isMockMode(): boolean {
   const mid = parseInt(process.env.P24_MERCHANT_ID ?? '', 10);
@@ -39,6 +40,7 @@ async function createLeadForPayment(opts: {
        VALUES ($1, $2, $3, $4, $5, 'new')`,
       [fullName, phone || null, situation, source, sessionId],
     );
+    await createTaskFromLead({ name: fullName, contact: phone, source, situation: description });
   } catch (err) {
     // Не блокуємо платіж якщо запис ліда не вдався
     console.error('payment/route: failed to create lead', err);

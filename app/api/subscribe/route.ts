@@ -6,6 +6,7 @@ export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { sendEmail, welcomeEmailHtml } from "@/lib/email";
+import { createTaskFromLead } from "@/lib/task-from-lead";
 
 const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://kompasmigracji.com";
 
@@ -71,6 +72,13 @@ export async function POST(req: NextRequest) {
        VALUES ($1,$2,'subscription','new',$3,$4)`,
       [name, email + (phone ? " / " + phone : ""), plan.name, `Subskrypcja ${plan.name}`],
     );
+    await createTaskFromLead({
+      name,
+      contact: email + (phone ? " / " + phone : ""),
+      source: "subscription",
+      service: plan.name,
+      situation: `Subskrypcja ${plan.name}`,
+    });
   } catch {}
 
   // F14: Send welcome email (non-blocking)

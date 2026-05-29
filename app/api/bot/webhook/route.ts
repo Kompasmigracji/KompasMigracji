@@ -14,6 +14,7 @@ export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
 import { sendMessage, sendInlineKeyboard, answerCallback } from "@/lib/telegram";
+import { createTaskFromLead } from "@/lib/task-from-lead";
 
 /* ── Telegram types (мiнiмальний набiр) ────────────────────────────── */
 interface TgUser { id: number; username?: string; first_name?: string }
@@ -83,6 +84,7 @@ async function getOrCreateLead(
      RETURNING id`,
     [chatId, firstName, username],
   )) as { id: string };
+  await createTaskFromLead({ name: firstName, contact: username ? `@${username}` : null, source: "bot" });
   return row.id;
 }
 
