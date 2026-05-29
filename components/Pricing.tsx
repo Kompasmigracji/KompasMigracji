@@ -122,6 +122,17 @@ export default function Pricing() {
           </a>
         </div>
 
+        <P24PaymentSteps
+          title={t('pricing_how_title')}
+          steps={[
+            { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
+            { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
+            { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
+            { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
+          ]}
+          securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
+        />
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {cards.map((card, i) => (
             <div
@@ -194,17 +205,6 @@ export default function Pricing() {
           ))}
         </div>
       </div>
-
-      <P24PaymentSteps
-        title={t('pricing_how_title')}
-        steps={[
-          { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
-          { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
-          { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
-          { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
-        ]}
-        securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
-      />
     </section>
   );
 }
