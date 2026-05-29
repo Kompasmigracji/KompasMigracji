@@ -38,10 +38,11 @@ function Modal({ plan, onClose }: { plan: Plan; onClose: () => void }) {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [agreed, setAgreed] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) return;
+    if (!name.trim() || !email.trim() || !agreed) return;
     setLoading(true);
     setError("");
     try {
@@ -112,13 +113,30 @@ function Modal({ plan, onClose }: { plan: Plan; onClose: () => void }) {
             />
           ))}
           {error && <div style={{ fontSize: 12, color: "#EF4444" }}>{error}</div>}
+
+          <label style={{ display: "flex", gap: 10, alignItems: "flex-start", cursor: "pointer", userSelect: "none", margin: "4px 0 2px" }}>
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={e => setAgreed(e.target.checked)}
+              style={{ marginTop: 3, accentColor: BRAND, width: 16, height: 16, flexShrink: 0, cursor: "pointer" }}
+            />
+            <span style={{ fontSize: 12, color: "#6B7280", lineHeight: 1.6 }}>
+              Zapoznałem/am się z{" "}
+              <a href="/regulamin" target="_blank" rel="noreferrer" style={{ color: BRAND, textDecoration: "none", fontWeight: 600 }} onClick={e => e.stopPropagation()}>
+                Regulaminem Sklepu
+              </a>{" "}
+              i akceptuję jego warunki
+            </span>
+          </label>
+
           <button
             type="submit"
-            disabled={!name.trim() || !email.trim() || loading}
+            disabled={!name.trim() || !email.trim() || loading || !agreed}
             style={{
               padding: "13px 0", borderRadius: 9, background: BRAND, color: "#fff",
               fontWeight: 700, fontSize: 15, border: "none", cursor: "pointer",
-              opacity: (!name.trim() || !email.trim() || loading) ? 0.6 : 1,
+              opacity: (!name.trim() || !email.trim() || loading || !agreed) ? 0.6 : 1,
             }}
           >
             {loading ? "Przekierowujemy do platnosci..." : `Subskrybuj ${plan.name} — ${plan.price_pln} PLN/mies.`}
@@ -126,7 +144,7 @@ function Modal({ plan, onClose }: { plan: Plan; onClose: () => void }) {
         </form>
 
         <p style={{ textAlign: "center", fontSize: 11, color: "#9CA3AF", margin: "12px 0 0" }}>
-          Bezpieczna platnosc przez Przelewy24 &middot; Mozna anulowac w dowolnym momencie
+          Bezpieczna płatność przez Przelewy24 &middot; Można anulować w dowolnym momencie
         </p>
       </div>
     </div>
