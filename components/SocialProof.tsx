@@ -94,11 +94,11 @@ export default function SocialProof() {
           gap: 4,
         }}>
           {[
-            { value: stats.members, suffix: "+", label: "Zaufanych klientow", icon: "&#x1F465;" },
-            { value: stats.casesSolved, suffix: "+", label: "Zalatwionych spraw", icon: "&#x2705;" },
-            { value: stats.successRate, suffix: "%", label: "Skutecznosci", icon: "&#x1F3AF;" },
-            { value: stats.countries, suffix: "", label: "Krajow obslugi", icon: "&#x1F30D;" },
-            { value: stats.yearsActive, suffix: "", label: "Lat doswiadczenia", icon: "&#x1F3C6;" },
+            { value: stats.members, suffix: "+", label: "Zaufanych klientow", icon: "👥" },
+            { value: stats.casesSolved, suffix: "+", label: "Zalatwionych spraw", icon: "✅" },
+            { value: stats.successRate, suffix: "%", label: "Skutecznosci", icon: "🎯" },
+            { value: stats.countries, suffix: "", label: "Krajow obslugi", icon: "🌍" },
+            { value: stats.yearsActive, suffix: "", label: "Lat doswiadczenia", icon: "🏆" },
           ].map((item, i) => (
             <div key={i} style={{
               background: "rgba(255,255,255,0.05)", borderRadius: 12,
