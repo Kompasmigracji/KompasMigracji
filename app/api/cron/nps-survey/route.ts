@@ -21,17 +21,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Find leads closed/converted in last 24h that don't have an NPS survey yet
+  // Find leads closed/converted (recently or unsurveyed) that don't have an NPS survey yet
+  // Note: leads table has no updated_at; use paid_at or created_at as proxy
   const closedLeads = await q(
     `SELECT l.id, l.first_name, l.contact, l.chat_id
      FROM leads l
      WHERE l.status IN ('closed','converted')
-       AND l.updated_at > now() - interval '24 hours'
        AND l.deleted_at IS NULL
        AND NOT EXISTS (
          SELECT 1 FROM kompas_nps_surveys ns WHERE ns.lead_id = l.id
        )
-     LIMIT 50`,
+     ORDER BY l.created_at DESC
+     LIMIT 20`,
   );
 
   let sent = 0;

@@ -37,7 +37,7 @@ ON CONFLICT (slug) DO NOTHING;
 -- ── Active subscriptions ─────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS kompas_subscriptions (
   id              BIGSERIAL PRIMARY KEY,
-  lead_id         BIGINT REFERENCES leads(id) ON DELETE SET NULL,
+  lead_id         UUID REFERENCES leads(id) ON DELETE SET NULL,
   member_id       BIGINT REFERENCES kompas_users(id) ON DELETE SET NULL,
   plan_slug       TEXT NOT NULL,
   plan_name       TEXT,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS kompas_subscriptions (
 -- ── Appointment Bookings ─────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS kompas_appointments (
   id              BIGSERIAL PRIMARY KEY,
-  lead_id         BIGINT REFERENCES leads(id) ON DELETE SET NULL,
+  lead_id         UUID REFERENCES leads(id) ON DELETE SET NULL,
   member_id       BIGINT REFERENCES kompas_users(id) ON DELETE SET NULL,
   assigned_to     BIGINT REFERENCES kompas_users(id) ON DELETE SET NULL,
   client_name     TEXT NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS kompas_appointments (
 CREATE TABLE IF NOT EXISTS kompas_nps_surveys (
   id            BIGSERIAL PRIMARY KEY,
   case_id       BIGINT,
-  lead_id       BIGINT REFERENCES leads(id) ON DELETE SET NULL,
+  lead_id       UUID REFERENCES leads(id) ON DELETE SET NULL,
   client_name   TEXT,
   client_email  TEXT,
   score         INT CHECK(score >= 0 AND score <= 10),
