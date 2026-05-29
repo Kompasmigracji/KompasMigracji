@@ -22,7 +22,7 @@ function MiniBar({ value, max, color }) {
 
 function SnapshotChart({ snapshots }) {
   if (!snapshots || snapshots.length === 0) {
-    return <div style={{ textAlign:"center", color:"var(--faint)", fontSize:12, padding:"20px 0" }}>Дані з'являться після першого cron-запуску</div>;
+    return <div style={{ textAlign:"center", color:"var(--faint)", fontSize:12, padding:"20px 0" }}>{"Дані з'являться після першого cron-запуску"}</div>;
   }
   const sorted = [...snapshots].sort((a, b) => a.date > b.date ? 1 : -1);
   const maxMrr = Math.max(...sorted.map(s => s.mrr), 1);
