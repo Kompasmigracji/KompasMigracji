@@ -2,6 +2,7 @@
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import P24PaymentSteps, { CartIcon, UserIcon, CardIcon, CheckCircleIcon } from '@/components/P24PaymentSteps';
 
 const PROMO_END = new Date('2026-06-06T23:59:59');
 
@@ -193,6 +194,17 @@ export default function Pricing() {
           ))}
         </div>
       </div>
+
+      <P24PaymentSteps
+        title={t('pricing_how_title')}
+        steps={[
+          { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
+          { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
+          { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
+          { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
+        ]}
+        securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
+      />
     </section>
   );
 }
