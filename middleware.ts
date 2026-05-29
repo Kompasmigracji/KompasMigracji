@@ -58,6 +58,20 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // ── Strip locale prefix from portal routes: /uk/portal → /portal ─────────
+  // Portal lives in app/portal/ (not in app/[locale]/), no locale prefix needed.
+  const localePortalMatch = pathname.match(/^\/(uk|pl|en|ru)(\/portal.*)$/);
+  if (localePortalMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localePortalMatch[2];
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ── Portal pages: skip intl middleware ───────────────────────────────────
+  if (pathname.startsWith("/portal")) {
+    return NextResponse.next();
+  }
+
   // ── Admin pages + admin API: JWT protection ───────────────────────────────
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
     // Login page, setup page and auth endpoints are public

@@ -1,8 +1,8 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 import P24PaymentSteps, { CartIcon, UserIcon, CardIcon, CheckCircleIcon } from '@/components/P24PaymentSteps';
+import PayModal, { PayService } from '@/components/PayModal';
 
 const PROMO_END = new Date('2026-06-06T23:59:59');
 
@@ -43,9 +43,21 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
 export default function Pricing() {
   const t = useTranslations();
   const [contactOpen, setContactOpen] = useState<string | null>(null);
+  const [payService,  setPayService]  = useState<PayService | null>(null);
   const countdown = useCountdown(PROMO_END);
 
-  const cards = [
+  const cards: {
+    label: string;
+    amount: string;
+    currency: string | null;
+    badge?: string;
+    desc: string;
+    features: string[];
+    cta: string;
+    featured: boolean;
+    oldAmount?: string;
+    amountGrosze?: number;
+  }[] = [
     {
       label: t('pricing_free_label'),
       amount: t('pricing_free_amount'),
@@ -54,7 +66,6 @@ export default function Pricing() {
       features: [t('pricing_free_f1'), t('pricing_free_f2')],
       cta: t('pricing_free_cta'),
       featured: false,
-      oldAmount: undefined,
     },
     {
       label: t('pricing_consult_label'),
@@ -65,7 +76,7 @@ export default function Pricing() {
       features: [t('pricing_consult_f1'), t('pricing_consult_f2'), t('pricing_consult_f3')],
       cta: t('pricing_consult_cta'),
       featured: true,
-      oldAmount: undefined,
+      amountGrosze: 15000,
     },
     {
       label: t('pricing_hour_label'),
@@ -77,6 +88,7 @@ export default function Pricing() {
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],
       cta: 'Замовити за 300 zł →',
       featured: false,
+      amountGrosze: 30000,
     },
   ];
 
@@ -122,18 +134,8 @@ export default function Pricing() {
           </a>
         </div>
 
-        <P24PaymentSteps
-          title={t('pricing_how_title')}
-          steps={[
-            { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
-            { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
-            { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
-            { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
-          ]}
-          securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        {/* Pricing cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center mb-16">
           {cards.map((card, i) => (
             <div
               key={i}
@@ -162,7 +164,16 @@ export default function Pricing() {
                   </li>
                 ))}
               </ul>
-              {contactOpen === card.label ? (
+
+              {/* CTA: paid cards → P24 modal, free card → inline contact picker */}
+              {card.amountGrosze ? (
+                <button
+                  onClick={() => setPayService({ name: card.label, amountGrosze: card.amountGrosze!, oldPrice: card.oldAmount })}
+                  className={`text-center py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer border-0 ${card.featured ? 'gradient-btn text-white hover:opacity-90' : 'bg-primary text-white hover:bg-secondary'}`}
+                >
+                  {card.cta}
+                </button>
+              ) : contactOpen === card.label ? (
                 <div className="flex flex-col gap-2">
                   <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer"
                     className="flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold text-white no-underline transition-opacity hover:opacity-90"
@@ -195,6 +206,7 @@ export default function Pricing() {
                   {card.cta}
                 </button>
               )}
+
               {card.currency && (
                 <p className="text-center mt-2" style={{ fontSize: 10, color: '#9ca3af' }}>
                   Składając zamówienie, akceptujesz{' '}
@@ -204,7 +216,21 @@ export default function Pricing() {
             </div>
           ))}
         </div>
+
+        {/* How payments work — Przelewy24 branded (after the cards) */}
+        <P24PaymentSteps
+          title={t('pricing_how_title')}
+          steps={[
+            { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
+            { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
+            { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
+            { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
+          ]}
+          securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
+        />
       </div>
+
+      {payService && <PayModal service={payService} onClose={() => setPayService(null)} />}
     </section>
   );
 }
