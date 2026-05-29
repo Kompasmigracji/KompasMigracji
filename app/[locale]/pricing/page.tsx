@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import P24PaymentSteps, { CartIcon, UserIcon, CardIcon, CheckCircleIcon } from '@/components/P24PaymentSteps';
 
 const ORANGE = '#f97316';
 const NAVY   = '#0f172a';
@@ -342,13 +343,6 @@ export default function PricingPage() {
   const [payService,     setPayService]     = useState<ServiceRow | null>(null);
   const [contactService, setContactService] = useState<ServiceRow | null>(null);
 
-  const steps = [
-    { step:'01', icon:'🛒', title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
-    { step:'02', icon:'👤', title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
-    { step:'03', icon:'💳', title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
-    { step:'04', icon:'✅', title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
-  ];
-
   return (
     <div className="min-h-screen bg-white text-navy">
       <Header />
@@ -425,36 +419,17 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* How payments work */}
-        <section style={{ background:'#f8fafc', borderTop:'1px solid #f1f5f9', padding:'clamp(48px,7vw,72px) 24px' }}>
-          <div style={{ maxWidth:860, margin:'0 auto' }}>
-            <h2 style={{ fontSize:'clamp(24px,4vw,36px)', fontWeight:900, color:NAVY, margin:'0 0 48px', fontFamily:"'Syne', sans-serif", letterSpacing:'-0.03em', textAlign:'center' }}>
-              {t('pricing_how_title')}
-            </h2>
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:24 }}>
-              {steps.map(({ step, icon, title, desc }) => (
-                <div key={step} style={{ background:'#fff', borderRadius:16, padding:'24px 20px', border:'1px solid #e2e8f0', boxShadow:'0 2px 8px rgba(0,0,0,0.04)', position:'relative' }}>
-                  <span style={{ position:'absolute', top:16, right:16, fontSize:11, fontWeight:800, color:'#e2e8f0', letterSpacing:'0.06em' }}>{step}</span>
-                  <div style={{ fontSize:28, marginBottom:12 }}>{icon}</div>
-                  <p style={{ fontSize:14, fontWeight:800, color:NAVY, margin:'0 0 8px', fontFamily:"'Syne', sans-serif" }}>{title}</p>
-                  <p style={{ fontSize:13, color:'#64748b', margin:0, lineHeight:1.6 }}>{desc}</p>
-                </div>
-              ))}
-            </div>
-            <div style={{ marginTop:32, background:'#fff', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, padding:'16px 20px', display:'flex', alignItems:'center', gap:14 }}>
-              <span style={{ fontSize:22, flexShrink:0 }}>🔒</span>
-              <p style={{ fontSize:13, color:'#64748b', margin:0, lineHeight:1.6 }}>
-                <strong style={{ color:NAVY }}>{t('pricing_safe_title')}</strong> · {t('pricing_safe_desc')}
-              </p>
-            </div>
-            <div style={{ marginTop:24, textAlign:'center' }}>
-              <p style={{ fontSize:13, color:'#94a3b8', margin:'0 0 12px' }}>{t('pricing_question')}</p>
-              <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display:'inline-block', padding:'12px 28px', borderRadius:10, background:'#25d366', color:'#fff', fontWeight:700, fontSize:13, textDecoration:'none', fontFamily:"'Syne', sans-serif" }}>
-                💬 WhatsApp · +48 729 271 848
-              </a>
-            </div>
-          </div>
-        </section>
+        {/* How payments work — Przelewy24 branded */}
+        <P24PaymentSteps
+          title={t('pricing_how_title')}
+          steps={[
+            { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
+            { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
+            { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
+            { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
+          ]}
+          securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
+        />
 
         {/* Company info */}
         <section style={{ borderTop:'1px solid #e2e8f0', padding:'32px 24px', textAlign:'center', background:'#fff' }}>

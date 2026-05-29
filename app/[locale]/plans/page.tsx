@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import P24PaymentSteps from "@/components/P24PaymentSteps";
 
 const BRAND = "#D8232A";
 
@@ -282,6 +283,17 @@ export default function PlansPage() {
             ))}
           </div>
         </section>
+
+        {/* Przelewy24 payment steps */}
+        <P24PaymentSteps
+          title="Jak działa proces płatności"
+          steps={[
+            { n:"01", icon:<span style={{fontSize:28}}>📋</span>, title:"Wybór planu", desc:"Wybierz plan Basic, Standard lub Premium i kliknij «Wybierz plan»." },
+            { n:"02", icon:<span style={{fontSize:28}}>👤</span>, title:"Dane klienta", desc:"Podaj imię, email i telefon — potrzebne do rejestracji i faktury." },
+            { n:"03", icon:<span style={{fontSize:28}}>💳</span>, title:"Płatność Przelewy24", desc:"Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. SSL 256-bit." },
+            { n:"04", icon:<span style={{fontSize:28}}>✅</span>, title:"Dostęp natychmiast", desc:"Po płatności specjalista kontaktuje się w ciągu 2 godzin. Subskrypcja aktywna." },
+          ]}
+        />
 
         {/* FAQ */}
         <section style={{ background: "#fff", padding: "56px 16px" }}>

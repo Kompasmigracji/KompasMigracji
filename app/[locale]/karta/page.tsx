@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
 import ChatBot from '@/components/ChatBot';
+import P24PaymentSteps from '@/components/P24PaymentSteps';
 
 const ORANGE = '#f97316';
 const MINT   = '#86efac';
@@ -582,6 +583,19 @@ export default function KartaPage(): React.JSX.Element {
             </p>
           </section>
 
+        </div>
+
+        {/* Przelewy24 payment steps */}
+        <div style={{ margin: '0 -24px' }}>
+          <P24PaymentSteps
+            title={locale === 'ua' ? 'Як працює процес оплати' : locale === 'ru' ? 'Как работает процесс оплаты' : 'Jak działa proces płatności'}
+            steps={[
+              { n:'01', icon:<span style={{fontSize:28}}>🛒</span>, title: locale === 'ua' ? 'Вибір послуги' : 'Wybór usługi',        desc: locale === 'ua' ? 'Обери пакет Прискорення або Резидент і натисни «Замовити».' : 'Wybierz pakiet Przyspieszenie lub Rezydent i kliknij «Zamów».' },
+              { n:'02', icon:<span style={{fontSize:28}}>👤</span>, title: locale === 'ua' ? 'Дані клієнта' : 'Dane klienta',          desc: locale === 'ua' ? 'Вкажи ім\'я, телефон та email — для квитанції та зв\'язку.' : 'Podaj imię, telefon i email — do rachunku i kontaktu.' },
+              { n:'03', icon:<span style={{fontSize:28}}>💳</span>, title: locale === 'ua' ? 'Оплата Przelewy24' : 'Płatność Przelewy24', desc: locale === 'ua' ? 'Безпечна оплата через Przelewy24 — картка, BLIK, переказ. SSL 256-bit.' : 'Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. SSL 256-bit.' },
+              { n:'04', icon:<span style={{fontSize:28}}>✅</span>, title: locale === 'ua' ? 'Підтвердження' : 'Potwierdzenie',        desc: locale === 'ua' ? 'Отримуєш квитанцію, фахівець зв\'язується протягом 2 годин.' : 'Otrzymujesz paragon, specjalista kontaktuje się w ciągu 2 godzin.' },
+            ]}
+          />
         </div>
 
         {/* FOOTER */}
