@@ -89,7 +89,13 @@
       "WebFetch(domain:brandfetch.com)",
       "WebFetch(domain:www.thefinestack.com)",
       "WebFetch(domain:www.svgrepo.com)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(xargs grep -l \"Поточні справи\\\\|cabinet\\\\|portal\")",
+      "Bash(mkdir -p \"c:/Users/user/Documents/GitHub/KompasMigracji/app/portal/case/[pin]\")",
+      "Bash(xargs grep -l \"next-intl\\\\|next-i18next\\\\|i18n\")",
+      "Bash(xargs grep -l \"locales.*=\\\\|export.*locales\")",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
@@ -98,7 +104,8 @@
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\leads\\[id]",
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\payment\\mock",
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\workers",
-      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\workers"
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\admin\\(panel)\\workers",
+      "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\portal\\case"
     ]
   }
 }
