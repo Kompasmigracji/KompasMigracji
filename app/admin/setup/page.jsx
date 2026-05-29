@@ -134,7 +134,7 @@ function SetupForm() {
 
           <form onSubmit={submit}>
             <div className="kc-field">
-              <label className="kc-label">Повне ім'я</label>
+              <label className="kc-label">{"Повне ім'я"}</label>
               <input
                 className="kc-input"
                 type="text"
