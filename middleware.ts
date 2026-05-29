@@ -60,10 +60,12 @@ export async function middleware(req: NextRequest) {
 
   // ── Admin pages + admin API: JWT protection ───────────────────────────────
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
-    // Login page and auth endpoints are public
+    // Login page, setup page and auth endpoints are public
     if (
       pathname === "/admin/login" ||
-      pathname.startsWith("/api/admin/auth/")
+      pathname === "/admin/setup" ||
+      pathname.startsWith("/api/admin/auth/") ||
+      pathname.startsWith("/api/admin/setup")
     ) {
       return NextResponse.next();
     }
