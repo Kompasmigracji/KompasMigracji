@@ -24,7 +24,7 @@ export default function WhatsAppFloat() {
       aria-label="Napisz do nas na WhatsApp"
       style={{
         position: "fixed",
-        bottom: 24,
+        bottom: 96,
         right: 24,
         zIndex: 9999,
         display: "flex",
