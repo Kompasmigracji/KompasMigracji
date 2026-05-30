@@ -104,7 +104,12 @@
       "Bash(sed -i 's/\"pricing_consult_cta\": \"Записаться сейчас\"/\"pricing_consult_cta\": \"Купить сейчас\"/' \"c:/Users/user/Documents/GitHub/KompasMigracji/messages/ru.json\")",
       "Bash(sed -i 's/\"pricing_consult_cta\": \"Записатися зараз\"/\"pricing_consult_cta\": \"Купити зараз\"/' \"c:/Users/user/Documents/GitHub/KompasMigracji/messages/uk.json\")",
       "Bash(Get-ChildItem -Path . -Depth 0)",
-      "Bash(git check-ignore *)"
+      "Bash(git check-ignore *)",
+      "Bash(grep -rn \"\\\\\"[A-Z][a-zA-Zą-żĄ-Ż ]\\\\{4,\\\\}\\\\\"\" components/ app/\\\\[locale\\\\]/ --include=\"*.tsx\" --include=\"*.jsx\" -l)",
+      "Bash(node -e \"const f=require\\('fs'\\); console.log\\(JSON.stringify\\(JSON.parse\\(f.readFileSync\\('messages/pl.json','utf8'\\)\\), null, 2\\)\\)\")",
+      "Bash(node -e \"const f=require\\('fs'\\); const pl=JSON.parse\\(f.readFileSync\\('messages/pl.json','utf8'\\)\\); Object.entries\\(pl\\).filter\\(\\([k]\\)=>k.startsWith\\('pricing_free'\\)||k.startsWith\\('pricing_consult'\\)||k.startsWith\\('pricing_hour'\\)\\).forEach\\(\\([k,v]\\)=>console.log\\(k,':',v\\)\\)\")",
+      "Bash(grep -n \"\\\\\"[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż ]\\\\{3,\\\\}\\\\|'[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż ]\\\\{3,\\\\}\" components/P24PaymentSteps.tsx components/ExitPopup.tsx)",
+      "Bash(grep -n \"\\\\\"[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\\\\|'[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\" app/\\\\[locale\\\\]/pricing/page.tsx)"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",
