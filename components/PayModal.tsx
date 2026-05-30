@@ -109,7 +109,7 @@ export default function PayModal({ service, onClose }: { service: PayService; on
             <P24Logo />
             <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Bezpieczna płatność
+              {t('pay_secure')}
             </div>
             <button onClick={onClose} style={{ background:'none', border:'none', color:'#9CA3AF', fontSize:20, cursor:'pointer', lineHeight:1, padding:'2px 4px', marginLeft:'auto' }} onMouseEnter={e => { e.currentTarget.style.color = P24_TEXT; }} onMouseLeave={e => { e.currentTarget.style.color = '#9CA3AF'; }}>✕</button>
           </div>
@@ -185,7 +185,7 @@ export default function PayModal({ service, onClose }: { service: PayService; on
             <PaymentBadges />
             <span style={{ fontSize:10, color:'#9CA3AF', display:'flex', alignItems:'center', gap:4 }}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Szyfrowanie SSL 256-bit · Przelewy24 sp. z o.o. · licencja KNF
+              {t('pay_ssl')}
             </span>
           </div>
         </div>

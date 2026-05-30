@@ -83,10 +83,10 @@ export default function Pricing() {
       amount: '300',
       oldAmount: '450',
       currency: 'zł',
-      badge: 'АКЦІЯ до 06.06',
+      badge: t('pricing_hour_badge'),
       desc: t('pricing_hour_desc'),
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],
-      cta: 'Замовити за 300 zł →',
+      cta: t('pricing_hour_order'),
       featured: false,
       amountGrosze: 30000,
     },
@@ -106,31 +106,31 @@ export default function Pricing() {
             className="mb-10 rounded-2xl p-6 text-center"
             style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)' }}
           >
-            <div className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-2">Акція закінчується через</div>
+            <div className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-2">{t('pricing_promo_ends')}</div>
             <div className="flex items-center justify-center gap-3 mb-3">
-              <CountdownUnit value={countdown.d} label="днів" />
+              <CountdownUnit value={countdown.d} label={t('pricing_promo_days')} />
               <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.h} label="годин" />
+              <CountdownUnit value={countdown.h} label={t('pricing_promo_hours')} />
               <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.m} label="хвилин" />
+              <CountdownUnit value={countdown.m} label={t('pricing_promo_min')} />
               <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.s} label="секунд" />
+              <CountdownUnit value={countdown.s} label={t('pricing_promo_sec')} />
             </div>
-            <p className="text-white/70 text-sm">Юридична година зі знижкою 33% — 300 zł замість 450 zł</p>
+            <p className="text-white/70 text-sm">{t('pricing_promo_desc')}</p>
           </div>
         )}
 
         {/* Subscription plans banner */}
         <div className="mb-10 rounded-2xl border-2 border-primary/30 bg-primary/5 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Subskrypcje miesięczne</div>
-            <p className="text-navy font-semibold text-base leading-snug">Nieograniczone wsparcie od 49 zł/mies. — wybierz plan i opłać online</p>
+            <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-1">{t('pricing_sub_tag')}</div>
+            <p className="text-navy font-semibold text-base leading-snug">{t('pricing_sub_desc')}</p>
           </div>
           <a
             href="/plans"
             className="shrink-0 px-6 py-3 rounded-xl text-sm font-bold text-white gradient-btn hover:opacity-90 transition-opacity no-underline"
           >
-            Zobacz plany →
+            {t('pricing_sub_cta')}
           </a>
         </div>
 
