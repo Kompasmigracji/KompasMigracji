@@ -11,27 +11,32 @@ interface Stats {
 }
 
 const ICONS = [
-  <svg key="users" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  // Users
+  <svg key="users" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
     <circle cx="9" cy="7" r="4"/>
     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
   </svg>,
-  <svg key="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  // Check circle
+  <svg key="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
     <polyline points="22 4 12 14.01 9 11.01"/>
   </svg>,
-  <svg key="target" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  // Target
+  <svg key="target" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
     <circle cx="12" cy="12" r="10"/>
     <circle cx="12" cy="12" r="6"/>
     <circle cx="12" cy="12" r="2"/>
   </svg>,
-  <svg key="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  // Globe
+  <svg key="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
     <circle cx="12" cy="12" r="10"/>
     <line x1="2" y1="12" x2="22" y2="12"/>
     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
   </svg>,
-  <svg key="award" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+  // Award
+  <svg key="award" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
     <circle cx="12" cy="8" r="6"/>
     <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
   </svg>,
@@ -61,6 +66,7 @@ function StatCard({
   value, suffix = "", label, icon,
 }: { value: number; suffix?: string; label: string; icon: React.ReactNode }) {
   const [active, setActive] = useState(false);
+  const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const animated = useCountUp(value, 1600, active);
 
@@ -76,18 +82,60 @@ function StatCard({
   return (
     <div
       ref={ref}
-      className="card-hover flex flex-col items-center text-center py-8 px-5 rounded-2xl border border-white/10 bg-white/5 group"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        padding: '32px 20px',
+        borderRadius: 16,
+        background: hovered ? 'rgba(37,99,235,0.08)' : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${hovered ? 'rgba(37,99,235,0.4)' : 'rgba(255,255,255,0.07)'}`,
+        boxShadow: hovered
+          ? '0 0 32px rgba(37,99,235,0.15), inset 0 1px 0 rgba(255,255,255,0.06)'
+          : 'inset 0 1px 0 rgba(255,255,255,0.04)',
+        transition: 'all 0.3s ease',
+        cursor: 'default',
+      }}
     >
-      <div className="w-12 h-12 rounded-full flex items-center justify-center mb-5 text-primary bg-primary/10 group-hover:bg-primary/20 transition-colors">
+      {/* Icon */}
+      <div style={{
+        color: hovered ? '#60a5fa' : '#4d7fc4',
+        marginBottom: 20,
+        transition: 'color 0.3s ease',
+        lineHeight: 1,
+      }}>
         {icon}
       </div>
-      <div
-        className="gradient-text font-display font-extrabold leading-none"
-        style={{ fontSize: "clamp(22px, 2.6vw, 36px)" }}
-      >
-        {animated.toLocaleString("pl-PL")}{suffix}
+
+      {/* Animated number */}
+      <div style={{
+        background: 'linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        fontSize: 'clamp(28px, 3vw, 44px)',
+        fontWeight: 900,
+        lineHeight: 1,
+        letterSpacing: '-0.02em',
+        fontFamily: 'var(--font-display)',
+      }}>
+        {animated.toLocaleString('pl-PL')}{suffix}
       </div>
-      <div className="text-sm text-muted mt-3 font-medium leading-snug">{label}</div>
+
+      {/* Label */}
+      <div style={{
+        fontSize: 12,
+        color: '#6b7f96',
+        marginTop: 10,
+        fontWeight: 500,
+        letterSpacing: '0.01em',
+        lineHeight: 1.4,
+      }}>
+        {label}
+      </div>
     </div>
   );
 }
@@ -116,35 +164,61 @@ export default function SocialProof() {
   ];
 
   return (
-    <section className="py-24 bg-navy relative overflow-hidden">
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 55% at 50% 0%, rgba(37,99,235,0.13) 0%, transparent 70%)",
-        }}
-      />
+    <section style={{ background: '#060c18', position: 'relative', overflow: 'hidden', padding: '96px 0' }}>
+      {/* Radial top glow */}
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,0.18) 0%, transparent 65%)',
+      }} />
+      {/* Bottom fade */}
+      <div aria-hidden style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 120, pointerEvents: 'none',
+        background: 'linear-gradient(to top, rgba(6,12,24,0.6) 0%, transparent 100%)',
+      }} />
 
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <div className="text-center mb-16">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: '#4d7fc4', marginBottom: 12,
+          }}>
             {t("sp_tag")}
           </div>
-          <h2
-            className="font-serif font-light text-white"
-            style={{ fontSize: "clamp(28px, 4vw, 44px)" }}
-          >
+          <h2 style={{
+            fontFamily: 'var(--font-serif)',
+            fontWeight: 300,
+            color: '#e8edf5',
+            fontSize: 'clamp(28px, 4vw, 44px)',
+            margin: 0,
+            lineHeight: 1.2,
+          }}>
             {t("sp_title")}
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {/* Cards grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 16,
+        }}
+          className="sp-grid"
+        >
           {items.map((item, i) => (
             <StatCard key={i} {...item} />
           ))}
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .sp-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+        @media (max-width: 560px) {
+          .sp-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
     </section>
   );
 }
