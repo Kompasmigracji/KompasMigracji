@@ -278,7 +278,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Шукаю роботу',
     card1Desc: 'Стабільність, високі контракти, європейське житло та соціальна опіка над вашою родиною.',
     card2Title: 'Шукаю персонал',
-    card2Desc: 'Від вашого дзвінка до першої зміни — 5 робочих днів. Все що після — наша турбота.',
+    card2Desc: 'Ми відбираємо лише тих, кого самі б взяли в бригаду. Це наш єдиний критерій.',
     workersTitle: 'Професійний захист та опіка',
     workersDesc: "Ми будуємо безпечне майбутнє для вашої кар'єри та спокій близьких.",
     workersItems: [
@@ -328,7 +328,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Looking for work',
     card1Desc: 'Stability, high-value contracts, European accommodation and social care for your family.',
     card2Title: 'Looking for staff',
-    card2Desc: 'From your call to first shift — 5 working days. Everything after that is on us.',
+    card2Desc: 'We only send people we would take into our own crew. That is our only standard.',
     workersTitle: 'Professional Protection & Care',
     workersDesc: 'We build a safe future for your career and peace of mind for your loved ones.',
     workersItems: [
@@ -378,7 +378,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Ищу работу',
     card1Desc: 'Стабильность, высокие контракты, европейское жильё и социальная опека над вашей семьёй.',
     card2Title: 'Ищу персонал',
-    card2Desc: 'От звонка до первой смены — 5 рабочих дней. Всё что после — наша забота.',
+    card2Desc: 'Мы отбираем только тех, кого сами взяли бы в бригаду. Это наш единственный критерий.',
     workersTitle: 'Профессиональная защита и опека',
     workersDesc: 'Мы строим безопасное будущее для вашей карьеры и спокойствие близких.',
     workersItems: [
@@ -428,7 +428,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Szukam pracy',
     card1Desc: 'Stabilność, atrakcyjne kontrakty, europejskie zakwaterowanie i opieka społeczna nad Twoją rodziną.',
     card2Title: 'Szukam pracowników',
-    card2Desc: 'Od Twojego telefonu do pierwszej zmiany — 5 dni roboczych. Resztą zajmujemy się my.',
+    card2Desc: 'Wysyłamy tylko tych, których sami wzięlibyśmy do brygady. To nasz jedyny standard.',
     workersTitle: 'Profesjonalna ochrona i wsparcie',
     workersDesc: 'Budujemy bezpieczną przyszłość dla Twojej kariery i spokój Twoich bliskich.',
     workersItems: [
