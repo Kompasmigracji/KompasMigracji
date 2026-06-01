@@ -109,7 +109,10 @@
       "Bash(node -e \"const f=require\\('fs'\\); console.log\\(JSON.stringify\\(JSON.parse\\(f.readFileSync\\('messages/pl.json','utf8'\\)\\), null, 2\\)\\)\")",
       "Bash(node -e \"const f=require\\('fs'\\); const pl=JSON.parse\\(f.readFileSync\\('messages/pl.json','utf8'\\)\\); Object.entries\\(pl\\).filter\\(\\([k]\\)=>k.startsWith\\('pricing_free'\\)||k.startsWith\\('pricing_consult'\\)||k.startsWith\\('pricing_hour'\\)\\).forEach\\(\\([k,v]\\)=>console.log\\(k,':',v\\)\\)\")",
       "Bash(grep -n \"\\\\\"[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż ]\\\\{3,\\\\}\\\\|'[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż ]\\\\{3,\\\\}\" components/P24PaymentSteps.tsx components/ExitPopup.tsx)",
-      "Bash(grep -n \"\\\\\"[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\\\\|'[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\" app/\\\\[locale\\\\]/pricing/page.tsx)"
+      "Bash(grep -n \"\\\\\"[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\\\\|'[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźżąęłńóśźż ]\\\\{3,\\\\}\" app/\\\\[locale\\\\]/pricing/page.tsx)",
+      "Bash(git branch *)",
+      "WebFetch(domain:www.basenymineralne.pl)",
+      "Bash(node -e \"const f=require\\('fs'\\); const files=['pl','uk','en','ru'].map\\(l=>\\({l,j:JSON.parse\\(f.readFileSync\\('messages/'+l+'.json','utf8'\\)\\)}\\)\\); files.forEach\\(\\({l,j}\\)=>console.log\\(l+':',JSON.stringify\\({pricing_lbl_agree:j.pricing_lbl_agree}\\)\\)\\)\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",

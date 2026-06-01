@@ -147,6 +147,13 @@ export default function Header() {
           <Link href="/plans" className="px-4 py-2 text-sm font-bold text-white gradient-btn rounded-lg transition-opacity hover:opacity-90 no-underline">
             Plany
           </Link>
+          <Link
+            href="/orakul"
+            className="px-3 py-2 text-sm font-bold no-underline rounded-lg transition-all"
+            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d12' }}
+          >
+            ⚡ Оракул
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -205,6 +212,14 @@ export default function Header() {
           </Link>
           <Link href="/plans" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-bold text-white gradient-btn text-center no-underline mt-1">
             Plany subskrypcji
+          </Link>
+          <Link
+            href="/orakul"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold no-underline mt-1 justify-center"
+            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02' }}
+          >
+            ⚡ Оракул — AI для зварювальників
           </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>
