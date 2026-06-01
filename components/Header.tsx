@@ -135,12 +135,15 @@ export default function Header() {
             )}
           </div>
 
-          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
           <Link href="/pricing" className="px-3 py-2 text-sm font-semibold text-primary hover:bg-orange-50 rounded-lg transition-colors no-underline">
             {t('nav_pricelist')}
           </Link>
+
+          <div style={{ width: 1, height: 20, background: '#e5e7eb', flexShrink: 0, margin: '0 2px' }} />
+
           <Link href="/portal" className="px-3 py-2 text-sm font-semibold text-gray-600 hover:text-primary border border-gray-200 hover:border-primary rounded-lg transition-colors no-underline" title="Portal klienta — sprawdź status swojej sprawy">
             🔑 Portal
           </Link>
