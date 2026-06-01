@@ -589,7 +589,7 @@ export default function OrakulPage() {
         </section>
 
         <footer className="e-footer">
-          <p>© 2026 European Welding Union | Partner of «Migration Compass»</p>
+          <p>© 2026 European Welding Union | Partner of «Kompas Migracji»</p>
           <Link href={`/${locale}`}>← kompasmigracji.com</Link>
         </footer>
 
