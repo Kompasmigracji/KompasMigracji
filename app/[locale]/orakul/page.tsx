@@ -309,7 +309,7 @@ export default function OrakulPage() {
             </p>
             <div className="ewu-cta">
               <button className="ewu-btn ewu-btn-fire ewu-mag">▶ Запустити ОРАКУЛ</button>
-              <button className="ewu-btn ewu-btn-ion ewu-mag">// Я роботодавець</button>
+              <button className="ewu-btn ewu-btn-ion ewu-mag">{'// Я роботодавець'}</button>
             </div>
             <div className="ewu-metrics">
               <div className="ewu-metric"><div className="ewu-num" data-ewu-c="40" data-ewu-suffix="K+">0</div><div className="ewu-lbl">тис. майстрів</div></div>
@@ -342,7 +342,7 @@ export default function OrakulPage() {
 
         {/* Live uptime */}
         <section className="ewu-live-blk ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">// UPTIME · БЕЗПЕРЕРВНА РОБОТА</div>
+          <div className="ewu-eyebrow ewu-mono">{'// UPTIME · БЕЗПЕРЕРВНА РОБОТА'}</div>
           <div className="ewu-timer" ref={timerRef}>00:00:00</div>
           <p className="ewu-live-cap">Поки Європа спить, мережа варить.<br />ОРАКУЛ не лягає. Не п&apos;є. Не розчарується через тебе.</p>
         </section>
@@ -365,10 +365,10 @@ export default function OrakulPage() {
 
         {/* Demo terminal */}
         <section className="ewu-sec ewu-wrap ewu-reveal ewu-demo">
-          <div className="ewu-eyebrow ewu-mono">// LIVE_INFERENCE — оцінка шва за 60 секунд</div>
+          <div className="ewu-eyebrow ewu-mono">{'// LIVE_INFERENCE — оцінка шва за 60 секунд'}</div>
           <h2 className="ewu-h2">ОРАКУЛ дивиться,<br />як майстер</h2>
           <div className="ewu-term">
-            <div className="ewu-term-head"><i /><i /><i /><span>orakul@ewu // weld_inference.v021</span></div>
+            <div className="ewu-term-head"><i /><i /><i /><span>{'orakul@ewu // weld_inference.v021'}</span></div>
             <div className="ewu-term-body">
               <span className="ewu-cmd">$ orakul --analyze seam_2026_05.jpg --model 021</span><br /><br />
               {'>'} LOADING IMAGE ............... <span className="ewu-ok">OK</span><br />
@@ -389,7 +389,7 @@ export default function OrakulPage() {
 
         {/* Protocols */}
         <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">// SUPPORTED_PROTOCOLS</div>
+          <div className="ewu-eyebrow ewu-mono">{'// SUPPORTED_PROTOCOLS'}</div>
           <h2 className="ewu-h2">Машина читає руку,<br />яку неможливо підробити</h2>
           <p className="ewu-sub">Завантаж фото шва — нейромережа бачить геометрію, провар, дефекти. Те, що відрізняє майстра від балакуна. За секунди.</p>
           <div className="ewu-proto">
@@ -398,12 +398,12 @@ export default function OrakulPage() {
             <div className="ewu-pcard"><div className="ewu-pcode">135</div><div className="ewu-pname ewu-mono">MAG</div><div className="ewu-pdesc">активний газ · вуглецева сталь</div></div>
             <div className="ewu-pcard"><div className="ewu-pcode">141</div><div className="ewu-pname ewu-mono">TIG</div><div className="ewu-pdesc">вольфрам · корінь, труби</div></div>
           </div>
-          <p className="ewu-pnote ewu-mono">+ монтажники · слюсарі · працівники верфей · бригади // PA–PF, 6G // EN ISO 9606</p>
+          <p className="ewu-pnote ewu-mono">{'+ монтажники · слюсарі · працівники верфей · бригади // PA–PF, 6G // EN ISO 9606'}</p>
         </section>
 
         {/* Care */}
         <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">// PROTOKÓŁ_OPIEKI</div>
+          <div className="ewu-eyebrow ewu-mono">{'// PROTOKÓŁ_OPIEKI'}</div>
           <h2 className="ewu-h2">Опіка — це інфраструктура,<br />а не реклама</h2>
           <p className="ewu-sub">Конкурент, що кине на зарплаті, про це навіть вголос не скаже. Але не здогадається, що так можна. Ми вшили це в систему.</p>
           <div className="ewu-care-grid">
@@ -416,7 +416,7 @@ export default function OrakulPage() {
 
         {/* Pipeline */}
         <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">// EXECUTION_PIPELINE</div>
+          <div className="ewu-eyebrow ewu-mono">{'// EXECUTION_PIPELINE'}</div>
           <h2 className="ewu-h2">Чотири кроки<br />до контракту</h2>
           <div className="ewu-pipe">
             <div className="ewu-step"><span className="ewu-n ewu-mono">01</span><span className="ewu-ttl">Пишеш</span><span className="ewu-d">ОРАКУЛу, як другу. Жодного опитника.</span></div>
@@ -429,7 +429,7 @@ export default function OrakulPage() {
         {/* Employers */}
         <section className="ewu-wrap ewu-reveal" id="ewu-emp">
           <div className="ewu-emp"><div className="inner">
-            <div className="ewu-eyebrow ewu-mono">// DLA_PRACODAWCÓW</div>
+            <div className="ewu-eyebrow ewu-mono">{'// DLA_PRACODAWCÓW'}</div>
             <h2 className="ewu-h2">Stabilny zespół.<br />Zero rotacji.<br />Pełen cykl.</h2>
             <p>Sprawdzeni spawacze 111/131/135/141, monterzy i brygady — z weryfikacją AI po zdjęciach prac, legalizacją pobytu, opieką koordynatora i gwarancją zastępstwa. Mniej przestojów. Niższe koszty. Przewidywalny wynik.</p>
             <button className="ewu-btn ewu-btn-fire ewu-mag">Połącz się z siecią →</button>
