@@ -209,8 +209,8 @@ const CSS = `
 #e-arc{
   position:fixed;top:0;left:0;z-index:9999;
   width:14px;height:14px;border-radius:50%;
-  background:radial-gradient(circle,#fff,#ffd27a 40%,rgba(255,77,18,.6) 70%,transparent);
-  box-shadow:0 0 16px 4px rgba(255,140,40,.85),0 0 40px 8px rgba(255,77,18,.45);
+  background:radial-gradient(circle,#fff,#7efcff 40%,rgba(0,80,255,.65) 70%,transparent);
+  box-shadow:0 0 14px 5px rgba(0,220,255,.9),0 0 42px 10px rgba(0,100,255,.5);
   transform:translate(-50%,-50%);pointer-events:none;
   transition:width .15s,height .15s;
 }
@@ -266,7 +266,7 @@ export default function OrakulPage() {
       }
       c.lineTo(cx, cy - outer);
       c.closePath();
-      c.fillStyle = '#f59e0b';
+      c.fillStyle = '#38bdf8';
       c.shadowColor = '#00e5ff';
       c.shadowBlur = 6;
       c.fill();
@@ -328,8 +328,8 @@ export default function OrakulPage() {
         if (p.life <= 0) { P.splice(i, 1); continue; }
         const t = p.life;
         c.beginPath();
-        c.fillStyle = `rgba(255,${120 + Math.floor(135 * t)},${Math.floor(40 * t)},${t})`;
-        c.shadowBlur = 12; c.shadowColor = `rgba(255,150,50,${t})`;
+        c.fillStyle = `rgba(${Math.floor(60 + 195 * t)},${Math.floor(180 + 75 * t)},255,${t})`;
+        c.shadowBlur = 14; c.shadowColor = `rgba(0,200,255,${t})`;
         c.arc(p.x, p.y, p.r * t, 0, Math.PI * 2); c.fill();
       }
       c.globalCompositeOperation = 'source-over'; c.shadowBlur = 0;
