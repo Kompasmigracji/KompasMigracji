@@ -52,8 +52,9 @@ const CSS = `
 }
 .e-nav-logo{font-weight:700;font-size:1.1rem;color:var(--text-main);text-decoration:none;white-space:nowrap}
 .e-nav-logo span{color:var(--text-muted);font-weight:500;font-size:0.8rem}
-.e-nav-back{font-size:0.88rem;color:var(--text-muted);text-decoration:none;font-weight:600;transition:color .2s;white-space:nowrap}
+.e-nav-back{flex:1;font-size:0.88rem;color:var(--text-muted);text-decoration:none;font-weight:600;transition:color .2s;white-space:nowrap}
 .e-nav-back:hover{color:var(--union-blue)}
+.e-nav-spacer{flex:1}
 
 /* HERO */
 .e-hero{
@@ -425,7 +426,7 @@ export default function OrakulPage() {
         <nav className="e-nav">
           <Link href={`/${locale}`} className="e-nav-back">← Kompas Migracji</Link>
           <span className="e-nav-logo">EWU <span>| European Welding Union</span></span>
-          <div />
+          <div className="e-nav-spacer" />
         </nav>
 
         {/* HERO */}
@@ -531,8 +532,8 @@ export default function OrakulPage() {
                     <div className="e-stat-l">перевірених майстрів</div>
                   </div>
                   <div className="e-stat">
-                    <div className="e-stat-n">48год</div>
-                    <div className="e-stat-l">на підбір кандидатів</div>
+                    <div className="e-stat-n">100%</div>
+                    <div className="e-stat-l">офіційні контракти</div>
                   </div>
                   <div className="e-stat">
                     <div className="e-stat-n">0</div>
