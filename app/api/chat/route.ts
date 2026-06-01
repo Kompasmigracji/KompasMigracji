@@ -82,16 +82,6 @@ function checkRateLimit(clientId: string): boolean {
   return true;
 }
 
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
-}
 
 export async function POST(req: NextRequest) {
   const clientId = getClientId(req);

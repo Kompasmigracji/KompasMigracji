@@ -276,5 +276,6 @@
   "pricing_hour_badge": "АКЦІЯ до 06.06",
   "pricing_hour_order": "Замовити за 300 zł →",
   "pay_secure": "Безпечний платіж",
-  "pay_ssl": "Шифрування SSL 256-bit · Przelewy24 sp. z o.o. · ліцензія KNF"
+  "pay_ssl": "Шифрування SSL 256-bit · Przelewy24 sp. z o.o. · ліцензія KNF",
+  "pricing_lbl_agree_link": "Regulamin"
 }

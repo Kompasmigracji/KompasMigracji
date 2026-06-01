@@ -44,8 +44,8 @@ export default function PromoBanner() {
   const locale = useLocale();
 
   useEffect(() => {
-    const id = setInterval(() => setVisible(true), 40000);
-    return () => clearInterval(id);
+    const id = setTimeout(() => setVisible(true), 40000);
+    return () => clearTimeout(id);
   }, []);
 
   const close = () => {

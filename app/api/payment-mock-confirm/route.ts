@@ -21,6 +21,10 @@ function isMockMode(): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  /* ── Повністю заблоковано в production без явного P24_SANDBOX=mock ── */
+  if (process.env.NODE_ENV === "production" && process.env.P24_SANDBOX !== "mock") {
+    return NextResponse.json({ error: "Not available" }, { status: 403 });
+  }
   /* ── Дозволено тільки в мок-режимі ─────────────────────────────── */
   if (!isMockMode()) {
     return NextResponse.json(

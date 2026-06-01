@@ -5,8 +5,26 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
+import { rateLimit, checkLockout, recordFailure, resetLockout, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  const ip = clientIp(req);
+
+  // Rate limit: 10 attempts per 15 minutes per IP
+  const rl = rateLimit(ip, { max: 10, windowMs: 15 * 60_000, ns: "portal-auth" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Забагато спроб. Спробуйте через 15 хвилин." }, { status: 429 });
+  }
+
+  // Brute-force lockout: 5 failures → 15min lockout
+  const lock = checkLockout(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
+  if (lock.locked) {
+    return NextResponse.json(
+      { error: `Аккаунт заблоковано. Спробуйте через ${lock.minutesLeft} хв.` },
+      { status: 429 },
+    );
+  }
+
   let body: { pin?: unknown } = {};
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
@@ -23,8 +41,11 @@ export async function POST(req: NextRequest) {
   );
 
   if (!session) {
-    return NextResponse.json({ error: "Невірний PIN. Перевірте і спробуйте ще раз." }, { status: 404 });
+    recordFailure(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
+    return NextResponse.json({ error: "Невірний PIN. Перевірте і спробуйте ще раз." }, { status: 401 });
   }
+
+  resetLockout(ip);
 
   // F12: Log access
   await q(

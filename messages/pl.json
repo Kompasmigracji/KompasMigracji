@@ -276,5 +276,6 @@
   "pricing_hour_badge": "PROMOCJA do 06.06",
   "pricing_hour_order": "Zamów za 300 zł →",
   "pay_secure": "Bezpieczna płatność",
-  "pay_ssl": "Szyfrowanie SSL 256-bit · Przelewy24 sp. z o.o. · licencja KNF"
+  "pay_ssl": "Szyfrowanie SSL 256-bit · Przelewy24 sp. z o.o. · licencja KNF",
+  "pricing_lbl_agree_link": "Regulamin"
 }

@@ -15,9 +15,11 @@ function cleanEnv(s: string | undefined): string {
   return r.split(String.fromCharCode(13)).join("").trim();
 }
 
-const SECRET = new TextEncoder().encode(
-  cleanEnv(process.env.JWT_SECRET) || "dev-secret-change-me-in-production"
-);
+const jwtSecret = cleanEnv(process.env.JWT_SECRET);
+if (!jwtSecret && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET env var is not configured");
+}
+const SECRET = new TextEncoder().encode(jwtSecret || "dev-secret-change-me-in-production");
 
 const intlMiddleware = createMiddleware({
   locales: ["uk", "pl", "en", "ru"],

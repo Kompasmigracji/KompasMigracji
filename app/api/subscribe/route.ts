@@ -32,7 +32,9 @@ export async function POST(req: NextRequest) {
       "SELECT * FROM kompas_subscription_plans WHERE slug=$1 AND is_active=true",
       [planSlug],
     );
-  } catch {}
+  } catch (err: any) {
+    console.error("[subscribe] plan lookup failed:", err.message);
+  }
 
   if (!plan) {
     // Hardcoded fallback prices

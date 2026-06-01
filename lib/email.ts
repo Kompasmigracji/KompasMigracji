@@ -53,6 +53,15 @@ export async function sendEmail(
 
 // ── HTML Templates ────────────────────────────────────────────────────────────
 
+function esc(s: unknown): string {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function baseLayout(content: string): string {
   return `<!DOCTYPE html>
 <html lang="pl">
@@ -81,7 +90,7 @@ function baseLayout(content: string): string {
 // F14: Welcome email after lead creation
 export function welcomeEmailHtml(name: string): string {
   return baseLayout(`
-<h2 style="margin:0 0 16px;font-size:20px;color:#111;">Czesc, ${name}! &#x1F44B;</h2>
+<h2 style="margin:0 0 16px;font-size:20px;color:#111;">Czesc, ${esc(name)}! &#x1F44B;</h2>
 <p style="margin:0 0 16px;line-height:1.7;color:#374151;">
   Dziekujemy za kontakt z <strong>Kompas Migracji</strong>. Twoje zgloszenie zostalo
   przyjete i nasz konsultant skontaktuje sie z Toba w ciagu <strong>24 godzin</strong>.
@@ -124,14 +133,14 @@ export function caseUpdateEmailHtml(name: string, status: string, notes?: string
 
   return baseLayout(`
 <h2 style="margin:0 0 8px;font-size:20px;color:#111;">Aktualizacja Twojej sprawy</h2>
-<p style="margin:0 0 20px;color:#6B7280;font-size:14px;">Czesc, <strong>${name}</strong>!</p>
+<p style="margin:0 0 20px;color:#6B7280;font-size:14px;">Czesc, <strong>${esc(name)}</strong>!</p>
 <div style="background:#F0FDF4;border:2px solid #10B981;border-radius:10px;padding:20px;text-align:center;margin:0 0 20px;">
   <div style="font-size:32px;margin-bottom:8px;">${icon}</div>
   <div style="font-size:18px;font-weight:700;color:#065F46;">${statusLabel}</div>
 </div>
 ${notes ? `<div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:14px;margin:0 0 20px;">
   <div style="font-weight:600;color:#92400E;margin-bottom:6px;">&#x1F4AC; Wiadomosc od konsultanta:</div>
-  <div style="color:#78350F;line-height:1.6;">${notes}</div>
+  <div style="color:#78350F;line-height:1.6;">${esc(notes)}</div>
 </div>` : ""}
 <div style="text-align:center;">
   <a href="${SITE}/portal"
@@ -152,7 +161,7 @@ export function invoiceEmailHtml(
   return baseLayout(`
 <h2 style="margin:0 0 16px;font-size:20px;color:#111;">Potwierdzenie subskrypcji</h2>
 <p style="margin:0 0 20px;color:#374151;line-height:1.7;">
-  Dziekujemy, <strong>${name}</strong>! Twoja subskrypcja <strong>${plan}</strong>
+  Dziekujemy, <strong>${esc(name)}</strong>! Twoja subskrypcja <strong>${esc(plan)}</strong>
   zostala aktywowana.
 </p>
 <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;margin:0 0 20px;">
@@ -187,7 +196,7 @@ export function npsSurveyEmailHtml(name: string, token: string): string {
   return baseLayout(`
 <h2 style="margin:0 0 16px;font-size:20px;color:#111;">Jak oceniasz nasza pomoc?</h2>
 <p style="margin:0 0 16px;line-height:1.7;color:#374151;">
-  Czesc, <strong>${name}</strong>! Twoja sprawa zostala zamknieta.
+  Czesc, <strong>${esc(name)}</strong>! Twoja sprawa zostala zamknieta.
   Bedziemy wdzieczni za opinie — zajmie to tylko 30 sekund.
 </p>
 <div style="text-align:center;margin:24px 0;">

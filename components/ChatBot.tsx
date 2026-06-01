@@ -133,12 +133,9 @@ export default function ChatBot() {
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, loading]);
   useEffect(() => { if (open) { setHasNew(false); setTimeout(() => inputRef.current?.focus(), 100); } }, [open]);
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
-    setInput('');
+  const sendText = async (text: string, currentMessages: Msg[]) => {
     const messageId = `msg-${Date.now()}-${messageCountRef.current++}`;
-    const history: Msg[] = [...messages, { id: messageId, role: 'user', content: text }];
+    const history: Msg[] = [...currentMessages, { id: messageId, role: 'user', content: text }];
     setMessages(history);
     setLoading(true);
     try {
@@ -151,7 +148,6 @@ export default function ChatBot() {
         try {
           const lead = JSON.parse(match[1]);
           if (supabase && lead.name && lead.phone) {
-            // Таблиця leads: first_name, contact, situation (немає name/phone/source)
             await supabase.from('leads').insert({
               first_name: lead.name,
               contact: lead.phone,
@@ -171,6 +167,13 @@ export default function ChatBot() {
       setMessages([...history, { id: errorId, role: 'assistant', content: 'Вибачте, сталася помилка. Спробуйте пізніше або напишіть нам у WhatsApp.' }]);
     }
     setLoading(false);
+  };
+
+  const send = async () => {
+    const text = input.trim();
+    if (!text || loading) return;
+    setInput('');
+    await sendText(text, messages);
   };
 
   const onKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
@@ -227,7 +230,7 @@ export default function ChatBot() {
                   ].map(chip => (
                     <button
                       key={chip}
-                      onClick={() => { setInput(chip); setTimeout(() => { setInput(''); const t = chip; const messageId = `chip-${Date.now()}`; const history = [...messages, { id: messageId, role: 'user' as const, content: t }]; setMessages(history); setLoading(true); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: history.filter(m => !m.greeting) }) }).then(r => r.json()).then(data => { const assistantId = `msg-${Date.now()}`; setMessages([...history, { id: assistantId, role: 'assistant', content: data.content || 'Вибачте, спробуйте пізніше.' }]); setLoading(false); }).catch(() => setLoading(false)); }, 10); }}
+                      onClick={() => { if (!loading) sendText(chip, messages); }}
                       style={{
                         padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e2e8f0',
                         background: '#f8fafc', color: '#1e293b', fontSize: 12, cursor: 'pointer',

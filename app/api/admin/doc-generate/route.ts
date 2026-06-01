@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
   // F20: Generate unique number
   const docNumber = await nextDocNumber();
 
-  const userId = (auth as any).userId;
+  const userId = auth.user?.sub ?? null;
 
   // F21: Save to history
   await one(

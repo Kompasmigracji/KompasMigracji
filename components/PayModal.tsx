@@ -167,9 +167,9 @@ export default function PayModal({ service, onClose }: { service: PayService; on
             <label style={{ display:'flex', gap:10, alignItems:'flex-start', cursor:'pointer', margin:'0 0 16px', userSelect:'none' }}>
               <input type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)} style={{ marginTop:3, accentColor:P24_GREEN, width:16, height:16, flexShrink:0, cursor:'pointer' }} />
               <span style={{ fontSize:12, color:P24_MUTED, lineHeight:1.6 }}>
-                {t('pricing_lbl_agree').split('Regulamin')[0]}
-                <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:P24_GREEN, textDecoration:'none', fontWeight:700 }}>Regulamin</Link>
-                {t('pricing_lbl_agree').split('Regulamin')[1]}
+                {t('pricing_lbl_agree').split(t('pricing_lbl_agree_link'))[0]}
+                <Link href="/regulamin" onClick={e => e.stopPropagation()} style={{ color:P24_GREEN, textDecoration:'none', fontWeight:700 }}>{t('pricing_lbl_agree_link')}</Link>
+                {t('pricing_lbl_agree').split(t('pricing_lbl_agree_link'))[1] ?? ''}
               </span>
             </label>
 

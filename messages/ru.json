@@ -276,5 +276,6 @@
   "pricing_hour_badge": "АКЦИЯ до 06.06",
   "pricing_hour_order": "Заказать за 300 zł →",
   "pay_secure": "Безопасный платёж",
-  "pay_ssl": "Шифрование SSL 256-bit · Przelewy24 sp. z o.o. · лицензия KNF"
+  "pay_ssl": "Шифрование SSL 256-bit · Przelewy24 sp. z o.o. · лицензия KNF",
+  "pricing_lbl_agree_link": "Regulamin"
 }
