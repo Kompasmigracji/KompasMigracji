@@ -39,7 +39,7 @@
 }
 .kc-brand {
   display: flex; align-items: center; gap: 11px;
-  padding: 18px 18px 16px; border-bottom: 1px solid var(--border);
+  height: 60px; padding: 0 18px; flex-shrink: 0; border-bottom: 1px solid var(--border);
 }
 .kc-brand-mark {
   width: 38px; height: 38px; border-radius: 10px; background: var(--brass-bg);

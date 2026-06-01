@@ -1,0 +1,134 @@
+import { NextRequest, NextResponse } from 'next/server';
+import Anthropic from '@anthropic-ai/sdk';
+import { one } from '@/lib/db';
+import { ORAKUL_SYSTEM_PROMPT } from '@/lib/orakul-prompt';
+
+const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+async function saveLead(
+  firstName: string, contact: string,
+  service: string, situation: string, email: string,
+) {
+  try {
+    await one(
+      `INSERT INTO leads (first_name, contact, source, service, situation, email, status, created_at)
+       VALUES ($1, $2, 'orakul', $3, $4, $5, 'new', NOW())
+       ON CONFLICT DO NOTHING`,
+      [firstName, contact, service, situation, email || null],
+    );
+    const crmMsg = [service, situation].filter(Boolean).join('\n') || null;
+    await one(
+      `INSERT INTO kompas_leads (source, name, contact, email, message, status)
+       VALUES ('other', $1, $2, $3, $4, 'new')`,
+      [firstName, contact, email || null, crmMsg],
+    );
+  } catch (err) {
+    console.error('[orakul/chat] saveLead:', err);
+  }
+}
+
+function extractJson(text: string, after: string): Record<string, unknown> | null {
+  const idx = text.indexOf(after);
+  if (idx === -1) return null;
+  const slice = text.slice(idx + after.length);
+  const match = slice.match(/\{[\s\S]*?\}/);
+  if (!match) return null;
+  try { return JSON.parse(match[0]); } catch { return null; }
+}
+
+export async function POST(req: NextRequest) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: 'AI not configured' }, { status: 503 });
+  }
+
+  let body: { messages?: { role: string; content: string }[] };
+  try { body = await req.json(); } catch {
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
+  const messages = (body.messages || []).slice(-20); // keep last 20 turns max
+  const encoder = new TextEncoder();
+  let fullText = '';
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        const resp = await anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 600,
+          system: ORAKUL_SYSTEM_PROMPT,
+          messages: messages.map((m) => ({
+            role: m.role as 'user' | 'assistant',
+            content: m.content,
+          })),
+          stream: true,
+        });
+
+        for await (const event of resp) {
+          if (
+            event.type === 'content_block_delta' &&
+            event.delta.type === 'text_delta'
+          ) {
+            fullText += event.delta.text;
+            controller.enqueue(
+              encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`),
+            );
+          }
+        }
+
+        // Detect candidate lead
+        if (fullText.includes('[КАНДИДАТ_ГОТОВИЙ]')) {
+          const d = extractJson(fullText, '[КАНДИДАТ_ГОТОВИЙ]');
+          const phone = d?.phone as string | undefined;
+          const name  = d?.name  as string | undefined;
+          if (phone && name) {
+            const situation = [
+              `AI чат Оракул. Спеціальність: ${d?.specialty || '—'}`,
+              `Досвід: ${d?.experience || '—'}`,
+              `Документи: ${d?.documents || '—'}`,
+              `Мови: ${d?.languages || '—'}`,
+              `Мобільність: ${d?.mobility || '—'}`,
+              `Оцінка: ${d?.lead_score || '—'}`,
+            ].join('. ');
+            await saveLead(name, phone, 'EWU — Зварювальник (AI чат)', situation, '');
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
+          }
+        }
+
+        // Detect employer lead
+        if (fullText.includes('[РОБОТОДАВЕЦЬ_ГОТОВИЙ]')) {
+          const d = extractJson(fullText, '[РОБОТОДАВЕЦЬ_ГОТОВИЙ]');
+          const contact = d?.contact as string | undefined;
+          const name    = d?.name    as string | undefined;
+          if (contact && name) {
+            const situation = [
+              `AI чат Оракул. Роботодавець.`,
+              `Потреба: ${d?.specialty_needed || '—'}`,
+              `Кількість: ${d?.workers_count || '—'}`,
+              `Локація: ${d?.location || '—'}`,
+              `Старт: ${d?.start_date || '—'}`,
+              d?.message || '',
+            ].filter(Boolean).join(' ');
+            await saveLead(name, contact, 'EWU — Роботодавець (AI чат)', situation, (d?.email as string) || '');
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
+          }
+        }
+
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        controller.close();
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'AI error';
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  });
+}

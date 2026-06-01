@@ -113,7 +113,8 @@
       "Bash(git branch *)",
       "WebFetch(domain:www.basenymineralne.pl)",
       "Bash(node -e \"const f=require\\('fs'\\); const files=['pl','uk','en','ru'].map\\(l=>\\({l,j:JSON.parse\\(f.readFileSync\\('messages/'+l+'.json','utf8'\\)\\)}\\)\\); files.forEach\\(\\({l,j}\\)=>console.log\\(l+':',JSON.stringify\\({pricing_lbl_agree:j.pricing_lbl_agree}\\)\\)\\)\")",
-      "Bash(pnpm add *)"
+      "Bash(pnpm add *)",
+      "PowerShell(New-Item -ItemType Directory -Force \"c:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\KompasMigracji\\\\app\\\\api\\\\orakul\\\\chat\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\user\\Documents\\GitHub\\KompasMigracji\\app\\api\\admin\\members\\[id]",

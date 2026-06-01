@@ -262,6 +262,109 @@ const CSS = `
 .e-role-strip-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;gap:3px;background:var(--bg-soft)}
 .e-role-strip-line{width:1px;height:22px;background:linear-gradient(180deg,rgba(29,78,216,.4),rgba(217,119,6,.4))}
 .e-role-strip-dot{width:7px;height:7px;border-radius:50%;background:conic-gradient(var(--union-blue) 50%,#d97706 50%)}
+
+/* ── ORAKUL CHAT WIDGET ── */
+.oc-btn{
+  position:fixed;bottom:26px;right:26px;z-index:9990;
+  display:flex;align-items:center;gap:.45rem;
+  padding:.65rem 1.25rem;border-radius:50px;border:none;cursor:pointer;
+  background:linear-gradient(120deg,#ff6a00,#ee0979);
+  color:#fff;font-weight:800;font-size:.82rem;font-family:inherit;letter-spacing:.03em;
+  box-shadow:0 0 26px -4px rgba(238,9,121,.55),0 4px 14px rgba(0,0,0,.3);
+  transition:transform .2s,box-shadow .2s;
+}
+.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(238,9,121,.7),0 8px 20px rgba(0,0,0,.35)}
+.oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#7fffb2;box-shadow:0 0 6px #7fffb2;animation:oc-pulse 2s infinite}
+@keyframes oc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.7)}}
+
+.oc-panel{
+  position:fixed;bottom:84px;right:26px;z-index:9991;
+  width:386px;height:572px;
+  background:rgba(7,11,25,.97);backdrop-filter:blur(22px);
+  border:1px solid rgba(0,229,255,.1);border-radius:22px;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 24px 64px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04);
+  animation:oc-in .24s cubic-bezier(.16,1,.3,1);
+}
+@keyframes oc-in{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+
+.oc-head{
+  padding:.85rem 1.2rem;flex-shrink:0;
+  background:linear-gradient(120deg,rgba(255,106,0,.12),rgba(238,9,121,.08));
+  border-bottom:1px solid rgba(0,229,255,.09);
+  display:flex;align-items:center;gap:.65rem;
+}
+.oc-head-sym{
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  border:1.5px solid rgba(0,229,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:900;color:#00e5ff;
+}
+.oc-head-info{flex:1;min-width:0}
+.oc-head-name{font-weight:800;font-size:.92rem;color:#f8fafc;letter-spacing:.01em}
+.oc-head-sub{font-size:.68rem;color:rgba(0,229,255,.6);font-weight:500;margin-top:1px}
+.oc-close{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:1.1rem;line-height:1;padding:.2rem .3rem;border-radius:6px;transition:color .15s;margin-left:auto}
+.oc-close:hover{color:#fff}
+
+.oc-msgs{
+  flex:1;overflow-y:auto;padding:1rem .85rem;display:flex;flex-direction:column;gap:.6rem;
+  scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.1) transparent;
+}
+.oc-msg{display:flex;gap:.45rem;align-items:flex-end}
+.oc-msg-bot{justify-content:flex-start}
+.oc-msg-user{justify-content:flex-end}
+.oc-avatar{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  border:1.5px solid rgba(0,229,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.62rem;font-weight:900;color:#00e5ff;letter-spacing:-.02em;
+}
+.oc-bubble{
+  max-width:80%;padding:.55rem .85rem;border-radius:14px;
+  font-size:.83rem;line-height:1.55;font-family:inherit;
+  white-space:pre-wrap;word-break:break-word;
+}
+.oc-bubble-bot{
+  background:rgba(14,22,44,.9);color:#dce4f0;
+  border:1px solid rgba(0,229,255,.07);border-bottom-left-radius:4px;
+}
+.oc-bubble-user{
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;
+  border-bottom-right-radius:4px;
+}
+.oc-typing{display:flex;gap:4px;align-items:center;padding:.3rem .2rem}
+.oc-dot{width:5px;height:5px;border-radius:50%;background:rgba(0,229,255,.45);animation:oc-blink 1.2s infinite}
+.oc-dot:nth-child(2){animation-delay:.2s}
+.oc-dot:nth-child(3){animation-delay:.4s}
+@keyframes oc-blink{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.oc-saved{text-align:center;font-size:.7rem;color:rgba(0,229,255,.55);padding:.3rem}
+
+.oc-input-row{
+  padding:.75rem .85rem;border-top:1px solid rgba(0,229,255,.07);
+  display:flex;gap:.5rem;align-items:center;flex-shrink:0;
+  background:rgba(4,8,20,.6);
+}
+.oc-input{
+  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(0,229,255,.08);
+  border-radius:22px;padding:.55rem .95rem;color:#f1f5f9;
+  font-size:.83rem;font-family:inherit;outline:none;transition:border-color .15s;
+}
+.oc-input:focus{border-color:rgba(0,229,255,.28)}
+.oc-input::placeholder{color:rgba(255,255,255,.2)}
+.oc-send{
+  width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+  background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,opacity .15s;
+}
+.oc-send:hover:not(:disabled){transform:scale(1.1)}
+.oc-send:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:440px){
+  .oc-panel{width:calc(100vw - 16px);right:8px;bottom:78px}
+  .oc-btn{bottom:16px;right:16px}
+}
 `;
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
@@ -519,6 +622,78 @@ export default function OrakulPage() {
   const [eMsg, setEMsg] = useState('');
   const [eSent, setESent] = useState(false);
   const [eSending, setESending] = useState(false);
+
+  // ── Chat state ──
+  interface ChatMsg { role: 'user' | 'assistant'; content: string }
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMsgs, setChatMsgs] = useState<ChatMsg[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const [leadSaved, setLeadSaved] = useState(false);
+  const msgsEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatOpen && chatMsgs.length === 0) {
+      const greet: Record<LangKey, string> = {
+        uk: 'Привіт! Я — Оракул ⟁\n\nОпераційний розум мережі EWU для зварювальників і роботодавців.\n\nТи шукаєш роботу чи підбираєш персонал?',
+        ru: 'Привет! Я — Оракул ⟁\n\nОперативный разум сети EWU.\n\nТы ищешь работу или подбираешь персонал?',
+        pl: 'Cześć! Jestem Orakul ⟁\n\nOperacyjny umysł sieci EWU.\n\nSzukasz pracy czy szukasz personelu?',
+        en: 'Hi! I\'m Orakul ⟁\n\nThe operational intelligence of the EWU network.\n\nAre you looking for work or hiring staff?',
+      };
+      setChatMsgs([{ role: 'assistant', content: greet[lang] }]);
+    }
+  }, [chatOpen]);
+
+  useEffect(() => {
+    msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMsgs, chatLoading]);
+
+  const sendChat = async () => {
+    const text = chatInput.trim();
+    if (!text || chatLoading) return;
+    const newMsgs: ChatMsg[] = [...chatMsgs, { role: 'user', content: text }];
+    setChatMsgs(newMsgs);
+    setChatInput('');
+    setChatLoading(true);
+    try {
+      const res = await fetch('/api/orakul/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMsgs }),
+      });
+      if (!res.ok || !res.body) throw new Error('error');
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let botText = '';
+      setChatMsgs(prev => [...prev, { role: 'assistant', content: '' }]);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const lines = dec.decode(value).split('\n');
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const raw = line.slice(6);
+          if (raw === '[DONE]') continue;
+          try {
+            const d = JSON.parse(raw);
+            if (d.text) {
+              botText += d.text;
+              const clean = botText
+                .replace(/\[КАНДИДАТ_ГОТОВИЙ\][\s\S]*$/, '')
+                .replace(/\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\][\s\S]*$/, '')
+                .trim();
+              setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: clean }]);
+            }
+            if (d.lead_saved) setLeadSaved(true);
+          } catch { /* skip */ }
+        }
+      }
+    } catch {
+      setChatMsgs(prev => [...prev, { role: 'assistant', content: '⚠️ Помилка з\'єднання. Спробуй ще раз.' }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -895,6 +1070,62 @@ export default function OrakulPage() {
         </footer>
 
       </div>
+
+      {/* ── CHAT WIDGET ── */}
+      {chatOpen && (
+        <div className="oc-panel">
+          <div className="oc-head">
+            <div className="oc-head-sym">⟁</div>
+            <div className="oc-head-info">
+              <div className="oc-head-name">ОРАКУЛ · EWU</div>
+              <div className="oc-head-sub">AI-рекрутинг · зварювальники</div>
+            </div>
+            <button className="oc-close" onClick={() => setChatOpen(false)} aria-label="Закрити">✕</button>
+          </div>
+
+          <div className="oc-msgs">
+            {chatMsgs.map((m, i) => (
+              <div key={i} className={`oc-msg oc-msg-${m.role}`}>
+                {m.role === 'assistant' && <div className="oc-avatar">⟁</div>}
+                <div className={`oc-bubble oc-bubble-${m.role}`}>{m.content || ' '}</div>
+              </div>
+            ))}
+            {chatLoading && (
+              <div className="oc-msg oc-msg-bot">
+                <div className="oc-avatar">⟁</div>
+                <div className="oc-bubble oc-bubble-bot">
+                  <div className="oc-typing">
+                    <div className="oc-dot"/><div className="oc-dot"/><div className="oc-dot"/>
+                  </div>
+                </div>
+              </div>
+            )}
+            {leadSaved && <div className="oc-saved">✓ Заявку збережено — менеджер зв'яжеться з тобою</div>}
+            <div ref={msgsEndRef} />
+          </div>
+
+          <div className="oc-input-row">
+            <input
+              className="oc-input"
+              placeholder="Написати..."
+              value={chatInput}
+              onChange={e => setChatInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }}
+              disabled={chatLoading}
+            />
+            <button className="oc-send" onClick={sendChat} disabled={chatLoading || !chatInput.trim()} aria-label="Надіслати">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      <button className="oc-btn" onClick={() => setChatOpen(v => !v)} aria-label="Оракул AI чат">
+        <span className="oc-btn-dot"/>
+        ⟁ Оракул
+      </button>
     </>
   );
 }
