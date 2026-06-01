@@ -217,6 +217,15 @@ const CSS = `
 #e-arc.big{width:30px;height:30px}
 #e-sparks{position:fixed;inset:0;z-index:500;pointer-events:none}
 @media(hover:none){.e-pg{cursor:auto}#e-arc{display:none}}
+/* MANIFESTO */
+.e-manifesto{
+  margin-top:2rem;padding:1.8rem 0 0;
+  border-top:1px solid rgba(0,229,255,0.25);
+  font-size:1.18rem;font-style:italic;font-weight:600;
+  color:var(--text-main);line-height:1.85;white-space:pre-line;
+  background:linear-gradient(135deg,var(--text-main) 60%,var(--welding-flash));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 /* WELD QUOTE */
 .e-weld-quote{
   margin:0 0 2.5rem;padding:1.2rem 1.8rem;
@@ -244,7 +253,7 @@ interface PageTrans {
   eFormTitle: string; eNamePlh: string; ePhonePlh: string;
   eBtn: string; eSendingBtn: string; eSentTitle: string; eSentDesc: string;
   aboutTitle: string; aboutP1: string; aboutP2: string;
-  quote: string;
+  quote: string; quote2: string;
 }
 const TRANSLATIONS: Record<LangKey, PageTrans> = {
   uk: {
@@ -295,6 +304,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'European Welding Union — це платформа, яка виводить розвиток європейської промисловості на новий рівень завдяки синергії цифрових технологій та турботи про людей.',
     aboutP2: 'У довгостроковому партнерстві з проєктом «Компас Міграції» (співзасновник — Олександр Василишин), ми створюємо непорушний соціально-юридичний щит для робітників, захищаючи інтереси їхніх сімей в ЄС.',
     quote: 'Шов ляже ідеально, коли поспішати нікуди. Простота — це складність, яку вже ніхто не помічає.',
+    quote2: 'Той, хто варить цю систему ночами, поки Європа спить,\nщоб удень вона працювала за всіх.',
   },
   en: {
     badge: 'Supported by the Kompas Migracji project',
@@ -344,6 +354,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'European Welding Union is a platform that takes European industry development to the next level through the synergy of digital technologies and care for people.',
     aboutP2: 'In long-term partnership with the Kompas Migracji project (co-founder — Oleksandr Vasylyshyn), we create an unbreakable social-legal shield for workers, protecting the interests of their families in the EU.',
     quote: 'The weld will lie perfectly when there is no rush. Simplicity is the complexity that no one notices anymore.',
+    quote2: 'The one who welds this system through the nights, while Europe sleeps,\nso that by day it works for everyone.',
   },
   ru: {
     badge: 'При поддержке проекта Kompas Migracji',
@@ -393,6 +404,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'European Welding Union — это платформа, которая выводит развитие европейской промышленности на новый уровень благодаря синергии цифровых технологий и заботы о людях.',
     aboutP2: 'В долгосрочном партнёрстве с проектом «Kompas Migracji» (сооснователь — Александр Василишин), мы создаём несокрушимый социально-юридический щит для рабочих, защищая интересы их семей в ЕС.',
     quote: 'Шов ляжет идеально, когда некуда спешить. Простота — это сложность, которую уже никто не замечает.',
+    quote2: 'Тот, кто варит эту систему по ночам, пока Европа спит,\nчтобы днём она работала за всех.',
   },
   pl: {
     badge: 'We współpracy z projektem Kompas Migracji',
@@ -442,6 +454,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'European Welding Union to platforma, która wynosi rozwój europejskiego przemysłu na nowy poziom dzięki synergii technologii cyfrowych i troski o ludzi.',
     aboutP2: 'W długoterminowym partnerstwie z projektem «Kompas Migracji» (współzałożyciel — Oleksandr Vasylyshyn), tworzymy niezłomną tarczę społeczno-prawną dla pracowników, chroniąc interesy ich rodzin w UE.',
     quote: 'Spoina będzie idealna, gdy nie ma pośpiechu. Prostota to złożoność, której już nikt nie zauważa.',
+    quote2: 'Ten, kto spawa ten system nocami, gdy Europa śpi,\nby we dnie działał dla wszystkich.',
   },
 };
 
@@ -806,6 +819,7 @@ export default function OrakulPage() {
               <h3>{T.aboutTitle}</h3>
               <p>{T.aboutP1}</p>
               <p style={{ fontWeight: 600 }}>{T.aboutP2}</p>
+              <p className="e-manifesto">{T.quote2}</p>
             </div>
           </div>
         </section>
