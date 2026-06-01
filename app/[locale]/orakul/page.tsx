@@ -238,6 +238,21 @@ const CSS = `
 .e-lang-btn{padding:3px 8px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--text-muted);font-size:0.73rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;letter-spacing:.03em}
 .e-lang-btn.act{background:var(--union-blue);color:#fff;border-color:var(--union-blue)}
 .e-lang-btn:hover:not(.act){border-color:var(--union-blue);color:var(--union-blue)}
+/* SECTION ROLE ACCENTS */
+.e-section-workers{border-top:4px solid var(--union-blue)!important}
+.e-section-employers{border-top:4px solid #d97706!important}
+.e-section-employers .e-stat-n{color:#d97706}
+.e-section-employers .e-list li::before{color:#d97706}
+.e-role-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .9rem;border-radius:50px;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.85rem}
+.e-role-badge-w{background:rgba(29,78,216,.09);color:var(--union-blue);border:1.5px solid rgba(29,78,216,.2)}
+.e-role-badge-e{background:rgba(217,119,6,.1);color:#92400e;border:1.5px solid rgba(217,119,6,.3)}
+/* ROLE DIVIDER STRIP */
+.e-role-strip{display:flex;align-items:stretch;border-top:2px solid rgba(29,78,216,.18);border-bottom:2px solid rgba(217,119,6,.22)}
+.e-role-strip-w{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:.55rem;padding:.95rem 2.5rem;font-size:.73rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--union-blue);background:rgba(29,78,216,.04)}
+.e-role-strip-e{flex:1;display:flex;align-items:center;justify-content:flex-start;gap:.55rem;padding:.95rem 2.5rem;font-size:.73rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#92400e;background:rgba(217,119,6,.05)}
+.e-role-strip-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;gap:3px;background:var(--bg-soft)}
+.e-role-strip-line{width:1px;height:22px;background:linear-gradient(180deg,rgba(29,78,216,.4),rgba(217,119,6,.4))}
+.e-role-strip-dot{width:7px;height:7px;border-radius:50%;background:conic-gradient(var(--union-blue) 50%,#d97706 50%)}
 `;
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
@@ -711,9 +726,10 @@ export default function OrakulPage() {
         </section>
 
         {/* FOR WORKERS */}
-        <section id="workers" className="e-section e-section-alt">
+        <section id="workers" className="e-section e-section-alt e-section-workers">
           <div className="e-wrap">
             <div className="e-sec-head">
+              <div className="e-role-badge e-role-badge-w">🔧 {T.card1Title}</div>
               <h2>{T.workersTitle}</h2>
               <p>{T.workersDesc}</p>
             </div>
@@ -760,10 +776,22 @@ export default function OrakulPage() {
           </div>
         </section>
 
+        {/* ROLE DIVIDER */}
+        <div className="e-role-strip" aria-hidden="true">
+          <div className="e-role-strip-w">🔧 {T.card1Title}</div>
+          <div className="e-role-strip-mid">
+            <div className="e-role-strip-line" />
+            <div className="e-role-strip-dot" />
+            <div className="e-role-strip-line" />
+          </div>
+          <div className="e-role-strip-e">🏭 {T.card2Title}</div>
+        </div>
+
         {/* FOR EMPLOYERS */}
-        <section id="employers" className="e-section">
+        <section id="employers" className="e-section e-section-employers">
           <div className="e-wrap">
             <div className="e-sec-head">
+              <div className="e-role-badge e-role-badge-e">🏭 {T.card2Title}</div>
               <h2>{T.employersTitle}</h2>
               <p>{T.employersDesc}</p>
             </div>
