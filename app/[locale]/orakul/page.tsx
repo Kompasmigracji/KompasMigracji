@@ -246,6 +246,15 @@ const CSS = `
 .e-role-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.28rem .9rem;border-radius:50px;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.85rem}
 .e-role-badge-w{background:rgba(29,78,216,.09);color:var(--union-blue);border:1.5px solid rgba(29,78,216,.2)}
 .e-role-badge-e{background:rgba(217,119,6,.1);color:#92400e;border:1.5px solid rgba(217,119,6,.3)}
+/* TEXTAREA */
+.e-textarea{
+  width:100%;padding:1rem;background:var(--bg-panel);
+  border:1px solid var(--border);border-radius:10px;
+  margin-bottom:1rem;font-size:1rem;outline:none;font-family:inherit;
+  resize:vertical;min-height:88px;color:var(--text-main);line-height:1.5;
+}
+.e-textarea::placeholder{color:var(--text-muted)}
+.e-textarea:focus{border-color:var(--union-blue);box-shadow:0 0 0 3px rgba(29,78,216,.08)}
 /* ROLE DIVIDER STRIP */
 .e-role-strip{display:flex;align-items:stretch;border-top:2px solid rgba(29,78,216,.18);border-bottom:2px solid rgba(217,119,6,.22)}
 .e-role-strip-w{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:.55rem;padding:.95rem 2.5rem;font-size:.73rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--union-blue);background:rgba(29,78,216,.04)}
@@ -261,11 +270,11 @@ interface PageTrans {
   card1Title: string; card1Desc: string;
   card2Title: string; card2Desc: string;
   workersTitle: string; workersDesc: string; workersItems: string[];
-  wFormTitle: string; wNamePlh: string; wPhonePlh: string;
+  wFormTitle: string; wNamePlh: string; wPhonePlh: string; wEmailPlh: string; wMsgPlh: string;
   wBtn: string; wSendingBtn: string; wSentTitle: string; wSentDesc: string;
   employersTitle: string; employersDesc: string;
   stat1: string; stat2: string; stat3: string; employersItems: string[];
-  eFormTitle: string; eNamePlh: string; ePhonePlh: string;
+  eFormTitle: string; eNamePlh: string; ePhonePlh: string; eEmailPlh: string; eMsgPlh: string;
   eBtn: string; eSendingBtn: string; eSentTitle: string; eSentDesc: string;
   aboutTitle: string; aboutP1: string; aboutP2: string;
   quote: string; quote2: string;
@@ -292,6 +301,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wFormTitle: 'Крок 1: Залишити заявку',
     wNamePlh: "Ваше ім'я",
     wPhonePlh: 'Телефон або WhatsApp',
+    wEmailPlh: "Email (необов'язково)",
+    wMsgPlh: 'Коротко про себе — досвід, країна, місто',
     wBtn: 'Знайти роботу',
     wSendingBtn: 'Надсилання...',
     wSentTitle: 'Заявку отримано',
@@ -311,6 +322,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     eFormTitle: 'Надіслати запит',
     eNamePlh: "Ім'я або назва компанії",
     ePhonePlh: 'Телефон або WhatsApp',
+    eEmailPlh: 'Email компанії',
+    eMsgPlh: 'Опишіть потребу — кількість майстрів, регіон, строки',
     eBtn: 'Надіслати запит',
     eSendingBtn: 'Надсилання...',
     eSentTitle: 'Запит отримано',
@@ -342,6 +355,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wFormTitle: 'Step 1: Submit your application',
     wNamePlh: 'Your name',
     wPhonePlh: 'Phone or WhatsApp',
+    wEmailPlh: 'Email (optional)',
+    wMsgPlh: 'About yourself — experience, country, city',
     wBtn: 'Find work',
     wSendingBtn: 'Sending...',
     wSentTitle: 'Application received',
@@ -361,6 +376,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     eFormTitle: 'Send a request',
     eNamePlh: 'Name or company name',
     ePhonePlh: 'Phone or WhatsApp',
+    eEmailPlh: 'Company email',
+    eMsgPlh: 'Describe your need — number of specialists, region, timeline',
     eBtn: 'Send request',
     eSendingBtn: 'Sending...',
     eSentTitle: 'Request received',
@@ -392,6 +409,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wFormTitle: 'Шаг 1: Оставить заявку',
     wNamePlh: 'Ваше имя',
     wPhonePlh: 'Телефон или WhatsApp',
+    wEmailPlh: 'Email (необязательно)',
+    wMsgPlh: 'Кратко о себе — опыт, страна, город',
     wBtn: 'Найти работу',
     wSendingBtn: 'Отправка...',
     wSentTitle: 'Заявка получена',
@@ -411,6 +430,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     eFormTitle: 'Отправить запрос',
     eNamePlh: 'Имя или название компании',
     ePhonePlh: 'Телефон или WhatsApp',
+    eEmailPlh: 'Email компании',
+    eMsgPlh: 'Опишите потребность — количество мастеров, регион, сроки',
     eBtn: 'Отправить запрос',
     eSendingBtn: 'Отправка...',
     eSentTitle: 'Запрос получен',
@@ -442,6 +463,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wFormTitle: 'Krok 1: Zostaw zgłoszenie',
     wNamePlh: 'Twoje imię i nazwisko',
     wPhonePlh: 'Telefon lub WhatsApp',
+    wEmailPlh: 'Email (opcjonalnie)',
+    wMsgPlh: 'O sobie — doświadczenie, kraj, miasto',
     wBtn: 'Znajdź pracę',
     wSendingBtn: 'Wysyłanie...',
     wSentTitle: 'Zgłoszenie otrzymane',
@@ -461,6 +484,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     eFormTitle: 'Wyślij zapytanie',
     eNamePlh: 'Imię lub nazwa firmy',
     ePhonePlh: 'Telefon lub WhatsApp',
+    eEmailPlh: 'Email firmy',
+    eMsgPlh: 'Opisz potrzebę — liczba specjalistów, region, termin',
     eBtn: 'Wyślij zapytanie',
     eSendingBtn: 'Wysyłanie...',
     eSentTitle: 'Zapytanie otrzymane',
@@ -483,11 +508,15 @@ export default function OrakulPage() {
 
   const [wName, setWName] = useState('');
   const [wPhone, setWPhone] = useState('');
+  const [wEmail, setWEmail] = useState('');
+  const [wMsg, setWMsg] = useState('');
   const [wSent, setWSent] = useState(false);
   const [wSending, setWSending] = useState(false);
 
   const [eName, setEName] = useState('');
   const [ePhone, setEPhone] = useState('');
+  const [eEmail, setEEmail] = useState('');
+  const [eMsg, setEMsg] = useState('');
   const [eSent, setESent] = useState(false);
   const [eSending, setESending] = useState(false);
 
@@ -627,6 +656,8 @@ export default function OrakulPage() {
         body: JSON.stringify({
           first_name: wName.trim(),
           contact: wPhone.trim(),
+          email: wEmail.trim() || undefined,
+          message: wMsg.trim() || undefined,
           service: 'EWU — Зварювальник',
           situation: 'Заявка з сторінки Оракул. Роль: worker',
           source: 'orakul',
@@ -648,6 +679,8 @@ export default function OrakulPage() {
         body: JSON.stringify({
           first_name: eName.trim(),
           contact: ePhone.trim(),
+          email: eEmail.trim() || undefined,
+          message: eMsg.trim() || undefined,
           service: 'EWU — Роботодавець',
           situation: 'Заявка з сторінки Оракул. Роль: employer',
           source: 'orakul',
@@ -765,6 +798,8 @@ export default function OrakulPage() {
                     <form onSubmit={submitWorker}>
                       <input className="e-inp" placeholder={T.wNamePlh} value={wName} onChange={e => setWName(e.target.value)} required />
                       <input className="e-inp" placeholder={T.wPhonePlh} value={wPhone} onChange={e => setWPhone(e.target.value)} required />
+                      <input className="e-inp" type="email" placeholder={T.wEmailPlh} value={wEmail} onChange={e => setWEmail(e.target.value)} />
+                      <textarea className="e-textarea" placeholder={T.wMsgPlh} value={wMsg} onChange={e => setWMsg(e.target.value)} />
                       <button className="e-submit-btn" type="submit" disabled={wSending || !wName.trim() || !wPhone.trim()}>
                         {wSending ? T.wSendingBtn : T.wBtn}
                       </button>
@@ -829,6 +864,8 @@ export default function OrakulPage() {
                     <form onSubmit={submitEmployer}>
                       <input className="e-inp" placeholder={T.eNamePlh} value={eName} onChange={e => setEName(e.target.value)} required />
                       <input className="e-inp" placeholder={T.ePhonePlh} value={ePhone} onChange={e => setEPhone(e.target.value)} required />
+                      <input className="e-inp" type="email" placeholder={T.eEmailPlh} value={eEmail} onChange={e => setEEmail(e.target.value)} />
+                      <textarea className="e-textarea" placeholder={T.eMsgPlh} value={eMsg} onChange={e => setEMsg(e.target.value)} />
                       <button className="e-submit-btn" type="submit" disabled={eSending || !eName.trim() || !ePhone.trim()}>
                         {eSending ? T.eSendingBtn : T.eBtn}
                       </button>
