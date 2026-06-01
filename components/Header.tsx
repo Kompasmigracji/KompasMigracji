@@ -142,18 +142,27 @@ export default function Header() {
             {t('nav_pricelist')}
           </Link>
 
-          <div style={{ width: 1, height: 20, background: '#e5e7eb', flexShrink: 0, margin: '0 2px' }} />
+          <div style={{ width: 1, height: 20, background: '#e5e7eb', flexShrink: 0, margin: '0 4px' }} />
 
-          <Link href="/portal" className="px-3 py-2 text-sm font-semibold text-gray-600 hover:text-primary border border-gray-200 hover:border-primary rounded-lg transition-colors no-underline" title="Portal klienta — sprawdź status swojej sprawy">
+          <Link
+            href="/portal"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: 'white', boxShadow: '0 2px 12px -2px rgba(124,58,237,.45)' }}
+            title="Portal klienta — sprawdź status swojej sprawy"
+          >
             🔑 Portal
           </Link>
-          <Link href="/plans" className="px-4 py-2 text-sm font-bold text-white gradient-btn rounded-lg transition-opacity hover:opacity-90 no-underline">
+          <Link
+            href="/plans"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn rounded-full transition-all hover:opacity-90 hover:scale-105 no-underline"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
+          >
             Plany
           </Link>
           <Link
             href="/orakul"
-            className="px-3 py-2 text-sm font-bold no-underline rounded-lg transition-all"
-            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d12' }}
+            className="flex items-center gap-1 px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
           >
             ⚡ Оракул
           </Link>
@@ -173,12 +182,15 @@ export default function Header() {
 
           <ThemeToggle />
 
-          <div className="flex items-center gap-0.5 bg-gray-50 border border-gray-200 rounded-lg px-1.5 py-1">
+          <div className="flex items-center gap-0.5 p-1 rounded-full" style={{ background: 'rgba(0,0,0,0.04)', border: '1.5px solid rgba(0,0,0,0.07)' }}>
             {['uk', 'pl', 'en', 'ru'].map((l) => (
               <button
                 key={l}
                 onClick={() => changeLang(l)}
-                className={`px-1.5 py-0.5 text-xs font-bold rounded transition-all uppercase ${locale === l ? 'bg-primary text-white' : 'text-gray-400 hover:text-primary'}`}
+                className="px-2.5 py-0.5 text-xs font-bold rounded-full transition-all uppercase tracking-wide"
+                style={locale === l
+                  ? { background: 'linear-gradient(135deg,#1d4ed8,#2563eb)', color: 'white', boxShadow: '0 1px 8px rgba(29,78,216,.35)' }
+                  : { color: '#9ca3af' }}
               >
                 {LANG_LABELS[l]}
               </button>
@@ -210,17 +222,27 @@ export default function Header() {
           <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
             {t('nav_pricelist')}
           </Link>
-          <Link href="/portal" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold text-gray-700 border border-gray-200 no-underline mt-1">
-            🔑 Portal klienta — status sprawy
+          <Link
+            href="/portal"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1"
+            style={{ background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: 'white', boxShadow: '0 2px 12px -2px rgba(124,58,237,.45)' }}
+          >
+            🔑 Portal klienta
           </Link>
-          <Link href="/plans" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-bold text-white gradient-btn text-center no-underline mt-1">
+          <Link
+            href="/plans"
+            onClick={() => setMobileOpen(false)}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
+          >
             Plany subskrypcji
           </Link>
           <Link
             href="/orakul"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold no-underline mt-1 justify-center"
-            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02' }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1 justify-center"
+            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
           >
             ⚡ Оракул — AI для зварювальників
           </Link>
