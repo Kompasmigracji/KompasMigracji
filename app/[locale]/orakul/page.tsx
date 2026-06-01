@@ -299,6 +299,7 @@ export default function OrakulPage() {
     if (!ctx) return;
     const c = ctx;
     const cvs = cv;
+    const arcs = arc;
 
     let W = 0, H = 0;
     function resize() { W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight; }
@@ -341,11 +342,11 @@ export default function OrakulPage() {
       const sp = Math.min(Math.hypot(dx, dy), 40);
       emitSpark(e.clientX, e.clientY, Math.floor(sp / 4) + 1, 3);
       pmx = e.clientX; pmy = e.clientY;
-      arc.style.left = e.clientX + 'px';
-      arc.style.top = e.clientY + 'px';
+      arcs.style.left = e.clientX + 'px';
+      arcs.style.top = e.clientY + 'px';
     }
-    function onMouseDown(e: MouseEvent) { emitSpark(e.clientX, e.clientY, 45, 6.5); arc.classList.add('big'); }
-    function onMouseUp() { arc.classList.remove('big'); }
+    function onMouseDown(e: MouseEvent) { emitSpark(e.clientX, e.clientY, 45, 6.5); arcs.classList.add('big'); }
+    function onMouseUp() { arcs.classList.remove('big'); }
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mousedown', onMouseDown);
