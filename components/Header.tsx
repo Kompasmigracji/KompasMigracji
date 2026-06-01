@@ -146,11 +146,11 @@ export default function Header() {
 
           <Link
             href="/portal"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
-            style={{ background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: 'white', boxShadow: '0 2px 12px -2px rgba(124,58,237,.45)' }}
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
             title="Portal klienta — sprawdź status swojej sprawy"
           >
-            🔑 Portal
+            Portal
           </Link>
           <Link
             href="/plans"
@@ -161,10 +161,10 @@ export default function Header() {
           </Link>
           <Link
             href="/orakul"
-            className="flex items-center gap-1 px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
             style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
           >
-            ⚡ Оракул
+            Оракул
           </Link>
         </nav>
 
@@ -225,10 +225,10 @@ export default function Header() {
           <Link
             href="/portal"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1"
-            style={{ background: 'linear-gradient(135deg,#4f46e5,#7c3aed)', color: 'white', boxShadow: '0 2px 12px -2px rgba(124,58,237,.45)' }}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
-            🔑 Portal klienta
+            Portal klienta
           </Link>
           <Link
             href="/plans"
@@ -241,10 +241,10 @@ export default function Header() {
           <Link
             href="/orakul"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1 justify-center"
+            className="block px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1 text-center"
             style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
           >
-            ⚡ Оракул — AI для зварювальників
+            Оракул — AI для зварювальників
           </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>
