@@ -202,10 +202,26 @@ const CSS = `
   .e-form-box{padding:1.8rem 1.2rem}
   .e-nav-logo span{display:none}
 }
+
+/* CURSOR */
+.e-pg{cursor:none}
+#e-arc{
+  position:fixed;top:0;left:0;z-index:9999;
+  width:14px;height:14px;border-radius:50%;
+  background:radial-gradient(circle,#fff,#ffd27a 40%,rgba(255,77,18,.6) 70%,transparent);
+  box-shadow:0 0 16px 4px rgba(255,140,40,.85),0 0 40px 8px rgba(255,77,18,.45);
+  transform:translate(-50%,-50%);pointer-events:none;
+  transition:width .15s,height .15s;
+}
+#e-arc.big{width:30px;height:30px}
+#e-sparks{position:fixed;inset:0;z-index:500;pointer-events:none}
+@media(hover:none){.e-pg{cursor:auto}#e-arc{display:none}}
 `;
 
 export default function OrakulPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sparksRef = useRef<HTMLCanvasElement>(null);
+  const arcRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
 
   const [wName, setWName] = useState('');
@@ -274,6 +290,73 @@ export default function OrakulPage() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  useEffect(() => {
+    const cv = sparksRef.current;
+    const arc = arcRef.current;
+    if (!cv || !arc) return;
+    const ctx = cv.getContext('2d');
+    if (!ctx) return;
+    const c = ctx;
+
+    let W = 0, H = 0;
+    function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    interface Particle { x: number; y: number; vx: number; vy: number; life: number; r: number; grav: number; }
+    const P: Particle[] = [];
+    let pmx = W / 2, pmy = H / 2;
+
+    function emitSpark(x: number, y: number, n: number, pow: number) {
+      for (let i = 0; i < n; i++) {
+        const a = Math.random() * Math.PI * 2, s = Math.random() * pow + 1;
+        P.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 1, life: 1, r: Math.random() * 1.8 + 0.6, grav: 0.06 + Math.random() * 0.05 });
+      }
+    }
+
+    let raf2: number;
+    function tick() {
+      c.clearRect(0, 0, W, H);
+      c.globalCompositeOperation = 'lighter';
+      for (let i = P.length - 1; i >= 0; i--) {
+        const p = P[i];
+        p.vx *= 0.96; p.vy = p.vy * 0.96 + p.grav; p.x += p.vx; p.y += p.vy; p.life -= 0.018;
+        if (p.y > H - 2 && p.vy > 0) { p.vy *= -0.35; p.vx *= 0.5; }
+        if (p.life <= 0) { P.splice(i, 1); continue; }
+        const t = p.life;
+        c.beginPath();
+        c.fillStyle = `rgba(255,${120 + Math.floor(135 * t)},${Math.floor(40 * t)},${t})`;
+        c.shadowBlur = 12; c.shadowColor = `rgba(255,150,50,${t})`;
+        c.arc(p.x, p.y, p.r * t, 0, Math.PI * 2); c.fill();
+      }
+      c.globalCompositeOperation = 'source-over'; c.shadowBlur = 0;
+      raf2 = requestAnimationFrame(tick);
+    }
+    tick();
+
+    function onMouseMove(e: MouseEvent) {
+      const dx = e.clientX - pmx, dy = e.clientY - pmy;
+      const sp = Math.min(Math.hypot(dx, dy), 40);
+      emitSpark(e.clientX, e.clientY, Math.floor(sp / 4) + 1, 3);
+      pmx = e.clientX; pmy = e.clientY;
+      arc.style.left = e.clientX + 'px';
+      arc.style.top = e.clientY + 'px';
+    }
+    function onMouseDown(e: MouseEvent) { emitSpark(e.clientX, e.clientY, 45, 6.5); arc.classList.add('big'); }
+    function onMouseUp() { arc.classList.remove('big'); }
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      cancelAnimationFrame(raf2);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
   const submitWorker = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!wName.trim() || !wPhone.trim()) return;
@@ -319,6 +402,9 @@ export default function OrakulPage() {
   return (
     <>
       <style>{CSS}</style>
+
+      <canvas ref={sparksRef} id="e-sparks" />
+      <div ref={arcRef} id="e-arc" />
 
       <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
