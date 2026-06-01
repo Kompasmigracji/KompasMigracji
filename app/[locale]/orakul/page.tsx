@@ -1,445 +1,329 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
 
+const C = {
+  bg0: '#0c1220',
+  bg1: '#111827',
+  bgC: '#1a2035',
+  card: '#1e2a3a',
+  border: 'rgba(148,163,184,0.12)',
+  copper: '#c27840',
+  copperL: '#e09651',
+  silver: '#94a3b8',
+  silverB: '#cbd5e1',
+  text: '#e2e8f0',
+  muted: '#64748b',
+  white: '#f8fafc',
+};
+
+const CSS = `
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.o-pg{min-height:100vh;background:${C.bg0};color:${C.text};font-family:'Inter','Syne',system-ui,sans-serif;position:relative;overflow-x:hidden}
+.o-stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.o-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:13px 24px;background:rgba(12,18,32,0.88);backdrop-filter:blur(14px);border-bottom:1px solid ${C.border}}
+.o-back{color:${C.silver};text-decoration:none;font-size:13px;font-weight:500;letter-spacing:.02em;transition:color .2s}
+.o-back:hover{color:${C.copperL}}
+.o-logo{font-size:12px;font-weight:700;letter-spacing:.1em;color:${C.copper}}
+
+/* HERO */
+.o-hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 24px 64px;background:radial-gradient(ellipse 80% 55% at 50% 45%,rgba(26,42,85,0.55) 0%,transparent 72%)}
+.o-hero-inner{max-width:680px;width:100%;text-align:center}
+.o-badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:${C.copper};border:1px solid rgba(194,120,64,.35);border-radius:20px;padding:5px 16px;margin-bottom:28px}
+.o-h1{font-size:clamp(44px,8.5vw,84px);font-weight:800;line-height:1.04;letter-spacing:-.03em;color:${C.white};margin-bottom:20px}
+.o-cu{color:${C.copper}}
+.o-lead{font-size:clamp(15px,2vw,18px);color:${C.silver};line-height:1.65;margin:0 auto 36px;max-width:500px}
+.o-ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:52px}
+.o-bp{padding:14px 30px;border-radius:8px;border:none;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;background:${C.copper};color:#fff;text-decoration:none;transition:background .2s,transform .15s;display:inline-block}
+.o-bp:hover{background:${C.copperL};transform:translateY(-1px)}
+.o-bs{padding:14px 30px;border-radius:8px;cursor:pointer;font-size:15px;font-weight:700;font-family:inherit;background:transparent;color:${C.silverB};border:1.5px solid rgba(148,163,184,.28);text-decoration:none;transition:border-color .2s,color .2s,transform .15s;display:inline-block}
+.o-bs:hover{border-color:${C.silver};color:${C.white};transform:translateY(-1px)}
+.o-stats{display:flex;border:1px solid ${C.border};border-radius:12px;overflow:hidden;background:rgba(26,32,50,.65);backdrop-filter:blur(10px)}
+.o-stat{flex:1;padding:18px 10px;text-align:center;border-right:1px solid ${C.border}}
+.o-stat:last-child{border-right:none}
+.o-sn{font-size:26px;font-weight:900;color:${C.copper};letter-spacing:-.02em;line-height:1}
+.o-sl{font-size:11px;color:${C.muted};margin-top:5px;letter-spacing:.04em}
+
+/* SECTIONS */
+.o-sec{position:relative;z-index:1;padding:80px 24px}
+.o-wrap{max-width:880px;margin:0 auto}
+.o-sec-alt{background:rgba(17,24,39,.55)}
+.o-ey{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:${C.copper};margin-bottom:12px}
+.o-h2{font-size:clamp(28px,5vw,44px);font-weight:800;letter-spacing:-.025em;color:${C.white};line-height:1.15;margin-bottom:14px}
+.o-sub{font-size:16px;color:${C.silver};line-height:1.6;max-width:540px;margin-bottom:40px}
+
+/* STEPS */
+.o-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:36px}
+.o-step{background:${C.card};border:1px solid ${C.border};border-radius:12px;padding:24px 20px}
+.o-stn{font-size:11px;font-weight:800;letter-spacing:.1em;color:${C.copper};margin-bottom:10px;font-family:monospace}
+.o-step h3{font-size:16px;font-weight:700;color:${C.white};margin-bottom:6px}
+.o-step p{font-size:14px;color:${C.silver};line-height:1.55}
+
+/* BULLETS */
+.o-list{display:flex;flex-direction:column;gap:12px;margin-bottom:36px}
+.o-li{display:flex;align-items:flex-start;gap:12px;font-size:15px;color:${C.silverB};line-height:1.55}
+.o-li-dot{color:${C.copper};flex-shrink:0;margin-top:2px;font-size:12px}
+
+/* EMPLOYER NUMS */
+.o-enums{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px}
+.o-enum{text-align:center;background:${C.card};border:1px solid ${C.border};border-radius:12px;padding:26px 12px}
+.o-enn{font-size:32px;font-weight:900;color:${C.copper};letter-spacing:-.03em;line-height:1}
+.o-enl{font-size:12px;color:${C.muted};margin-top:6px}
+
+/* FORM */
+.o-fs{position:relative;z-index:1;padding:80px 24px;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(194,120,64,.07) 0%,transparent 70%)}
+.o-fbox{max-width:460px;margin:0 auto;background:${C.card};border:1px solid rgba(194,120,64,.2);border-radius:16px;padding:36px 32px}
+.o-ft{font-size:22px;font-weight:800;color:${C.white};margin-bottom:5px}
+.o-fsub{font-size:14px;color:${C.muted};margin-bottom:24px}
+.o-roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.o-role{padding:10px 12px;border-radius:8px;cursor:pointer;text-align:center;font-size:13px;font-weight:600;font-family:inherit;border:1.5px solid ${C.border};background:transparent;color:${C.silver};transition:all .15s}
+.o-ra{border-color:${C.copper};background:rgba(194,120,64,.12);color:${C.copperL}}
+.o-inp{width:100%;padding:11px 14px;border-radius:8px;background:rgba(12,18,35,.7);border:1.5px solid ${C.border};color:${C.text};font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;margin-bottom:12px}
+.o-inp:focus{border-color:rgba(194,120,64,.5)}
+.o-inp::placeholder{color:${C.muted}}
+.o-sub-btn{width:100%;padding:13px;border-radius:8px;border:none;background:${C.copper};color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .2s;margin-top:4px}
+.o-sub-btn:hover:not(:disabled){background:${C.copperL}}
+.o-sub-btn:disabled{opacity:.5;cursor:not-allowed}
+.o-ok{text-align:center;padding:24px 0}
+.o-ok-ico{font-size:40px;color:${C.copper};margin-bottom:14px}
+.o-ok h3{font-size:18px;font-weight:700;color:${C.white};margin-bottom:8px}
+.o-ok p{font-size:14px;color:${C.silver}}
+
+/* FOOTER */
+.o-foot{position:relative;z-index:1;text-align:center;padding:30px 24px;border-top:1px solid ${C.border}}
+.o-foot-logo{font-size:11px;color:${C.muted};letter-spacing:.1em;margin-bottom:8px}
+.o-foot a{color:${C.muted};text-decoration:none;font-size:13px}
+.o-foot a:hover{color:${C.silver}}
+
+@media(max-width:600px){
+  .o-stats{flex-direction:column}
+  .o-stat{border-right:none;border-bottom:1px solid ${C.border}}
+  .o-stat:last-child{border-bottom:none}
+  .o-enums{grid-template-columns:repeat(3,1fr)}
+  .o-fbox{padding:28px 18px}
+}
+`;
+
 export default function OrakulPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const arcRef = useRef<HTMLDivElement>(null);
-  const bootRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<HTMLDivElement>(null);
-  const barRef = useRef<HTMLSpanElement>(null);
-  const morphRef = useRef<HTMLSpanElement>(null);
   const locale = useLocale();
+  const [role, setRole] = useState<'worker' | 'employer'>('worker');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    // Boot hide
-    const bootTimer = setTimeout(() => {
-      if (bootRef.current) bootRef.current.style.cssText += ';opacity:0;visibility:hidden';
-    }, 2100);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    // Canvas sparks
-    const cv = canvasRef.current;
-    if (!cv) return;
-    const ctx = cv.getContext('2d')!;
-    let W = 0, H = 0;
-    const resize = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
-    resize();
-    window.addEventListener('resize', resize);
-
-    interface Particle { x: number; y: number; vx: number; vy: number; life: number; r: number; grav: number; }
-    const P: Particle[] = [];
-    let pmx = W / 2, pmy = H / 2;
-
-    const spark = (x: number, y: number, n: number, pow: number) => {
-      for (let i = 0; i < n; i++) {
-        const a = Math.random() * Math.PI * 2, s = Math.random() * pow + 1;
-        P.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 1, life: 1, r: Math.random() * 1.8 + 0.6, grav: 0.06 + Math.random() * 0.05 });
-      }
-    };
-
-    let rafId: number;
-    const tick = () => {
-      ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'lighter';
-      for (let i = P.length - 1; i >= 0; i--) {
-        const p = P[i];
-        p.vx *= 0.96; p.vy = p.vy * 0.96 + p.grav; p.x += p.vx; p.y += p.vy; p.life -= 0.018;
-        if (p.y > H - 2 && p.vy > 0) { p.vy *= -0.35; p.vx *= 0.5; }
-        if (p.life <= 0) { P.splice(i, 1); continue; }
-        const t = p.life, r = 255, g = 120 + Math.floor(135 * t), b = Math.floor(40 * t);
+    const draw = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < 160; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const r = Math.random() * 1.0 + 0.2;
+        const a = Math.random() * 0.45 + 0.08;
+        const copper = Math.random() > 0.85;
         ctx.beginPath();
-        ctx.fillStyle = `rgba(${r},${g},${b},${t})`;
-        ctx.shadowBlur = 12; ctx.shadowColor = `rgba(255,150,50,${t})`;
-        ctx.arc(p.x, p.y, p.r * t, 0, 7); ctx.fill();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = copper
+          ? `rgba(194,120,64,${a * 0.7})`
+          : `rgba(148,163,184,${a})`;
+        ctx.fill();
       }
-      ctx.globalCompositeOperation = 'source-over'; ctx.shadowBlur = 0;
-      rafId = requestAnimationFrame(tick);
     };
-    tick();
-
-    const onMove = (e: MouseEvent) => {
-      const dx = e.clientX - pmx, dy = e.clientY - pmy;
-      const sp = Math.min(Math.hypot(dx, dy), 40);
-      spark(e.clientX, e.clientY, Math.floor(sp / 4) + 1, 3);
-      pmx = e.clientX; pmy = e.clientY;
-      if (arcRef.current) { arcRef.current.style.left = e.clientX + 'px'; arcRef.current.style.top = e.clientY + 'px'; }
-    };
-    const onDown = (e: MouseEvent) => { spark(e.clientX, e.clientY, 45, 6.5); if (arcRef.current) arcRef.current.classList.add('ewu-big'); };
-    const onUp = () => { if (arcRef.current) arcRef.current.classList.remove('ewu-big'); };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mousedown', onDown);
-    window.addEventListener('mouseup', onUp);
-
-    // Morphing word
-    const words = ['МАЙСТЕР', 'ШОВ', 'РУКИ', 'ТРУД', 'МАЙСТЕР', 'ТИ'];
-    let mi = 0;
-    const morphInterval = setInterval(() => {
-      if (!morphRef.current) return;
-      morphRef.current.classList.add('ewu-flick');
-      setTimeout(() => {
-        mi = (mi + 1) % words.length;
-        if (morphRef.current) { morphRef.current.textContent = words[mi]; morphRef.current.classList.remove('ewu-flick'); }
-      }, 180);
-    }, 1900);
-
-    // Live uptime timer
-    const startMs = new Date('2026-05-01T00:00:00Z').getTime();
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const timerInterval = setInterval(() => {
-      if (!timerRef.current) return;
-      const d = Date.now() - startMs;
-      const h = Math.floor(d / 3.6e6), m = Math.floor(d / 6e4) % 60, s = Math.floor(d / 1e3) % 60;
-      timerRef.current.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-    }, 1000);
-
-    // Scroll reveal
-    const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) x.target.classList.add('ewu-on'); }), { threshold: 0.15 });
-    document.querySelectorAll('.ewu-reveal').forEach(el => io.observe(el));
-
-    // Counter animation
-    document.querySelectorAll<HTMLElement>('[data-ewu-c]').forEach(el => {
-      const end = +el.dataset.ewuC!;
-      const suffix = el.dataset.ewuSuffix || '';
-      let n = 0;
-      const step = () => { n += Math.ceil(end / 30); if (n >= end) { el.textContent = end + suffix; return; } el.textContent = n + suffix; requestAnimationFrame(step); };
-      const cio = new IntersectionObserver((e, o) => { if (e[0].isIntersecting) { step(); o.disconnect(); } });
-      cio.observe(el);
-    });
-
-    // Demo progress bar
-    let bp = 0;
-    const demoIo = new IntersectionObserver((e, o) => {
-      if (e[0].isIntersecting) {
-        const tk = setInterval(() => {
-          bp += 8; if (bp >= 100) { bp = 100; clearInterval(tk); }
-          const fill = '▓'.repeat(Math.floor(bp / 8.4)), emp = '░'.repeat(12 - Math.floor(bp / 8.4));
-          if (barRef.current) barRef.current.textContent = `[${fill}${emp}] ${bp}%`;
-        }, 120);
-        o.disconnect();
-      }
-    }, { threshold: 0.5 });
-    const demoEl = document.querySelector('.ewu-demo');
-    if (demoEl) demoIo.observe(demoEl);
-
-    // Magnetic buttons
-    const mags = document.querySelectorAll<HTMLElement>('.ewu-mag');
-    const onMagMove = function (this: HTMLElement, e: Event) {
-      const me = e as MouseEvent; const r = this.getBoundingClientRect();
-      this.style.transform = `translate(${(me.clientX - r.left - r.width / 2) * 0.25}px,${(me.clientY - r.top - r.height / 2) * 0.4}px)`;
-    };
-    const onMagLeave = function (this: HTMLElement) { this.style.transform = ''; };
-    mags.forEach(b => { b.addEventListener('mousemove', onMagMove); b.addEventListener('mouseleave', onMagLeave); });
-
-    return () => {
-      clearTimeout(bootTimer);
-      clearInterval(morphInterval);
-      clearInterval(timerInterval);
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mousedown', onDown);
-      window.removeEventListener('mouseup', onUp);
-      io.disconnect();
-      demoIo.disconnect();
-      mags.forEach(b => { b.removeEventListener('mousemove', onMagMove); b.removeEventListener('mouseleave', onMagLeave); });
-    };
+    draw();
+    window.addEventListener('resize', draw);
+    return () => window.removeEventListener('resize', draw);
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !phone.trim()) return;
+    setSending(true);
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: name.trim(),
+          contact: phone.trim(),
+          service: role === 'employer' ? 'EWU — Роботодавець' : 'EWU — Зварювальник',
+          situation: `Заявка з сторінки Оракул. Роль: ${role}`,
+          source: 'orakul',
+        }),
+      });
+    } catch { /* still show success */ }
+    setSending(false);
+    setSent(true);
+  };
 
   return (
     <>
-      <style>{`
-        .ewu-page{background:#050608;color:#eef1f5;font-family:'Archivo',system-ui,sans-serif;overflow-x:hidden;cursor:none;line-height:1.5;min-height:100vh}
-        .ewu-page *{box-sizing:border-box;margin:0;padding:0}
-        .ewu-page h1,.ewu-page h2,.ewu-page h3,.ewu-disp{font-family:'Big Shoulders Display','Archivo',sans-serif;letter-spacing:-.005em;text-transform:uppercase;font-weight:900;line-height:.86}
-        .ewu-mono{font-family:'JetBrains Mono','Courier New',monospace}
-        /* boot */
-        #ewu-boot{position:fixed;inset:0;z-index:99999;background:#050608;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;color:#22e0d6;font-size:.85rem;letter-spacing:.05em;transition:opacity .6s,visibility .6s}
-        #ewu-boot .lines p{opacity:0;margin:.4rem 0;animation:ewu-btn .35s forwards}
-        #ewu-boot .lines p:nth-child(1){animation-delay:.05s}#ewu-boot .lines p:nth-child(2){animation-delay:.4s}#ewu-boot .lines p:nth-child(3){animation-delay:.75s}#ewu-boot .lines p:nth-child(4){animation-delay:1.1s;color:#ffb24d}#ewu-boot .lines p:nth-child(5){animation-delay:1.45s;color:#fff}
-        @keyframes ewu-btn{to{opacity:1}}
-        .ewu-scan{display:inline-block;width:8px;height:14px;background:#22e0d6;margin-left:4px;animation:ewu-blink .6s infinite}
-        @keyframes ewu-blink{50%{opacity:0}}
-        /* cursor */
-        #ewu-arc{position:fixed;top:0;left:0;z-index:9999;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd27a 40%,rgba(255,77,18,.6) 70%,transparent);box-shadow:0 0 16px 4px rgba(255,140,40,.85),0 0 40px 8px rgba(255,77,18,.45);transform:translate(-50%,-50%);pointer-events:none;transition:width .15s,height .15s}
-        #ewu-arc.ewu-big{width:30px;height:30px}
-        /* scanlines */
-        .ewu-scanline{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.16) 3px 4px)}
-        /* bar */
-        .ewu-bar{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:.7rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#79838f;background:rgba(5,6,8,.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-        .ewu-bar b{color:#eef1f5}
-        .ewu-live{display:inline-flex;gap:.5rem;align-items:center;color:#22e0d6}
-        .ewu-dot{width:7px;height:7px;border-radius:50%;background:#22e0d6;box-shadow:0 0 10px #22e0d6;animation:ewu-pulse 1.6s infinite}
-        @keyframes ewu-pulse{0%,100%{opacity:1}50%{opacity:.2}}
-        /* layout */
-        .ewu-wrap{max-width:1200px;margin:0 auto;padding:0 1.5rem}
-        .ewu-btn{position:relative;display:inline-block;padding:1.05rem 2rem;border-radius:100px;font-weight:700;text-decoration:none;font-size:1rem;transition:transform .1s;will-change:transform;color:inherit;font-family:'Archivo',sans-serif;cursor:pointer;border:none}
-        .ewu-btn-fire{background:linear-gradient(100deg,#ffb24d,#ff4d12);color:#190a02;box-shadow:0 0 60px -14px #ff4d12}
-        .ewu-btn-ion{border:1px solid rgba(34,224,214,.4);color:#22e0d6;background:rgba(34,224,214,.05)}
-        /* hero */
-        .ewu-hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:5rem 0 3rem}
-        .ewu-heat{position:absolute;inset:-25%;z-index:0;filter:blur(80px);opacity:.55;background:radial-gradient(40% 45% at 70% 25%,#ff4d12 0,transparent 60%),radial-gradient(45% 45% at 18% 85%,#1c3fff 0,transparent 60%),radial-gradient(35% 40% at 55% 65%,#22e0d6 0,transparent 55%);animation:ewu-drift 18s ease-in-out infinite alternate}
-        @keyframes ewu-drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-3%,2%) scale(1.1)}}
-        .ewu-hudgrid{position:absolute;inset:0;z-index:0;opacity:.32;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px;-webkit-mask:radial-gradient(70% 70% at 50% 45%,#000,transparent);mask:radial-gradient(70% 70% at 50% 45%,#000,transparent)}
-        .ewu-tag{display:inline-flex;gap:.7rem;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#22e0d6;border:1px solid rgba(34,224,214,.25);border-radius:100px;padding:.42rem .9rem;margin-bottom:2rem}
-        h1.ewu-king{font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:clamp(4rem,16vw,13rem);margin:0;letter-spacing:-.01em;font-weight:900;text-transform:uppercase;line-height:.86}
-        h1.ewu-king .row{display:block;overflow:hidden}
-        .ewu-morph{position:relative;display:inline-block;min-width:6ch;background:linear-gradient(180deg,#fff7e8,#ffb24d 50%,#ff4d12);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(255,90,20,.45))}
-        .ewu-morph.ewu-flick{animation:ewu-glitch .25s steps(2)}
-        @keyframes ewu-glitch{0%{transform:translate(0)}20%{transform:translate(-2px,1px) skewX(-2deg);filter:hue-rotate(20deg) brightness(1.4) drop-shadow(0 0 12px #ff4d12)}40%{transform:translate(2px,-1px) skewX(2deg);filter:brightness(.6)}60%{transform:translate(-1px,0)}80%{filter:brightness(1.6)}100%{transform:translate(0)}}
-        .ewu-tez{background:linear-gradient(180deg,#fff7e8,#ffb24d 50%,#ff4d12);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(255,90,20,.4));animation:ewu-flicker 4.5s infinite}
-        @keyframes ewu-flicker{0%,96%,100%{opacity:1}97%{opacity:.4}98%{opacity:1}}
-        .ewu-lead{font-size:clamp(1.1rem,2vw,1.4rem);color:#79838f;max-width:54ch;margin:2.2rem 0;line-height:1.55}
-        .ewu-lead b{color:#eef1f5;font-weight:500}
-        .ewu-lead .ewu-hit{color:#ffb24d}
-        .ewu-cta{display:flex;gap:1rem;flex-wrap:wrap}
-        .ewu-metrics{display:flex;gap:2.6rem;margin-top:3.5rem;flex-wrap:wrap}
-        .ewu-metric .ewu-num{font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;background:linear-gradient(120deg,#22e0d6,#39a0ff);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
-        .ewu-metric .ewu-lbl{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#79838f;text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem}
-        /* marquee */
-        .ewu-marquee{position:relative;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);padding:1.4rem 0;overflow:hidden;background:#070809;mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-        .ewu-marquee-track{display:flex;gap:3.5rem;animation:ewu-scroll 38s linear infinite;width:max-content;font-family:'Big Shoulders Display','Archivo',sans-serif;font-weight:900;font-size:2.2rem;text-transform:uppercase;color:#eef1f5;white-space:nowrap;letter-spacing:.02em}
-        .ewu-marquee-track span{display:inline-flex;align-items:center;gap:3.5rem}
-        .ewu-marquee-track .ewu-acc{color:#ff4d12}.ewu-marquee-track .ewu-ion{color:#22e0d6}
-        @keyframes ewu-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-        /* live */
-        .ewu-live-blk{padding:6rem 0;text-align:center}
-        .ewu-eyebrow{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#ff4d12;letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem}
-        .ewu-timer{font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:clamp(3rem,11vw,8rem);font-weight:900;background:linear-gradient(180deg,#fff7e8,#ffb24d,#ff4d12);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 30px rgba(255,90,20,.35));line-height:1;letter-spacing:.01em}
-        .ewu-live-cap{font-family:'JetBrains Mono',monospace;color:#79838f;max-width:50ch;margin:1.4rem auto 0;font-size:.95rem;line-height:1.6}
-        /* manifesto */
-        .ewu-manifest{padding:8rem 0}
-        .ewu-maxim{font-family:'Big Shoulders Display','Archivo',sans-serif;font-weight:900;font-size:clamp(2.4rem,8vw,6rem);line-height:.9;letter-spacing:-.01em;text-transform:uppercase;margin:5rem 0;max-width:18ch}
-        .ewu-maxim em{font-style:normal;background:linear-gradient(180deg,#ffb24d,#ff4d12);-webkit-background-clip:text;background-clip:text;color:transparent}
-        .ewu-maxim .ghost{color:#2a2f37}
-        .ewu-maxim .small{display:block;font-family:'Archivo',sans-serif;font-size:1rem;font-weight:500;color:#79838f;text-transform:none;letter-spacing:0;margin-top:1rem;max-width:50ch;line-height:1.55;font-style:italic}
-        /* terminal */
-        .ewu-term{background:#080a0d;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:.9rem;line-height:1.7;max-width:760px;margin:2rem auto 0;box-shadow:0 30px 80px -30px rgba(255,90,20,.25)}
-        .ewu-term-head{display:flex;gap:.5rem;padding:.7rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);background:#0b0e12;align-items:center}
-        .ewu-term-head i{width:10px;height:10px;border-radius:50%;background:#333;display:inline-block}
-        .ewu-term-head i:nth-child(1){background:#ff5f56}.ewu-term-head i:nth-child(2){background:#ffbd2e}.ewu-term-head i:nth-child(3){background:#27c93f}
-        .ewu-term-head span{margin-left:auto;color:#79838f;font-size:.72rem}
-        .ewu-term-body{padding:1.4rem 1.6rem;color:#cdd5df;min-height:280px}
-        .ewu-cmd{color:#22e0d6}.ewu-ok{color:#27c93f}.ewu-warn{color:#ffb24d}
-        .ewu-res{color:#ffb24d;font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:1.6rem;font-weight:900;letter-spacing:.02em;margin-top:.6rem;display:inline-block}
-        /* sections */
-        .ewu-sec{padding:7rem 0}
-        h2.ewu-h2{font-family:'Big Shoulders Display','Archivo',sans-serif;font-weight:900;font-size:clamp(2rem,5.5vw,3.8rem);margin-bottom:1.4rem;text-transform:uppercase;line-height:.9;letter-spacing:-.01em}
-        .ewu-sub{color:#79838f;max-width:62ch;font-size:1.05rem;line-height:1.65}
-        .ewu-reveal{opacity:0;transform:translateY(40px);transition:.9s cubic-bezier(.2,.7,.2,1)}
-        .ewu-reveal.ewu-on{opacity:1;transform:none}
-        /* protocols */
-        .ewu-proto{display:grid;gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-top:2.5rem}
-        .ewu-pcard{background:#0c0f14;padding:2.2rem 1.8rem;position:relative;transition:.3s;overflow:hidden}
-        .ewu-pcard::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 100% 0,rgba(255,77,18,.16),transparent 60%);opacity:0;transition:.3s}
-        .ewu-pcard:hover::before{opacity:1}.ewu-pcard:hover{transform:translateY(-5px)}
-        .ewu-pcode{font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:4.2rem;font-weight:900;line-height:1;background:linear-gradient(180deg,#ffb24d,#ff4d12);-webkit-background-clip:text;background-clip:text;color:transparent}
-        .ewu-pname{font-family:'JetBrains Mono',monospace;color:#22e0d6;font-size:.95rem;margin:.6rem 0 .4rem;font-weight:600}
-        .ewu-pdesc{color:#79838f;font-size:.92rem}
-        .ewu-pnote{margin-top:1.6rem;color:#79838f;font-family:'JetBrains Mono',monospace;font-size:.82rem}
-        /* care */
-        .ewu-care-grid{display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:2.5rem}
-        .ewu-ccard{background:linear-gradient(180deg,#0c0f14,#080a0d);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:2rem 1.9rem;transition:.3s}
-        .ewu-ccard:hover{border-color:rgba(255,77,18,.4);transform:translateY(-4px)}
-        .ewu-ccard .ewu-idx{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:#ff4d12;margin-bottom:.8rem}
-        .ewu-ccard h3{font-family:'Big Shoulders Display','Archivo',sans-serif;font-weight:900;font-size:1.7rem;margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.01em}
-        .ewu-ccard p{color:#79838f;font-size:.95rem;line-height:1.55}
-        /* pipeline */
-        .ewu-pipe{display:grid;gap:1px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;margin-top:2.5rem}
-        .ewu-step{background:#0c0f14;padding:1.9rem 2rem;display:flex;gap:1.6rem;align-items:center;transition:.25s}
-        .ewu-step:hover{background:#11151b;padding-left:2.6rem}
-        .ewu-step .ewu-n{font-family:'JetBrains Mono',monospace;font-size:1rem;color:#22e0d6;border:1px solid rgba(34,224,214,.3);border-radius:8px;padding:.4rem .65rem;min-width:3.2ch;text-align:center}
-        .ewu-step .ewu-ttl{font-family:'Big Shoulders Display','Archivo',sans-serif;font-size:1.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.02em;margin-right:.2rem}
-        .ewu-step .ewu-d{color:#79838f;font-size:.97rem}
-        /* employers */
-        .ewu-emp{position:relative;border-radius:22px;overflow:hidden;margin-top:6rem;border:1px solid rgba(255,77,18,.25);background:radial-gradient(60% 100% at 100% 0,rgba(255,77,18,.2),transparent 60%),#0c0f14}
-        .ewu-emp .inner{padding:4rem 2.4rem}
-        .ewu-emp p{color:#79838f;font-size:1.06rem;max-width:60ch;margin:1.2rem 0 2rem;line-height:1.6}
-        /* footer */
-        .ewu-foot{padding:5rem 0 3rem;border-top:1px solid rgba(255,255,255,.08);margin-top:6rem;text-align:center}
-        .ewu-foot .sig{font-family:'Big Shoulders Display','Archivo',sans-serif;font-weight:900;font-size:1.6rem;letter-spacing:.02em}
-        .ewu-foot .q{color:#79838f;font-style:italic;margin:.8rem 0;font-family:'JetBrains Mono',monospace;font-size:.85rem}
-        .ewu-foot a{color:#22e0d6;text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.82rem}
-        @media(max-width:560px){.ewu-metrics{gap:1.6rem}.ewu-sec{padding:4.5rem 0}.ewu-manifest{padding:4rem 0}.ewu-maxim{margin:2.5rem 0}}
-        @media(hover:none){.ewu-page{cursor:auto}#ewu-arc{display:none}}
-      `}</style>
+      <style>{CSS}</style>
+      <div className="o-pg">
+        <canvas ref={canvasRef} className="o-stars" />
 
-      {/* Boot splash */}
-      <div id="ewu-boot" ref={bootRef}>
-        <div className="lines">
-          <p>{'>'} ⚡ SYSTEM_021 / EWU NEURAL NET</p>
-          <p>{'>'} INITIALIZING SPARK ENGINE...</p>
-          <p>{'>'} LOADING ORAKUL CORE v021.0</p>
-          <p>{'>'} CONNECTED · ZWIĄZEK UKRAIŃSKICH SPAWACZY</p>
-          <p>{'>'} ONLINE.<span className="ewu-scan" /></p>
-        </div>
-      </div>
-
-      <div className="ewu-page">
-        <canvas ref={canvasRef} id="ewu-sparks" style={{ position: 'fixed', inset: 0, zIndex: 1, pointerEvents: 'none' }} />
-        <div ref={arcRef} id="ewu-arc" />
-        <div className="ewu-scanline" />
-
-        {/* Top bar */}
-        <div className="ewu-bar">
-          <span className="ewu-mono"><b>EWU</b> / SYSTEM_021</span>
-          <span className="ewu-live ewu-mono"><span className="ewu-dot" />NEURAL NET · LIVE</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span className="ewu-mono">PL · ES · EU</span>
-            <Link href={`/${locale}`} style={{ color: '#22e0d6', textDecoration: 'none', fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', border: '1px solid rgba(34,224,214,.25)', borderRadius: '100px', padding: '.3rem .8rem', transition: 'all .2s' }}>← Kompas</Link>
-          </div>
+        {/* Nav bar */}
+        <div className="o-bar">
+          <Link href={`/${locale}`} className="o-back">← Kompas Migracji</Link>
+          <span className="o-logo">⚡ EWU · 021</span>
         </div>
 
-        {/* Hero */}
-        <section className="ewu-hero">
-          <div className="ewu-heat" />
-          <div className="ewu-hudgrid" />
-          <div className="ewu-wrap" style={{ position: 'relative', zIndex: 5 }}>
-            <span className="ewu-tag ewu-mono">⚡ ZWIĄZEK UKRAIŃSKICH SPAWACZY · NEURAL RECRUITMENT</span>
-            <h1 className="ewu-king">
-              <span className="row"><span className="ewu-morph" ref={morphRef}>МАЙСТЕР</span></span>
-              <span className="row">ЦЕ ПІДПИС.</span>
-              <span className="row"><span className="ewu-tez">ДА ТАК.</span></span>
+        {/* HERO — 3 секунди: зрозумів */}
+        <section className="o-hero">
+          <div className="o-hero-inner">
+            <div className="o-badge">Związek Ukraińskich Spawaczy · Польща</div>
+            <h1 className="o-h1">
+              Зварювальники<br />
+              для <span className="o-cu">Європи</span>
             </h1>
-            <p className="ewu-lead">
-              <span className="ewu-hit">Одне фото шва.</span>{' '}
-              <span className="ewu-hit">60 секунд.</span>{' '}
-              <b>Завод у Європі.</b><br />
-              Без агентів-кидал. Без дрібного шрифту. Без посередників, які крадуть з твоєї ставки.
+            <p className="o-lead">
+              Перевірені майстри. Легальна робота.<br />
+              Координатор включений — не з вашої ставки.
             </p>
-            <div className="ewu-cta">
-              <button className="ewu-btn ewu-btn-fire ewu-mag">▶ Запустити ОРАКУЛ</button>
-              <button className="ewu-btn ewu-btn-ion ewu-mag">{'// Я роботодавець'}</button>
+            <div className="o-ctas">
+              <a href="#apply" className="o-bp">Шукаю роботу</a>
+              <a href="#employers" className="o-bs">Шукаю персонал</a>
             </div>
-            <div className="ewu-metrics">
-              <div className="ewu-metric"><div className="ewu-num" data-ewu-c="40" data-ewu-suffix="K+">0</div><div className="ewu-lbl">тис. майстрів</div></div>
-              <div className="ewu-metric"><div className="ewu-num" data-ewu-c="60" data-ewu-suffix="">0</div><div className="ewu-lbl">сек. на оцінку</div></div>
-              <div className="ewu-metric"><div className="ewu-num">021</div><div className="ewu-lbl">рівень системи</div></div>
-              <div className="ewu-metric"><div className="ewu-num">0</div><div className="ewu-lbl">кидалова</div></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Marquee */}
-        <div className="ewu-marquee">
-          <div className="ewu-marquee-track">
-            <span>
-              <b>111 MMA</b><span className="ewu-acc">◆</span><b>131 MIG</b><span className="ewu-acc">◆</span><b>135 MAG</b><span className="ewu-acc">◆</span><b>141 TIG</b>
-              <span className="ewu-ion">PA · PB · PC · PF · 6G</span>
-              <b>НАРФ</b><span className="ewu-acc">◆</span><b>ТРУБА</b><span className="ewu-acc">◆</span><b>БАЛКА</b>
-              <span className="ewu-ion">RT · UT · WPS · EN ISO 9606</span>
-              <b>ВАРШАВА</b><span className="ewu-acc">◆</span><b>БАРСЕЛОНА</b><span className="ewu-acc">◆</span><b>HAMBURG</b><span className="ewu-acc">◆</span><b>BILBAO</b>
-            </span>
-            <span>
-              <b>111 MMA</b><span className="ewu-acc">◆</span><b>131 MIG</b><span className="ewu-acc">◆</span><b>135 MAG</b><span className="ewu-acc">◆</span><b>141 TIG</b>
-              <span className="ewu-ion">PA · PB · PC · PF · 6G</span>
-              <b>НАРФ</b><span className="ewu-acc">◆</span><b>ТРУБА</b><span className="ewu-acc">◆</span><b>БАЛКА</b>
-              <span className="ewu-ion">RT · UT · WPS · EN ISO 9606</span>
-              <b>ВАРШАВА</b><span className="ewu-acc">◆</span><b>БАРСЕЛОНА</b><span className="ewu-acc">◆</span><b>HAMBURG</b><span className="ewu-acc">◆</span><b>BILBAO</b>
-            </span>
-          </div>
-        </div>
-
-        {/* Live uptime */}
-        <section className="ewu-live-blk ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">{'// UPTIME · БЕЗПЕРЕРВНА РОБОТА'}</div>
-          <div className="ewu-timer" ref={timerRef}>00:00:00</div>
-          <p className="ewu-live-cap">Поки Європа спить, мережа варить.<br />ОРАКУЛ не лягає. Не п&apos;є. Не розчарується через тебе.</p>
-        </section>
-
-        {/* Manifesto */}
-        <section className="ewu-manifest ewu-wrap">
-          <div className="ewu-maxim ewu-reveal">
-            Шов — це <em>підпис.</em><br /><span className="ghost">Машина</span> читає його за тебе.
-            <span className="small">Геометрія валика, провар кореня, підрізи, шлак. Машина бачить руку за секунди. Балакун не пройде. Майстер пройде завжди.</span>
-          </div>
-          <div className="ewu-maxim ewu-reveal">
-            Координатор — <em>не з твоєї зарплати.</em>
-            <span className="small">Він наш. Платимо ми. Дивно для конкурентів, які про це навіть вголос не говорять. Норма — для нас.</span>
-          </div>
-          <div className="ewu-maxim ewu-reveal">
-            Ти говориш <em>фото.</em><br />Машина — <em>руч.</em>
-            <span className="small">Ти продаєш руки. Ми продаємо тебе достойно. Досвід — каже. Мережа на твоєму боці. Завжди.</span>
-          </div>
-        </section>
-
-        {/* Demo terminal */}
-        <section className="ewu-sec ewu-wrap ewu-reveal ewu-demo">
-          <div className="ewu-eyebrow ewu-mono">{'// LIVE_INFERENCE — оцінка шва за 60 секунд'}</div>
-          <h2 className="ewu-h2">ОРАКУЛ дивиться,<br />як майстер</h2>
-          <div className="ewu-term">
-            <div className="ewu-term-head"><i /><i /><i /><span>{'orakul@ewu // weld_inference.v021'}</span></div>
-            <div className="ewu-term-body">
-              <span className="ewu-cmd">$ orakul --analyze seam_2026_05.jpg --model 021</span><br /><br />
-              {'>'} LOADING IMAGE ............... <span className="ewu-ok">OK</span><br />
-              {'>'} DETECTING METHOD ........... <span className="ewu-ok">141 TIG</span><br />
-              {'>'} POSITION ................... <span className="ewu-ok">6G (труба, all-position)</span><br />
-              {'>'} ANALYZING ROOT ............. <span ref={barRef}>[░░░░░░░░░░░░] 0%</span><br />
-              {'>'} ПРОВАР КОРЕНЯ ............. <span className="ewu-ok">ВІДМІННО</span><br />
-              {'>'} ПІДРІЗИ / UNDERCUT ....... <span className="ewu-ok">НЕ ВИЯВЛЕНО</span><br />
-              {'>'} ШЛАК / SLAG INCLUSIONS ... <span className="ewu-ok">НЕ ВИЯВЛЕНО</span><br />
-              {'>'} RIPPLES UNIFORMITY ......... <span className="ewu-ok">96.4%</span><br />
-              {'>'} RT/UT READINESS ............ <span className="ewu-ok">PASS</span><br /><br />
-              {'>'} <span className="ewu-warn">VERDICT:</span><br />
-              <span className="ewu-res">МАЙСТЕР РЕКОМЕНДУЄТЬСЯ. ✓</span><br />
-              <span className="ewu-cmd">_</span>
+            <div className="o-stats">
+              <div className="o-stat">
+                <div className="o-sn">40K+</div>
+                <div className="o-sl">майстрів у базі</div>
+              </div>
+              <div className="o-stat">
+                <div className="o-sn">6</div>
+                <div className="o-sl">країн Європи</div>
+              </div>
+              <div className="o-stat">
+                <div className="o-sn">100%</div>
+                <div className="o-sl">офіційна зайнятість</div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Protocols */}
-        <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">{'// SUPPORTED_PROTOCOLS'}</div>
-          <h2 className="ewu-h2">Машина читає руку,<br />яку неможливо підробити</h2>
-          <p className="ewu-sub">Завантаж фото шва — нейромережа бачить геометрію, провар, дефекти. Те, що відрізняє майстра від балакуна. За секунди.</p>
-          <div className="ewu-proto">
-            <div className="ewu-pcard"><div className="ewu-pcode">111</div><div className="ewu-pname ewu-mono">MMA</div><div className="ewu-pdesc">ручне дугове · електрод</div></div>
-            <div className="ewu-pcard"><div className="ewu-pcode">131</div><div className="ewu-pname ewu-mono">MIG</div><div className="ewu-pdesc">інертний газ · неіржа, алюміній</div></div>
-            <div className="ewu-pcard"><div className="ewu-pcode">135</div><div className="ewu-pname ewu-mono">MAG</div><div className="ewu-pdesc">активний газ · вуглецева сталь</div></div>
-            <div className="ewu-pcard"><div className="ewu-pcode">141</div><div className="ewu-pname ewu-mono">TIG</div><div className="ewu-pdesc">вольфрам · корінь, труби</div></div>
-          </div>
-          <p className="ewu-pnote ewu-mono">{'+ монтажники · слюсарі · працівники верфей · бригади // PA–PF, 6G // EN ISO 9606'}</p>
-        </section>
-
-        {/* Care */}
-        <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">{'// PROTOKÓŁ_OPIEKI'}</div>
-          <h2 className="ewu-h2">Опіка — це інфраструктура,<br />а не реклама</h2>
-          <p className="ewu-sub">Конкурент, що кине на зарплаті, про це навіть вголос не скаже. Але не здогадається, що так можна. Ми вшили це в систему.</p>
-          <div className="ewu-care-grid">
-            <div className="ewu-ccard"><div className="ewu-idx ewu-mono">01</div><h3>Прозоро</h3><p>Договір чистий. Без дрібного шрифту. Без зборів. Без сюрпризів в кінці місяця.</p></div>
-            <div className="ewu-ccard"><div className="ewu-idx ewu-mono">02</div><h3>Чесно</h3><p>Ставку виторгували за тебе. Переговини провели ми. Ти приходиш на готове.</p></div>
-            <div className="ewu-ccard"><div className="ewu-idx ewu-mono">03</div><h3>Оплачено</h3><p>Координатор не з твоєї зарплати. Він наш. На обʼєкті допоможе з усім.</p></div>
-            <div className="ewu-ccard"><div className="ewu-idx ewu-mono">04</div><h3>Порядок</h3><p>Досвід — каже. Мережа на твоєму боці. Завжди. Без відмазок.</p></div>
-          </div>
-        </section>
-
-        {/* Pipeline */}
-        <section className="ewu-sec ewu-wrap ewu-reveal">
-          <div className="ewu-eyebrow ewu-mono">{'// EXECUTION_PIPELINE'}</div>
-          <h2 className="ewu-h2">Чотири кроки<br />до контракту</h2>
-          <div className="ewu-pipe">
-            <div className="ewu-step"><span className="ewu-n ewu-mono">01</span><span className="ewu-ttl">Пишеш</span><span className="ewu-d">ОРАКУЛу, як другу. Жодного опитника.</span></div>
-            <div className="ewu-step"><span className="ewu-n ewu-mono">02</span><span className="ewu-d">Машина бачить твою руку. Підпис без слів.</span><span className="ewu-ttl">Видаєш фото</span></div>
-            <div className="ewu-step"><span className="ewu-n ewu-mono">03</span><span className="ewu-ttl">Домовляємось</span><span className="ewu-d">Обʼєкт. Ставка. Документи. Все по-чесному.</span></div>
-            <div className="ewu-step"><span className="ewu-n ewu-mono">04</span><span className="ewu-ttl">Працюєш</span><span className="ewu-d">Координатор поруч. Завод задоволений. Ти — теж.</span></div>
+        {/* FOR WORKERS — 10 секунд: зацікавився */}
+        <section className="o-sec o-sec-alt">
+          <div className="o-wrap">
+            <div className="o-ey">Для зварювальників</div>
+            <h2 className="o-h2">Три кроки<br />до роботи в Європі</h2>
+            <p className="o-sub">Без агентів-посередників. Координатор від нас — безкоштовно для вас.</p>
+            <div className="o-steps">
+              <div className="o-step">
+                <div className="o-stn">01</div>
+                <h3>Залишаєш заявку</h3>
+                <p>Ім&apos;я і телефон. Зв&apos;яжемося протягом 24 годин.</p>
+              </div>
+              <div className="o-step">
+                <div className="o-stn">02</div>
+                <h3>Координатор з&apos;єднується</h3>
+                <p>Обговорюємо спеціалізацію, країну, умови. Підбираємо об&apos;єкт під вас.</p>
+              </div>
+              <div className="o-step">
+                <div className="o-stn">03</div>
+                <h3>Виїжджаєш на об&apos;єкт</h3>
+                <p>Договір підписаний. Офіційна ставка. Координатор поруч на місці.</p>
+              </div>
+            </div>
+            <div className="o-list">
+              <div className="o-li"><span className="o-li-dot">◆</span>Координатор включений — платимо ми, не ви</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Договір чистий: без дрібного шрифту та прихованих зборів</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Підтримка 111 MMA · 131 MIG · 135 MAG · 141 TIG та монтажників</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Повна легалізація перебування в пакеті</div>
+            </div>
+            <a href="#apply" className="o-bp">Залишити заявку</a>
           </div>
         </section>
 
-        {/* Employers */}
-        <section className="ewu-wrap ewu-reveal" id="ewu-emp">
-          <div className="ewu-emp"><div className="inner">
-            <div className="ewu-eyebrow ewu-mono">{'// DLA_PRACODAWCÓW'}</div>
-            <h2 className="ewu-h2">Stabilny zespół.<br />Zero rotacji.<br />Pełen cykl.</h2>
-            <p>Sprawdzeni spawacze 111/131/135/141, monterzy i brygady — z weryfikacją AI po zdjęciach prac, legalizacją pobytu, opieką koordynatora i gwarancją zastępstwa. Mniej przestojów. Niższe koszty. Przewidywalny wynik.</p>
-            <button className="ewu-btn ewu-btn-fire ewu-mag">Połącz się z siecią →</button>
-          </div></div>
+        {/* FOR EMPLOYERS — 10 секунд: зацікавився */}
+        <section className="o-sec" id="employers">
+          <div className="o-wrap">
+            <div className="o-ey">Для роботодавців</div>
+            <h2 className="o-h2">Перевірений персонал.<br />Без клопоту.</h2>
+            <p className="o-sub">Підбір, легалізація, координатор на об&apos;єкті — повний цикл під ключ.</p>
+            <div className="o-enums">
+              <div className="o-enum">
+                <div className="o-enn">40K+</div>
+                <div className="o-enl">перевірених майстрів</div>
+              </div>
+              <div className="o-enum">
+                <div className="o-enn">48год</div>
+                <div className="o-enl">на підбір кандидатів</div>
+              </div>
+              <div className="o-enum">
+                <div className="o-enn">0</div>
+                <div className="o-enl">прихованих витрат</div>
+              </div>
+            </div>
+            <div className="o-list">
+              <div className="o-li"><span className="o-li-dot">◆</span>Підтверджені кваліфікації: 111/131/135/141, EN ISO 9606</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Легалізація та документи — наша відповідальність</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Координатор на об&apos;єкті: нуль простоїв та непорозумінь</div>
+              <div className="o-li"><span className="o-li-dot">◆</span>Гарантована заміна при необхідності</div>
+            </div>
+            <a href="#apply" className="o-bp" onClick={() => setRole('employer')}>Знайти персонал</a>
+          </div>
         </section>
 
-        <footer className="ewu-foot ewu-wrap">
-          <div className="sig">⚡ EWU · SYSTEM 021</div>
-          <div className="q ewu-mono">&ldquo;Шов лежить ідеально, коли поспішати нікуди.&rdquo;</div>
-          <Link href={`/${locale}`} className="ewu-foot a">← kompasmigracji.com</Link>
+        {/* FORM — 30 секунд: залишає заявку */}
+        <section className="o-fs" id="apply">
+          <div className="o-fbox">
+            {sent ? (
+              <div className="o-ok">
+                <div className="o-ok-ico">✓</div>
+                <h3>Заявку отримано</h3>
+                <p>Координатор зв&apos;яжеться з вами протягом 24 годин.</p>
+              </div>
+            ) : (
+              <>
+                <div className="o-ft">Залишити заявку</div>
+                <div className="o-fsub">Безкоштовно. Без обов&apos;язань. Конфіденційно.</div>
+                <div className="o-roles">
+                  <button type="button" className={`o-role${role === 'worker' ? ' o-ra' : ''}`} onClick={() => setRole('worker')}>
+                    Зварювальник
+                  </button>
+                  <button type="button" className={`o-role${role === 'employer' ? ' o-ra' : ''}`} onClick={() => setRole('employer')}>
+                    Роботодавець
+                  </button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                  <input
+                    className="o-inp"
+                    placeholder={role === 'worker' ? "Ваше ім'я" : "Ім'я або назва компанії"}
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    required
+                  />
+                  <input
+                    className="o-inp"
+                    placeholder="Телефон або WhatsApp"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    required
+                  />
+                  <button
+                    className="o-sub-btn"
+                    type="submit"
+                    disabled={sending || !name.trim() || !phone.trim()}
+                  >
+                    {sending ? 'Надсилання...' : role === 'worker' ? 'Знайти роботу' : 'Знайти персонал'}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+        </section>
+
+        <footer className="o-foot">
+          <div className="o-foot-logo">⚡ EWU · UNION 021</div>
+          <Link href={`/${locale}`}>← kompasmigracji.com</Link>
         </footer>
       </div>
     </>
