@@ -298,9 +298,10 @@ export default function OrakulPage() {
     const ctx = cv.getContext('2d');
     if (!ctx) return;
     const c = ctx;
+    const cvs = cv;
 
     let W = 0, H = 0;
-    function resize() { W = cv.width = window.innerWidth; H = cv.height = window.innerHeight; }
+    function resize() { W = cvs.width = window.innerWidth; H = cvs.height = window.innerHeight; }
     resize();
     window.addEventListener('resize', resize);
 
