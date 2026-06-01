@@ -278,7 +278,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Шукаю роботу',
     card1Desc: 'Стабільність, високі контракти, європейське житло та соціальна опіка над вашою родиною.',
     card2Title: 'Шукаю персонал',
-    card2Desc: 'Залучення майстрів, цифрова перевірка швів нейромережами та масштабування промислових ліній.',
+    card2Desc: 'Від вашого дзвінка до першої зміни — 5 робочих днів. Все що після — наша турбота.',
     workersTitle: 'Професійний захист та опіка',
     workersDesc: "Ми будуємо безпечне майбутнє для вашої кар'єри та спокій близьких.",
     workersItems: [
@@ -304,7 +304,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersItems: [
       'Сертифіковані майстри методів MIG, MAG, TIG, MMA',
       'Повне адміністрування відряджень, житла та податків',
-      'Цифровий аудит зварювальних швів нейромережами',
+      'Кожен майстер прибуває з документами, медоглядом та підтвердженим розрядом — нуль адмін-клопоту',
       "Координатор на об'єкті: нуль простоїв та непорозумінь",
       'Гарантована заміна при необхідності',
     ],
@@ -328,7 +328,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Looking for work',
     card1Desc: 'Stability, high-value contracts, European accommodation and social care for your family.',
     card2Title: 'Looking for staff',
-    card2Desc: 'Recruiting certified masters, AI-powered weld inspection and scaling of industrial lines.',
+    card2Desc: 'From your call to first shift — 5 working days. Everything after that is on us.',
     workersTitle: 'Professional Protection & Care',
     workersDesc: 'We build a safe future for your career and peace of mind for your loved ones.',
     workersItems: [
@@ -354,7 +354,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersItems: [
       'Certified MIG, MAG, TIG, MMA welding specialists',
       'Full administration of secondments, housing and taxes',
-      'Digital AI audit of weld seams',
+      'Every master arrives with documents, medical clearance and a certified grade — zero admin overhead',
       'On-site coordinator: zero downtime or misunderstandings',
       'Guaranteed replacement when needed',
     ],
@@ -378,7 +378,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Ищу работу',
     card1Desc: 'Стабильность, высокие контракты, европейское жильё и социальная опека над вашей семьёй.',
     card2Title: 'Ищу персонал',
-    card2Desc: 'Привлечение мастеров, цифровая проверка швов нейросетями и масштабирование промышленных линий.',
+    card2Desc: 'От звонка до первой смены — 5 рабочих дней. Всё что после — наша забота.',
     workersTitle: 'Профессиональная защита и опека',
     workersDesc: 'Мы строим безопасное будущее для вашей карьеры и спокойствие близких.',
     workersItems: [
@@ -404,7 +404,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersItems: [
       'Сертифицированные сварщики методов MIG, MAG, TIG, MMA',
       'Полное администрирование командировок, жилья и налогов',
-      'Цифровой аудит сварочных швов нейросетями',
+      'Каждый мастер прибывает с документами, медосмотром и подтверждённым разрядом — ноль административных хлопот',
       'Координатор на объекте: ноль простоев и недоразумений',
       'Гарантированная замена при необходимости',
     ],
@@ -428,7 +428,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     card1Title: 'Szukam pracy',
     card1Desc: 'Stabilność, atrakcyjne kontrakty, europejskie zakwaterowanie i opieka społeczna nad Twoją rodziną.',
     card2Title: 'Szukam pracowników',
-    card2Desc: 'Rekrutacja certyfikowanych spawaczy, cyfrowa kontrola spoin i skalowanie linii produkcyjnych.',
+    card2Desc: 'Od Twojego telefonu do pierwszej zmiany — 5 dni roboczych. Resztą zajmujemy się my.',
     workersTitle: 'Profesjonalna ochrona i wsparcie',
     workersDesc: 'Budujemy bezpieczną przyszłość dla Twojej kariery i spokój Twoich bliskich.',
     workersItems: [
@@ -454,7 +454,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersItems: [
       'Certyfikowani spawacze metodami MIG, MAG, TIG, MMA',
       'Pełna administracja delegacji, zakwaterowania i podatków',
-      'Cyfrowy audyt spoin spawalniczych sieciami neuronowymi',
+      'Każdy mistrz przybywa z dokumentami, orzeczeniem lekarskim i potwierdzonym stopniem — zero biurokracji',
       'Koordynator na obiekcie: zero przestojów i nieporozumień',
       'Gwarantowana wymiana w razie potrzeby',
     ],
