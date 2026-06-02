@@ -632,17 +632,19 @@ export default function OrakulPage() {
   const [leadSaved, setLeadSaved] = useState(false);
   const msgsEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (chatOpen && chatMsgs.length === 0) {
-      const greet: Record<LangKey, string> = {
-        uk: 'Привіт! Я — Оракул ⟁\n\nОпераційний розум мережі EWU для зварювальників і роботодавців.\n\nТи шукаєш роботу чи підбираєш персонал?',
-        ru: 'Привет! Я — Оракул ⟁\n\nОперативный разум сети EWU.\n\nТы ищешь работу или подбираешь персонал?',
-        pl: 'Cześć! Jestem Orakul ⟁\n\nOperacyjny umysł sieci EWU.\n\nSzukasz pracy czy szukasz personelu?',
-        en: 'Hi! I\'m Orakul ⟁\n\nThe operational intelligence of the EWU network.\n\nAre you looking for work or hiring staff?',
-      };
-      setChatMsgs([{ role: 'assistant', content: greet[lang] }]);
+  const GREET: Record<LangKey, string> = {
+    uk: 'Привіт! Я — Оракул ⟁\n\nОпераційний розум мережі EWU для зварювальників і роботодавців.\n\nТи шукаєш роботу чи підбираєш персонал?',
+    ru: 'Привет! Я — Оракул ⟁\n\nОперативный разум сети EWU.\n\nТы ищешь работу или подбираешь персонал?',
+    pl: 'Cześć! Jestem Orakul ⟁\n\nOperacyjny umysł sieci EWU.\n\nSzukasz pracy czy szukasz personelu?',
+    en: "Hi! I'm Orakul ⟁\n\nThe operational intelligence of the EWU network.\n\nAre you looking for work or hiring staff?",
+  };
+
+  const openChat = () => {
+    if (chatMsgs.length === 0) {
+      setChatMsgs([{ role: 'assistant', content: GREET[lang] }]);
     }
-  }, [chatOpen]);
+    setChatOpen(true);
+  };
 
   useEffect(() => {
     msgsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -1080,7 +1082,7 @@ export default function OrakulPage() {
               <div className="oc-head-name">ОРАКУЛ · EWU</div>
               <div className="oc-head-sub">AI-рекрутинг · зварювальники</div>
             </div>
-            <button className="oc-close" onClick={() => setChatOpen(false)} aria-label="Закрити">✕</button>
+            <button className="oc-close" onClick={() => setChatOpen(false)}>✕</button>
           </div>
 
           <div className="oc-msgs">
@@ -1100,7 +1102,7 @@ export default function OrakulPage() {
                 </div>
               </div>
             )}
-            {leadSaved && <div className="oc-saved">✓ Заявку збережено — менеджер зв'яжеться з тобою</div>}
+            {leadSaved && <div className="oc-saved">✓ Заявку збережено — менеджер зв&apos;яжеться з тобою</div>}
             <div ref={msgsEndRef} />
           </div>
 
@@ -1122,7 +1124,7 @@ export default function OrakulPage() {
         </div>
       )}
 
-      <button className="oc-btn" onClick={() => setChatOpen(v => !v)} aria-label="Оракул AI чат">
+      <button className="oc-btn" onClick={() => chatOpen ? setChatOpen(false) : openChat()} aria-label="Оракул AI чат">
         <span className="oc-btn-dot"/>
         ⟁ Оракул
       </button>
