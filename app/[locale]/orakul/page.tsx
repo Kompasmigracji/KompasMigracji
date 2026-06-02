@@ -127,9 +127,13 @@ const CSS = `
 .e-role-card h3{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;color:#0f172a}
 .e-role-card p{color:#334155;font-size:1rem;font-weight:500}
 
+.e-wrap{max-width:1120px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+
 /* SECTIONS */
-.e-section{padding:6rem 0;border-top:1px solid var(--border);background:var(--bg-panel)}
-.e-section-alt{background:var(--bg-soft)}
+.e-section{padding:6rem 0;border-top:1px solid rgba(255,255,255,0.06);position:relative;overflow:hidden;color:#fff}
+.e-section::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1920&q=95');background-size:cover;background-position:center;filter:brightness(0.55) contrast(0.95);z-index:-1}
+.e-section-alt{position:relative;background:transparent;color:#fff}
+.e-section-alt::before{content:'';position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1920&q=95');background-size:cover;background-position:center;filter:brightness(0.6) contrast(0.95);z-index:-1}
 .e-wrap{max-width:1120px;margin:0 auto;padding:0 1.5rem}
 .e-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2.5rem}
 .e-sec-head h2{font-size:2.4rem;font-weight:700;margin-bottom:.6rem}
@@ -161,13 +165,13 @@ const CSS = `
 .e-inp:focus{border-color:var(--union-blue)}
 .e-inp::placeholder{color:var(--text-muted)}
 .e-submit-btn{
-  width:100%;padding:1rem;border-radius:10px;border:none;
+  width:100%;padding:1rem;border-radius:10px;border:2px solid #000;
   cursor:pointer;background:var(--union-blue);color:#fff;
   font-weight:700;font-size:1rem;font-family:inherit;
-  transition:filter .15s;margin-top:4px;
+  transition:filter .15s,box-shadow .15s;margin-top:4px;
   box-shadow:0 4px 14px rgba(29,78,216,.2);
 }
-.e-submit-btn:hover:not(:disabled){filter:brightness(1.08);box-shadow:0 0 18px rgba(0,229,255,.35)}
+.e-submit-btn:hover:not(:disabled){filter:brightness(1.08);box-shadow:0 6px 20px rgba(0,0,0,.45)}
 .e-submit-btn:disabled{opacity:.5;cursor:not-allowed}
 .e-ok{text-align:center;padding:1.5rem 0}
 .e-ok-ico{font-size:3rem;margin-bottom:1rem;color:var(--union-blue)}
@@ -176,12 +180,12 @@ const CSS = `
 
 /* BTN */
 .e-btn{
-  display:inline-block;padding:1rem 2.2rem;border-radius:10px;border:none;
+  display:inline-block;padding:1rem 2.2rem;border-radius:10px;border:2px solid #000;
   cursor:pointer;background:var(--union-blue);color:#fff;font-weight:700;
   font-size:1rem;font-family:inherit;text-decoration:none;
-  transition:filter .2s;box-shadow:0 4px 14px rgba(29,78,216,.2);
+  transition:filter .2s,box-shadow .15s;box-shadow:0 4px 14px rgba(29,78,216,.2);
 }
-.e-btn:hover{filter:brightness(1.08);box-shadow:0 0 18px rgba(0,229,255,.4)}
+.e-btn:hover{filter:brightness(1.08);box-shadow:0 6px 20px rgba(0,0,0,.45)}
 
 /* ABOUT */
 .e-about{padding:6rem 0;background:var(--bg-soft);border-top:1px solid var(--border)}
@@ -296,15 +300,15 @@ const CSS = `
 .oc-btn{
   position:fixed;bottom:26px;right:26px;z-index:9990;
   display:flex;align-items:center;gap:.45rem;
-  padding:.65rem 1.25rem;border-radius:50px;border:none;cursor:pointer;
+  padding:.65rem 1.25rem;border-radius:50px;border:2px solid #000;cursor:pointer;
   background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
   color:#fff;font-weight:600;font-size:.84rem;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   letter-spacing:-.01em;
-  box-shadow:0 0 26px -4px rgba(14,165,233,.5),0 4px 14px rgba(0,0,0,.2);
+  box-shadow:0 0 26px -4px rgba(14,165,233,.5),0 4px 14px rgba(0,0,0,.3);
   transition:transform .2s,box-shadow .2s;
 }
-.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(0,229,255,.65),0 8px 20px rgba(0,0,0,.25)}
+.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(0,229,255,.65),0 8px 20px rgba(0,0,0,.4)}
 .oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#7fffb2;box-shadow:0 0 6px #7fffb2;animation:oc-pulse 2s infinite}
 @keyframes oc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.7)}}
 
@@ -389,7 +393,7 @@ const CSS = `
 .oc-input:focus{border-color:rgba(29,78,216,.4);background:#fff}
 .oc-input::placeholder{color:#94a3b8}
 .oc-send{
-  width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+  width:34px;height:34px;border-radius:50%;border:2px solid #000;cursor:pointer;flex-shrink:0;
   background:linear-gradient(135deg,#1d4ed8,#0ea5e9);color:#fff;
   display:flex;align-items:center;justify-content:center;
   transition:transform .15s,opacity .15s;
@@ -464,13 +468,13 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
   uk: {
     badge: '',
     h1: 'Європейський Союз Зварювальників',
-    heroDesc: 'Технологічна екосистема розвитку важкої промисловості в ЄС та безкомпромісної соціально-правової опіки за промисловими працівниками.',
+    heroDesc: 'Європейський Союз Зварювальників (EWU) — міжнародна індустріальна платформа, що об\'єднує професійних майстрів та провідних роботодавців ЄС.',
     card1Title: 'Шукаю роботу',
     card1Desc: 'Стабільність, високі контракти, європейське житло та соціальна опіка над вашою родиною.',
     card2Title: 'Шукаю персонал',
     card2Desc: 'Ми відбираємо лише тих, кого самі б взяли в бригаду. Це наш єдиний критерій.',
     workersTitle: 'Професійний захист та опіка',
-    workersDesc: "Ми будуємо безпечне майбутнє для вашої кар'єри та спокій близьких.",
+    workersDesc: "Гарантуємо офіційне працевлаштування, повний правовий захист, супровід з сертифікацією та 100% чесні виплати та правовий захист і підтримку у всіх сферах життя.",
     workersItems: [
       'Легальні контракти на провідних індустріальних заводах ЄС',
       "Повне медичне та юридичне забезпечення сім'ї працівника",
@@ -489,7 +493,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wSentTitle: 'Заявку отримано',
     wSentDesc: 'Координатор зв’яжеться з вами протягом 24 годин.',
     employersTitle: 'Розвиток промислового потенціалу',
-    employersDesc: 'Інтеграція перевірених людських ресурсів та AI-систем моніторингу у вашу виробничу потужність.',
+    employersDesc: 'Оперативно комплектуємо об\'єкти перевіреними зварювальниками та монтерами з підтвердженою кваліфікацією та готовим пакетом документів.',
     stat1: 'перевірених майстрів',
     stat2: 'офіційні контракти',
     stat3: 'прихованих витрат',
@@ -510,7 +514,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     eSentTitle: 'Запит отримано',
     eSentDesc: 'Координатор зв’яжеться з вами протягом 24 годин.',
     aboutTitle: 'Промислова екосистема EWU',
-    aboutP1: 'European Welding Union — це платформа, яка виводить розвиток європейської промисловості на новий рівень завдяки синергії цифрових технологій та турботи про людей.',
+    aboutP1: 'Європейський Союз Зварювальників (EWU) — міжнародна індустріальна платформа, що об\'єднує професійних майстрів та провідних роботодавців ЄС.',
     aboutP2: 'У довгостроковому партнерстві з проєктом «Компас Міграції» (співзасновник — Олександр Василишин), ми створюємо непорушний соціально-юридичний щит для робітників, захищаючи інтереси їхніх сімей в ЄС.',
     quote: 'Шов ляже ідеально, коли поспішати нікуди. Простота — це складність, яку вже ніхто не помічає.',
     quote2: 'Той, хто варить цю систему ночами, поки Європа спить,\nщоб удень вона працювала за всіх.',
