@@ -268,58 +268,59 @@ const CSS = `
   position:fixed;bottom:26px;right:26px;z-index:9990;
   display:flex;align-items:center;gap:.45rem;
   padding:.65rem 1.25rem;border-radius:50px;border:none;cursor:pointer;
-  background:linear-gradient(120deg,#ff6a00,#ee0979);
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
   color:#fff;font-weight:800;font-size:.82rem;font-family:inherit;letter-spacing:.03em;
-  box-shadow:0 0 26px -4px rgba(238,9,121,.55),0 4px 14px rgba(0,0,0,.3);
+  box-shadow:0 0 26px -4px rgba(14,165,233,.5),0 4px 14px rgba(0,0,0,.2);
   transition:transform .2s,box-shadow .2s;
 }
-.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(238,9,121,.7),0 8px 20px rgba(0,0,0,.35)}
+.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(0,229,255,.65),0 8px 20px rgba(0,0,0,.25)}
 .oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#7fffb2;box-shadow:0 0 6px #7fffb2;animation:oc-pulse 2s infinite}
 @keyframes oc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.7)}}
 
 .oc-panel{
   position:fixed;bottom:84px;right:26px;z-index:9991;
   width:386px;height:572px;
-  background:rgba(7,11,25,.97);backdrop-filter:blur(22px);
-  border:1px solid rgba(0,229,255,.1);border-radius:22px;
+  background:rgba(255,255,255,.98);backdrop-filter:blur(22px);
+  border:1px solid rgba(29,78,216,.12);border-radius:22px;
   display:flex;flex-direction:column;overflow:hidden;
-  box-shadow:0 24px 64px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04);
+  box-shadow:0 24px 64px rgba(29,78,216,.12),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(29,78,216,.06);
   animation:oc-in .24s cubic-bezier(.16,1,.3,1);
 }
 @keyframes oc-in{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 
 .oc-head{
   padding:.85rem 1.2rem;flex-shrink:0;
-  background:linear-gradient(120deg,rgba(255,106,0,.12),rgba(238,9,121,.08));
-  border-bottom:1px solid rgba(0,229,255,.09);
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
+  border-bottom:none;
   display:flex;align-items:center;gap:.65rem;
 }
 .oc-head-sym{
   width:34px;height:34px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#0f172a,#1e3a8a);
-  border:1.5px solid rgba(0,229,255,.3);
+  background:rgba(255,255,255,.18);
+  border:1.5px solid rgba(255,255,255,.35);
   display:flex;align-items:center;justify-content:center;
-  font-size:.85rem;font-weight:900;color:#00e5ff;
+  font-size:.85rem;font-weight:900;color:#fff;
 }
 .oc-head-info{flex:1;min-width:0}
-.oc-head-name{font-weight:800;font-size:.92rem;color:#f8fafc;letter-spacing:.01em}
-.oc-head-sub{font-size:.68rem;color:rgba(0,229,255,.6);font-weight:500;margin-top:1px}
-.oc-close{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:1.1rem;line-height:1;padding:.2rem .3rem;border-radius:6px;transition:color .15s;margin-left:auto}
+.oc-head-name{font-weight:800;font-size:.92rem;color:#fff;letter-spacing:.01em}
+.oc-head-sub{font-size:.68rem;color:rgba(255,255,255,.72);font-weight:500;margin-top:1px}
+.oc-close{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);font-size:1.1rem;line-height:1;padding:.2rem .3rem;border-radius:6px;transition:color .15s;margin-left:auto}
 .oc-close:hover{color:#fff}
 
 .oc-msgs{
   flex:1;overflow-y:auto;padding:1rem .85rem;display:flex;flex-direction:column;gap:.6rem;
-  scrollbar-width:thin;scrollbar-color:rgba(0,229,255,.1) transparent;
+  scrollbar-width:thin;scrollbar-color:rgba(29,78,216,.12) transparent;
+  background:#f8fafc;
 }
 .oc-msg{display:flex;gap:.45rem;align-items:flex-end}
 .oc-msg-bot{justify-content:flex-start}
 .oc-msg-user{justify-content:flex-end}
 .oc-avatar{
   width:26px;height:26px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#0f172a,#1e3a8a);
-  border:1.5px solid rgba(0,229,255,.25);
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
+  border:1.5px solid rgba(29,78,216,.2);
   display:flex;align-items:center;justify-content:center;
-  font-size:.62rem;font-weight:900;color:#00e5ff;letter-spacing:-.02em;
+  font-size:.62rem;font-weight:900;color:#fff;letter-spacing:-.02em;
 }
 .oc-bubble{
   max-width:80%;padding:.55rem .85rem;border-radius:14px;
@@ -327,35 +328,36 @@ const CSS = `
   white-space:pre-wrap;word-break:break-word;
 }
 .oc-bubble-bot{
-  background:rgba(14,22,44,.9);color:#dce4f0;
-  border:1px solid rgba(0,229,255,.07);border-bottom-left-radius:4px;
+  background:#fff;color:#1e293b;
+  border:1px solid rgba(29,78,216,.09);border-bottom-left-radius:4px;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
 }
 .oc-bubble-user{
   background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;
   border-bottom-right-radius:4px;
 }
 .oc-typing{display:flex;gap:4px;align-items:center;padding:.3rem .2rem}
-.oc-dot{width:5px;height:5px;border-radius:50%;background:rgba(0,229,255,.45);animation:oc-blink 1.2s infinite}
+.oc-dot{width:5px;height:5px;border-radius:50%;background:rgba(29,78,216,.4);animation:oc-blink 1.2s infinite}
 .oc-dot:nth-child(2){animation-delay:.2s}
 .oc-dot:nth-child(3){animation-delay:.4s}
 @keyframes oc-blink{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
-.oc-saved{text-align:center;font-size:.7rem;color:rgba(0,229,255,.55);padding:.3rem}
+.oc-saved{text-align:center;font-size:.7rem;color:rgba(29,78,216,.6);padding:.3rem}
 
 .oc-input-row{
-  padding:.75rem .85rem;border-top:1px solid rgba(0,229,255,.07);
+  padding:.75rem .85rem;border-top:1px solid rgba(29,78,216,.08);
   display:flex;gap:.5rem;align-items:center;flex-shrink:0;
-  background:rgba(4,8,20,.6);
+  background:#fff;
 }
 .oc-input{
-  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(0,229,255,.08);
-  border-radius:22px;padding:.55rem .95rem;color:#f1f5f9;
-  font-size:.83rem;font-family:inherit;outline:none;transition:border-color .15s;
+  flex:1;background:#f1f5f9;border:1px solid rgba(29,78,216,.12);
+  border-radius:22px;padding:.55rem .95rem;color:#1e293b;
+  font-size:.83rem;font-family:inherit;outline:none;transition:border-color .15s,background .15s;
 }
-.oc-input:focus{border-color:rgba(0,229,255,.28)}
-.oc-input::placeholder{color:rgba(255,255,255,.2)}
+.oc-input:focus{border-color:rgba(29,78,216,.4);background:#fff}
+.oc-input::placeholder{color:#94a3b8}
 .oc-send{
   width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
-  background:linear-gradient(135deg,#ff6a00,#ee0979);color:#fff;
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);color:#fff;
   display:flex;align-items:center;justify-content:center;
   transition:transform .15s,opacity .15s;
 }
@@ -908,7 +910,93 @@ export default function OrakulPage() {
           <div className="e-hero-inner">
             <div className="e-logo-wrap">
               <canvas ref={canvasRef} className="e-logo-canvas" />
-              <div className="e-logo-txt">EWU</div>
+              <svg width="320" height="190" viewBox="0 0 320 190" fill="none" xmlns="http://www.w3.org/2000/svg" style={{position:'relative',zIndex:2,userSelect:'none'}}>
+                <defs>
+                  <radialGradient id="ewu-bg" cx="40%" cy="30%" r="80%">
+                    <stop offset="0%" stopColor="#1a2a50"/>
+                    <stop offset="100%" stopColor="#060912"/>
+                  </radialGradient>
+                  <linearGradient id="ewu-ring" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#60a5fa"/>
+                    <stop offset="40%" stopColor="#00e5ff"/>
+                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  </linearGradient>
+                  <linearGradient id="ewu-txt" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f0f9ff"/>
+                    <stop offset="25%" stopColor="#ffffff"/>
+                    <stop offset="60%" stopColor="#bfdbfe"/>
+                    <stop offset="100%" stopColor="#60a5fa"/>
+                  </linearGradient>
+                  <radialGradient id="ewu-topglow" cx="50%" cy="0%" r="65%">
+                    <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.7"/>
+                    <stop offset="55%" stopColor="#1d4ed8" stopOpacity="0.2"/>
+                    <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0"/>
+                  </radialGradient>
+                  <filter id="ewu-gf" x="-40%" y="-40%" width="180%" height="180%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                  <filter id="ewu-tf" x="-15%" y="-25%" width="130%" height="150%">
+                    <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#00e5ff" floodOpacity="0.35"/>
+                  </filter>
+                  <clipPath id="ewu-cc">
+                    <circle cx="160" cy="95" r="83"/>
+                  </clipPath>
+                </defs>
+                {/* shadow */}
+                <circle cx="162" cy="98" r="82" fill="rgba(0,0,0,0.28)"/>
+                {/* badge */}
+                <circle cx="160" cy="95" r="83" fill="url(#ewu-bg)"/>
+                <circle cx="160" cy="95" r="83" stroke="url(#ewu-ring)" strokeWidth="2.5"/>
+                <circle cx="160" cy="95" r="77" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.35}/>
+                {/* tick marks */}
+                {Array.from({length:32},(_,i)=>{
+                  const a=(i*Math.PI*2)/32;
+                  const isM=i%8===0,isN=i%4===0&&!isM;
+                  const r2=isM?73:isN?76.5:79;
+                  return <line key={i}
+                    x1={160+83*Math.sin(a)} y1={95-83*Math.cos(a)}
+                    x2={160+r2*Math.sin(a)} y2={95-r2*Math.cos(a)}
+                    stroke={isM?'#00e5ff':'#1d4ed8'}
+                    strokeWidth={isM?1.5:0.8}
+                    opacity={isM?0.8:isN?0.4:0.2}
+                  />;
+                })}
+                {/* top arc glow */}
+                <ellipse cx="160" cy="32" rx="68" ry="50" fill="url(#ewu-topglow)" clipPath="url(#ewu-cc)"/>
+                {/* left electrode */}
+                <line x1="128" y1="18" x2="148" y2="58" stroke="#2d3f5a" strokeWidth="4" strokeLinecap="round"/>
+                <line x1="125" y1="13" x2="131" y2="22" stroke="#4a5f7a" strokeWidth="6" strokeLinecap="round"/>
+                {/* right electrode */}
+                <line x1="192" y1="18" x2="172" y2="58" stroke="#2d3f5a" strokeWidth="4" strokeLinecap="round"/>
+                <line x1="195" y1="13" x2="189" y2="22" stroke="#4a5f7a" strokeWidth="6" strokeLinecap="round"/>
+                {/* arc glow */}
+                <path d="M144,59 L149,49 L154,59 L159,47 L164,59 L169,49 L176,59"
+                  stroke="#00e5ff" strokeWidth="3.5" fill="none" strokeLinejoin="round" filter="url(#ewu-gf)"/>
+                {/* arc core */}
+                <path d="M144,59 L149,49 L154,59 L159,47 L164,59 L169,49 L176,59"
+                  stroke="#ffffff" strokeWidth="1.2" fill="none" strokeLinejoin="round" opacity={0.9}/>
+                {/* sparks */}
+                <circle cx="160" cy="41" r="2.5" fill="#00e5ff" filter="url(#ewu-gf)"/>
+                <circle cx="147" cy="46" r="1.5" fill="#00e5ff" filter="url(#ewu-gf)" opacity={0.7}/>
+                <circle cx="173" cy="46" r="1.5" fill="#00e5ff" filter="url(#ewu-gf)" opacity={0.7}/>
+                <circle cx="138" cy="53" r="1" fill="#7efcff" opacity={0.55}/>
+                <circle cx="182" cy="53" r="1" fill="#7efcff" opacity={0.55}/>
+                {/* EWU text */}
+                <text x="160" y="127" textAnchor="middle"
+                  fontFamily="'Arial Black','Archivo',sans-serif"
+                  fontWeight="900" fontSize="66"
+                  fill="url(#ewu-txt)" filter="url(#ewu-tf)" letterSpacing="-1">EWU</text>
+                {/* divider */}
+                <line x1="96" y1="138" x2="143" y2="138" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.5}/>
+                <circle cx="160" cy="138" r="2" fill="#00e5ff" opacity={0.7} filter="url(#ewu-gf)"/>
+                <line x1="177" y1="138" x2="224" y2="138" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.5}/>
+                {/* subtitle */}
+                <text x="160" y="153" textAnchor="middle"
+                  fontFamily="'Arial',sans-serif"
+                  fontWeight="700" fontSize="8"
+                  fill="#60a5fa" letterSpacing="3">EUROPEAN WELDING UNION</text>
+              </svg>
             </div>
 
             <div className="e-badge">
