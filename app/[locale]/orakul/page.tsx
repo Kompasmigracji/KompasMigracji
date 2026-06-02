@@ -1,7 +1,8 @@
-'use client';
+ 'use client';
 import { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
+import ThemeSwitch from '../../../components/ThemeSwitch';
 
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap');
@@ -1060,12 +1061,15 @@ export default function OrakulPage() {
             </svg>
             EWU <span>| European Welding Union</span>
           </span>
-          <div className="e-lang-sw">
-            {(['uk','en','ru','pl'] as LangKey[]).map(l => (
-              <button key={l} className={`e-lang-btn${lang === l ? ' act' : ''}`} onClick={() => setLang(l)}>
-                {l.toUpperCase()}
-              </button>
-            ))}
+          <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
+            <ThemeSwitch />
+            <div className="e-lang-sw">
+              {(['uk','en','ru','pl'] as LangKey[]).map(l => (
+                <button key={l} className={`e-lang-btn${lang === l ? ' act' : ''}`} onClick={() => setLang(l)}>
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
         </nav>
 

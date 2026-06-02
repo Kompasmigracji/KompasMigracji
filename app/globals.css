@@ -185,3 +185,19 @@ html[data-theme="dark"] {
   background: rgba(255,255,255,0.06) !important;
   border-color: rgba(255,255,255,0.12) !important;
 }
+
+/* Theme toggle base */
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;padding:4px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:inherit;cursor:pointer}
+
+/* Light theme (Apple-like) */
+[data-theme="light"] body { background: #f5f7fb; color: #0f172a; }
+[data-theme="light"] header { background: rgba(255,255,255,0.9) !important; border-color: rgba(0,0,0,0.06) !important; backdrop-filter: blur(8px) !important; }
+[data-theme="light"] .card-hover { background: #ffffff !important; border-color: rgba(0,0,0,0.06) !important; color: #0f172a !important; box-shadow: 0 10px 30px rgba(14,20,30,0.06) !important; }
+[data-theme="light"] .bg-white { background: #ffffff !important; }
+[data-theme="light"] input:not([type="range"]),
+[data-theme="light"] textarea,
+[data-theme="light"] select { background: #ffffff !important; color: #0f172a !important; border-color: rgba(0,0,0,0.08) !important; }
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder { color: rgba(17,24,39,0.28) !important; }
+[data-theme="light"] .theme-toggle{ border-color: rgba(0,0,0,0.08); background: rgba(255,255,255,0.96); box-shadow: 0 6px 18px rgba(14,20,30,0.06) }
+[data-theme="light"] .e-badge{ background: rgba(255,255,255,0.9) !important; border-color: rgba(0,0,0,0.06) !important; color: #0f172a !important; box-shadow: 0 10px 30px rgba(14,20,30,0.06) !important }

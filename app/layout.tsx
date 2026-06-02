@@ -3,7 +3,7 @@
    додавати lang= та className через React merging без гідрація-помилок. */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html suppressHydrationWarning data-theme="dark">
+    <html suppressHydrationWarning>
       <body suppressHydrationWarning style={{ margin: 0, padding: 0 }}>
         {children}
       </body>
