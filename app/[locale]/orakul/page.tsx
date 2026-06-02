@@ -62,10 +62,16 @@ const CSS = `
 }
 .e-hero::before{
   content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(circle at center,rgba(16,24,48,.3) 0%,rgba(15,23,42,.82) 80%),
-    linear-gradient(180deg,rgba(241,243,247,.75) 0%,rgba(15,23,42,.35) 40%,rgba(241,243,247,.92) 100%);
+  background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1920&q=95');
+  background-size:cover;background-position:center;
+  filter:var(--section-filter);
   z-index:1;
+}
+[data-theme="dark"] .e-hero::before{
+  filter:brightness(0.55) contrast(0.95);
+}
+[data-theme="light"] .e-hero::before{
+  filter:brightness(0.98) contrast(0.98);
 }
 .e-hero-inner{
   position:relative;z-index:2;
@@ -105,7 +111,13 @@ const CSS = `
 .e-hero-title{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:700;line-height:1.1;margin-bottom:1.1rem}
 .e-hero-desc{
   color:var(--hero-desc-color);font-size:clamp(1.05rem,2vw,1.25rem);font-weight:500;
-  max-width:700px;margin:0 auto 2.5rem;text-shadow:var(--hero-desc-shadow, none);
+  max-width:700px;margin:0 auto 2.5rem;text-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+[data-theme="light"] .e-hero-desc{
+  text-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+[data-theme="dark"] .e-hero-desc{
+  text-shadow:0 2px 8px rgba(0,0,0,.6);
 }
 
 .e-role-cards{display:flex;gap:20px;width:100%;max-width:900px;margin:0 auto}
