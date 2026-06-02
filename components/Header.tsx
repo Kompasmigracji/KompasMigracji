@@ -161,8 +161,8 @@ export default function Header() {
           </Link>
           <Link
             href="/orakul"
-            className="px-3.5 py-1.5 text-sm font-bold no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
-            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
           >
             Оракул
           </Link>
@@ -241,8 +241,8 @@ export default function Header() {
           <Link
             href="/orakul"
             onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold no-underline mt-1 text-center"
-            style={{ background: 'linear-gradient(100deg,#ffb24d,#ff4d12)', color: '#190a02', boxShadow: '0 0 18px -4px #ff4d1288' }}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn no-underline mt-1 text-center"
+            style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
           >
             Оракул — AI для зварювальників
           </Link>
