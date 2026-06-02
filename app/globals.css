@@ -21,36 +21,35 @@
   --color-primary: #2563eb;
   --color-secondary: #059669;
   --color-gold: #d97706;
-  --color-soft: #070c1a;
+  --color-soft: #f8f9fb;
   --color-muted: #7a7a9a;
   --color-emerald: #10b981;
   /* next/font injects --font-syne / --font-cormorant on <html> */
   --font-display: var(--font-syne), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
 
-  /* Orakul / site theme variables (dark defaults) */
-  --bg-soft: #070c1a;
-  --bg-panel: rgba(8,14,30,0.96);
-  --text-main: #e6f0ff;
-  --text-muted: #94a8bf;
-  --union-blue: #60a5fa;
+  /* Site theme variables (light defaults) */
+  --bg-soft: #f8f9fb;
+  --bg-panel: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --union-blue: #1d4ed8;
   --welding-flash: #00e5ff;
-  --border: rgba(255,255,255,0.06);
-  --nav-bg: rgba(6,9,18,0.9);
-  --badge-bg: rgba(6,9,18,0.6);
-  --btn-border: #000;
-  --section-filter: brightness(0.55) contrast(0.95);
-  --card-bg: rgba(13,22,44,0.97);
-  --hero-desc-color: #f8fafc;
+  --border: rgba(15,23,42,0.08);
+  --nav-bg: rgba(255,255,255,0.92);
+  --badge-bg: rgba(255,255,255,0.85);
+  --btn-border: transparent;
+  --section-filter: none;
+  --card-bg: #ffffff;
+  --hero-desc-color: #0f172a;
 }
 
 * { scroll-behavior: smooth; box-sizing: border-box; }
 
 body {
   font-family: var(--font-display);
-  color: #dde4f0;
-  background: linear-gradient(135deg, #0a3a52 0%, #1a5a7a 25%, #0d2d42 50%, #1f4a6a 75%, #0a3a52 100%);
-  background-attachment: fixed;
+  color: #0f172a;
+  background: #f8f9fb;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -94,9 +93,12 @@ body {
 /* ─── Dark Theme ──────────────────────────────────────────── */
 
 html[data-theme="dark"] {
-  background: linear-gradient(135deg, #0a3a52 0%, #1a5a7a 25%, #0d2d42 50%, #1f4a6a 75%, #0a3a52 100%);
-  background-attachment: fixed;
+  background: linear-gradient(135deg, #0a3a52 0%, #1a5a7a 25%, #0d2d42 50%, #1f4a6a 75%, #0a3a52 100%) fixed;
   color-scheme: dark;
+}
+html[data-theme="dark"] body {
+  color: #dde4f0;
+  background: transparent;
 }
 
 /* dark theme variable overrides */
