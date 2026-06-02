@@ -27,6 +27,12 @@ export const metadata: Metadata = {
   description:
     'Юридична, психологічна та практична допомога мігрантам у Польщі та ЄС. Domus V.',
   metadataBase: new URL('https://kompasmigracji.com'),
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
+    ],
+  },
 };
 
 export function generateStaticParams() {
