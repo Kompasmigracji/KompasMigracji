@@ -895,7 +895,68 @@ export default function OrakulPage() {
         {/* NAV */}
         <nav className="e-nav">
           <Link href={`/${locale}`} className="e-nav-back">← Kompas Migracji</Link>
-          <span className="e-nav-logo">EWU <span>| European Welding Union</span></span>
+          <span className="e-nav-logo" style={{display:'flex',alignItems:'center',gap:'8px'}}>
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style={{flexShrink:0}}>
+              <defs>
+                <radialGradient id="nb-bg" cx="38%" cy="28%" r="80%">
+                  <stop offset="0%" stopColor="#1a2a50"/>
+                  <stop offset="100%" stopColor="#060912"/>
+                </radialGradient>
+                <linearGradient id="nb-ring" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#60a5fa"/>
+                  <stop offset="45%" stopColor="#00e5ff"/>
+                  <stop offset="100%" stopColor="#1d4ed8"/>
+                </linearGradient>
+                <linearGradient id="nb-txt" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f0f9ff"/>
+                  <stop offset="50%" stopColor="#ffffff"/>
+                  <stop offset="100%" stopColor="#93c5fd"/>
+                </linearGradient>
+                <radialGradient id="nb-glow" cx="50%" cy="5%" r="70%">
+                  <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.6"/>
+                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0"/>
+                </radialGradient>
+                <filter id="nb-tf" x="-20%" y="-30%" width="140%" height="160%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="0.7" floodColor="#00e5ff" floodOpacity="0.5"/>
+                </filter>
+                <clipPath id="nb-clip">
+                  <circle cx="17" cy="17" r="15.5"/>
+                </clipPath>
+              </defs>
+              <circle cx="17.3" cy="17.4" r="15" fill="rgba(0,0,0,0.25)"/>
+              <circle cx="17" cy="17" r="15.5" fill="url(#nb-bg)"/>
+              <circle cx="17" cy="17" r="15.5" stroke="url(#nb-ring)" strokeWidth="1.5"/>
+              <circle cx="17" cy="17" r="14.2" stroke="#1d4ed8" strokeWidth="0.5" opacity={0.3}/>
+              {Array.from({length:16},(_,i)=>{
+                const a=(i*Math.PI*2)/16;
+                const isM=i%4===0;
+                const r2=isM?13.2:14;
+                return <line key={i}
+                  x1={17+15.5*Math.sin(a)} y1={17-15.5*Math.cos(a)}
+                  x2={17+r2*Math.sin(a)} y2={17-r2*Math.cos(a)}
+                  stroke={isM?'#00e5ff':'#1d4ed8'}
+                  strokeWidth={isM?1:0.6}
+                  opacity={isM?0.8:0.3}
+                />;
+              })}
+              <ellipse cx="17" cy="5" rx="12" ry="8" fill="url(#nb-glow)" clipPath="url(#nb-clip)"/>
+              <line x1="13.5" y1="5" x2="15.5" y2="13.5" stroke="#2d3f5a" strokeWidth="1" strokeLinecap="round"/>
+              <line x1="13.2" y1="3.8" x2="13.8" y2="5.5" stroke="#4a5f7a" strokeWidth="1.5" strokeLinecap="round"/>
+              <line x1="20.5" y1="5" x2="18.5" y2="13.5" stroke="#2d3f5a" strokeWidth="1" strokeLinecap="round"/>
+              <line x1="20.8" y1="3.8" x2="20.2" y2="5.5" stroke="#4a5f7a" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M15,13.5 L16,11.5 L17,13.5 L17.7,11 L18.8,13.5 L19.8,11.5 L21,13.5"
+                stroke="#00e5ff" strokeWidth="0.9" fill="none" strokeLinejoin="round"/>
+              <circle cx="17" cy="9" r="0.7" fill="#00e5ff" opacity={0.8}/>
+              <text x="17" y="22.5" textAnchor="middle"
+                fontFamily="'Arial Black',sans-serif"
+                fontWeight="900" fontSize="8.5"
+                fill="url(#nb-txt)" filter="url(#nb-tf)" letterSpacing="-0.2">EWU</text>
+              <line x1="10" y1="26" x2="14.5" y2="26" stroke="#1d4ed8" strokeWidth="0.5" opacity={0.45}/>
+              <circle cx="17" cy="26" r="0.6" fill="#00e5ff" opacity={0.6}/>
+              <line x1="19.5" y1="26" x2="24" y2="26" stroke="#1d4ed8" strokeWidth="0.5" opacity={0.45}/>
+            </svg>
+            EWU <span>| European Welding Union</span>
+          </span>
           <div className="e-lang-sw">
             {(['uk','en','ru','pl'] as LangKey[]).map(l => (
               <button key={l} className={`e-lang-btn${lang === l ? ' act' : ''}`} onClick={() => setLang(l)}>
