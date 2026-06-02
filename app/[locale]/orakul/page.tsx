@@ -217,6 +217,35 @@ const CSS = `
 #e-arc.big{width:30px;height:30px}
 #e-sparks{position:fixed;inset:0;z-index:500;pointer-events:none}
 @media(hover:none){.e-pg{cursor:auto}#e-arc{display:none}}
+
+/* WATERMARK */
+.e-wm{
+  position:fixed;bottom:18px;left:18px;z-index:8000;
+  display:flex;align-items:center;gap:7px;
+  padding:6px 12px 6px 8px;
+  background:rgba(6,9,18,.55);
+  border:1px solid rgba(0,229,255,.18);
+  border-radius:50px;
+  backdrop-filter:blur(12px);
+  opacity:.28;
+  transition:opacity .3s,box-shadow .3s;
+  pointer-events:none;
+  user-select:none;
+}
+.e-wm:hover{opacity:.72;box-shadow:0 0 18px rgba(0,229,255,.22)}
+.e-wm-ico{flex-shrink:0;display:flex;align-items:center}
+.e-wm-txt{
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  font-size:.68rem;font-weight:700;letter-spacing:.04em;
+  background:linear-gradient(90deg,#93c5fd,#00e5ff 55%,#60a5fa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  white-space:nowrap;
+}
+.e-wm-copy{
+  font-size:.55rem;font-weight:500;color:rgba(148,194,251,.45);
+  font-family:inherit;letter-spacing:.02em;margin-top:1px;
+}
+@media(max-width:480px){.e-wm{bottom:80px}}
 /* MANIFESTO */
 .e-manifesto{
   margin-top:2rem;padding:1.8rem 0 0;
@@ -1224,6 +1253,41 @@ export default function OrakulPage() {
           <Link href={`/${locale}`}>← kompasmigracji.com</Link>
         </footer>
 
+      </div>
+
+      {/* ── WATERMARK ── */}
+      <div className="e-wm">
+        <span className="e-wm-ico">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="wm-flame" x1="10" y1="18" x2="10" y2="1" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#1d4ed8"/>
+                <stop offset="40%" stopColor="#0ea5e9"/>
+                <stop offset="100%" stopColor="#00e5ff"/>
+              </linearGradient>
+              <radialGradient id="wm-core" cx="50%" cy="70%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9"/>
+                <stop offset="100%" stopColor="#00e5ff" stopOpacity="0"/>
+              </radialGradient>
+            </defs>
+            {/* Phoenix flame body */}
+            <path d="M10 17.5 C7 17.5 4.5 15 4.5 12 C4.5 9.5 6 8 7 7 C6.5 9 7.5 10 8.5 10 C8 8.5 8.5 6 10 3 C10 3 10.5 5.5 11 6.5 C11.8 5 12 3.5 12 3.5 C13.5 5.5 14 8 13.5 10 C14.5 9.5 15 8.5 15 7 C16.5 8.5 16.5 10.5 16.5 12 C16.5 15 14 17.5 10 17.5Z"
+              fill="url(#wm-flame)" opacity="0.9"/>
+            {/* Inner glow core */}
+            <path d="M10 15.5 C8.5 15.5 7 14 7 12.5 C7 11.5 7.5 10.8 8.2 10.5 C8 11.5 8.8 12 9.2 12 C9 11 9.2 9.5 10 8 C10 8 10.5 9.5 10.8 10.5 C11.2 9.8 11.5 9 11.5 8 C12.3 9.2 12.5 10.8 12 12 C12.5 11.8 13 11 13 10.5 C13.8 11.2 13.5 12.5 13 12.5 C13 14 11.5 15.5 10 15.5Z"
+              fill="url(#wm-core)" opacity="0.6"/>
+            {/* Wing left */}
+            <path d="M4.5 10 C3 9 2 7 3 5.5 C3.5 7 5 7.5 5.5 8 C4.5 6.5 5 5 5 5 C6.5 6 7 8 6.5 9.5 C5.8 9.2 5.1 9.4 4.5 10Z"
+              fill="#60a5fa" opacity="0.55"/>
+            {/* Wing right */}
+            <path d="M15.5 10 C17 9 18 7 17 5.5 C16.5 7 15 7.5 14.5 8 C15.5 6.5 15 5 15 5 C13.5 6 13 8 13.5 9.5 C14.2 9.2 14.9 9.4 15.5 10Z"
+              fill="#60a5fa" opacity="0.55"/>
+          </svg>
+        </span>
+        <div>
+          <div className="e-wm-txt">iPhoenixGSM®</div>
+          <div className="e-wm-copy">Design &amp; Dev</div>
+        </div>
       </div>
 
       {/* ── CHAT WIDGET ── */}
