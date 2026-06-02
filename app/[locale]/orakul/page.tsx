@@ -116,13 +116,13 @@ const CSS = `
 
 .e-role-cards{display:flex;gap:20px;width:100%;max-width:900px;margin:0 auto}
 .e-role-card{
-  flex:1;background:transparent;
-  border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:2.2rem 1.8rem;
-  cursor:pointer;box-shadow:0 8px 32px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);
+  flex:1;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.8);border-radius:16px;padding:2.2rem 1.8rem;
+  cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.15);
   transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;
   text-align:left;text-decoration:none;display:block;
 }
-.e-role-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(0,229,255,.22),0 0 0 1px rgba(0,229,255,.18)}
+.e-role-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(0,229,255,.25)}
 .e-role-icon{font-size:2.4rem;margin-bottom:.7rem;display:block}
 .e-role-card h3{font-size:1.5rem;font-weight:700;margin-bottom:.4rem;color:#0f172a}
 .e-role-card p{color:#334155;font-size:1rem;font-weight:500}
@@ -436,18 +436,13 @@ const CSS = `
 .ewu-mini{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;animation:ewu-mini-pulse 2.5s ease-in-out infinite}
 @keyframes ewu-mini-pulse{0%,100%{filter:drop-shadow(0 0 2px rgba(0,140,220,.5))}50%{filter:drop-shadow(0 0 9px rgba(0,229,255,.95))}}
 /* ROLE CARDS WITH PHOTO BG */
-.e-role-card{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.18)!important}
+.e-role-card{position:relative;overflow:hidden;border:1px solid rgba(0,229,255,.2)!important}
 .e-role-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .45s cubic-bezier(.16,1,.3,1);z-index:0}
 .e-role-card:hover .e-role-card-bg{transform:scale(1.07)}
-.e-role-card-overlay{
-  position:absolute;inset:0;z-index:1;
-  background:linear-gradient(165deg,rgba(8,14,36,.32) 0%,rgba(4,8,22,.48) 100%);
-  backdrop-filter:blur(9px) saturate(1.3);
-  -webkit-backdrop-filter:blur(9px) saturate(1.3);
-}
+.e-role-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(165deg,rgba(8,14,36,.75) 0%,rgba(4,8,22,.88) 100%)}
 .e-role-card-content{position:relative;z-index:2}
-.e-role-card h3{color:#fff!important;text-shadow:0 2px 12px rgba(0,0,0,.7)}
-.e-role-card p{color:rgba(220,235,255,.88)!important;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.e-role-card h3{color:#e8f2ff!important}
+.e-role-card p{color:rgba(180,210,255,.82)!important}
 `;
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
