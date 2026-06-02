@@ -80,13 +80,13 @@ const CSS = `
 
 /* GIANT LOGO */
 .e-logo-wrap{
-  position:relative;width:320px;height:190px;
+  position:relative;width:300px;height:300px;
   margin:0 auto .5rem;
   display:flex;align-items:center;justify-content:center;
 }
 .e-logo-canvas{
   position:absolute;top:0;left:0;
-  width:320px;height:190px;
+  width:300px;height:300px;
   pointer-events:none;z-index:3;
 }
 .e-logo-txt{
@@ -400,6 +400,49 @@ const CSS = `
   .oc-panel{width:calc(100vw - 16px);right:8px;bottom:78px}
   .oc-btn{bottom:16px;right:16px}
 }
+
+/* ── EWU ANIMATED BADGE ── */
+.ewu-svg-main{animation:ewu-glow-breath 4s ease-in-out infinite}
+@keyframes ewu-glow-breath{
+  0%,100%{filter:drop-shadow(0 0 12px rgba(0,100,200,.22))}
+  50%{filter:drop-shadow(0 0 44px rgba(0,229,255,.75)) drop-shadow(0 0 88px rgba(0,80,200,.3))}
+}
+.ewu-arc{animation:ewu-arc-flicker 2.8s ease-in-out infinite}
+@keyframes ewu-arc-flicker{
+  0%,100%{opacity:.88}
+  7%{opacity:1;filter:brightness(2.3)}8%{opacity:.35;filter:brightness(.4)}
+  22%{opacity:.93;filter:brightness(1.5)}50%{opacity:.82}
+  63%{opacity:1;filter:brightness(2.5)}64%{opacity:.25;filter:brightness(.32)}
+  80%{opacity:.91}
+}
+.ewu-ring-rot{animation:ewu-ring-spin 38s linear infinite;transform-origin:160px 160px}
+@keyframes ewu-ring-spin{to{transform:rotate(360deg)}}
+@keyframes ewu-sp1{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(22px,-30px) scale(0)}}
+@keyframes ewu-sp2{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-20px,-26px) scale(0)}}
+@keyframes ewu-sp3{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(32px,-12px) scale(0)}}
+@keyframes ewu-sp4{0%{opacity:.85;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(-28px,-16px) scale(0)}}
+@keyframes ewu-sp5{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(12px,-36px) scale(0)}}
+@keyframes ewu-sp6{0%{opacity:.9;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(30px,-6px) scale(0)}}
+.ewu-sp1{animation:ewu-sp1 1.1s 0s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.ewu-sp2{animation:ewu-sp2 1.3s .4s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.ewu-sp3{animation:ewu-sp3 0.9s .7s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.ewu-sp4{animation:ewu-sp4 1.5s .2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.ewu-sp5{animation:ewu-sp5 1.0s .9s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.ewu-sp6{animation:ewu-sp6 1.2s .5s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes ewu-smoke-a{0%{opacity:.14;transform:translateY(0) scaleX(1)}100%{opacity:0;transform:translateY(-24px) scaleX(1.7)}}
+@keyframes ewu-smoke-b{0%{opacity:.10;transform:translateY(0) scaleX(1)}100%{opacity:0;transform:translateY(-18px) scaleX(1.5)}}
+.ewu-smoke1{animation:ewu-smoke-a 3.2s 0s ease-out infinite;transform-box:fill-box;transform-origin:center bottom}
+.ewu-smoke2{animation:ewu-smoke-b 2.8s .9s ease-out infinite;transform-box:fill-box;transform-origin:center bottom}
+.ewu-mini{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;flex-shrink:0;animation:ewu-mini-pulse 2.5s ease-in-out infinite}
+@keyframes ewu-mini-pulse{0%,100%{filter:drop-shadow(0 0 2px rgba(0,140,220,.5))}50%{filter:drop-shadow(0 0 9px rgba(0,229,255,.95))}}
+/* ROLE CARDS WITH PHOTO BG */
+.e-role-card{position:relative;overflow:hidden;border:1px solid rgba(0,229,255,.2)!important}
+.e-role-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .45s cubic-bezier(.16,1,.3,1);z-index:0}
+.e-role-card:hover .e-role-card-bg{transform:scale(1.07)}
+.e-role-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(165deg,rgba(8,14,36,.75) 0%,rgba(4,8,22,.88) 100%)}
+.e-role-card-content{position:relative;z-index:2}
+.e-role-card h3{color:#e8f2ff!important}
+.e-role-card p{color:rgba(180,210,255,.82)!important}
 `;
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
@@ -738,16 +781,16 @@ export default function OrakulPage() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const W = 320, H = 190;
+    const W = 300, H = 300;
     const dpr = window.devicePixelRatio || 1;
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     ctx.scale(dpr, dpr);
     const c = ctx;
 
-    const stars = Array.from({ length: 12 }, (_, i) => ({
-      angle: (i * Math.PI * 2) / 12,
-      speed: 0.007,
+    const stars = Array.from({ length: 14 }, (_, i) => ({
+      angle: (i * Math.PI * 2) / 14,
+      speed: 0.006,
     }));
 
     function drawStar(cx: number, cy: number, spikes: number, outer: number, inner: number) {
@@ -773,7 +816,7 @@ export default function OrakulPage() {
     let raf: number;
     function animate() {
       c.clearRect(0, 0, W, H);
-      const cx = W / 2, cy = H / 2 - 5, rx = 135, ry = 42, tilt = -0.25;
+      const cx = W / 2, cy = H / 2, rx = 142, ry = 46, tilt = -0.18;
       stars.forEach(s => {
         s.angle += s.speed;
         const bx = Math.cos(s.angle) * rx, by = Math.sin(s.angle) * ry;
@@ -920,6 +963,29 @@ export default function OrakulPage() {
             </feSpecularLighting>
             <feComposite in="SourceGraphic" in2="specular" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
           </filter>
+          {/* Mini EWU icon gradients — shared across all mini icons */}
+          <radialGradient id="mi-bg" cx="38%" cy="28%" r="82%">
+            <stop offset="0%" stopColor="#1a2a50"/>
+            <stop offset="100%" stopColor="#060912"/>
+          </radialGradient>
+          <linearGradient id="mi-ring" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#60a5fa"/>
+            <stop offset="50%" stopColor="#00e5ff"/>
+            <stop offset="100%" stopColor="#1d4ed8"/>
+          </linearGradient>
+          <linearGradient id="mi-txt" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#f0f9ff"/>
+            <stop offset="40%" stopColor="#ffffff"/>
+            <stop offset="100%" stopColor="#93c5fd"/>
+          </linearGradient>
+          <radialGradient id="mi-arc" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9"/>
+            <stop offset="40%" stopColor="#00e5ff" stopOpacity="0.6"/>
+            <stop offset="100%" stopColor="#0040ff" stopOpacity="0"/>
+          </radialGradient>
+          <filter id="mi-blur" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="1.2"/>
+          </filter>
         </defs>
       </svg>
 
@@ -1004,92 +1070,184 @@ export default function OrakulPage() {
           <div className="e-hero-inner">
             <div className="e-logo-wrap">
               <canvas ref={canvasRef} className="e-logo-canvas" />
-              <svg width="320" height="190" viewBox="0 0 320 190" fill="none" xmlns="http://www.w3.org/2000/svg" style={{position:'relative',zIndex:2,userSelect:'none'}}>
+              <svg className="ewu-svg-main" width="300" height="300" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" style={{position:'relative',zIndex:2,userSelect:'none'}}>
                 <defs>
-                  <radialGradient id="ewu-bg" cx="40%" cy="30%" r="80%">
-                    <stop offset="0%" stopColor="#1a2a50"/>
-                    <stop offset="100%" stopColor="#060912"/>
+                  <radialGradient id="ewu-bg-g" cx="35%" cy="25%" r="80%">
+                    <stop offset="0%" stopColor="#16223c"/>
+                    <stop offset="55%" stopColor="#080e1c"/>
+                    <stop offset="100%" stopColor="#030508"/>
                   </radialGradient>
-                  <linearGradient id="ewu-ring" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#60a5fa"/>
-                    <stop offset="40%" stopColor="#00e5ff"/>
-                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  <linearGradient id="ewu-ring-g" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#3a5070"/>
+                    <stop offset="20%" stopColor="#7090b0"/>
+                    <stop offset="50%" stopColor="#b0c8de"/>
+                    <stop offset="80%" stopColor="#5a7898"/>
+                    <stop offset="100%" stopColor="#2a3c50"/>
                   </linearGradient>
-                  <linearGradient id="ewu-txt" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f0f9ff"/>
-                    <stop offset="25%" stopColor="#ffffff"/>
-                    <stop offset="60%" stopColor="#bfdbfe"/>
-                    <stop offset="100%" stopColor="#60a5fa"/>
+                  {/* 3D steel gradient for EWU text */}
+                  <linearGradient id="ewu-steel" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#5a6a78"/>
+                    <stop offset="12%" stopColor="#9ab4c8"/>
+                    <stop offset="28%" stopColor="#ccdde8"/>
+                    <stop offset="42%" stopColor="#eaf2f8"/>
+                    <stop offset="50%" stopColor="#ffffff"/>
+                    <stop offset="58%" stopColor="#d8e8f4"/>
+                    <stop offset="72%" stopColor="#8898a8"/>
+                    <stop offset="86%" stopColor="#3e4e5c"/>
+                    <stop offset="100%" stopColor="#1c2830"/>
                   </linearGradient>
-                  <radialGradient id="ewu-topglow" cx="50%" cy="0%" r="65%">
-                    <stop offset="0%" stopColor="#00e5ff" stopOpacity="0.7"/>
-                    <stop offset="55%" stopColor="#1d4ed8" stopOpacity="0.2"/>
-                    <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0"/>
+                  <radialGradient id="ewu-arc-g" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#ffffff"/>
+                    <stop offset="22%" stopColor="#a0eeff" stopOpacity="0.95"/>
+                    <stop offset="55%" stopColor="#00b4ff" stopOpacity="0.6"/>
+                    <stop offset="100%" stopColor="#0030ff" stopOpacity="0"/>
                   </radialGradient>
-                  <filter id="ewu-gf" x="-40%" y="-40%" width="180%" height="180%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>
-                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  <filter id="ewu-blur3" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="3"/>
                   </filter>
-                  <filter id="ewu-tf" x="-15%" y="-25%" width="130%" height="150%">
-                    <feDropShadow dx="0" dy="0" stdDeviation="5" floodColor="#00e5ff" floodOpacity="0.35"/>
+                  <filter id="ewu-blur9" x="-120%" y="-120%" width="340%" height="340%">
+                    <feGaussianBlur stdDeviation="9"/>
+                  </filter>
+                  {/* Bevel/emboss for 3D steel text */}
+                  <filter id="ewu-bevel" x="-8%" y="-25%" width="116%" height="150%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+                    <feSpecularLighting in="blur" surfaceScale="6" specularConstant="0.9" specularExponent="28" lightingColor="#cce8ff" result="spec">
+                      <fePointLight x="100" y="40" z="120"/>
+                    </feSpecularLighting>
+                    <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec2"/>
+                    <feBlend in="SourceGraphic" in2="spec2" mode="screen" result="blended"/>
+                    <feDropShadow dx="0" dy="5" stdDeviation="5" floodColor="#000820" floodOpacity="0.9" in="blended"/>
+                    <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#0055cc" floodOpacity="0.45"/>
                   </filter>
                   <clipPath id="ewu-cc">
-                    <circle cx="160" cy="95" r="83"/>
+                    <circle cx="160" cy="160" r="149"/>
                   </clipPath>
                 </defs>
-                {/* shadow */}
-                <circle cx="162" cy="98" r="82" fill="rgba(0,0,0,0.28)"/>
-                {/* badge */}
-                <circle cx="160" cy="95" r="83" fill="url(#ewu-bg)"/>
-                <circle cx="160" cy="95" r="83" stroke="url(#ewu-ring)" strokeWidth="2.5"/>
-                <circle cx="160" cy="95" r="77" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.35}/>
-                {/* tick marks */}
-                {Array.from({length:32},(_,i)=>{
-                  const a=(i*Math.PI*2)/32;
-                  const isM=i%8===0,isN=i%4===0&&!isM;
-                  const r2=isM?73:isN?76.5:79;
-                  return <line key={i}
-                    x1={160+83*Math.sin(a)} y1={95-83*Math.cos(a)}
-                    x2={160+r2*Math.sin(a)} y2={95-r2*Math.cos(a)}
-                    stroke={isM?'#00e5ff':'#1d4ed8'}
-                    strokeWidth={isM?1.5:0.8}
-                    opacity={isM?0.8:isN?0.4:0.2}
+
+                {/* Drop shadow */}
+                <circle cx="163" cy="165" r="150" fill="rgba(0,0,0,0.5)"/>
+                {/* Background */}
+                <circle cx="160" cy="160" r="150" fill="url(#ewu-bg-g)"/>
+
+                <g clipPath="url(#ewu-cc)">
+                  {/* ─── WELDER SILHOUETTE ─── */}
+                  <g fill="#0b0f16">
+                    {/* Helmet dome */}
+                    <ellipse cx="110" cy="50" rx="38" ry="22" fill="#0b0f16"/>
+                    {/* Helmet main body */}
+                    <rect x="72" y="54" width="76" height="40" rx="6" fill="#0b0f16"/>
+                    {/* Visor dark glass */}
+                    <rect x="77" y="57" width="66" height="33" rx="5" fill="#060a12"/>
+                    {/* Visor blue tint */}
+                    <rect x="78" y="58" width="64" height="11" rx="3" fill="rgba(0,50,180,0.22)"/>
+                    {/* Visor glass highlight */}
+                    <line x1="80" y1="62" x2="96" y2="62" stroke="rgba(120,200,255,0.28)" strokeWidth="1.5" strokeLinecap="round"/>
+                    {/* Chin guard */}
+                    <rect x="79" y="89" width="62" height="16" rx="4" fill="#0b0f16"/>
+                    {/* Neck */}
+                    <rect x="94" y="103" width="34" height="15" rx="4" fill="#0b0f16"/>
+                    {/* Torso */}
+                    <rect x="62" y="114" width="108" height="76" rx="12" fill="#0b0f16"/>
+                    {/* Right shoulder */}
+                    <ellipse cx="166" cy="124" rx="20" ry="15" fill="#0b0f16"/>
+                    {/* Left shoulder */}
+                    <ellipse cx="70" cy="124" rx="17" ry="15" fill="#0b0f16"/>
+                    {/* Right arm + torch (extends toward arc zone) */}
+                    <path d="M 172,126 C 182,132 194,140 206,150" stroke="#0b0f16" strokeWidth="24" strokeLinecap="round" fill="none"/>
+                    <path d="M 200,146 C 207,152 212,158 216,164" stroke="#0b0f16" strokeWidth="14" strokeLinecap="round" fill="none"/>
+                    {/* Torch tip */}
+                    <path d="M 214,162 L 220,169" stroke="#0b0f16" strokeWidth="9" strokeLinecap="round"/>
+                    {/* Left arm hanging */}
+                    <path d="M 62,132 C 52,148 50,166 55,182" stroke="#0b0f16" strokeWidth="18" strokeLinecap="round" fill="none"/>
+                    {/* Welding cable back */}
+                    <path d="M 220,168 C 226,176 224,186 217,183 C 209,180 204,170 200,164" stroke="#141c28" strokeWidth="4" strokeLinecap="round" fill="none"/>
+                  </g>
+
+                  {/* ─── WELD ARC FLASH ─── */}
+                  <ellipse cx="218" cy="166" rx="72" ry="60" fill="url(#ewu-arc-g)" className="ewu-arc" filter="url(#ewu-blur9)" opacity="0.5"/>
+                  <ellipse cx="218" cy="166" rx="28" ry="22" fill="url(#ewu-arc-g)" className="ewu-arc" filter="url(#ewu-blur9)" opacity="0.85"/>
+                  <ellipse cx="218" cy="166" rx="10" ry="8" fill="url(#ewu-arc-g)" className="ewu-arc" filter="url(#ewu-blur3)"/>
+                  <circle cx="218" cy="166" r="4.5" fill="#e8f8ff" className="ewu-arc" filter="url(#ewu-blur3)"/>
+                  <circle cx="218" cy="166" r="2" fill="#ffffff" className="ewu-arc"/>
+
+                  {/* ─── ORANGE SPARKS ─── */}
+                  <g transform="translate(218,166)">
+                    <circle r="2.5" fill="#ff8800" className="ewu-sp1"/>
+                    <circle r="2" fill="#ffcc44" className="ewu-sp2"/>
+                    <circle r="1.5" fill="#ff5500" className="ewu-sp3"/>
+                    <circle r="2" fill="#ffaa22" className="ewu-sp4"/>
+                    <circle r="1.5" fill="#ffee44" className="ewu-sp5"/>
+                    <circle r="2.5" fill="#ff7700" className="ewu-sp6"/>
+                  </g>
+
+                  {/* ─── SMOKE ─── */}
+                  <ellipse cx="218" cy="150" rx="11" ry="5.5" fill="rgba(90,120,150,0.18)" className="ewu-smoke1"/>
+                  <ellipse cx="210" cy="141" rx="8" ry="4" fill="rgba(90,120,150,0.12)" className="ewu-smoke2"/>
+                </g>
+
+                {/* ─── OUTER METAL RING ─── */}
+                <circle cx="160" cy="160" r="150" stroke="url(#ewu-ring-g)" strokeWidth="7" fill="none"/>
+                <circle cx="160" cy="160" r="143" stroke="rgba(60,100,140,0.2)" strokeWidth="0.8" fill="none"/>
+
+                {/* ─── ROTATING TICKS ─── */}
+                <g className="ewu-ring-rot">
+                  {Array.from({length:64},(_,i)=>{
+                    const a=(i*Math.PI*2)/64;
+                    const isM=i%16===0,isN=i%8===0&&!isM,isS=i%4===0&&!isN&&!isM;
+                    const r2=isM?134:isN?138:isS?141:144;
+                    const sw=isM?2.4:isN?1.4:isS?0.8:0.5;
+                    const op=isM?0.95:isN?0.55:isS?0.3:0.14;
+                    const sc=isM?'#00e5ff':isN?'#4a88c0':'#2a4e70';
+                    return <line key={i}
+                      x1={160+150*Math.sin(a)} y1={160-150*Math.cos(a)}
+                      x2={160+r2*Math.sin(a)} y2={160-r2*Math.cos(a)}
+                      stroke={sc} strokeWidth={sw} opacity={op}
+                    />;
+                  })}
+                </g>
+
+                {/* Bolt accents */}
+                {Array.from({length:16},(_,i)=>{
+                  const a=(i*Math.PI*2)/16;
+                  const isB=i%4===0;
+                  return <circle key={i}
+                    cx={160+150*Math.sin(a)} cy={160-150*Math.cos(a)}
+                    r={isB?3.5:2} fill={isB?'#182436':'#0e1828'}
+                    stroke={isB?'#3a5878':'#1e3050'} strokeWidth={isB?1.2:0.7}
                   />;
                 })}
-                {/* top arc glow */}
-                <ellipse cx="160" cy="32" rx="68" ry="50" fill="url(#ewu-topglow)" clipPath="url(#ewu-cc)"/>
-                {/* left electrode */}
-                <line x1="128" y1="18" x2="148" y2="58" stroke="#2d3f5a" strokeWidth="4" strokeLinecap="round"/>
-                <line x1="125" y1="13" x2="131" y2="22" stroke="#4a5f7a" strokeWidth="6" strokeLinecap="round"/>
-                {/* right electrode */}
-                <line x1="192" y1="18" x2="172" y2="58" stroke="#2d3f5a" strokeWidth="4" strokeLinecap="round"/>
-                <line x1="195" y1="13" x2="189" y2="22" stroke="#4a5f7a" strokeWidth="6" strokeLinecap="round"/>
-                {/* arc glow */}
-                <path d="M144,59 L149,49 L154,59 L159,47 L164,59 L169,49 L176,59"
-                  stroke="#00e5ff" strokeWidth="3.5" fill="none" strokeLinejoin="round" filter="url(#ewu-gf)"/>
-                {/* arc core */}
-                <path d="M144,59 L149,49 L154,59 L159,47 L164,59 L169,49 L176,59"
-                  stroke="#ffffff" strokeWidth="1.2" fill="none" strokeLinejoin="round" opacity={0.9}/>
-                {/* sparks */}
-                <circle cx="160" cy="41" r="2.5" fill="#00e5ff" filter="url(#ewu-gf)"/>
-                <circle cx="147" cy="46" r="1.5" fill="#00e5ff" filter="url(#ewu-gf)" opacity={0.7}/>
-                <circle cx="173" cy="46" r="1.5" fill="#00e5ff" filter="url(#ewu-gf)" opacity={0.7}/>
-                <circle cx="138" cy="53" r="1" fill="#7efcff" opacity={0.55}/>
-                <circle cx="182" cy="53" r="1" fill="#7efcff" opacity={0.55}/>
-                {/* EWU text */}
-                <text x="160" y="127" textAnchor="middle"
-                  fontFamily="'Arial Black','Archivo',sans-serif"
-                  fontWeight="900" fontSize="66"
-                  fill="url(#ewu-txt)" filter="url(#ewu-tf)" letterSpacing="-1">EWU</text>
-                {/* divider */}
-                <line x1="96" y1="138" x2="143" y2="138" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.5}/>
-                <circle cx="160" cy="138" r="2" fill="#00e5ff" opacity={0.7} filter="url(#ewu-gf)"/>
-                <line x1="177" y1="138" x2="224" y2="138" stroke="#1d4ed8" strokeWidth="0.8" opacity={0.5}/>
-                {/* subtitle */}
-                <text x="160" y="153" textAnchor="middle"
-                  fontFamily="'Arial',sans-serif"
-                  fontWeight="700" fontSize="8"
-                  fill="#60a5fa" letterSpacing="3">EUROPEAN WELDING UNION</text>
+
+                {/* ─── 3D STEEL EWU TEXT ─── */}
+                {/* Deep shadow layer */}
+                <text x="163" y="263" textAnchor="middle"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108" fill="#000820"
+                  letterSpacing="-4" opacity="0.7">EWU</text>
+                {/* Blue glow halo */}
+                <text x="160" y="260" textAnchor="middle"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108" fill="#0055dd"
+                  letterSpacing="-4" filter="url(#ewu-blur9)" className="ewu-arc" opacity="0.5">EWU</text>
+                {/* Main 3D steel text with bevel */}
+                <text x="160" y="260" textAnchor="middle"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108"
+                  fill="url(#ewu-steel)"
+                  filter="url(#ewu-bevel)"
+                  letterSpacing="-4">EWU</text>
+
+                {/* ─── GROUND SYMBOL ─── */}
+                <line x1="144" y1="276" x2="176" y2="276" stroke="#1d4ed8" strokeWidth="1.8" opacity={0.55}/>
+                <line x1="150" y1="281" x2="170" y2="281" stroke="#1d4ed8" strokeWidth="1.2" opacity={0.4}/>
+                <line x1="155" y1="286" x2="165" y2="286" stroke="#1d4ed8" strokeWidth="0.9" opacity={0.28}/>
+                <line x1="160" y1="271" x2="160" y2="276" stroke="#1d4ed8" strokeWidth="1.8" opacity={0.55}/>
+
+                {/* ─── SUBTITLE ─── */}
+                <text x="160" y="304" textAnchor="middle"
+                  fontFamily="Arial,sans-serif" fontWeight="700" fontSize="7.8"
+                  fill="#4a7ab0" letterSpacing="3.5" opacity={0.75}>EUROPEAN WELDING UNION</text>
+
+                <circle cx="160" cy="12" r="2.5" fill="#00e5ff" filter="url(#ewu-blur3)" opacity={0.4}/>
               </svg>
             </div>
 
@@ -1104,14 +1262,36 @@ export default function OrakulPage() {
 
             <div className="e-role-cards">
               <a href="#workers" className="e-role-card">
-                <span className="e-role-icon">🔧</span>
-                <h3>{T.card1Title}</h3>
-                <p>{T.card1Desc}</p>
+                <div className="e-role-card-bg" style={{backgroundImage:"url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=85')"}}/>
+                <div className="e-role-card-overlay"/>
+                <div className="e-role-card-content">
+                  <span className="e-role-icon" style={{display:'block',marginBottom:'.7rem'}}>
+                    <svg className="ewu-mini" width="40" height="40" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                      <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                      <ellipse cx="12" cy="8.5" rx="5.5" ry="3.5" fill="url(#mi-arc)" className="ewu-arc" opacity="0.5" filter="url(#mi-blur)"/>
+                      <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                    </svg>
+                  </span>
+                  <h3>{T.card1Title}</h3>
+                  <p>{T.card1Desc}</p>
+                </div>
               </a>
               <a href="#employers" className="e-role-card">
-                <span className="e-role-icon">🏭</span>
-                <h3>{T.card2Title}</h3>
-                <p>{T.card2Desc}</p>
+                <div className="e-role-card-bg" style={{backgroundImage:"url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=85')"}}/>
+                <div className="e-role-card-overlay"/>
+                <div className="e-role-card-content">
+                  <span className="e-role-icon" style={{display:'block',marginBottom:'.7rem'}}>
+                    <svg className="ewu-mini" width="40" height="40" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                      <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                      <ellipse cx="12" cy="8.5" rx="5.5" ry="3.5" fill="url(#mi-arc)" className="ewu-arc" opacity="0.5" filter="url(#mi-blur)"/>
+                      <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                    </svg>
+                  </span>
+                  <h3>{T.card2Title}</h3>
+                  <p>{T.card2Desc}</p>
+                </div>
               </a>
             </div>
           </div>
@@ -1121,7 +1301,14 @@ export default function OrakulPage() {
         <section id="workers" className="e-section e-section-alt e-section-workers">
           <div className="e-wrap">
             <div className="e-sec-head">
-              <div className="e-role-badge e-role-badge-w">🔧 {T.card1Title}</div>
+              <div className="e-role-badge e-role-badge-w" style={{display:'inline-flex',alignItems:'center',gap:'.4rem'}}>
+                <svg className="ewu-mini" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                  <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                </svg>
+                {T.card1Title}
+              </div>
               <h2>{T.workersTitle}</h2>
               <p>{T.workersDesc}</p>
             </div>
@@ -1172,20 +1359,41 @@ export default function OrakulPage() {
 
         {/* ROLE DIVIDER */}
         <div className="e-role-strip" aria-hidden="true">
-          <div className="e-role-strip-w">🔧 {T.card1Title}</div>
+          <div className="e-role-strip-w" style={{gap:'.5rem'}}>
+            <svg className="ewu-mini" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+              <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+              <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+            </svg>
+            {T.card1Title}
+          </div>
           <div className="e-role-strip-mid">
             <div className="e-role-strip-line" />
             <div className="e-role-strip-dot" />
             <div className="e-role-strip-line" />
           </div>
-          <div className="e-role-strip-e">🏭 {T.card2Title}</div>
+          <div className="e-role-strip-e" style={{gap:'.5rem'}}>
+            <svg className="ewu-mini" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+              <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+              <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+            </svg>
+            {T.card2Title}
+          </div>
         </div>
 
         {/* FOR EMPLOYERS */}
         <section id="employers" className="e-section e-section-employers">
           <div className="e-wrap">
             <div className="e-sec-head">
-              <div className="e-role-badge e-role-badge-e">🏭 {T.card2Title}</div>
+              <div className="e-role-badge e-role-badge-e" style={{display:'inline-flex',alignItems:'center',gap:'.4rem'}}>
+                <svg className="ewu-mini" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                  <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                </svg>
+                {T.card2Title}
+              </div>
               <h2>{T.employersTitle}</h2>
               <p>{T.employersDesc}</p>
             </div>
@@ -1294,7 +1502,14 @@ export default function OrakulPage() {
       {chatOpen && (
         <div className="oc-panel">
           <div className="oc-head">
-            <div className="oc-head-sym">⟁</div>
+            <div className="oc-head-sym" style={{background:'none',border:'none'}}>
+              <svg className="ewu-mini" width="30" height="30" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                <ellipse cx="12" cy="8.5" rx="5" ry="3" fill="url(#mi-arc)" className="ewu-arc" opacity="0.45" filter="url(#mi-blur)"/>
+                <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+              </svg>
+            </div>
             <div className="oc-head-info">
               <div className="oc-head-name">ОРАКУЛ · EWU</div>
               <div className="oc-head-sub">AI-рекрутинг · зварювальники</div>
@@ -1305,13 +1520,27 @@ export default function OrakulPage() {
           <div className="oc-msgs">
             {chatMsgs.map((m, i) => (
               <div key={i} className={`oc-msg oc-msg-${m.role}`}>
-                {m.role === 'assistant' && <div className="oc-avatar">⟁</div>}
+                {m.role === 'assistant' && (
+                  <div className="oc-avatar" style={{background:'none',border:'none',padding:0}}>
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                      <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                      <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                    </svg>
+                  </div>
+                )}
                 <div className={`oc-bubble oc-bubble-${m.role}`}>{m.content || ' '}</div>
               </div>
             ))}
             {chatLoading && (
               <div className="oc-msg oc-msg-bot">
-                <div className="oc-avatar">⟁</div>
+                <div className="oc-avatar" style={{background:'none',border:'none',padding:0}}>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+                    <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+                    <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                  </svg>
+                </div>
                 <div className="oc-bubble oc-bubble-bot">
                   <div className="oc-typing">
                     <div className="oc-dot"/><div className="oc-dot"/><div className="oc-dot"/>
@@ -1343,7 +1572,13 @@ export default function OrakulPage() {
 
       <button className="oc-btn" onClick={() => chatOpen ? setChatOpen(false) : openChat()} aria-label="Оракул AI чат">
         <span className="oc-btn-dot"/>
-        ⟁ Оракул
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}>
+          <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
+          <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
+          <ellipse cx="12" cy="8.5" rx="5" ry="3" fill="url(#mi-arc)" className="ewu-arc" opacity="0.5" filter="url(#mi-blur)"/>
+          <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+        </svg>
+        Оракул
       </button>
     </>
   );
