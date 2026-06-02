@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useLocale } from 'next-intl';
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
@@ -1056,8 +1056,8 @@ export default function OrakulPage() {
                 stroke="#00e5ff" strokeWidth="0.9" fill="none" strokeLinejoin="round"/>
               <circle cx="17" cy="9" r="0.7" fill="#00e5ff" opacity={0.8}/>
               <text x="17" y="22.5" textAnchor="middle"
-                fontFamily="'Bebas Neue','Archivo Black',sans-serif"
-                fontWeight="700" fontSize="8.5"
+                fontFamily="'Arial Black',sans-serif"
+                fontWeight="900" fontSize="8.5"
                 fill="url(#nb-txt)" filter="url(#nb-tf)" letterSpacing="-0.2">EWU</text>
               <line x1="10" y1="26" x2="14.5" y2="26" stroke="#1d4ed8" strokeWidth="0.5" opacity={0.45}/>
               <circle cx="17" cy="26" r="0.6" fill="#00e5ff" opacity={0.6}/>
@@ -1231,18 +1231,18 @@ export default function OrakulPage() {
                 {/* ─── 3D STEEL EWU TEXT ─── */}
                 {/* Deep shadow layer */}
                 <text x="163" y="263" textAnchor="middle"
-                  fontFamily="'Bebas Neue','Archivo Black',sans-serif"
-                  fontWeight="700" fontSize="108" fill="#000820"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108" fill="#000820"
                   letterSpacing="-4" opacity="0.7">EWU</text>
                 {/* Blue glow halo */}
                 <text x="160" y="260" textAnchor="middle"
-                  fontFamily="'Bebas Neue','Archivo Black',sans-serif"
-                  fontWeight="700" fontSize="108" fill="#0055dd"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108" fill="#0055dd"
                   letterSpacing="-4" filter="url(#ewu-blur9)" className="ewu-arc" opacity="0.5">EWU</text>
                 {/* Main 3D steel text with bevel */}
                 <text x="160" y="260" textAnchor="middle"
-                  fontFamily="'Bebas Neue','Archivo Black',sans-serif"
-                  fontWeight="700" fontSize="108"
+                  fontFamily="'Arial Black','Impact',sans-serif"
+                  fontWeight="900" fontSize="108"
                   fill="url(#ewu-steel)"
                   filter="url(#ewu-bevel)"
                   letterSpacing="-4">EWU</text>
@@ -1318,7 +1318,7 @@ export default function OrakulPage() {
                 <svg className="ewu-mini" width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
                   <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
-                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
                 </svg>
                 {T.card1Title}
               </div>
@@ -1403,7 +1403,7 @@ export default function OrakulPage() {
                 <svg className="ewu-mini" width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
                   <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
-                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                  <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
                 </svg>
                 {T.card2Title}
               </div>
@@ -1520,7 +1520,7 @@ export default function OrakulPage() {
                 <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
                 <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
                 <ellipse cx="12" cy="8.5" rx="5" ry="3" fill="url(#mi-arc)" className="ewu-arc" opacity="0.45" filter="url(#mi-blur)"/>
-                <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="6" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
               </svg>
             </div>
             <div className="oc-head-info">
@@ -1538,7 +1538,7 @@ export default function OrakulPage() {
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                       <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
                       <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
-                      <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                      <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
                     </svg>
                   </div>
                 )}
@@ -1551,7 +1551,7 @@ export default function OrakulPage() {
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
                     <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
-                    <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+                    <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
                   </svg>
                 </div>
                 <div className="oc-bubble oc-bubble-bot">
@@ -1589,7 +1589,7 @@ export default function OrakulPage() {
           <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
           <circle cx="12" cy="12" r="11" stroke="url(#mi-ring)" strokeWidth="1.2" fill="none"/>
           <ellipse cx="12" cy="8.5" rx="5" ry="3" fill="url(#mi-arc)" className="ewu-arc" opacity="0.5" filter="url(#mi-blur)"/>
-          <text x="12" y="15.5" textAnchor="middle" fontFamily="'Bebas Neue','Archivo Black',sans-serif" fontWeight="700" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
+          <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
         </svg>
         Оракул
       </button>
