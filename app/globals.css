@@ -27,6 +27,21 @@
   /* next/font injects --font-syne / --font-cormorant on <html> */
   --font-display: var(--font-syne), system-ui, sans-serif;
   --font-serif: var(--font-cormorant), Georgia, serif;
+
+  /* Orakul / site theme variables (light defaults) */
+  --bg-soft: #f1f3f7;
+  --bg-panel: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --union-blue: #1d4ed8;
+  --welding-flash: #00e5ff;
+  --border: rgba(15,23,42,0.08);
+  --nav-bg: rgba(255,255,255,0.88);
+  --badge-bg: rgba(255,255,255,0.95);
+  --btn-border: rgba(0,0,0,0.06);
+  --section-filter: brightness(0.98) contrast(0.98);
+  --card-bg: rgba(255,255,255,0.95);
+  --hero-desc-color: #334155;
 }
 
 * { scroll-behavior: smooth; box-sizing: border-box; }
@@ -80,6 +95,23 @@ body {
 html[data-theme="dark"] {
   background: #070c1a;
   color-scheme: dark;
+}
+
+/* dark theme variable overrides */
+[data-theme="dark"]{
+  --bg-soft: #070c1a;
+  --bg-panel: rgba(8,14,30,0.96);
+  --text-main: #e6f0ff;
+  --text-muted: #94a8bf;
+  --union-blue: #60a5fa;
+  --welding-flash: #00e5ff;
+  --border: rgba(255,255,255,0.06);
+  --nav-bg: rgba(6,9,18,0.9);
+  --badge-bg: rgba(6,9,18,0.6);
+  --btn-border: #000;
+  --section-filter: brightness(0.55) contrast(0.95);
+  --card-bg: rgba(13,22,44,0.97);
+  --hero-desc-color: #f8fafc;
 }
 
 [data-theme="dark"] body {

@@ -10,13 +10,6 @@ const CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 .e-pg{
-  --bg-soft:#070c1a;
-  --bg-panel:rgba(8,14,30,0.96);
-  --text-main:#e6f0ff;
-  --text-muted:#94a8bf;
-  --union-blue:#60a5fa;
-  --welding-flash:#00e5ff;
-  --border:rgba(255,255,255,0.06);
   background:var(--bg-soft);
   color:var(--text-main);
   font-family:'Archivo',system-ui,sans-serif;
@@ -44,9 +37,9 @@ const CSS = `
 .e-nav{
   position:fixed;top:0;left:0;right:0;
   height:76px;
-  background:rgba(6,9,18,0.9);
+  background:var(--nav-bg);
   backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  border-bottom:1px solid var(--border);
   z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 2rem;gap:1rem;
@@ -101,24 +94,24 @@ const CSS = `
 
 .e-badge{
   display:inline-block;padding:.65rem 1.6rem;
-  background:rgba(6,9,18,0.6);
-  border:1px solid rgba(255,255,255,0.06);border-radius:50px;
+  background:var(--badge-bg);
+  border:1px solid var(--border);border-radius:50px;
   margin-bottom:1.4rem;backdrop-filter:blur(6px);
-  box-shadow:0 6px 30px rgba(0,0,0,.6);
+  box-shadow:0 6px 30px rgba(0,0,0,0.12);
 }
 .e-badge h2{font-size:.95rem;font-weight:700;color:var(--text-main)}
 .e-badge span{color:var(--union-blue)}
 
 .e-hero-title{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:700;line-height:1.1;margin-bottom:1.1rem}
 .e-hero-desc{
-  color:#f8fafc;font-size:clamp(1.05rem,2vw,1.25rem);font-weight:500;
-  max-width:700px;margin:0 auto 2.5rem;text-shadow:0 2px 8px rgba(0,0,0,.6);
+  color:var(--hero-desc-color);font-size:clamp(1.05rem,2vw,1.25rem);font-weight:500;
+  max-width:700px;margin:0 auto 2.5rem;text-shadow:var(--hero-desc-shadow, none);
 }
 
 .e-role-cards{display:flex;gap:20px;width:100%;max-width:900px;margin:0 auto}
 .e-role-card{
-  flex:1;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.8);border-radius:16px;padding:2.2rem 1.8rem;
+  flex:1;background:var(--card-bg);backdrop-filter:blur(10px);
+  border:1px solid var(--border);border-radius:16px;padding:2.2rem 1.8rem;
   cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.15);
   transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s;
   text-align:left;text-decoration:none;display:block;
@@ -154,7 +147,7 @@ const CSS = `
 .e-stat-l{font-size:.82rem;color:var(--text-muted);margin-top:4px}
 
 /* FORM BOX */
-.e-form-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:16px;padding:2.5rem}
+.e-form-box{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:2.5rem}
 .e-form-title{font-size:1.3rem;font-weight:700;margin-bottom:1.5rem}
 .e-inp{
   width:100%;padding:1rem;background:var(--bg-panel);
@@ -166,7 +159,7 @@ const CSS = `
 .e-inp:focus{border-color:var(--union-blue)}
 .e-inp::placeholder{color:var(--text-muted)}
 .e-submit-btn{
-  width:100%;padding:1rem;border-radius:10px;border:2px solid #000;
+  width:100%;padding:1rem;border-radius:10px;border:2px solid var(--btn-border);
   cursor:pointer;background:var(--union-blue);color:#fff;
   font-weight:700;font-size:1rem;font-family:inherit;
   transition:filter .15s,box-shadow .15s;margin-top:4px;
@@ -181,7 +174,7 @@ const CSS = `
 
 /* BTN */
 .e-btn{
-  display:inline-block;padding:1rem 2.2rem;border-radius:10px;border:2px solid #000;
+  display:inline-block;padding:1rem 2.2rem;border-radius:10px;border:2px solid var(--btn-border);
   cursor:pointer;background:var(--union-blue);color:#fff;font-weight:700;
   font-size:1rem;font-family:inherit;text-decoration:none;
   transition:filter .2s,box-shadow .15s;box-shadow:0 4px 14px rgba(29,78,216,.2);
@@ -301,8 +294,8 @@ const CSS = `
 .oc-btn{
   position:fixed;bottom:26px;right:26px;z-index:9990;
   display:flex;align-items:center;gap:.45rem;
-  padding:.65rem 1.25rem;border-radius:50px;border:2px solid #000;cursor:pointer;
-  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
+  padding:.65rem 1.25rem;border-radius:50px;border:2px solid var(--btn-border);cursor:pointer;
+  background:linear-gradient(135deg,var(--union-blue),#0ea5e9);
   color:#fff;font-weight:600;font-size:.84rem;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   letter-spacing:-.01em;
@@ -316,8 +309,8 @@ const CSS = `
 .oc-panel{
   position:fixed;bottom:84px;right:26px;z-index:9991;
   width:386px;height:572px;
-  background:rgba(255,255,255,.98);backdrop-filter:blur(22px);
-  border:1px solid rgba(29,78,216,.12);border-radius:22px;
+  background:var(--bg-panel);backdrop-filter:blur(22px);
+  border:1px solid var(--border);border-radius:22px;
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 24px 64px rgba(29,78,216,.12),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(29,78,216,.06);
   animation:oc-in .24s cubic-bezier(.16,1,.3,1);
@@ -347,7 +340,7 @@ const CSS = `
 .oc-msgs{
   flex:1;overflow-y:auto;padding:1rem .85rem;display:flex;flex-direction:column;gap:.6rem;
   scrollbar-width:thin;scrollbar-color:rgba(29,78,216,.12) transparent;
-  background:#f8fafc;
+  background:var(--bg-panel);
 }
 .oc-msg{display:flex;gap:.45rem;align-items:flex-end}
 .oc-msg-bot{justify-content:flex-start}
@@ -384,11 +377,11 @@ const CSS = `
 .oc-input-row{
   padding:.75rem .85rem;border-top:1px solid rgba(29,78,216,.08);
   display:flex;gap:.5rem;align-items:center;flex-shrink:0;
-  background:#fff;
+  background:var(--bg-panel);
 }
 .oc-input{
-  flex:1;background:#f1f5f9;border:1px solid rgba(29,78,216,.12);
-  border-radius:22px;padding:.55rem .95rem;color:#1e293b;
+  flex:1;background:var(--bg-panel);border:1px solid var(--border);
+  border-radius:22px;padding:.55rem .95rem;color:var(--text-main);
   font-size:.84rem;font-family:inherit;letter-spacing:-.005em;outline:none;transition:border-color .15s,background .15s;
 }
 .oc-input:focus{border-color:rgba(29,78,216,.4);background:#fff}
