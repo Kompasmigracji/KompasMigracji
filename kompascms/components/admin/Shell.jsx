@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 /* KompasCRM — каркас панели: сайдбар + топбар. Оборачивает все страницы (panel). */
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ import { navFor, ROLE_LABEL } from "@/lib/rbac";
 import { Icon, Spinner } from "./ui";
 
 export default function Shell({ children }) {
-  const [user, setUser] = useState(undefined); // undefined=загрузка, null=нет
+  const [user, setUser] = useState(undefined);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -40,17 +40,22 @@ export default function Shell({ children }) {
 
   return (
     <div className="kc-root">
-      <div className="kc-shell">
-        {/* САЙДБАР */}
-        <aside className="kc-side">
-          <div className="kc-brand">
-            <div className="kc-brand-mark"><Icon name="compass" size={21} color="#d99e54" /></div>
-            <div>
-              <div className="kc-brand-name">KompasCRM</div>
-              <div className="kc-brand-sub">KOMPAS MIGRACJI</div>
-            </div>
-          </div>
 
+      {/* ─── ЄДИНИЙ ЗАГОЛОВОК (повна ширина) ─── */}
+      <header className="kc-header">
+        <div className="kc-brand">
+          <div className="kc-brand-mark"><Icon name="compass" size={21} color="#d99e54" /></div>
+          <div>
+            <div className="kc-brand-name">KompasCRM</div>
+            <div className="kc-brand-sub">KOMPAS MIGRACJI</div>
+          </div>
+        </div>
+        <h1 className="kc-header-title">{current?.label || "KompasCRM"}</h1>
+      </header>
+
+      {/* ─── ТІЛО: сайдбар + контент ─── */}
+      <div className="kc-shell">
+        <aside className="kc-side">
           <nav className="kc-nav">
             <div className="kc-nav-cap">Управление</div>
             {nav.map((n) => {
@@ -82,14 +87,11 @@ export default function Shell({ children }) {
           </div>
         </aside>
 
-        {/* ОСНОВНАЯ ОБЛАСТЬ */}
         <div className="kc-main">
-          <header className="kc-topbar">
-            <h1>{current?.label || "KompasCRM"}</h1>
-          </header>
           <main className="kc-content kc-page-enter">{children}</main>
         </div>
       </div>
+
     </div>
   );
 }

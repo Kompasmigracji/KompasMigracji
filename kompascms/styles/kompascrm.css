@@ -31,15 +31,28 @@
 .kc-root ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 /* ---------- каркас ---------- */
-.kc-shell { display: flex; min-height: 100vh; }
-.kc-side {
-  width: 248px; flex-shrink: 0; background: var(--panel);
-  border-right: 1px solid var(--border); display: flex; flex-direction: column;
-  position: sticky; top: 0; height: 100vh;
+.kc-header {
+  display: flex; align-items: center;
+  height: 60px; flex-shrink: 0;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 20;
+}
+.kc-header-title {
+  font-family: var(--display); font-size: 19px; font-weight: 600; margin: 0;
+  padding: 0 22px; flex: 1;
 }
 .kc-brand {
   display: flex; align-items: center; gap: 11px;
-  height: 60px; padding: 0 18px; flex-shrink: 0; border-bottom: 1px solid var(--border);
+  width: 248px; flex-shrink: 0;
+  height: 100%; padding: 0 18px;
+  border-right: 1px solid var(--border);
+}
+.kc-shell { display: flex; min-height: calc(100vh - 60px); }
+.kc-side {
+  width: 248px; flex-shrink: 0; background: var(--panel);
+  border-right: 1px solid var(--border); display: flex; flex-direction: column;
+  position: sticky; top: 60px; height: calc(100vh - 60px);
 }
 .kc-brand-mark {
   width: 38px; height: 38px; border-radius: 10px; background: var(--brass-bg);
@@ -80,14 +93,6 @@
 
 /* ---------- основная область ---------- */
 .kc-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.kc-topbar {
-  height: 60px; flex-shrink: 0; border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--panel) 70%, transparent);
-  backdrop-filter: blur(8px);
-  display: flex; align-items: center; gap: 14px; padding: 0 22px;
-  position: sticky; top: 0; z-index: 10;
-}
-.kc-topbar h1 { font-family: var(--display); font-size: 19px; font-weight: 600; margin: 0; }
 .kc-content { padding: 22px; max-width: 1240px; width: 100%; }
 
 /* ---------- кнопки ---------- */
@@ -119,6 +124,7 @@
   .kc-grid-4 { grid-template-columns: repeat(2, 1fr); }
   .kc-grid-2 { grid-template-columns: 1fr; }
   .kc-side { width: 64px; }
+  .kc-brand { width: 64px; }
   .kc-brand-name, .kc-brand-sub, .kc-nav-item span, .kc-nav-cap,
   .kc-user-name, .kc-user-role { display: none; }
 }
