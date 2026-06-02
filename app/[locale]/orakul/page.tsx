@@ -462,7 +462,7 @@ interface PageTrans {
 }
 const TRANSLATIONS: Record<LangKey, PageTrans> = {
   uk: {
-    badge: 'На підтримці проєкту Компас Міграції',
+    badge: '',
     h1: 'Європейський Союз Зварювальників',
     heroDesc: 'Технологічна екосистема розвитку важкої промисловості в ЄС та безкомпромісної соціально-правової опіки за промисловими працівниками.',
     card1Title: 'Шукаю роботу',
@@ -1251,9 +1251,11 @@ export default function OrakulPage() {
               </svg>
             </div>
 
-            <div className="e-badge">
-              <h2>{T.badge}</h2>
-            </div>
+            {T.badge ? (
+              <div className="e-badge">
+                <h2>{T.badge}</h2>
+              </div>
+            ) : null}
 
             <h1 className="e-hero-title">
               <span className="e-weld">{T.h1}</span>
