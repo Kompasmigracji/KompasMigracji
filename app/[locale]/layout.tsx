@@ -6,7 +6,6 @@ import { Syne, Cormorant_Garamond } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { locales } from '@/i18n';
-import { ThemeProvider } from '@/lib/ThemeContext';
 import '../globals.css';
 
 const syne = Syne({
@@ -53,9 +52,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${syne.variable} ${cormorant.variable}`}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          {children}
         </NextIntlClientProvider>
         <Analytics />
         <SpeedInsights />
