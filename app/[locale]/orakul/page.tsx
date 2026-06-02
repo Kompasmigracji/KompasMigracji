@@ -9,13 +9,13 @@ const CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 .e-pg{
-  --bg-soft:#f1f3f7;
-  --bg-panel:#ffffff;
-  --text-main:#0f172a;
-  --text-muted:#475569;
-  --union-blue:#1d4ed8;
+  --bg-soft:#070c1a;
+  --bg-panel:rgba(8,14,30,0.96);
+  --text-main:#e6f0ff;
+  --text-muted:#94a8bf;
+  --union-blue:#60a5fa;
   --welding-flash:#00e5ff;
-  --border:rgba(15,23,42,0.08);
+  --border:rgba(255,255,255,0.06);
   background:var(--bg-soft);
   color:var(--text-main);
   font-family:'Archivo',system-ui,sans-serif;
@@ -43,9 +43,9 @@ const CSS = `
 .e-nav{
   position:fixed;top:0;left:0;right:0;
   height:76px;
-  background:rgba(255,255,255,0.88);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
+  background:rgba(6,9,18,0.9);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
   z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 2rem;gap:1rem;
@@ -100,13 +100,13 @@ const CSS = `
 
 .e-badge{
   display:inline-block;padding:.65rem 1.6rem;
-  background:rgba(255,255,255,.95);
-  border:1px solid rgba(29,78,216,.3);border-radius:50px;
-  margin-bottom:1.4rem;backdrop-filter:blur(10px);
-  box-shadow:0 4px 25px rgba(0,229,255,.15);
+  background:rgba(6,9,18,0.6);
+  border:1px solid rgba(255,255,255,0.06);border-radius:50px;
+  margin-bottom:1.4rem;backdrop-filter:blur(6px);
+  box-shadow:0 6px 30px rgba(0,0,0,.6);
 }
-.e-badge h2{font-size:.95rem;font-weight:700;color:#1e3a8a}
-.e-badge span{color:#2563eb}
+.e-badge h2{font-size:.95rem;font-weight:700;color:var(--text-main)}
+.e-badge span{color:var(--union-blue)}
 
 .e-hero-title{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:700;line-height:1.1;margin-bottom:1.1rem}
 .e-hero-desc{
