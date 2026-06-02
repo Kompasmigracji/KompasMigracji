@@ -306,15 +306,15 @@ const CSS = `
   position:fixed;bottom:26px;right:26px;z-index:9990;
   display:flex;align-items:center;gap:.45rem;
   padding:.65rem 1.25rem;border-radius:50px;border:2px solid var(--btn-border);cursor:pointer;
-  background:linear-gradient(135deg,var(--union-blue),#0ea5e9);
+  background:linear-gradient(135deg,#ffb24d,#ff4d12);
   color:#fff;font-weight:600;font-size:.84rem;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   letter-spacing:-.01em;
-  box-shadow:0 0 26px -4px rgba(14,165,233,.5),0 4px 14px rgba(0,0,0,.3);
+  box-shadow:0 0 26px -4px rgba(255,77,18,.5),0 4px 14px rgba(0,0,0,.3);
   transition:transform .2s,box-shadow .2s;
 }
-.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(0,229,255,.65),0 8px 20px rgba(0,0,0,.4)}
-.oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#7fffb2;box-shadow:0 0 6px #7fffb2;animation:oc-pulse 2s infinite}
+.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(255,77,18,.65),0 8px 20px rgba(0,0,0,.4)}
+.oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#ffb24d;box-shadow:0 0 6px #ffb24d;animation:oc-pulse 2s infinite}
 @keyframes oc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.7)}}
 
 .oc-panel{
