@@ -457,6 +457,131 @@ const CSS = `
 .e-role-card-content{position:relative;z-index:2}
 .e-role-card h3{color:#e8f2ff!important}
 .e-role-card p{color:rgba(180,210,255,.82)!important}
+
+/* ══ PAGE THEME VARS ══ */
+.e-pg{
+  --bg-soft:#f5f5f7;--bg-panel:#ffffff;--text-main:#1d1d1f;--text-muted:#6e6e73;
+  --union-blue:#0066cc;--welding-flash:#0066cc;--border:rgba(0,0,0,.07);
+  --nav-bg:rgba(255,255,255,.82);--badge-bg:rgba(255,255,255,.96);
+  --card-bg:#ffffff;--btn-border:transparent;--hero-desc-color:#3a3a3c;
+  background:#f5f5f7;
+}
+
+/* ══ HERO OVERLAY (shared) ══ */
+.e-hero-overlay{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  transition:opacity .5s;
+}
+.e-hero-inner{position:relative;z-index:3;text-align:center;max-width:1000px;width:100%;padding:0 1.5rem}
+
+/* ── Light hero ── */
+.e-pg:not(.pg-dark) .e-hero-overlay{
+  background:linear-gradient(180deg,rgba(248,248,252,.91) 0%,rgba(244,244,248,.86) 100%);
+}
+.e-pg:not(.pg-dark) .e-hero::before{
+  opacity:.2;filter:brightness(1.1) contrast(.82) saturate(.45);
+}
+
+/* ── Light sections ── */
+.e-pg:not(.pg-dark) .e-section{
+  background:#f5f5f7;color:#1d1d1f;border-top:1px solid rgba(0,0,0,.06);
+}
+.e-pg:not(.pg-dark) .e-section::before{display:none}
+.e-pg:not(.pg-dark) .e-section-alt{
+  background:#ffffff;color:#1d1d1f;border-top:1px solid rgba(0,0,0,.06);
+}
+.e-pg:not(.pg-dark) .e-section-alt::before{display:none}
+.e-pg:not(.pg-dark) .e-about{background:#ffffff}
+
+/* ── Light role cards ── */
+.e-pg:not(.pg-dark) .e-role-card{border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.e-pg:not(.pg-dark) .e-role-card:hover{box-shadow:0 14px 38px rgba(0,102,204,.16)!important}
+.e-pg:not(.pg-dark) .e-role-card-overlay{background:linear-gradient(165deg,rgba(248,248,252,.24) 0%,rgba(244,244,248,.38) 100%)}
+.e-pg:not(.pg-dark) .e-role-card h3{color:#1d1d1f!important}
+.e-pg:not(.pg-dark) .e-role-card p{color:#6e6e73!important}
+
+/* ══ DARK (SPACE SCREENSAVER) ══ */
+.e-pg.pg-dark{
+  --bg-soft:#000008;--bg-panel:rgba(8,12,40,.86);--text-main:#e8f0ff;--text-muted:#7080a0;
+  --union-blue:#00e5ff;--welding-flash:#00e5ff;--border:rgba(0,200,255,.12);
+  --nav-bg:rgba(0,3,20,.82);--badge-bg:rgba(0,5,25,.78);
+  --card-bg:rgba(6,10,30,.9);--btn-border:transparent;--hero-desc-color:#b8d0ff;
+  background:
+    radial-gradient(ellipse at 50% 0%,#0d1b4e 0%,#050815 42%,#000008 100%) fixed,
+    radial-gradient(ellipse at 85% 100%,rgba(80,5,120,.4) 0%,transparent 48%) fixed,
+    radial-gradient(ellipse at 8% 58%,rgba(0,40,130,.32) 0%,transparent 48%) fixed;
+}
+
+/* Dark hero */
+.e-pg.pg-dark .e-hero{
+  background-image:none;
+  background:radial-gradient(ellipse at 50% 30%,#0d1b4e 0%,#030818 55%,#000008 100%);
+}
+.e-pg.pg-dark .e-hero::before{
+  background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1920&q=95');
+  filter:brightness(.18) contrast(.88) saturate(.45) hue-rotate(200deg);
+  opacity:1;
+}
+.e-pg.pg-dark .e-hero-overlay{
+  background:
+    radial-gradient(1.5px 1.5px at 8% 12%,rgba(255,255,255,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 22% 8%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(2px 2px at 58% 5%,rgba(255,255,255,.95) 0%,transparent 100%),
+    radial-gradient(1px 1px at 86% 14%,rgba(255,255,255,.75) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 44% 22%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 72% 32%,rgba(255,255,255,.65) 0%,transparent 100%),
+    radial-gradient(2px 2px at 18% 42%,rgba(200,210,255,.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 93% 28%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 36% 52%,rgba(255,255,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 55% 18%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(2px 2px at 78% 62%,rgba(180,200,255,.9) 0%,transparent 100%),
+    radial-gradient(1px 1px at 12% 75%,rgba(255,255,255,.7) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 62% 82%,rgba(255,255,255,.75) 0%,transparent 100%),
+    radial-gradient(1px 1px at 28% 88%,rgba(255,255,255,.65) 0%,transparent 100%),
+    radial-gradient(2px 2px at 95% 78%,rgba(200,180,255,.85) 0%,transparent 100%),
+    radial-gradient(1px 1px at 48% 95%,rgba(255,255,255,.55) 0%,transparent 100%),
+    radial-gradient(2px 2px at 15% 24%,rgba(220,220,255,.8) 0%,transparent 100%),
+    radial-gradient(1px 1px at 68% 48%,rgba(255,255,255,.6) 0%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 3% 65%,rgba(255,255,255,.72) 0%,transparent 100%),
+    radial-gradient(2px 2px at 82% 92%,rgba(200,220,255,.8) 0%,transparent 100%),
+    radial-gradient(ellipse at 40% 45%,rgba(0,50,180,.28) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 25%,rgba(80,0,180,.18) 0%,transparent 40%),
+    radial-gradient(ellipse at 15% 80%,rgba(0,30,120,.2) 0%,transparent 40%),
+    linear-gradient(to bottom,rgba(0,0,20,.45) 0%,rgba(0,0,10,.25) 100%);
+  animation:nebula-breathe 8s ease-in-out infinite;
+}
+@keyframes nebula-breathe{0%,100%{opacity:.82}50%{opacity:1}}
+
+/* Dark sections */
+.e-pg.pg-dark .e-section,.e-pg.pg-dark .e-section-alt{
+  background:transparent;color:#e8f0ff;border-top-color:rgba(0,229,255,.08);
+}
+.e-pg.pg-dark .e-section::before,.e-pg.pg-dark .e-section-alt::before{display:block}
+.e-pg.pg-dark .e-about{background:rgba(3,5,20,.95);border-top-color:rgba(0,229,255,.08)}
+.e-pg.pg-dark .e-footer{background:rgba(2,3,14,.98)}
+
+/* Dark role cards */
+.e-pg.pg-dark .e-role-card-overlay{background:linear-gradient(165deg,rgba(8,14,36,.75) 0%,rgba(4,8,22,.88) 100%)}
+.e-pg.pg-dark .e-role-card h3{color:#e8f2ff!important}
+.e-pg.pg-dark .e-role-card p{color:rgba(180,210,255,.82)!important}
+.e-pg.pg-dark .e-role-card{border:1px solid rgba(0,229,255,.2)!important}
+.e-pg.pg-dark .e-role-card:hover{box-shadow:0 20px 40px rgba(0,229,255,.25)!important}
+
+/* Dark weld gradient */
+.e-pg.pg-dark .e-weld{
+  background:linear-gradient(90deg,#c8deff 0%,#00e5ff 40%,#ffffff 50%,#00e5ff 60%,#c8deff 100%);
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;
+}
+
+/* ══ THEME TOGGLE BUTTON ══ */
+.e-theme-btn{
+  width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--border);background:var(--bg-panel);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .22s;flex-shrink:0;color:var(--text-main);
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.e-theme-btn:hover{transform:scale(1.12);border-color:var(--union-blue)}
 `;
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
@@ -722,6 +847,7 @@ export default function OrakulPage() {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
+  const [pageTheme, setPageTheme] = useState<'light'|'dark'>('light');
   const msgsEndRef = useRef<HTMLDivElement>(null);
 
   const GREET: Record<LangKey, string> = {
@@ -1003,7 +1129,7 @@ export default function OrakulPage() {
         </defs>
       </svg>
 
-      <div className="e-pg">
+      <div className={`e-pg${pageTheme === 'dark' ? ' pg-dark' : ''}`}>
 
         {/* NAV */}
         <nav className="e-nav">
@@ -1078,11 +1204,31 @@ export default function OrakulPage() {
                 </button>
               ))}
             </div>
+            <button
+              className="e-theme-btn"
+              onClick={() => setPageTheme(t => t === 'light' ? 'dark' : 'light')}
+              title={pageTheme === 'light' ? 'Темна тема' : 'Світла тема'}
+            >
+              {pageTheme === 'light' ? (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="5"/>
+                  <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                  <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+              )}
+            </button>
           </div>
         </nav>
 
         {/* HERO */}
         <section className="e-hero">
+          <div className="e-hero-overlay" aria-hidden="true" />
           <div className="e-hero-inner">
             <div className="e-logo-wrap">
               <canvas ref={canvasRef} className="e-logo-canvas" />
