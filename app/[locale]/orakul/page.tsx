@@ -269,7 +269,9 @@ const CSS = `
   display:flex;align-items:center;gap:.45rem;
   padding:.65rem 1.25rem;border-radius:50px;border:none;cursor:pointer;
   background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
-  color:#fff;font-weight:800;font-size:.82rem;font-family:inherit;letter-spacing:.03em;
+  color:#fff;font-weight:600;font-size:.84rem;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  letter-spacing:-.01em;
   box-shadow:0 0 26px -4px rgba(14,165,233,.5),0 4px 14px rgba(0,0,0,.2);
   transition:transform .2s,box-shadow .2s;
 }
@@ -285,6 +287,7 @@ const CSS = `
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 24px 64px rgba(29,78,216,.12),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(29,78,216,.06);
   animation:oc-in .24s cubic-bezier(.16,1,.3,1);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
 }
 @keyframes oc-in{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
 
@@ -302,8 +305,8 @@ const CSS = `
   font-size:.85rem;font-weight:900;color:#fff;
 }
 .oc-head-info{flex:1;min-width:0}
-.oc-head-name{font-weight:800;font-size:.92rem;color:#fff;letter-spacing:.01em}
-.oc-head-sub{font-size:.68rem;color:rgba(255,255,255,.72);font-weight:500;margin-top:1px}
+.oc-head-name{font-weight:600;font-size:.93rem;color:#fff;letter-spacing:-.01em}
+.oc-head-sub{font-size:.7rem;color:rgba(255,255,255,.75);font-weight:400;margin-top:1px;letter-spacing:0}
 .oc-close{background:none;border:none;cursor:pointer;color:rgba(255,255,255,.5);font-size:1.1rem;line-height:1;padding:.2rem .3rem;border-radius:6px;transition:color .15s;margin-left:auto}
 .oc-close:hover{color:#fff}
 
@@ -323,8 +326,9 @@ const CSS = `
   font-size:.62rem;font-weight:900;color:#fff;letter-spacing:-.02em;
 }
 .oc-bubble{
-  max-width:80%;padding:.55rem .85rem;border-radius:14px;
-  font-size:.83rem;line-height:1.55;font-family:inherit;
+  max-width:80%;padding:.55rem .9rem;border-radius:14px;
+  font-size:.84rem;line-height:1.5;font-family:inherit;
+  letter-spacing:-.005em;
   white-space:pre-wrap;word-break:break-word;
 }
 .oc-bubble-bot{
@@ -351,7 +355,7 @@ const CSS = `
 .oc-input{
   flex:1;background:#f1f5f9;border:1px solid rgba(29,78,216,.12);
   border-radius:22px;padding:.55rem .95rem;color:#1e293b;
-  font-size:.83rem;font-family:inherit;outline:none;transition:border-color .15s,background .15s;
+  font-size:.84rem;font-family:inherit;letter-spacing:-.005em;outline:none;transition:border-color .15s,background .15s;
 }
 .oc-input:focus{border-color:rgba(29,78,216,.4);background:#fff}
 .oc-input::placeholder{color:#94a3b8}
