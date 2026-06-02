@@ -474,7 +474,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
   uk: {
     badge: '',
     h1: 'Європейський Союз Зварювальників',
-    heroDesc: 'Європейський Союз Зварювальників (EWU) — міжнародна індустріальна платформа, що об\'єднує професійних майстрів та провідних роботодавців ЄС.',
+    heroDesc: 'Європейський Союз Зварювальників (EWU) — міжнародна індустріальна платформа, яка об\'єднує професійних майстрів та провідних роботодавців Європейського Союзу.',
     card1Title: 'Для спеціалістів:',
     card1Desc: 'Гарантуємо офіційне працевлаштування, повний правовий захист, супровід з сертифікацією та 100% чесні виплати та правовий захист і підтримку у всіх сферах життя.',
     card2Title: 'Для роботодавців:',
@@ -528,7 +528,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
   en: {
     badge: '',
     h1: 'European Welding Union',
-    heroDesc: 'European Welding Union (EWU) — an international industrial platform uniting professional welders and leading employers across the EU.',
+    heroDesc: 'European Welding Union (EWU) — an international industrial platform that unites professional welders and leading employers across the EU.',
     card1Title: 'Looking for work',
     card1Desc: 'Stability, high-value contracts, European accommodation and social care for your family.',
     card2Title: 'Looking for staff',
@@ -582,7 +582,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
   ru: {
     badge: '',
     h1: 'Европейский Союз Сварщиков',
-    heroDesc: 'Европейский Союз Сварщиков (EWU) — международная индустриальная платформа, объединяющая профессиональных сварщиков и ведущих работодателей ЕС.',
+    heroDesc: 'Европейский Союз Сварщиков (EWU) — международная индустриальная платформа, объединяющая профессиональных мастеров и ведущих работодателей Евросоюза.',
     card1Title: 'Ищу работу',
     card1Desc: 'Стабильность, высокие контракты, европейское жильё и социальная опека над вашей семьёй.',
     card2Title: 'Ищу персонал',
@@ -636,7 +636,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
   pl: {
     badge: '',
     h1: 'Europejski Związek Spawaczy',
-    heroDesc: 'Europejski Związek Spawaczy (EWU) — międzynarodowa platforma przemysłowa łącząca profesjonalnych spawaczy i wiodących pracodawców w UE.',
+    heroDesc: 'Europejski Związek Spawaczy (EWU) — międzynarodowa platforma przemysłowa, która łączy profesjonalnych mistrzów spawalniczych i wiodących pracodawców Unii Europejskiej.',
     card1Title: 'Szukam pracy',
     card1Desc: 'Stabilność, atrakcyjne kontrakty, europejskie zakwaterowanie i opieka społeczna nad Twoją rodziną.',
     card2Title: 'Szukam pracowników',
