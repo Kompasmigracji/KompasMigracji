@@ -305,23 +305,28 @@ const CSS = `
 .oc-btn{
   position:fixed;bottom:26px;right:26px;z-index:9990;
   display:flex;align-items:center;gap:.45rem;
-  padding:.65rem 1.25rem;border-radius:50px;border:2px solid var(--btn-border);cursor:pointer;
-  background:linear-gradient(135deg,#ffb24d,#ff4d12);
+  padding:.65rem 1.25rem;border-radius:50px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
   color:#fff;font-weight:600;font-size:.84rem;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   letter-spacing:-.01em;
-  box-shadow:0 0 26px -4px rgba(255,77,18,.5),0 4px 14px rgba(0,0,0,.3);
-  transition:transform .2s,box-shadow .2s;
+  box-shadow:0 0 22px -4px rgba(14,165,233,.55),0 4px 14px rgba(0,0,0,.22);
+  transition:transform .2s;
+  animation:oc-btn-glow 3s ease-in-out infinite;
 }
-.oc-btn:hover{transform:translateY(-2px);box-shadow:0 0 34px -4px rgba(255,77,18,.65),0 8px 20px rgba(0,0,0,.4)}
-.oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#ffb24d;box-shadow:0 0 6px #ffb24d;animation:oc-pulse 2s infinite}
+@keyframes oc-btn-glow{
+  0%,100%{box-shadow:0 0 18px -4px rgba(29,78,216,.5),0 4px 14px rgba(0,0,0,.2)}
+  50%{box-shadow:0 0 44px -2px rgba(0,229,255,.9),0 0 80px rgba(0,100,255,.28),0 4px 18px rgba(0,0,0,.25)}
+}
+.oc-btn:hover{transform:translateY(-2px);animation:none;box-shadow:0 0 40px -2px rgba(0,229,255,.95),0 8px 20px rgba(0,0,0,.25)}
+.oc-btn-dot{width:7px;height:7px;border-radius:50%;background:#7fffb2;box-shadow:0 0 6px #7fffb2;animation:oc-pulse 2s infinite}
 @keyframes oc-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.7)}}
 
 .oc-panel{
   position:fixed;bottom:84px;right:26px;z-index:9991;
   width:386px;height:572px;
-  background:var(--bg-panel);backdrop-filter:blur(22px);
-  border:1px solid var(--border);border-radius:22px;
+  background:#ffffff;backdrop-filter:blur(22px);
+  border:1px solid rgba(29,78,216,.12);border-radius:22px;
   display:flex;flex-direction:column;overflow:hidden;
   box-shadow:0 24px 64px rgba(29,78,216,.12),0 8px 24px rgba(0,0,0,.1),0 0 0 1px rgba(29,78,216,.06);
   animation:oc-in .24s cubic-bezier(.16,1,.3,1);
@@ -351,7 +356,7 @@ const CSS = `
 .oc-msgs{
   flex:1;overflow-y:auto;padding:1rem .85rem;display:flex;flex-direction:column;gap:.6rem;
   scrollbar-width:thin;scrollbar-color:rgba(29,78,216,.12) transparent;
-  background:var(--bg-panel);
+  background:#f8fafc;
 }
 .oc-msg{display:flex;gap:.45rem;align-items:flex-end}
 .oc-msg-bot{justify-content:flex-start}
@@ -388,17 +393,17 @@ const CSS = `
 .oc-input-row{
   padding:.75rem .85rem;border-top:1px solid rgba(29,78,216,.08);
   display:flex;gap:.5rem;align-items:center;flex-shrink:0;
-  background:var(--bg-panel);
+  background:#ffffff;
 }
 .oc-input{
-  flex:1;background:var(--bg-panel);border:1px solid var(--border);
-  border-radius:22px;padding:.55rem .95rem;color:var(--text-main);
+  flex:1;background:#f1f5f9;border:1px solid rgba(29,78,216,.15);
+  border-radius:22px;padding:.55rem .95rem;color:#0f172a;
   font-size:.84rem;font-family:inherit;letter-spacing:-.005em;outline:none;transition:border-color .15s,background .15s;
 }
-.oc-input:focus{border-color:rgba(29,78,216,.4);background:#fff}
+.oc-input:focus{border-color:rgba(29,78,216,.45);background:#ffffff;box-shadow:0 0 0 3px rgba(29,78,216,.08)}
 .oc-input::placeholder{color:#94a3b8}
 .oc-send{
-  width:34px;height:34px;border-radius:50%;border:2px solid #000;cursor:pointer;flex-shrink:0;
+  width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
   background:linear-gradient(135deg,#1d4ed8,#0ea5e9);color:#fff;
   display:flex;align-items:center;justify-content:center;
   transition:transform .15s,opacity .15s;
