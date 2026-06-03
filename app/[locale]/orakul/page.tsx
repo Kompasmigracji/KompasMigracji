@@ -1010,7 +1010,7 @@ export default function OrakulPage() {
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
-  const [pageTheme, setPageTheme] = useState<'light'|'dark'>('light');
+  const [pageTheme, setPageTheme] = useState<'light'|'dark'>('dark');
   const [exitPopup, setExitPopup] = useState(false);
   const [exitEmail, setExitEmail] = useState('');
   const [exitSent, setExitSent] = useState(false);
