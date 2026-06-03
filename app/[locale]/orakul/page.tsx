@@ -455,8 +455,8 @@ const CSS = `
 .e-role-card:hover .e-role-card-bg{transform:scale(1.07)}
 .e-role-card-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(165deg,rgba(8,14,36,.75) 0%,rgba(4,8,22,.88) 100%)}
 .e-role-card-content{position:relative;z-index:2}
-.e-role-card h3{color:#e8f2ff!important}
-.e-role-card p{color:rgba(180,210,255,.82)!important}
+.e-pg.pg-dark .e-role-card h3{color:#e8f2ff!important}
+.e-pg.pg-dark .e-role-card p{color:rgba(180,210,255,.82)!important}
 
 /* ══ PAGE THEME VARS ══ */
 .e-pg{
@@ -495,10 +495,10 @@ const CSS = `
 
 /* ── Light role cards ── */
 .e-pg:not(.pg-dark) .e-role-card{border:1px solid rgba(0,0,0,.09)!important;box-shadow:0 4px 20px rgba(0,0,0,.08)}
-.e-pg:not(.pg-dark) .e-role-card:hover{box-shadow:0 14px 38px rgba(0,102,204,.16)!important}
-.e-pg:not(.pg-dark) .e-role-card-overlay{background:linear-gradient(165deg,rgba(248,248,252,.24) 0%,rgba(244,244,248,.38) 100%)}
-.e-pg:not(.pg-dark) .e-role-card h3{color:#1d1d1f!important}
-.e-pg:not(.pg-dark) .e-role-card p{color:#6e6e73!important}
+.e-pg:not(.pg-dark) .e-role-card:hover{box-shadow:0 14px 38px rgba(0,102,204,.16)!important;transform:translateY(-5px)}
+.e-pg:not(.pg-dark) .e-role-card-overlay{background:linear-gradient(180deg,rgba(255,255,255,.72) 0%,rgba(248,248,252,.92) 55%,rgba(255,255,255,.97) 100%)}
+.e-pg:not(.pg-dark) .e-role-card h3{color:#1d1d1f!important;text-shadow:none!important}
+.e-pg:not(.pg-dark) .e-role-card p{color:#3a3a3c!important;text-shadow:none!important}
 
 /* ══ DARK (SPACE SCREENSAVER) ══ */
 .e-pg.pg-dark{
