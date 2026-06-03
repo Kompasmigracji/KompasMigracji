@@ -583,22 +583,6 @@ const CSS = `
 }
 .e-theme-btn:hover{transform:scale(1.12);border-color:var(--union-blue)}
 
-/* ══ STICKY WA CTA ══ */
-.e-sticky-wa{
-  position:fixed;bottom:28px;right:28px;z-index:900;
-  display:flex;align-items:center;gap:10px;
-  background:#25d366;color:#fff;
-  padding:12px 20px 12px 16px;border-radius:50px;
-  box-shadow:0 6px 28px rgba(37,211,102,.45);
-  text-decoration:none;font-weight:700;font-size:.95rem;
-  transition:transform .22s,box-shadow .22s;
-  animation:wa-enter .5s cubic-bezier(.16,1,.3,1) both;
-}
-.e-sticky-wa:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 36px rgba(37,211,102,.55)}
-@keyframes wa-enter{from{opacity:0;transform:translateY(20px) scale(.92)}to{opacity:1;transform:none}}
-.e-sticky-wa-label{display:flex;flex-direction:column;line-height:1.2}
-.e-sticky-wa-label span:first-child{font-size:.75rem;font-weight:600;opacity:.82}
-.e-sticky-wa-label span:last-child{font-size:1rem;font-weight:800}
 
 /* ══ EXIT POPUP ══ */
 .e-exit-overlay{
@@ -696,6 +680,11 @@ interface PageTrans {
   eBtn: string; eSendingBtn: string; eSentTitle: string; eSentDesc: string;
   aboutTitle: string; aboutP1: string; aboutP2: string;
   quote: string; quote2: string;
+  socialStrip: string[];
+  faqTitle: string; faqSub: string;
+  faqItems: { q: string; a: string }[];
+  exitTitle: string; exitSub: string; exitPlh: string; exitBtn: string; exitOk: string;
+  chatInputPlh: string; chatLeadSaved: string; chatBtnLabel: string;
 }
 const TRANSLATIONS: Record<LangKey, PageTrans> = {
   uk: {
@@ -751,6 +740,25 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'У довгостроковому партнерстві з проєктом «Компас Міграції» (співзасновник — Олександр Василишин), ми створюємо непорушний соціально-юридичний щит для робітників, захищаючи інтереси їхніх сімей в ЄС.',
     quote: 'Шов ляже ідеально, коли поспішати нікуди. Простота — це складність, яку вже ніхто не помічає.',
     quote2: 'Ми ті , хто міцним швом заварює, працедавців з виконавцями !',
+    socialStrip: ['перевірених майстрів', 'офіційні контракти', 'відповідь координатора', 'країн ЄС'],
+    faqTitle: 'Часті запитання',
+    faqSub: 'Відповіді на найпоширеніші питання зварювальників та роботодавців',
+    faqItems: [
+      { q: 'Які документи потрібні для роботи зварювальником в ЄС?', a: 'Паспорт, диплом або посвідчення зварювальника, медична довідка. EWU допомагає з підтвердженням розряду та міжнародною атестацією — весь процес під нашим супроводом.' },
+      { q: 'Чи є офіційне працевлаштування (UoP)?', a: '100% — UoP (Umowa o pracę) або UoZ з повним медичним страхуванням та ZUS. Жодних «сірих» схем. Координатор надає підтвердження до підписання контракту.' },
+      { q: 'Скільки заробляє зварювальник у Польщі / ЄС?', a: 'Від 5 000 до 9 000 zł нетто залежно від методу зварювання та досвіду. TIG-майстри отримують від 8 000 zł. Детальна вилка обговорюється з координатором під вашу кваліфікацію.' },
+      { q: 'Як швидко EWU знаходить роботу?', a: 'Координатор зв\'язується протягом 24 годин після заявки. Підбір позиції займає 3–14 робочих днів залежно від методу та регіону.' },
+      { q: 'Чи потрібно знати польську або іншу мову?', a: 'Базове розуміння — плюс, але не обов\'язково. На кожному об\'єкті є координатор-перекладач. Мовний бар\'єр не перешкода для початку роботи.' },
+      { q: 'Ми — компанія. Як швидко отримати бригаду зварювальників?', a: 'Надішліть запит через форму. Координатор зв\'язується протягом доби, обговорює кількість, методи та терміни. Перша група може прибути вже через 7–14 днів.' },
+    ],
+    exitTitle: 'Залишайтесь на зв\'язку!',
+    exitSub: 'Залиш email або телефон — координатор EWU зв\'яжеться з вами протягом 24 годин з персональною пропозицією.',
+    exitPlh: 'Email або телефон WhatsApp',
+    exitBtn: 'Надіслати',
+    exitOk: '✅ Дякуємо! Координатор зателефонує вам.',
+    chatInputPlh: 'Написати...',
+    chatLeadSaved: '✓ Заявку збережено — менеджер зв\'яжеться з тобою',
+    chatBtnLabel: 'Оракул',
   },
   en: {
     badge: '',
@@ -805,6 +813,25 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'In long-term partnership with the Kompas Migracji project (co-founder — Oleksandr Vasylyshyn), we create an unbreakable social-legal shield for workers, protecting the interests of their families in the EU.',
     quote: 'The weld will lie perfectly when there is no rush. Simplicity is the complexity that no one notices anymore.',
     quote2: 'We are the ones who weld employers and workers together with a strong seam.',
+    socialStrip: ['vetted masters', 'official contracts', 'coordinator response', 'EU countries'],
+    faqTitle: 'Frequently Asked Questions',
+    faqSub: 'Answers to the most common questions from welders and employers',
+    faqItems: [
+      { q: 'What documents are required to work as a welder in the EU?', a: 'Passport, welding diploma or certificate, medical clearance. EWU assists with grade confirmation and international certification — the entire process is guided by us.' },
+      { q: 'Is there official employment (UoP)?', a: '100% — UoP (Umowa o pracę) or UoZ with full medical insurance and ZUS. No grey schemes. The coordinator provides confirmation before signing the contract.' },
+      { q: 'How much does a welder earn in Poland / EU?', a: 'From 5,000 to 9,000 PLN net depending on welding method and experience. TIG masters earn from 8,000 PLN. The exact range is discussed with the coordinator based on your qualifications.' },
+      { q: 'How quickly does EWU find work?', a: 'The coordinator contacts you within 24 hours of your application. Position selection takes 3–14 working days depending on method and region.' },
+      { q: 'Do I need to know Polish or another language?', a: 'A basic understanding is a plus, but not required. Each site has a coordinator-translator. A language barrier is not an obstacle to starting work.' },
+      { q: 'We are a company. How quickly can we get a team of welders?', a: 'Submit a request via the form. The coordinator contacts you within a day, discusses numbers, methods and timelines. The first group can arrive within 7–14 days.' },
+    ],
+    exitTitle: 'Stay in touch!',
+    exitSub: 'Leave your email or phone — EWU coordinator will contact you within 24 hours with a personal offer.',
+    exitPlh: 'Email or WhatsApp number',
+    exitBtn: 'Send',
+    exitOk: '✅ Thank you! A coordinator will call you.',
+    chatInputPlh: 'Type a message...',
+    chatLeadSaved: '✓ Application saved — a manager will contact you',
+    chatBtnLabel: 'Orakul',
   },
   ru: {
     badge: '',
@@ -859,6 +886,25 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'В долгосрочном партнёрстве с проектом «Kompas Migracji» (сооснователь — Александр Василишин), мы создаём несокрушимый социально-юридический щит для рабочих, защищая интересы их семей в ЕС.',
     quote: 'Шов ляжет идеально, когда некуда спешить. Простота — это сложность, которую уже никто не замечает.',
     quote2: 'Мы те, кто крепким швом сваривает работодателей с исполнителями!',
+    socialStrip: ['проверенных мастеров', 'официальные контракты', 'ответ координатора', 'стран ЕС'],
+    faqTitle: 'Часто задаваемые вопросы',
+    faqSub: 'Ответы на самые популярные вопросы сварщиков и работодателей',
+    faqItems: [
+      { q: 'Какие документы нужны для работы сварщиком в ЕС?', a: 'Паспорт, диплом или удостоверение сварщика, медицинская справка. EWU помогает с подтверждением разряда и международной аттестацией — весь процесс под нашим сопровождением.' },
+      { q: 'Есть ли официальное трудоустройство (UoP)?', a: '100% — UoP (Umowa o pracę) или UoZ с полным медицинским страхованием и ZUS. Никаких «серых» схем. Координатор предоставляет подтверждение до подписания контракта.' },
+      { q: 'Сколько зарабатывает сварщик в Польше / ЕС?', a: 'От 5 000 до 9 000 zł нетто в зависимости от метода сварки и опыта. TIG-мастера получают от 8 000 zł. Детальная вилка обсуждается с координатором под вашу квалификацию.' },
+      { q: 'Как быстро EWU находит работу?', a: 'Координатор связывается в течение 24 часов после заявки. Подбор позиции занимает 3–14 рабочих дней в зависимости от метода и региона.' },
+      { q: 'Нужно ли знать польский или другой язык?', a: 'Базовое понимание — плюс, но не обязательно. На каждом объекте есть координатор-переводчик. Языковой барьер не помеха для начала работы.' },
+      { q: 'Мы — компания. Как быстро получить бригаду сварщиков?', a: 'Отправьте запрос через форму. Координатор связывается в течение суток, обсуждает количество, методы и сроки. Первая группа может прибыть уже через 7–14 дней.' },
+    ],
+    exitTitle: 'Оставайтесь на связи!',
+    exitSub: 'Оставьте email или телефон — координатор EWU свяжется с вами в течение 24 часов с персональным предложением.',
+    exitPlh: 'Email или телефон WhatsApp',
+    exitBtn: 'Отправить',
+    exitOk: '✅ Спасибо! Координатор позвонит вам.',
+    chatInputPlh: 'Написать...',
+    chatLeadSaved: '✓ Заявка сохранена — менеджер свяжется с тобой',
+    chatBtnLabel: 'Оракул',
   },
   pl: {
     badge: '',
@@ -913,6 +959,25 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'W długoterminowym partnerstwie z projektem «Kompas Migracji» (współzałożyciel — Oleksandr Vasylyshyn), tworzymy niezłomną tarczę społeczno-prawną dla pracowników, chroniąc interesy ich rodzin w UE.',
     quote: 'Spoina będzie idealna, gdy nie ma pośpiechu. Prostota to złożoność, której już nikt nie zauważa.',
     quote2: 'My jesteśmy tymi, którzy mocnym szwem łączą pracodawców z wykonawcami!',
+    socialStrip: ['sprawdzonych mistrzów', 'oficjalne kontrakty', 'odpowiedź koordynatora', 'krajów UE'],
+    faqTitle: 'Często zadawane pytania',
+    faqSub: 'Odpowiedzi na najczęstsze pytania spawaczy i pracodawców',
+    faqItems: [
+      { q: 'Jakie dokumenty są potrzebne do pracy spawacza w UE?', a: 'Paszport, dyplom lub świadectwo spawacza, zaświadczenie lekarskie. EWU pomaga z potwierdzeniem klasy i certyfikacją międzynarodową — cały proces pod naszą opieką.' },
+      { q: 'Czy jest oficjalne zatrudnienie (UoP)?', a: '100% — UoP (Umowa o pracę) lub UoZ z pełnym ubezpieczeniem zdrowotnym i ZUS. Żadnych szarych schematów. Koordynator dostarcza potwierdzenie przed podpisaniem umowy.' },
+      { q: 'Ile zarabia spawacz w Polsce / UE?', a: 'Od 5 000 do 9 000 zł netto w zależności od metody spawania i doświadczenia. Mistrzowie TIG zarabiają od 8 000 zł. Szczegółowe widełki omawiane są z koordynatorem na podstawie Twoich kwalifikacji.' },
+      { q: 'Jak szybko EWU znajduje pracę?', a: 'Koordynator kontaktuje się w ciągu 24 godzin od zgłoszenia. Dobór stanowiska zajmuje 3–14 dni roboczych w zależności od metody i regionu.' },
+      { q: 'Czy trzeba znać język polski lub inny?', a: 'Podstawowa znajomość to plus, ale nie jest wymagana. Na każdym obiekcie jest koordynator-tłumacz. Bariera językowa nie jest przeszkodą do rozpoczęcia pracy.' },
+      { q: 'Jesteśmy firmą. Jak szybko możemy otrzymać brygadę spawaczy?', a: 'Wyślij zapytanie przez formularz. Koordynator kontaktuje się w ciągu jednego dnia, omawia liczbę, metody i terminy. Pierwsza grupa może przybyć już po 7–14 dniach.' },
+    ],
+    exitTitle: 'Pozostań w kontakcie!',
+    exitSub: 'Zostaw email lub telefon — koordynator EWU skontaktuje się z Tobą w ciągu 24 godzin z indywidualną ofertą.',
+    exitPlh: 'Email lub numer WhatsApp',
+    exitBtn: 'Wyślij',
+    exitOk: '✅ Dziękujemy! Koordynator oddzwoni do Ciebie.',
+    chatInputPlh: 'Napisz wiadomość...',
+    chatLeadSaved: '✓ Zgłoszenie zapisane — menedżer skontaktuje się z Tobą',
+    chatBtnLabel: 'Orakul',
   },
 };
 
@@ -1771,44 +1836,19 @@ export default function OrakulPage() {
 
         {/* ── SOCIAL PROOF STRIP ── */}
         <div className="e-social-strip">
-          <div className="e-social-pill">✅ <span className="num">40 000+</span> перевірених майстрів</div>
-          <div className="e-social-pill">📋 <span className="num">100%</span> офіційні контракти</div>
-          <div className="e-social-pill">⚡ <span className="num">24 год</span> відповідь координатора</div>
-          <div className="e-social-pill">🌍 <span className="num">12+</span> країн ЄС</div>
+          <div className="e-social-pill">✅ <span className="num">40 000+</span> {T.socialStrip[0]}</div>
+          <div className="e-social-pill">📋 <span className="num">100%</span> {T.socialStrip[1]}</div>
+          <div className="e-social-pill">⚡ <span className="num">24h</span> {T.socialStrip[2]}</div>
+          <div className="e-social-pill">🌍 <span className="num">12+</span> {T.socialStrip[3]}</div>
         </div>
 
         {/* ── FAQ ── */}
         <section className="e-faq">
           <div className="e-wrap">
-            <h2 className="e-faq-title">Часті запитання</h2>
-            <p className="e-faq-sub">Відповіді на найпоширеніші питання зварювальників та роботодавців</p>
+            <h2 className="e-faq-title">{T.faqTitle}</h2>
+            <p className="e-faq-sub">{T.faqSub}</p>
             <div className="e-faq-list">
-              {[
-                {
-                  q: 'Які документи потрібні для роботи зварювальником в ЄС?',
-                  a: 'Паспорт, диплом або посвідчення зварювальника, медична довідка. EWU допомагає з підтвердженням розряду та міжнародною атестацією — весь процес під нашим супроводом.',
-                },
-                {
-                  q: 'Чи є офіційне працевлаштування (UoP)?',
-                  a: '100% — UoP (Umowa o pracę) або UoZ з повним медичним страхуванням та ZUS. Жодних «сірих» схем. Координатор надає підтвердження до підписання контракту.',
-                },
-                {
-                  q: 'Скільки заробляє зварювальник у Польщі / ЄС?',
-                  a: 'Від 5 000 до 9 000 zł нетто залежно від методу зварювання та досвіду. TIG-майстри отримують від 8 000 zł. Детальна вилка обговорюється з координатором під вашу кваліфікацію.',
-                },
-                {
-                  q: 'Як швидко EWU знаходить роботу?',
-                  a: 'Координатор зв\'язується протягом 24 годин після заявки. Підбір позиції займає 3–14 робочих днів залежно від методу та регіону.',
-                },
-                {
-                  q: 'Чи потрібно знати польську або іншу мову?',
-                  a: 'Базове розуміння — плюс, але не обов\'язково. На кожному об\'єкті є координатор-перекладач. Мовний бар\'єр не перешкода для початку роботи.',
-                },
-                {
-                  q: 'Ми — компанія. Як швидко отримати бригаду зварювальників?',
-                  a: 'Надішліть запит через форму. Координатор зв\'язується протягом доби, обговорює кількість, методи та терміни. Перша група може прибути вже через 7–14 днів.',
-                },
-              ].map((item, i) => (
+              {T.faqItems.map((item, i) => (
                 <div key={i} className={`e-faq-item${faqOpen === i ? ' open' : ''}`}>
                   <button className="e-faq-q" onClick={() => setFaqOpen(faqOpen === i ? null : i)}>
                     <span>{item.q}</span>
@@ -1826,21 +1866,6 @@ export default function OrakulPage() {
           <Link href={`/${locale}`}>← kompasmigracji.com</Link>
         </footer>
 
-        {/* ── STICKY WA CTA ── */}
-        <a
-          href="https://wa.me/48729271848?text=Привіт!%20Цікавить%20співпраця%20з%20EWU."
-          target="_blank" rel="noreferrer"
-          className="e-sticky-wa"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-            <path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.5 0-.2-.1-.4-.2-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.1 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3 0-.1-.3-.2-.5-.3z"/>
-            <path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.6C8.1 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-3.8 1 1-3.7-.2-.4C2.3 15.5 1.8 13.8 1.8 12 1.8 6.4 6.4 1.8 12 1.8S22.2 6.4 22.2 12 17.6 21.8 12 21.8z"/>
-          </svg>
-          <div className="e-sticky-wa-label">
-            <span>Безкоштовна консультація</span>
-            <span>WhatsApp</span>
-          </div>
-        </a>
 
       </div>
 
@@ -1850,24 +1875,22 @@ export default function OrakulPage() {
           <div className="e-exit-box">
             <button className="e-exit-close" onClick={() => setExitPopup(false)}>✕</button>
             {exitSent ? (
-              <div className="e-exit-ok">✅ Дякуємо! Координатор зателефонує вам.</div>
+              <div className="e-exit-ok">{T.exitOk}</div>
             ) : (
               <>
                 <div className="e-exit-emoji">👷</div>
-                <div className="e-exit-title">Залишайтесь на зв&apos;язку!</div>
-                <div className="e-exit-sub">
-                  Залиш email або телефон — координатор EWU зв&apos;яжеться з вами протягом 24 годин з персональною пропозицією.
-                </div>
+                <div className="e-exit-title">{T.exitTitle}</div>
+                <div className="e-exit-sub">{T.exitSub}</div>
                 <div className="e-exit-row">
                   <input
                     className="e-exit-inp"
                     type="text"
-                    placeholder="Email або телефон WhatsApp"
+                    placeholder={T.exitPlh}
                     value={exitEmail}
                     onChange={e => setExitEmail(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && submitExitEmail()}
                   />
-                  <button className="e-exit-btn" onClick={submitExitEmail}>Надіслати</button>
+                  <button className="e-exit-btn" onClick={submitExitEmail}>{T.exitBtn}</button>
                 </div>
               </>
             )}
@@ -1960,14 +1983,14 @@ export default function OrakulPage() {
                 </div>
               </div>
             )}
-            {leadSaved && <div className="oc-saved">✓ Заявку збережено — менеджер зв&apos;яжеться з тобою</div>}
+            {leadSaved && <div className="oc-saved">{T.chatLeadSaved}</div>}
             <div ref={msgsEndRef} />
           </div>
 
           <div className="oc-input-row">
             <input
               className="oc-input"
-              placeholder="Написати..."
+              placeholder={T.chatInputPlh}
               value={chatInput}
               onChange={e => setChatInput(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }}
@@ -1990,7 +2013,7 @@ export default function OrakulPage() {
           <ellipse cx="12" cy="8.5" rx="5" ry="3" fill="url(#mi-arc)" className="ewu-arc" opacity="0.5" filter="url(#mi-blur)"/>
           <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
         </svg>
-        Оракул
+        {T.chatBtnLabel}
       </button>
     </>
   );
