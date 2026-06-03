@@ -1854,9 +1854,9 @@ export default function OrakulPage() {
             ) : (
               <>
                 <div className="e-exit-emoji">👷</div>
-                <div className="e-exit-title">Залишайтесь на зв'язку!</div>
+                <div className="e-exit-title">Залишайтесь на зв&apos;язку!</div>
                 <div className="e-exit-sub">
-                  Залиш email або телефон — координатор EWU зв'яжеться з вами протягом 24 годин з персональною пропозицією.
+                  Залиш email або телефон — координатор EWU зв&apos;яжеться з вами протягом 24 годин з персональною пропозицією.
                 </div>
                 <div className="e-exit-row">
                   <input
