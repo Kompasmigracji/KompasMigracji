@@ -6,7 +6,7 @@ import { useLocale } from 'next-intl';
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;900&display=swap');
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+.e-pg *,.e-pg *::before,.e-pg *::after{box-sizing:border-box;margin:0;padding:0}
 
 .e-pg{
   background:var(--bg-soft);
