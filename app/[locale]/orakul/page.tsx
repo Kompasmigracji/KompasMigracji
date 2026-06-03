@@ -582,7 +582,105 @@ const CSS = `
   box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 .e-theme-btn:hover{transform:scale(1.12);border-color:var(--union-blue)}
+
+/* ══ STICKY WA CTA ══ */
+.e-sticky-wa{
+  position:fixed;bottom:28px;right:28px;z-index:900;
+  display:flex;align-items:center;gap:10px;
+  background:#25d366;color:#fff;
+  padding:12px 20px 12px 16px;border-radius:50px;
+  box-shadow:0 6px 28px rgba(37,211,102,.45);
+  text-decoration:none;font-weight:700;font-size:.95rem;
+  transition:transform .22s,box-shadow .22s;
+  animation:wa-enter .5s cubic-bezier(.16,1,.3,1) both;
+}
+.e-sticky-wa:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 36px rgba(37,211,102,.55)}
+@keyframes wa-enter{from{opacity:0;transform:translateY(20px) scale(.92)}to{opacity:1;transform:none}}
+.e-sticky-wa-label{display:flex;flex-direction:column;line-height:1.2}
+.e-sticky-wa-label span:first-child{font-size:.75rem;font-weight:600;opacity:.82}
+.e-sticky-wa-label span:last-child{font-size:1rem;font-weight:800}
+
+/* ══ EXIT POPUP ══ */
+.e-exit-overlay{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:fade-in .25s ease;
+}
+@keyframes fade-in{from{opacity:0}to{opacity:1}}
+.e-exit-box{
+  background:var(--bg-panel);border:1px solid var(--border);
+  border-radius:20px;max-width:420px;width:100%;padding:2.2rem;
+  position:relative;box-shadow:0 20px 60px rgba(0,0,0,.35);
+  animation:pop-in .3s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes pop-in{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.e-exit-close{
+  position:absolute;top:14px;right:14px;
+  background:none;border:none;cursor:pointer;
+  color:var(--text-muted);font-size:1.3rem;line-height:1;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;transition:background .18s;
+}
+.e-exit-close:hover{background:rgba(0,0,0,.08)}
+.e-exit-emoji{font-size:2.2rem;margin-bottom:.6rem}
+.e-exit-title{font-size:1.3rem;font-weight:800;color:var(--text-main);margin-bottom:.4rem}
+.e-exit-sub{font-size:.9rem;color:var(--text-muted);margin-bottom:1.2rem;line-height:1.5}
+.e-exit-row{display:flex;gap:8px}
+.e-exit-inp{
+  flex:1;padding:11px 14px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--bg-soft);
+  color:var(--text-main);font-size:.9rem;outline:none;
+  transition:border-color .18s;
+}
+.e-exit-inp:focus{border-color:var(--union-blue)}
+.e-exit-btn{
+  padding:11px 18px;border-radius:10px;border:none;
+  background:var(--union-blue);color:#fff;font-weight:700;font-size:.88rem;
+  cursor:pointer;white-space:nowrap;transition:opacity .18s;
+}
+.e-exit-btn:hover{opacity:.88}
+.e-exit-ok{text-align:center;padding:.8rem 0;color:#16a34a;font-weight:700;font-size:1.05rem}
+
+/* ══ SOCIAL PROOF STRIP ══ */
+.e-social-strip{
+  display:flex;align-items:center;justify-content:center;gap:1.5rem;
+  flex-wrap:wrap;padding:1rem 1.5rem;
+  background:var(--bg-panel);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  font-size:.85rem;color:var(--text-muted);
+}
+.e-social-pill{
+  display:flex;align-items:center;gap:.5rem;font-weight:600;color:var(--text-main);
+}
+.e-social-pill span.num{color:var(--union-blue);font-weight:800;font-size:1rem}
+
+/* ══ FAQ ══ */
+.e-faq{padding:5rem 0;background:var(--bg-panel)}
+.e-faq-title{text-align:center;font-size:clamp(22px,3vw,36px);font-weight:800;color:var(--text-main);margin-bottom:.5rem}
+.e-faq-sub{text-align:center;color:var(--text-muted);margin-bottom:2.5rem;font-size:.95rem}
+.e-faq-list{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:.75rem}
+.e-faq-item{
+  border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  background:var(--bg-soft);transition:border-color .2s;
+}
+.e-faq-item.open{border-color:var(--union-blue)}
+.e-faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem 1.2rem;background:none;border:none;
+  text-align:left;cursor:pointer;font-weight:700;font-size:.95rem;color:var(--text-main);
+  transition:color .2s;
+}
+.e-faq-q:hover{color:var(--union-blue)}
+.e-faq-chevron{font-size:.75rem;transition:transform .25s;flex-shrink:0;color:var(--union-blue)}
+.e-faq-item.open .e-faq-chevron{transform:rotate(180deg)}
+.e-faq-a{
+  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
+  font-size:.9rem;color:var(--text-muted);line-height:1.6;padding:0 1.2rem;
+}
+.e-faq-item.open .e-faq-a{max-height:200px;padding:0 1.2rem 1rem}
 `;
+
 
 type LangKey = 'uk' | 'en' | 'ru' | 'pl';
 interface PageTrans {
@@ -848,6 +946,10 @@ export default function OrakulPage() {
   const [chatLoading, setChatLoading] = useState(false);
   const [leadSaved, setLeadSaved] = useState(false);
   const [pageTheme, setPageTheme] = useState<'light'|'dark'>('light');
+  const [exitPopup, setExitPopup] = useState(false);
+  const [exitEmail, setExitEmail] = useState('');
+  const [exitSent, setExitSent] = useState(false);
+  const [faqOpen, setFaqOpen] = useState<number|null>(null);
   const msgsEndRef = useRef<HTMLDivElement>(null);
 
   const GREET: Record<LangKey, string> = {
@@ -913,6 +1015,37 @@ export default function OrakulPage() {
     } finally {
       setChatLoading(false);
     }
+  };
+
+  useEffect(() => {
+    let shown = false;
+    const handler = (e: MouseEvent) => {
+      if (e.clientY <= 0 && !shown && !exitSent) {
+        shown = true;
+        setTimeout(() => setExitPopup(true), 300);
+      }
+    };
+    document.addEventListener('mouseleave', handler);
+    return () => document.removeEventListener('mouseleave', handler);
+  }, [exitSent]);
+
+  const submitExitEmail = async () => {
+    if (!exitEmail.trim()) return;
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: 'Анонім',
+          contact: exitEmail.trim(),
+          email: exitEmail.trim(),
+          service: 'EWU — Exit Intent',
+          situation: 'Лід з exit-intent popup на сторінці Оракул',
+          source: 'orakul-exit',
+        }),
+      });
+    } catch { /* show success regardless */ }
+    setExitSent(true);
   };
 
   useEffect(() => {
@@ -1089,6 +1222,22 @@ export default function OrakulPage() {
   return (
     <>
       <style>{CSS}</style>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "name": "European Welding Union — EWU",
+        "description": "Міжнародна платформа працевлаштування зварювальників в ЄС. Офіційні контракти, правовий захист, сертифікація.",
+        "provider": { "@type": "Organization", "name": "Kompas Migracji", "url": "https://www.kompasmigracji.com" },
+        "areaServed": "EU",
+        "serviceType": "Recruitment",
+        "mainEntityOfPage": "https://www.kompasmigracji.com/uk/orakul",
+        "potentialAction": { "@type": "ReserveAction", "target": "https://www.kompasmigracji.com/uk/orakul#workers" },
+        "faq": [
+          { "@type": "Question", "name": "Чи є офіційне працевлаштування?", "acceptedAnswer": { "@type": "Answer", "text": "100% UoP або UoZ з повним медичним страхуванням та ZUS." } },
+          { "@type": "Question", "name": "Скільки заробляє зварювальник у Польщі?", "acceptedAnswer": { "@type": "Answer", "text": "Від 5 000 до 9 000 zł нетто залежно від методу та досвіду." } },
+          { "@type": "Question", "name": "Як швидко EWU знаходить роботу?", "acceptedAnswer": { "@type": "Answer", "text": "Координатор зв'язується протягом 24 годин після заявки." } },
+        ],
+      })}} />
 
       <canvas ref={sparksRef} id="e-sparks" />
       <div ref={arcRef} id="e-arc" />
@@ -1620,12 +1769,111 @@ export default function OrakulPage() {
           </div>
         </section>
 
+        {/* ── SOCIAL PROOF STRIP ── */}
+        <div className="e-social-strip">
+          <div className="e-social-pill">✅ <span className="num">40 000+</span> перевірених майстрів</div>
+          <div className="e-social-pill">📋 <span className="num">100%</span> офіційні контракти</div>
+          <div className="e-social-pill">⚡ <span className="num">24 год</span> відповідь координатора</div>
+          <div className="e-social-pill">🌍 <span className="num">12+</span> країн ЄС</div>
+        </div>
+
+        {/* ── FAQ ── */}
+        <section className="e-faq">
+          <div className="e-wrap">
+            <h2 className="e-faq-title">Часті запитання</h2>
+            <p className="e-faq-sub">Відповіді на найпоширеніші питання зварювальників та роботодавців</p>
+            <div className="e-faq-list">
+              {[
+                {
+                  q: 'Які документи потрібні для роботи зварювальником в ЄС?',
+                  a: 'Паспорт, диплом або посвідчення зварювальника, медична довідка. EWU допомагає з підтвердженням розряду та міжнародною атестацією — весь процес під нашим супроводом.',
+                },
+                {
+                  q: 'Чи є офіційне працевлаштування (UoP)?',
+                  a: '100% — UoP (Umowa o pracę) або UoZ з повним медичним страхуванням та ZUS. Жодних «сірих» схем. Координатор надає підтвердження до підписання контракту.',
+                },
+                {
+                  q: 'Скільки заробляє зварювальник у Польщі / ЄС?',
+                  a: 'Від 5 000 до 9 000 zł нетто залежно від методу зварювання та досвіду. TIG-майстри отримують від 8 000 zł. Детальна вилка обговорюється з координатором під вашу кваліфікацію.',
+                },
+                {
+                  q: 'Як швидко EWU знаходить роботу?',
+                  a: 'Координатор зв\'язується протягом 24 годин після заявки. Підбір позиції займає 3–14 робочих днів залежно від методу та регіону.',
+                },
+                {
+                  q: 'Чи потрібно знати польську або іншу мову?',
+                  a: 'Базове розуміння — плюс, але не обов\'язково. На кожному об\'єкті є координатор-перекладач. Мовний бар\'єр не перешкода для початку роботи.',
+                },
+                {
+                  q: 'Ми — компанія. Як швидко отримати бригаду зварювальників?',
+                  a: 'Надішліть запит через форму. Координатор зв\'язується протягом доби, обговорює кількість, методи та терміни. Перша група може прибути вже через 7–14 днів.',
+                },
+              ].map((item, i) => (
+                <div key={i} className={`e-faq-item${faqOpen === i ? ' open' : ''}`}>
+                  <button className="e-faq-q" onClick={() => setFaqOpen(faqOpen === i ? null : i)}>
+                    <span>{item.q}</span>
+                    <span className="e-faq-chevron">▼</span>
+                  </button>
+                  <div className="e-faq-a">{item.a}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <footer className="e-footer">
           <p>© 2026 European Welding Union | Partner of «Kompas Migracji»</p>
           <Link href={`/${locale}`}>← kompasmigracji.com</Link>
         </footer>
 
+        {/* ── STICKY WA CTA ── */}
+        <a
+          href="https://wa.me/48729271848?text=Привіт!%20Цікавить%20співпраця%20з%20EWU."
+          target="_blank" rel="noreferrer"
+          className="e-sticky-wa"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.5 0-.2-.1-.4-.2-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.1 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3 0-.1-.3-.2-.5-.3z"/>
+            <path d="M12 0C5.4 0 0 5.4 0 12c0 2.1.5 4.1 1.5 5.9L0 24l6.3-1.6C8.1 23.4 10 24 12 24c6.6 0 12-5.4 12-12S18.6 0 12 0zm0 21.8c-1.9 0-3.7-.5-5.3-1.4l-.4-.2-3.8 1 1-3.7-.2-.4C2.3 15.5 1.8 13.8 1.8 12 1.8 6.4 6.4 1.8 12 1.8S22.2 6.4 22.2 12 17.6 21.8 12 21.8z"/>
+          </svg>
+          <div className="e-sticky-wa-label">
+            <span>Безкоштовна консультація</span>
+            <span>WhatsApp</span>
+          </div>
+        </a>
+
       </div>
+
+      {/* ── EXIT INTENT POPUP ── */}
+      {exitPopup && (
+        <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setExitPopup(false); }}>
+          <div className="e-exit-box">
+            <button className="e-exit-close" onClick={() => setExitPopup(false)}>✕</button>
+            {exitSent ? (
+              <div className="e-exit-ok">✅ Дякуємо! Координатор зателефонує вам.</div>
+            ) : (
+              <>
+                <div className="e-exit-emoji">👷</div>
+                <div className="e-exit-title">Залишайтесь на зв'язку!</div>
+                <div className="e-exit-sub">
+                  Залиш email або телефон — координатор EWU зв'яжеться з вами протягом 24 годин з персональною пропозицією.
+                </div>
+                <div className="e-exit-row">
+                  <input
+                    className="e-exit-inp"
+                    type="text"
+                    placeholder="Email або телефон WhatsApp"
+                    value={exitEmail}
+                    onChange={e => setExitEmail(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && submitExitEmail()}
+                  />
+                  <button className="e-exit-btn" onClick={submitExitEmail}>Надіслати</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── WATERMARK ── */}
       <div className="e-wm">
