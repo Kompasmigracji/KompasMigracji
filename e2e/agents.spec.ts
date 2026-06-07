@@ -25,8 +25,6 @@ async function createMockToken() {
 
 test.describe('Agents Dashboard E2E', () => {
   test.beforeEach(async ({ context, page }) => {
-    page.on('console', msg => console.log('PAGE LOG:', msg.text()));
-
     // 1. Set the admin cookie so the next-intl/auth middleware passes through
     const token = await createMockToken();
     await context.addCookies([
@@ -70,7 +68,6 @@ test.describe('Agents Dashboard E2E', () => {
 
   test('should render the GodCard and AgentCards correctly', async ({ page }) => {
     await page.goto('/admin/agents');
-    console.log('E2E TEST URL AFTER GOTO:', page.url());
 
     // Wait for header to be visible
     await expect(page.locator('h1')).toContainText('Primus — Панель Агентов');
