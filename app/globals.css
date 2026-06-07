@@ -5,6 +5,7 @@
  * Contact: iphoenixgsm@gmail.com
  */
 @import "tailwindcss";
+@import "../styles/glass.css";
 
 @theme {
   --color-navy: #1a1a2e;
