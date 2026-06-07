@@ -177,3 +177,83 @@ pnpm dev
 | `CookieBanner` | GDPR-банер з `localStorage` персистентністю |
 | `StarField` | CSS-анімація зірок на фоні |
 | `PromoBanner` | Промо-повідомлення / акції |
+| `GodCard` | 👑 Премiум-картка God-агента (масштабування, gold accent) |
+| `AgentCard` | Glassmorphism-картка агента (heartbeat, перезапуск, мотивація) |
+| `AgentsDashboard` | Дашборд усіх агентів + GodCard, SWR polling кожні 10 с |
+
+---
+
+## 🛡️ Primus — AI-оркестрація агентів
+
+### Архітектура
+
+```
+┌─────────────────────────────────────┐
+│          👑  GOD AGENT              │
+│  Grand Architect Oleksandr          │
+│  Khrysytodul                        │
+│  /api/god/command (POST)            │
+└──────────────┬──────────────────────┘
+               │ dispatch
+               ▼
+┌─────────────────────────────────────┐
+│         ⚡  PRIMUS                  │
+│  /api/agents/primus/dispatch (POST) │
+│  /api/agents/primus/status   (GET)  │
+└──────────────┬──────────────────────┘
+               │ task routing
+     ┌─────────┼─────────┐
+     ▼         ▼         ▼
+┌─────────┐┌─────────┐┌─────────┐
+│ Agent 1 ││ Agent 2 ││ Agent N │
+│ (role)  ││ (role)  ││ (role)  │
+└─────────┘└─────────┘└─────────┘
+               ▲
+               │ monitor & motivate
+┌─────────────────────────────────────┐
+│      🔍  MONITOR SQUAD              │
+│  /api/agents/monitor/cron   (GET)   │
+│  Vercel cron — кожні 5 хвилин       │
+│  Email: iphoenixgsm@gmail.com       │
+└─────────────────────────────────────┘
+```
+
+### Таблиці Supabase (agents)
+
+| Таблиця | Опис |
+|---------|------|
+| `agents` | Реєстрація агентів: name, role, status (idle/busy/error), last_heartbeat |
+| `agent_tasks` | Завдання: agent_id, type, payload, status (queued/running/completed/failed), result |
+| `god_policies` | Глобальні політики оркестрації (JSON) |
+
+SQL-схема: `supabase/agents_schema.sql`
+
+### API-ендпоінти (agents)
+
+| Метод | Маршрут | Опис | Авторизація |
+|-------|---------|------|-------------|
+| POST | `/api/god/command` | Відправити команду God → Primus | email = `iphoenixgsm@gmail.com` |
+| POST | `/api/agents/primus/dispatch` | Створити задачу для агента | email = `iphoenixgsm@gmail.com` |
+| GET | `/api/agents/primus/status` | Отримати стан усіх агентів | email = `iphoenixgsm@gmail.com` |
+| GET | `/api/agents/monitor/cron` | Cron: перевірка heartbeat, корективні задачі | Vercel cron |
+
+### Файли системи агентів
+
+| Файл | Опис |
+|------|------|
+| `lib/agents.ts` | CRUD: registerAgent, heartbeat, dispatchTask, getAllAgents, setAgentStatus |
+| `lib/god.ts` | God-логіка: getGodAgent, evaluateAndCommandGod |
+| `lib/monitor.ts` | Monitor Squad: runMonitorCycle (heartbeat scan, email alerts) |
+| `lib/notify.ts` | Сповіщення: sendEmail (SendGrid REST), sendSlackWebhook |
+| `types/agents.d.ts` | Інтерфейси Agent, AgentTask |
+| `types/god.d.ts` | Інтерфейси GodAgent, GodCommand |
+| `styles/glass.css` | Glassmorphism CSS (.glass) |
+
+### Адмін-панель агентів
+
+Маршрут: `/admin/agents`  
+Компоненти: `AgentsDashboard` → `GodCard` + `AgentCard[]`  
+Авторизація: перевірка на рівні API-ендпоінтів.
+
+---
+
