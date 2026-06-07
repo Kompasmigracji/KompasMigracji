@@ -1,10 +1,15 @@
-import { supabase } from './agents';
+import { getSupabase } from './supabase';
 import type { GodAgent, GodCommand } from '../types/god';
-import type { Agent } from '../types/agents';
+
+function getDb() {
+  const sb = getSupabase();
+  if (!sb) throw new Error('Supabase not configured');
+  return sb;
+}
 
 /** Load God agent (singleton) */
 export async function getGodAgent(): Promise<GodAgent | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getDb()
     .from('god_policies')
     .select('policy_json')
     .limit(1)
@@ -13,7 +18,6 @@ export async function getGodAgent(): Promise<GodAgent | null> {
     console.error('Failed to load God policies', error);
     return null;
   }
-  // For simplicity we embed name & id statically – can be stored in a separate table later
   return {
     id: 'god-singleton',
     name: 'Grand Architect Oleksandr Khrysytodul',
@@ -27,20 +31,22 @@ export async function evaluateAndCommandGod(command: GodCommand): Promise<boolea
   const god = await getGodAgent();
   if (!god) return false;
 
-  // Example: forward any command to Primus (agent with role 'primus')
-  const { data: primusAgents, error } = await supabase
+  const db = getDb();
+
+  // Forward any command to Primus (agent with role 'primus')
+  const { data: primusAgent, error } = await db
     .from('agents')
     .select('id')
     .eq('role', 'primus')
     .single();
-  if (error || !primusAgents) {
+  if (error || !primusAgent) {
     console.error('No Primus agent found', error);
     return false;
   }
 
   // Dispatch as a task to Primus
-  const { error: taskErr } = await supabase.from('agent_tasks').insert({
-    agent_id: primusAgents.id,
+  const { error: taskErr } = await db.from('agent_tasks').insert({
+    agent_id: primusAgent.id,
     type: command.command,
     payload: command.payload || {},
   });

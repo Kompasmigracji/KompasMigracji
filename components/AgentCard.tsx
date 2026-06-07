@@ -1,6 +1,6 @@
+'use client';
+
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { setAgentStatus, dispatchTask } from '../lib/agents';
 import type { Agent } from '../types/agents';
 
 interface AgentCardProps {
@@ -8,43 +8,66 @@ interface AgentCardProps {
 }
 
 export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
-  const router = useRouter();
-
   const handleRestart = async () => {
-    // Set status to busy, then create a restart task
-    await setAgentStatus(agent.id, 'busy');
-    await dispatchTask(agent.id, 'restart', {});
-    // optimistic UI update could be added here
+    await fetch('/api/agents/primus/dispatch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agentId: agent.id, type: 'restart', payload: {} }),
+    });
   };
 
   const handleMotivate = async () => {
-    // Simple motivational message task
-    await dispatchTask(agent.id, 'motivate', { message: 'Вы делаете отличную работу! 🚀' });
+    await fetch('/api/agents/primus/dispatch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        agentId: agent.id,
+        type: 'motivate',
+        payload: { message: 'Вы делаете отличную работу! 🚀' },
+      }),
+    });
   };
 
   const statusColor =
-    agent.status === 'idle' ? 'bg-green-500' : agent.status === 'busy' ? 'bg-yellow-500' : 'bg-red-500';
+    agent.status === 'idle'
+      ? 'bg-green-500'
+      : agent.status === 'busy'
+        ? 'bg-yellow-500'
+        : 'bg-red-500';
+
+  const statusLabel =
+    agent.status === 'idle'
+      ? 'Активен'
+      : agent.status === 'busy'
+        ? 'Занят'
+        : 'Ошибка';
 
   return (
-    <div className="glass p-4 flex flex-col gap-3 transform transition hover:scale-105 hover:shadow-xl">
+    <div className="glass p-5 flex flex-col gap-3 transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold text-white">{agent.name}</h3>
-        <span className={`${statusColor} w-3 h-3 rounded-full`} title={agent.status}></span>
+        <h3 className="text-lg font-semibold text-white truncate">{agent.name}</h3>
+        <span
+          className={`${statusColor} w-3 h-3 rounded-full shrink-0 animate-pulse`}
+          title={statusLabel}
+        />
       </div>
-      <p className="text-sm text-gray-300">Роль: {agent.role}</p>
+      <p className="text-sm text-gray-300">Роль: <span className="text-primusBlue font-medium">{agent.role}</span></p>
       <p className="text-xs text-gray-400">
-        Последний heartbeat: {agent.last_heartbeat ? new Date(agent.last_heartbeat).toLocaleTimeString() : '—'}
+        Последний heartbeat:{' '}
+        {agent.last_heartbeat
+          ? new Date(agent.last_heartbeat).toLocaleTimeString('ru-RU')
+          : '—'}
       </p>
-      <div className="flex gap-2 mt-2">
+      <div className="flex gap-2 mt-auto pt-2">
         <button
           onClick={handleRestart}
-          className="bg-primusBlue text-white px-3 py-1 rounded hover:bg-primusBlue/80 transition"
+          className="flex-1 bg-primusBlue/90 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-primusBlue transition-colors duration-200"
         >
           Перезапустить
         </button>
         <button
           onClick={handleMotivate}
-          className="bg-monitorGreen text-white px-3 py-1 rounded hover:bg-monitorGreen/80 transition"
+          className="flex-1 bg-monitorGreen/90 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-monitorGreen transition-colors duration-200"
         >
           Мотивировать
         </button>

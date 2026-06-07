@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
-import { dispatchTask, getAllAgents } from '@/lib/agents';
+import { dispatchTask } from '@/lib/agents';
 import { getSupabase } from '@/lib/supabase';
 
 // POST /api/agents/primus/dispatch
 export async function POST(request: Request) {
   const supabase = getSupabase();
+  if (!supabase) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
   const { data: { session } } = await supabase.auth.getSession();
-  // only authorized Grand Architect can dispatch
   if (!session || session.user.email !== 'iphoenixgsm@gmail.com') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }

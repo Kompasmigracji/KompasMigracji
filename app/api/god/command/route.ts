@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { evaluateAndCommandGod } from '@/lib/god';
-import { getSupabase } from '@/lib/supabase'; // helper to get supabase client with auth
+import { getSupabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   const supabase = getSupabase();
+  if (!supabase) {
+    return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+  }
   const { data: { session } } = await supabase.auth.getSession();
   // Only the Grand Architect (email) can call this endpoint
   if (!session || session.user.email !== 'iphoenixgsm@gmail.com') {

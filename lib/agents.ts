@@ -1,14 +1,15 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { getSupabase } from './supabase';
 import type { Agent, AgentTask } from '../types/agents';
 
-// Supabase client – reads env variables (should be set in .env)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);
+function getDb() {
+  const sb = getSupabase();
+  if (!sb) throw new Error('Supabase not configured');
+  return sb;
+}
 
 /** Register a new agent */
 export async function registerAgent(name: string, role: string): Promise<Agent | null> {
-  const { data, error } = await supabase.from('agents').insert({ name, role }).single();
+  const { data, error } = await getDb().from('agents').insert({ name, role }).select().single();
   if (error) {
     console.error('Failed to register agent', error);
     return null;
@@ -18,7 +19,7 @@ export async function registerAgent(name: string, role: string): Promise<Agent |
 
 /** Update agent heartbeat */
 export async function heartbeat(agentId: string): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getDb()
     .from('agents')
     .update({ last_heartbeat: new Date().toISOString() })
     .eq('id', agentId);
@@ -27,9 +28,10 @@ export async function heartbeat(agentId: string): Promise<boolean> {
 
 /** Dispatch a task to an agent */
 export async function dispatchTask(agentId: string, type: string, payload: any = {}): Promise<AgentTask | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getDb()
     .from('agent_tasks')
     .insert({ agent_id: agentId, type, payload })
+    .select()
     .single();
   if (error) {
     console.error('Dispatch task error', error);
@@ -40,7 +42,7 @@ export async function dispatchTask(agentId: string, type: string, payload: any =
 
 /** Get health overview of all agents */
 export async function getAllAgents(): Promise<Agent[]> {
-  const { data, error } = await supabase.from('agents').select('*');
+  const { data, error } = await getDb().from('agents').select('*');
   if (error) {
     console.error('Fetch agents error', error);
     return [];
@@ -50,7 +52,7 @@ export async function getAllAgents(): Promise<Agent[]> {
 
 /** Update agent status */
 export async function setAgentStatus(agentId: string, status: 'idle' | 'busy' | 'error'): Promise<boolean> {
-  const { error } = await supabase
+  const { error } = await getDb()
     .from('agents')
     .update({ status })
     .eq('id', agentId);

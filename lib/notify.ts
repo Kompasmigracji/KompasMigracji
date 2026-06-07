@@ -1,23 +1,36 @@
-import sgMail from '@sendgrid/mail';
+// Notification adapters
+// Primary: email via SendGrid REST API (no CJS import issues)
+// Fallback: Slack webhook
 
-// Initialize SendGrid (API key should be set in env var SENDGRID_API_KEY)
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+const SENDGRID_API_URL = 'https://api.sendgrid.com/v3/mail/send';
 
-export async function sendEmail(to: string, subject: string, html: string) {
-  if (!process.env.SENDGRID_API_KEY) {
+export async function sendEmail(to: string, subject: string, html: string): Promise<boolean> {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  if (!apiKey) {
     console.warn('SendGrid API key not configured – email not sent');
     return false;
   }
-  const msg = {
-    to,
-    from: 'no-reply@kompasmigracji.com', // verified sender
+
+  const body = {
+    personalizations: [{ to: [{ email: to }] }],
+    from: { email: 'no-reply@kompasmigracji.com', name: 'KompasMigracji Primus' },
     subject,
-    html,
+    content: [{ type: 'text/html', value: html }],
   };
+
   try {
-    await sgMail.send(msg);
+    const res = await fetch(SENDGRID_API_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      console.error('SendGrid error', res.status, await res.text());
+      return false;
+    }
     return true;
   } catch (error) {
     console.error('Failed to send email', error);
@@ -25,8 +38,7 @@ export async function sendEmail(to: string, subject: string, html: string) {
   }
 }
 
-// Slack webhook placeholder (can be expanded later)
-export async function sendSlackWebhook(url: string, payload: any) {
+export async function sendSlackWebhook(url: string, payload: any): Promise<boolean> {
   try {
     const res = await fetch(url, {
       method: 'POST',
