@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:unit": "jest --passWithNoTests",
+    "seed:agents": "npx tsx scripts/seed-agents.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
@@ -26,14 +28,18 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.17.10",
     "@types/react": "^18.3.16",
     "@types/react-dom": "^18.3.5",
     "autoprefixer": "^10.4.20",
+    "dotenv": "^17.4.2",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.18",
+    "jest": "^30.4.2",
     "postcss": "^8.4.49",
     "tailwindcss": "^4.0.0",
+    "ts-jest": "^29.4.11",
     "typescript": "^5.7.2"
   },
   "packageManager": "pnpm@11.2.2"
