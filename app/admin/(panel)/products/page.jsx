@@ -1,77 +1,87 @@
 "use client";
-/* iPhoenixCRM — Products & Inventory Catalog (Saleor style) */
+/* iPhoenixCRM — Product & Services Catalog (Shopify style) */
 import React, { useState } from "react";
-import { Icon, Badge, EmptyState, DataTable } from "@/components/admin/ui";
+import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ProductsPage() {
   const [products] = useState([
-    { id: "p_1", name: "Premium Legal Consultation", sku: "SRV-LGL-01", type: "Service", stock: null, price: 150.00, currency: "USD", status: "active" },
-    { id: "p_2", name: "Residency Application Package", sku: "PKG-RES-02", type: "Digital", stock: null, price: 499.00, currency: "USD", status: "active" },
-    { id: "p_3", name: "Branded Welcome Kit", sku: "PHY-KIT-01", type: "Physical", stock: 45, price: 25.00, currency: "USD", status: "active" },
-    { id: "p_4", name: "Tax Audit Review 2026", sku: "SRV-TAX-01", type: "Service", stock: null, price: 300.00, currency: "USD", status: "draft" }
+    { id: "SKU-V01", name: "Karta Pobytu (TRC) Full Support", category: "Visas & Legal", price: "€450", sales: 124, status: "active", revenue: "€55,800" },
+    { id: "SKU-B01", name: "B2B Company Registration (Sp. z o.o.)", category: "Business", price: "€1,200", sales: 45, status: "active", revenue: "€54,000" },
+    { id: "SKU-L01", name: "PESEL & Meldunek Package", category: "Basic Services", price: "€50", sales: 312, status: "active", revenue: "€15,600" },
+    { id: "SKU-E01", name: "Premium Express Processing", category: "Add-ons", price: "€150", sales: 0, status: "draft", revenue: "€0" }
   ]);
 
   const columns = [
-    { 
-      header: "Product Name", 
-      cell: (row) => (
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 40, height: 40, background: "var(--panel-2)", borderRadius: "var(--radius-sm)", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid var(--border)" }}>
-            <Icon name={row.type === "Physical" ? "briefcase" : "file"} size={20} color="var(--dim)" />
-          </div>
-          <div>
-            <div style={{ fontWeight: 600 }}>{row.name}</div>
-            <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.sku}</div>
-          </div>
+    { header: "Service / Product", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+        <div style={{ width: 40, height: 40, background: "var(--panel-2)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon name="package" size={20} color="var(--primary)" />
         </div>
-      ) 
-    },
-    { 
-      header: "Type", 
-      cell: (row) => <span style={{ color: "var(--dim)" }}>{row.type}</span>
-    },
-    { 
-      header: "Status", 
-      cell: (row) => <Badge status={row.status === "active" ? "success" : "dim"} text={row.status} />
-    },
-    { 
-      header: "Inventory", 
-      cell: (row) => row.stock !== null ? (
-        <span style={{ color: row.stock < 10 ? "var(--color-warning)" : "inherit" }}>
-          {row.stock} in stock
-        </span>
-      ) : <span style={{ color: "var(--dim)" }}>∞ (Not tracked)</span>
-    },
-    { 
-      header: "Price", 
-      cell: (row) => <span style={{ fontWeight: 500 }}>{row.price.toFixed(2)} {row.currency}</span>
-    },
-    {
-      header: "",
-      cell: () => <button className="kc-btn kc-btn-ghost"><Icon name="more-horizontal" size={16} /></button>
-    }
+        <div>
+          <div style={{ fontWeight: 600 }}>{row.name}</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</div>
+        </div>
+      </div>
+    )},
+    { header: "Category", cell: (row) => <Badge status="info" text={row.category} /> },
+    { header: "Price", cell: (row) => <span style={{ fontWeight: 600 }}>{row.price}</span> },
+    { header: "Total Sales", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.sales} sold</span> },
+    { header: "Revenue (YTD)", cell: (row) => <span style={{ fontWeight: 600, color: "var(--color-success)" }}>{row.revenue}</span> },
+    { header: "Status", cell: (row) => {
+      let color = "success";
+      if (row.status === "draft") color = "warning";
+      if (row.status === "archived") color = "default";
+      return <Badge status={color} text={row.status.toUpperCase()} />;
+    }},
+    { header: "", cell: () => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="more-horizontal" size={16} /></button>
+      </div>
+    )}
   ];
 
   return (
-    <div>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>Products & Inventory</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Service Catalog & Products</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Manage your catalog, pricing, and stock levels.
+            Manage pricing, service bundles, and track your most profitable offerings.
           </p>
         </div>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-ghost"><Icon name="file" size={16} /> Import</button>
-          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Create Product</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="percent" size={16} /> Discounts</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Add Product</button>
         </div>
       </div>
 
-      {products.length === 0 ? (
-        <EmptyState title="No products found" description="Add your first product to start selling." icon="briefcase" />
-      ) : (
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Best Selling Service</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)" }}>Karta Pobytu</div>
+        </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Total Revenue (Catalog)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>€125,400</div>
+        </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Services</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>18</div>
+        </div>
+      </div>
+
+      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1 }}>
+        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
+            <Icon name="search" size={16} color="var(--dim)" />
+            <input type="text" placeholder="Search services by name or SKU..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
+          </div>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Category</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Status</button>
+        </div>
         <DataTable columns={columns} data={products} />
-      )}
+      </div>
     </div>
   );
 }
