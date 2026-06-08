@@ -97,9 +97,10 @@ export default function GlobalSearch({ isOpen, onClose }) {
             </div>
           )}
           
-          {query && !isLoading && results && results.length === 0 && (
-            <div style={{ padding: "32px 16px", textAlign: "center", color: "var(--dim)", fontSize: 13 }}>
-              No results found for "{query}"
+          {query && results && results.length === 0 && (
+            <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--dim)" }}>
+              <Icon name="search" size={32} color="var(--border)" />
+              <div style={{ marginTop: 12 }}>Нічого не знайдено за запитом &quot;{query}&quot;</div>
             </div>
           )}
 
