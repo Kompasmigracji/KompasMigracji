@@ -1,14 +1,15 @@
-﻿"use client";
-/* KompasCRM — каркас панели: сайдбар + топбар. Оборачивает все страницы (panel). */
+"use client";
+/* iPhoenixCRM — Core App Shell (Sidebar + Topbar) */
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { navFor, ROLE_LABEL } from "@/lib/rbac";
-import { Icon, Spinner } from "./ui";
+import { Icon, Spinner, Avatar } from "./ui";
 
 export default function Shell({ children }) {
-  const [user, setUser] = useState(undefined); // undefined=загрузка, null=нет
+  const [user, setUser] = useState(undefined); // undefined=loading, null=none
   const [theme, setTheme] = useState("dark");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -17,9 +18,15 @@ export default function Shell({ children }) {
       .then((r) => r.json())
       .then((d) => setUser(d.user || null))
       .catch(() => setUser(null));
+      
     const saved = localStorage.getItem("kc-theme");
     if (saved === "light" || saved === "dark") setTheme(saved);
   }, []);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -41,8 +48,6 @@ export default function Shell({ children }) {
   }
 
   const nav = navFor(user?.role || "member");
-  const initials = (user?.name || "?")
-    .split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
   const current = nav.find((n) =>
     n.href === "/admin" ? pathname === "/admin" : pathname.startsWith(n.href)
   );
@@ -50,26 +55,36 @@ export default function Shell({ children }) {
   return (
     <div className="kc-root" data-theme={theme}>
       <div className="kc-shell">
-        {/* САЙДБАР */}
-        <aside className="kc-side">
+        
+        {/* MOBILE OVERLAY */}
+        {isMobileMenuOpen && (
+          <div 
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 90 }} 
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
+        {/* SIDEBAR */}
+        <aside className={`kc-side ${isMobileMenuOpen ? 'kc-side-open' : ''}`}>
           <div className="kc-brand">
-            <div className="kc-brand-mark"><Icon name="compass" size={21} color="#d99e54" /></div>
+            <div className="kc-brand-mark">
+              <Icon name="compass" size={20} color="var(--color-primary)" />
+            </div>
             <div>
-              <div className="kc-brand-name">KompasCRM</div>
-              <div className="kc-brand-sub">KOMPAS MIGRACJI</div>
+              <div className="kc-brand-name">iPhoenixCRM</div>
+              <div className="kc-brand-sub">ENTERPRISE EDITION</div>
             </div>
           </div>
 
           <nav className="kc-nav">
-            <div className="kc-nav-cap">Управління</div>
+            <div className="kc-nav-cap">Main Menu</div>
             {nav.map((n) => {
               const on = n.href === "/admin"
                 ? pathname === "/admin"
                 : pathname.startsWith(n.href);
               return (
-                <Link key={n.href} href={n.href}
-                  className={"kc-nav-item" + (on ? " kc-on" : "")}>
-                  <Icon name={n.icon} size={17} />
+                <Link key={n.href} href={n.href} className={`kc-nav-item ${on ? "kc-on" : ""}`}>
+                  <Icon name={n.icon} size={18} />
                   <span>{n.label}</span>
                 </Link>
               );
@@ -78,30 +93,67 @@ export default function Shell({ children }) {
 
           <div className="kc-side-foot">
             <div className="kc-user">
-              <div className="kc-avatar">{initials}</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
+              <Avatar name={user?.name || "?"} />
+              <div style={{ flex: 1, minWidth: 0, marginLeft: 8 }}>
                 <div className="kc-user-name">{user?.name}</div>
                 <div className="kc-user-role">{ROLE_LABEL[user?.role] || user?.role}</div>
               </div>
-              <button onClick={logout} title="Вийти"
-                style={{ background: "none", border: "none", cursor: "pointer", color: "#5a6470" }}>
-                <Icon name="logout" size={17} />
+              <button 
+                onClick={logout} 
+                title="Logout"
+                style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)", padding: 4 }}
+              >
+                <Icon name="logout" size={18} />
               </button>
             </div>
           </div>
         </aside>
 
-        {/* ОСНОВНАЯ ОБЛАСТЬ */}
+        {/* MAIN AREA */}
         <div className="kc-main">
           <header className="kc-topbar">
-            <h1>{current?.label || "KompasCRM"}</h1>
-            <div style={{ flex: 1 }} />
-            <button onClick={toggleTheme} className="kc-theme-btn" title="Змінити тему">
-              <Icon name={theme === "dark" ? "sun" : "moon"} size={14} />
-              {theme === "dark" ? "Світла" : "Темна"}
-            </button>
+            <div className="kc-topbar-left">
+              {/* Mobile Menu Toggle */}
+              <button 
+                className="kc-btn kc-btn-ghost" 
+                style={{ padding: '8px', display: 'none' }} 
+                onClick={() => setIsMobileMenuOpen(true)}
+                id="mobile-menu-btn"
+              >
+                <Icon name="menu" size={20} />
+              </button>
+              
+              <style>{`
+                @media (max-width: 768px) { #mobile-menu-btn { display: flex !important; } }
+              `}</style>
+
+              <h1>{current?.label || "Dashboard"}</h1>
+            </div>
+
+            <div className="kc-topbar-right">
+              <button className="kc-theme-btn" title="Global Search" onClick={() => alert("Search coming soon")}>
+                <Icon name="search" size={16} />
+              </button>
+              
+              <button className="kc-theme-btn" title="Notifications">
+                <div style={{ position: 'relative' }}>
+                  <Icon name="bell" size={16} />
+                  <span style={{ position: 'absolute', top: -2, right: -2, width: 6, height: 6, background: 'var(--color-danger)', borderRadius: '50%' }} />
+                </div>
+              </button>
+
+              <div style={{ width: 1, height: 24, background: 'var(--border)', margin: '0 8px' }} />
+
+              <button onClick={toggleTheme} className="kc-theme-btn" title="Toggle Theme">
+                <Icon name={theme === "dark" ? "sun" : "moon"} size={16} />
+                <span>{theme === "dark" ? "Light" : "Dark"}</span>
+              </button>
+            </div>
           </header>
-          <main className="kc-content kc-page-enter">{children}</main>
+          
+          <main className="kc-content kc-page-enter">
+            {children}
+          </main>
         </div>
       </div>
     </div>
