@@ -1,4 +1,4 @@
-﻿-- ============================================================
+-- ============================================================
 -- KompasCRM — схема базы данных
 -- Все таблицы с префиксом kompas_ — изоляция от существующих таблиц.
 -- Запуск:  psql "$DATABASE_URL" -f db/schema.sql
@@ -98,3 +98,39 @@ create index if not exists idx_kompas_leads_created  on kompas_leads(created_at)
 create index if not exists idx_kompas_users_role     on kompas_users(role);
 create index if not exists idx_kompas_cases_user     on kompas_cases(user_id);
 create index if not exists idx_kompas_dues_user      on kompas_dues(user_id);
+
+-- Электронная почта
+create table if not exists kompas_emails (
+  id uuid primary key default gen_random_uuid(),
+  message_id varchar(500),
+  from_address varchar(255) not null,
+  to_addresses text[] not null,
+  cc_addresses text[],
+  subject varchar(1000),
+  body_html text,
+  body_text text,
+  folder varchar(50) default 'inbox',
+  status varchar(20) default 'received',
+  is_read boolean default false,
+  entity_type varchar(50),
+  entity_id varchar(255),
+  sent_by bigint references kompas_users(id),
+  sent_at timestamptz,
+  received_at timestamptz,
+  created_at timestamptz default now()
+);
+
+-- Почтовые аккаунты
+create table if not exists kompas_email_accounts (
+  id uuid primary key default gen_random_uuid(),
+  user_id bigint references kompas_users(id),
+  name varchar(255) not null,
+  email_address varchar(255) not null,
+  imap_host varchar(255), imap_port integer, imap_ssl boolean default true,
+  smtp_host varchar(255), smtp_port integer, smtp_ssl boolean default true,
+  username varchar(255),
+  password_encrypted text,
+  is_active boolean default true,
+  last_sync timestamptz,
+  created_at timestamptz default now()
+);
