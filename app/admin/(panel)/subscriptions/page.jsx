@@ -1,87 +1,108 @@
 "use client";
-/* iPhoenixCRM — Subscriptions & Billing (Stripe / Chargebee style) */
+/* iPhoenixCRM — Subscriptions & MRR */
 import React, { useState } from "react";
-import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
+import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function SubscriptionsPage() {
   const [subscriptions] = useState([
-    { id: "SUB-8091", customer: "TechCorp Ltd", plan: "B2B Legal Retainer", amount: "€1,200/mo", status: "active", nextBilling: "Jun 15, 2026" },
-    { id: "SUB-8092", customer: "BuildBud Sp. z o.o.", plan: "HR & Payroll Pro", amount: "€850/mo", status: "active", nextBilling: "Jun 01, 2026" },
-    { id: "SUB-8093", customer: "Ivan Ivanov", plan: "Personal VIP Support", amount: "€50/mo", status: "past_due", nextBilling: "May 25, 2026" },
-    { id: "SUB-8094", customer: "Logex Warehouse", plan: "Basic Recruiting", amount: "€300/mo", status: "canceled", nextBilling: "—" }
+    { id: "SUB-801", client: "TechCorp Sp. z.o.o.", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "active", nextBilling: "June 15, 2026", since: "Jan 2025" },
+    { id: "SUB-802", client: "Global IT Group", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "active", nextBilling: "July 01, 2026", since: "Mar 2026" },
+    { id: "SUB-803", client: "Ivan Petrov (Freelancer)", plan: "Personal Concierge", amount: "€150 / mo", status: "past_due", nextBilling: "Failed on Jun 01", since: "May 2026" },
+    { id: "SUB-804", client: "DevStudio Warsaw", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "canceled", nextBilling: "—", since: "Oct 2025" }
   ]);
 
   const columns = [
-    { header: "Customer", cell: (row) => (
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
-        <Avatar name={row.customer} size={32} />
+    { header: "Client / Company", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+        <Avatar name={row.client.substring(0,2).toUpperCase()} size={36} />
         <div>
-          <div style={{ fontWeight: 600 }}>{row.customer}</div>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</div>
+          <div style={{ fontWeight: 600 }}>{row.client}</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id} • Customer since {row.since}</div>
         </div>
       </div>
     )},
-    { header: "Plan / Product", cell: (row) => <span style={{ fontWeight: 500 }}>{row.plan}</span> },
-    { header: "Status", cell: (row) => {
-      let color = "success";
-      if (row.status === "past_due") color = "warning";
-      if (row.status === "canceled") color = "danger";
-      return <Badge status={color} text={row.status.replace("_", " ").toUpperCase()} />;
-    }},
-    { header: "Amount", cell: (row) => <span style={{ fontWeight: 600, color: "var(--color-success)" }}>{row.amount}</span> },
+    { header: "Subscription Plan", cell: (row) => (
+      <Badge status="primary" text={row.plan} />
+    )},
+    { header: "Recurring Amount", cell: (row) => <span style={{ fontWeight: 700, fontSize: "16px" }}>{row.amount}</span> },
     { header: "Next Billing", cell: (row) => (
-      <span style={{ color: row.status === "past_due" ? "var(--color-danger)" : "var(--dim)", fontWeight: row.status === "past_due" ? 600 : 400 }}>
+      <span style={{ fontSize: "var(--text-sm)", color: row.status === "past_due" ? "var(--color-danger)" : "var(--fg)" }}>
         {row.nextBilling}
       </span>
     )},
-    { header: "", cell: () => (
+    { header: "Status", cell: (row) => {
+      let color = "success";
+      let text = row.status.toUpperCase().replace("_", " ");
+      if (row.status === "past_due") color = "danger";
+      if (row.status === "canceled") color = "default";
+      return <Badge status={color} text={text} />;
+    }},
+    { header: "", cell: (row) => (
       <div style={{ display: "flex", gap: 8 }}>
-        <button className="kc-btn kc-btn-ghost"><Icon name="credit-card" size={16} /></button>
-        <button className="kc-btn kc-btn-ghost"><Icon name="more-horizontal" size={16} /></button>
+        {row.status === "past_due" && (
+          <button className="kc-btn kc-btn-primary" style={{ padding: "4px 8px", fontSize: "12px", background: "var(--color-warning)", border: "none" }}>Retry Card</button>
+        )}
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
       </div>
     )}
   ];
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>Subscriptions & Billing</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Subscriptions & MRR</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Manage recurring revenue, billing cycles, and subscriber churn.
+            Track monthly recurring revenue (MRR) from B2B retainers and ongoing legal support.
           </p>
         </div>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-secondary"><Icon name="settings" size={16} /> Pricing Plans</button>
-          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> New Subscription</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="credit-card" size={16} /> Stripe Settings</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Create Subscription</button>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Monthly Recurring (MRR)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>€24,500</div>
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)", background: "rgba(16, 185, 129, 0.05)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Total MRR</div>
+          <div style={{ fontSize: 36, fontWeight: 800, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>€14,500</div>
+          <div style={{ fontSize: "11px", color: "var(--color-success)", marginTop: 4, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+            <Icon name="trending-up" size={12} /> +12% from last month
+          </div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Subscribers</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>142</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>24</div>
+          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>B2B and B2C clients on auto-pay.</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Churn Rate (30d)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>2.4%</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Past Due (Failed Payments)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>3</div>
+          <div style={{ fontSize: "10px", color: "var(--color-danger)", marginTop: 4, fontWeight: 600 }}>€450 at risk of churn.</div>
         </div>
       </div>
 
-      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1 }}>
+      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1, display: "flex", flexDirection: "column" }}>
         <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
             <Icon name="search" size={16} color="var(--dim)" />
-            <input type="text" placeholder="Search subscriptions by customer or ID..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
+            <input type="text" placeholder="Search by client or company..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
           </div>
-          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Plan</button>
-          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Status</button>
+          <select className="kc-input" style={{ width: 160 }}>
+            <option>All Statuses</option>
+            <option>Active</option>
+            <option>Past Due</option>
+            <option>Canceled</option>
+          </select>
+          <select className="kc-input" style={{ width: 160 }}>
+            <option>All Plans</option>
+            <option>B2B Retainer</option>
+            <option>Personal Concierge</option>
+          </select>
         </div>
-        <DataTable columns={columns} data={subscriptions} />
+        <div style={{ flex: 1, overflowY: "auto" }}>
+          <DataTable columns={columns} data={subscriptions} />
+        </div>
       </div>
     </div>
   );
