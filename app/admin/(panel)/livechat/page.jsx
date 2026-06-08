@@ -14,7 +14,7 @@ export default function LiveChatPage() {
   const [activeChat, setActiveChat] = useState(conversations[0]);
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)", margin: "-var(--space-lg)" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
       
       {/* Header */}
       <div style={{ padding: "var(--space-lg) var(--space-lg) 0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

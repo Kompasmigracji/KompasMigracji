@@ -25,7 +25,7 @@ export default function TeamChatPage() {
   ]);
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", margin: "-var(--space-lg)" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       
       {/* Header */}
       <div style={{ padding: "var(--space-md) var(--space-lg)", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", background: "var(--bg)" }}>

@@ -146,7 +146,7 @@ export default function GamificationPage() {
                 <div style={{ color: "var(--dim)", fontSize: "var(--text-sm)" }}>Рівень 14 • Гуру продажів</div>
 
                 <div style={{ width: "100%", marginTop: "var(--space-lg)" }}>
-                  <div style={{ display: "flex", justifycontent: "space-between", fontSize: "var(--text-xs)", fontWeight: 600, marginBottom: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)", fontWeight: 600, marginBottom: 8 }}>
                     <span>XP: 9,800</span>
                     <span>Наступний Рівень: 10,000</span>
                   </div>
