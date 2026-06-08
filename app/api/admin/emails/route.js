@@ -57,7 +57,7 @@ export async function POST(req) {
        ) VALUES (
          $1, $2, $3, $4, 'sent', 'sent', $5
        ) RETURNING id`,
-      ["system@iphoenixcrm.com", [b.to], b.subject, b.body, auth.user.id]
+      ["system@kompascrm.com", [b.to], b.subject, b.body, auth.user.id]
     );
 
     return NextResponse.json({ ok: true, emailId: rows[0].id });

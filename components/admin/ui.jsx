@@ -1,6 +1,6 @@
 "use strict";
 "use client";
-/* iPhoenixCRM — Core UI Components Library */
+/* KompasCRM — Core UI Components Library */
 import React, { useState, useEffect } from "react";
 
 /* ---------- Icons (Minimal SVG set) ---------- */
@@ -43,6 +43,11 @@ const PATHS = {
   bell: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0",
   target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
   cpu: "M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3",
+  truck: "M14 18H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z M16 8h4l3 3v5h-7V8z M5.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M18.5 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z",
+  map: "M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z M8 2v16 M16 6v16",
+  navigation: "M3 11l19-9-9 19-2-8-8-2z",
+  flag: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z M4 22v-7",
+  card: "M2 4h20v16H2z M2 8h20 M6 14h4",
   x: "M18 6L6 18M6 6l12 12",
   menu: "M3 12h18M3 6h18M3 18h18"
 };

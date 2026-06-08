@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Core App Shell (Sidebar + Topbar) */
+/* KompasCRM — Core App Shell (Sidebar + Topbar) */
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -75,7 +75,7 @@ export default function Shell({ children }) {
               <Icon name="compass" size={20} color="var(--color-primary)" />
             </div>
             <div>
-              <div className="kc-brand-name">iPhoenixCRM</div>
+              <div className="kc-brand-name">KompasCRM</div>
               <div className="kc-brand-sub">ENTERPRISE EDITION</div>
             </div>
           </div>

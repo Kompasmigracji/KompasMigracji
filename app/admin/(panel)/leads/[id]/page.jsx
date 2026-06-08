@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Lead Detail View */
+/* KompasCRM — Lead Detail View */
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Spinner, EmptyState, Icon, Badge, Avatar } from "@/components/admin/ui";
