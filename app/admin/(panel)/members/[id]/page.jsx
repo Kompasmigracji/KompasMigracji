@@ -2,7 +2,7 @@
 /* /admin/members/:id — картка учасника профспiлки. */
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Badge, Spinner, Empty, Icon, StatCard } from "@/components/admin/ui";
+import { Badge, Spinner, EmptyState, Icon, StatCard } from "@/components/admin/ui";
 
 export default function MemberDetailPage() {
   const { id } = useParams();
@@ -169,7 +169,7 @@ export default function MemberDetailPage() {
             <span style={{ flex: 1, fontSize: 13.5 }}>{c.title}</span>
             <Badge status={c.status} />
           </div>
-        )) : <Empty text="Звернень немає" />}
+        )) : <EmptyState text="Немає записiв" />}
       </div>
 
       {/* внески */}
