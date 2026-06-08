@@ -1,8 +1,9 @@
-﻿"use client";
-/* KompasCRM — переиспользуемые UI-компоненты. */
-import React from "react";
+"use strict";
+"use client";
+/* iPhoenixCRM — Core UI Components Library */
+import React, { useState, useEffect } from "react";
 
-/* ---------- иконки (минимальный SVG-набор) ---------- */
+/* ---------- Icons (Minimal SVG set) ---------- */
 const PATHS = {
   grid: "M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z",
   users: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75",
@@ -31,6 +32,8 @@ const PATHS = {
   clipboard: "M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z",
   "chevron-down": "M6 9l6 6 6-6",
   "chevron-up":   "M18 15l-6-6-6 6",
+  "chevron-left": "M15 18l-6-6 6-6",
+  "chevron-right": "M9 18l6-6-6-6",
   filter: "M22 3H2l8 9.46V19l4 2v-8.54z",
   zap: "M13 2 3 14h9l-1 8 10-12h-9l1-8z",
   play: "M5 3l14 9-14 9V3z",
@@ -40,7 +43,10 @@ const PATHS = {
   bell: "M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0",
   target: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
   cpu: "M18 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3",
+  x: "M18 6L6 18M6 6l12 12",
+  menu: "M3 12h18M3 6h18M3 18h18"
 };
+
 export function Icon({ name, size = 18, color = "currentColor", fill = false }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24"
@@ -51,12 +57,18 @@ export function Icon({ name, size = 18, color = "currentColor", fill = false }) 
   );
 }
 
-/* ---------- статкарта ---------- */
-export function StatCard({ icon, value, label, sub }) {
+/* ---------- StatCard / KPI ---------- */
+export function StatCard({ icon, value, label, sub, trend = null }) {
   return (
     <div className="kc-stat">
       <div className="kc-stat-top">
-        <div className="kc-stat-ico"><Icon name={icon} size={17} color="#d99e54" /></div>
+        <div className="kc-stat-ico"><Icon name={icon} size={18} /></div>
+        {trend && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: trend > 0 ? 'var(--color-success)' : 'var(--color-danger)', fontSize: 'var(--text-xs)', fontWeight: 600 }}>
+            <Icon name={trend > 0 ? 'chevron-up' : 'chevron-down'} size={14} />
+            {Math.abs(trend)}%
+          </div>
+        )}
       </div>
       <div className="kc-stat-val">{value}</div>
       <div className="kc-stat-lbl">{label}</div>
@@ -65,7 +77,7 @@ export function StatCard({ icon, value, label, sub }) {
   );
 }
 
-/* ---------- бейдж статуса ---------- */
+/* ---------- Badges ---------- */
 const BADGE = {
   active: ["kc-badge-green", "Активний"],
   pending: ["kc-badge-brass", "Очікує"],
@@ -79,19 +91,156 @@ const BADGE = {
   paid: ["kc-badge-green", "Оплачено"],
   unpaid: ["kc-badge-red", "Не оплачено"],
   exempt: ["kc-badge-dim", "Звільнений"],
-  // универсальные тона (с обязательным text)
   brass: ["kc-badge-brass", ""],
   blue: ["kc-badge-blue", ""],
   green: ["kc-badge-green", ""],
   red: ["kc-badge-red", ""],
   dim: ["kc-badge-dim", ""],
 };
+
 export function Badge({ status, text }) {
   const [cls, label] = BADGE[status] || ["kc-badge-dim", status];
-  return <span className={"kc-badge " + cls}>{text || label}</span>;
+  return <span className={`kc-badge ${cls}`}>{text || label}</span>;
 }
 
-/* ---------- спарклайн (SVG, без зависимостей) ---------- */
+/* ---------- Basic Elements ---------- */
+export function Spinner() {
+  return (
+    <div style={{ display: "flex", justifyContent: "center", padding: "var(--space-xl)" }}>
+      <div className="kc-spin" />
+    </div>
+  );
+}
+
+export function EmptyState({ title = "Немає даних", description, icon = "inbox", action }) {
+  return (
+    <div className="kc-empty">
+      <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'var(--panel-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--dim)' }}>
+        <Icon name={icon} size={24} />
+      </div>
+      <div>
+        <h3 style={{ margin: '0 0 4px', color: 'var(--text)', fontSize: 'var(--text-md)', fontWeight: 600 }}>{title}</h3>
+        {description && <p style={{ margin: 0, color: 'var(--dim)', fontSize: 'var(--text-sm)' }}>{description}</p>}
+      </div>
+      {action && <div style={{ marginTop: 'var(--space-sm)' }}>{action}</div>}
+    </div>
+  );
+}
+
+/* ---------- Avatar ---------- */
+export function Avatar({ name = "?", role = "", size = 32, src = null }) {
+  const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+      <div className="kc-avatar" style={{ width: size, height: size, fontSize: size * 0.4 }}>
+        {src ? <img src={src} alt={name} style={{ width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' }} /> : initials}
+      </div>
+      {(name !== "?" || role) && (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {name !== "?" && <span className="kc-user-name">{name}</span>}
+          {role && <span className="kc-user-role">{role}</span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- ProgressBar ---------- */
+export function ProgressBar({ progress, max = 100, color = "var(--color-primary)", label }) {
+  const pct = Math.min(100, Math.max(0, (progress / max) * 100));
+  return (
+    <div style={{ width: '100%' }}>
+      {label && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 'var(--text-xs)', color: 'var(--dim)' }}>
+          <span>{label}</span>
+          <span>{Math.round(pct)}%</span>
+        </div>
+      )}
+      <div style={{ height: 6, background: 'var(--panel-2)', borderRadius: 3, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color, transition: 'width 0.3s ease' }} />
+      </div>
+    </div>
+  );
+}
+
+/* ---------- SearchInput ---------- */
+export function SearchInput({ value, onChange, placeholder = "Пошук...", style }) {
+  return (
+    <div style={{ position: 'relative', width: '100%', ...style }}>
+      <div style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--dim)', pointerEvents: 'none' }}>
+        <Icon name="search" size={16} />
+      </div>
+      <input 
+        className="kc-input" 
+        type="text" 
+        value={value} 
+        onChange={e => onChange(e.target.value)} 
+        placeholder={placeholder}
+        style={{ paddingLeft: 36, paddingRight: value ? 36 : 12 }}
+      />
+      {value && (
+        <button 
+          onClick={() => onChange('')}
+          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--dim)', cursor: 'pointer', padding: 4 }}
+        >
+          <Icon name="x" size={14} />
+        </button>
+      )}
+    </div>
+  );
+}
+
+/* ---------- DataTable ---------- */
+export function DataTable({ columns, data, onRowClick, isLoading }) {
+  if (isLoading) return <Spinner />;
+  if (!data || data.length === 0) return <EmptyState />;
+
+  return (
+    <div className="kc-table-wrap">
+      <table className="kc-table">
+        <thead>
+          <tr>
+            {columns.map((col, i) => (
+              <th key={i} style={col.style}>{col.header}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, i) => (
+            <tr key={row.id || i} onClick={() => onRowClick && onRowClick(row)}>
+              {columns.map((col, j) => (
+                <td key={j} style={col.style}>
+                  {col.cell ? col.cell(row) : row[col.accessor]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* ---------- ConfirmDialog ---------- */
+export function ConfirmDialog({ isOpen, onClose, onConfirm, title, message, confirmText = "Підтвердити", isDanger = false }) {
+  if (!isOpen) return null;
+  return (
+    <div className="kc-modal-bg" onClick={onClose}>
+      <div className="kc-modal" onClick={e => e.stopPropagation()}>
+        <h2 className="kc-modal-title">{title}</h2>
+        <p style={{ color: 'var(--dim)', marginBottom: 'var(--space-lg)' }}>{message}</p>
+        <div style={{ display: 'flex', gap: 'var(--space-sm)', justifyContent: 'flex-end' }}>
+          <button className="kc-btn kc-btn-ghost" onClick={onClose}>Скасувати</button>
+          <button className={`kc-btn ${isDanger ? 'kc-btn-danger' : 'kc-btn-primary'}`} onClick={() => { onConfirm(); onClose(); }}>
+            {confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Sparkline (SVG) ---------- */
 export function Sparkline({ data = [], w = 220, h = 56 }) {
   if (!data.length) return null;
   const max = Math.max(...data, 1);
@@ -100,46 +249,34 @@ export function Sparkline({ data = [], w = 220, h = 56 }) {
   const area = `0,${h} ${pts.join(" ")} ${w},${h}`;
   return (
     <svg width="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block" }}>
-      <polygon points={area} fill="#d99e5422" />
-      <polyline points={pts.join(" ")} fill="none" stroke="#d99e54" strokeWidth="2"
+      <polygon points={area} fill="var(--brass-bg)" />
+      <polyline points={pts.join(" ")} fill="none" stroke="var(--color-primary)" strokeWidth="2"
         strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );
 }
 
-/* ---------- спиннер / пусто ---------- */
-export function Spinner() {
-  return (
-    <div style={{ display: "flex", justifyContent: "center", padding: 36 }}>
-      <div className="kc-spin" />
-    </div>
-  );
-}
-export function Empty({ text = "Немає даних" }) {
-  return <div className="kc-empty">{text}</div>;
-}
-
-/* ---------- горизонтальные столбцы (распределение) ---------- */
+/* ---------- BarList ---------- */
 export function BarList({ items = [], unit = "" }) {
-  if (!items.length) return <Empty text="Нет данных" />;
+  if (!items.length) return <EmptyState />;
   const max = Math.max(...items.map((i) => Number(i.value) || 0), 1);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 'var(--space-sm)' }}>
       {items.map((it) => (
         <div key={it.label}>
           <div className="kc-row" style={{ justifyContent: "space-between", marginBottom: 4 }}>
-            <span style={{ fontSize: 13 }}>{it.label}</span>
-            <span className="kc-mono" style={{ fontSize: 12.5, color: "#828c9b" }}>
+            <span style={{ fontSize: 'var(--text-sm)', fontWeight: 500 }}>{it.label}</span>
+            <span className="kc-mono" style={{ fontSize: 'var(--text-xs)', color: 'var(--dim)' }}>
               {it.value}{unit}
             </span>
           </div>
-          <div style={{ height: 8, background: "var(--bg)", borderRadius: 5, overflow: "hidden" }}>
+          <div style={{ height: 6, background: "var(--panel-2)", borderRadius: 3, overflow: "hidden" }}>
             <div style={{
-              height: 8,
+              height: '100%',
               width: ((Number(it.value) || 0) / max) * 100 + "%",
-              background: it.color || "var(--brass)",
-              borderRadius: 5,
-              transition: "width .4s ease",
+              background: it.color || "var(--color-primary)",
+              borderRadius: 3,
+              transition: "width 0.4s ease",
             }} />
           </div>
         </div>
