@@ -1,171 +1,170 @@
 "use client";
-/* iPhoenixCRM — Internal Team Chat (Zulip/Slack style) */
-import React, { useState, useEffect } from "react";
-import { Icon, Avatar, Badge, EmptyState } from "@/components/admin/ui";
+/* iPhoenixCRM — Internal Team Chat & Mentions */
+import React, { useState, useRef, useEffect } from "react";
+import { Icon, Avatar, Badge } from "@/components/admin/ui";
 
-export default function ChatPage() {
-  const [activeChannel, setActiveChannel] = useState("general");
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+export default function TeamChatPage() {
+  const [activeChannel, setActiveChannel] = useState("#sales-team");
+  
+  const [messages] = useState([
+    { id: 1, sender: "Maria Garcia", time: "10:15 AM", content: "Hey team, did we get the new pricing for the VIP Relocation package?", avatar: "MG" },
+    { id: 2, sender: "Alex Jenkins", time: "10:18 AM", content: "Yes, I uploaded the new PDF to the Document Templates section.", avatar: "AJ" },
+    { id: 3, sender: "Oleg V.", time: "11:05 AM", content: "@Alex Jenkins Could you check the contract for Ivan Petrov? He's asking for a discount.", avatar: "OV", mentions: ["Alex Jenkins"] },
+    { id: 4, sender: "Alex Jenkins", time: "11:10 AM", content: "I'll review it now. Let's offer him 5% if he pays upfront.", avatar: "AJ" },
+    { id: 5, sender: "System", time: "11:30 AM", content: "🎉 Maria Garcia just closed a deal: Karta Pobytu (B2B) - €1,200", isSystem: true }
+  ]);
 
-  const channels = [
-    { id: "general", name: "general", unread: 0 },
-    { id: "sales", name: "sales-team", unread: 3 },
-    { id: "support", name: "customer-support", unread: 0 },
-    { id: "announcements", name: "announcements", unread: 1 }
-  ];
-
-  const directMessages = [
-    { id: "dm_1", name: "Alex Admin", online: true },
-    { id: "dm_2", name: "Maria Manager", online: true },
-    { id: "dm_3", name: "System Bot", online: true }
-  ];
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Mock loading messages for active channel
-    setMessages([
-      { id: 1, user: "System Bot", time: "09:00 AM", text: "Daily backup completed successfully.", type: "system" },
-      { id: 2, user: "Alex Admin", time: "10:15 AM", text: "Hey team, don't forget the product sync at 2 PM.", type: "user" },
-      { id: 3, user: "Maria Manager", time: "10:18 AM", text: "I'll be there! Has anyone checked the new leads from yesterday's campaign?", type: "user" },
-      { id: 4, user: "Alex Admin", time: "10:20 AM", text: "Yes, I assigned them to the sales channel. We got 12 new qualified leads.", type: "user" }
-    ]);
-  }, [activeChannel]);
-
-  const handleSend = (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
-    
-    setMessages([...messages, { 
-      id: Date.now(), 
-      user: "You", 
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
-      text: input, 
-      type: "user" 
-    }]);
-    setInput("");
-  };
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 120px)", gap: "var(--space-md)", background: "var(--bg)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)", overflow: "hidden" }}>
-      {/* Sidebar */}
-      <div style={{ width: 240, background: "var(--panel-2)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontWeight: 600, fontSize: "var(--text-md)" }}>Team Chat</div>
-          <button className="kc-btn kc-btn-ghost" style={{ padding: 4 }}><Icon name="plus" size={16} /></button>
-        </div>
-        
-        <div style={{ flex: 1, overflowY: "auto", padding: "var(--space-sm) 0" }}>
-          {/* Channels */}
-          <div style={{ padding: "0 var(--space-md)", fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600, marginBottom: 8, marginTop: 8 }}>Channels</div>
-          {channels.map(ch => (
-            <div 
-              key={ch.id} 
-              onClick={() => setActiveChannel(ch.id)}
-              style={{ 
-                padding: "8px 16px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
-                background: activeChannel === ch.id ? "color-mix(in srgb, var(--color-primary) 10%, transparent)" : "transparent",
-                color: activeChannel === ch.id ? "var(--color-primary)" : "var(--text)",
-                fontWeight: activeChannel === ch.id ? 600 : 400
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ color: "var(--dim)", fontSize: 16 }}>#</span> {ch.name}
-              </div>
-              {ch.unread > 0 && <Badge status="danger" text={ch.unread} />}
-            </div>
-          ))}
-
-          {/* Direct Messages */}
-          <div style={{ padding: "0 var(--space-md)", fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600, marginBottom: 8, marginTop: 24 }}>Direct Messages</div>
-          {directMessages.map(dm => (
-            <div 
-              key={dm.id} 
-              onClick={() => setActiveChannel(dm.id)}
-              style={{ 
-                padding: "8px 16px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
-                background: activeChannel === dm.id ? "color-mix(in srgb, var(--color-primary) 10%, transparent)" : "transparent",
-                color: activeChannel === dm.id ? "var(--color-primary)" : "var(--text)",
-                fontWeight: activeChannel === dm.id ? 600 : 400
-              }}
-            >
-              <div style={{ position: "relative" }}>
-                <Avatar name={dm.name} size={24} />
-                {dm.online && <div style={{ position: "absolute", bottom: -2, right: -2, width: 8, height: 8, borderRadius: "50%", background: "var(--color-success)", border: "2px solid var(--panel-2)" }}></div>}
-              </div>
-              <div style={{ flex: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{dm.name}</div>
-            </div>
-          ))}
+    <div style={{ height: "calc(100vh - 100px)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", flexShrink: 0 }}>
+        <div>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Team Chat</h2>
+          <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
+            Communicate securely with your team. Mention colleagues and share CRM records.
+          </p>
         </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/* Chat Header */}
-        <div style={{ padding: "var(--space-md) var(--space-lg)", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ color: "var(--dim)", fontSize: 20 }}>#</span>
-            <div style={{ fontWeight: 600, fontSize: "var(--text-md)" }}>
-              {channels.find(c => c.id === activeChannel)?.name || directMessages.find(d => d.id === activeChannel)?.name}
+      <div className="kc-card" style={{ flex: 1, padding: 0, display: "flex", overflow: "hidden" }}>
+        
+        {/* Left Sidebar (Channels & DMs) */}
+        <div style={{ width: 260, borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", background: "var(--panel-2)" }}>
+          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--bg)", padding: "8px 12px", borderRadius: 8 }}>
+              <Icon name="search" size={14} color="var(--dim)" />
+              <input type="text" placeholder="Search chats..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "12px" }} />
             </div>
           </div>
-          <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-            <button className="kc-btn kc-btn-ghost" style={{ padding: 6 }}><Icon name="search" size={18} /></button>
-            <button className="kc-btn kc-btn-ghost" style={{ padding: 6 }}><Icon name="user" size={18} /></button>
+
+          <div style={{ flex: 1, overflowY: "auto", padding: "var(--space-md)" }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--dim)", textTransform: "uppercase", marginBottom: 8, letterSpacing: "0.5px" }}>Channels</div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: "var(--space-lg)" }}>
+              <div style={{ padding: "8px 12px", borderRadius: 6, background: activeChannel === "#general" ? "var(--color-primary)" : "transparent", color: activeChannel === "#general" ? "white" : "var(--fg)", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }} onClick={() => setActiveChannel("#general")}>
+                <Icon name="hash" size={14} /> general
+              </div>
+              <div style={{ padding: "8px 12px", borderRadius: 6, background: activeChannel === "#sales-team" ? "var(--color-primary)" : "transparent", color: activeChannel === "#sales-team" ? "white" : "var(--fg)", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }} onClick={() => setActiveChannel("#sales-team")}>
+                <Icon name="hash" size={14} /> sales-team <Badge status="danger" text="2" style={{ marginLeft: "auto", border: "none" }} />
+              </div>
+              <div style={{ padding: "8px 12px", borderRadius: 6, background: activeChannel === "#legal-updates" ? "var(--color-primary)" : "transparent", color: activeChannel === "#legal-updates" ? "white" : "var(--fg)", cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }} onClick={() => setActiveChannel("#legal-updates")}>
+                <Icon name="hash" size={14} /> legal-updates
+              </div>
+            </div>
+
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--dim)", textTransform: "uppercase", marginBottom: 8, letterSpacing: "0.5px", display: "flex", justifyContent: "space-between" }}>
+              Direct Messages <Icon name="plus" size={12} style={{ cursor: "pointer" }} />
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ padding: "8px 12px", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ position: "relative" }}>
+                  <Avatar name="MG" size={24} />
+                  <div style={{ position: "absolute", bottom: 0, right: 0, width: 8, height: 8, background: "var(--color-success)", borderRadius: 4, border: "1px solid var(--panel-2)" }}></div>
+                </div>
+                <span style={{ fontSize: "13px" }}>Maria Garcia</span>
+              </div>
+              <div style={{ padding: "8px 12px", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}>
+                 <div style={{ position: "relative" }}>
+                  <Avatar name="AN" size={24} />
+                  <div style={{ position: "absolute", bottom: 0, right: 0, width: 8, height: 8, background: "var(--color-warning)", borderRadius: 4, border: "1px solid var(--panel-2)" }}></div>
+                </div>
+                <span style={{ fontSize: "13px", opacity: 0.7 }}>Anna Schmidt</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Messages List */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "var(--space-lg)", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-          {messages.map((msg, i) => {
-            const isSystem = msg.type === "system";
-            const isMe = msg.user === "You";
-            const showAvatar = i === 0 || messages[i-1].user !== msg.user;
+        {/* Chat Area */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg)" }}>
+          
+          {/* Chat Header */}
+          <div style={{ padding: "16px 24px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--panel)" }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "16px", display: "flex", alignItems: "center", gap: 8 }}>
+                <Icon name="hash" size={18} color="var(--dim)" /> {activeChannel.replace("#", "")}
+              </div>
+              <div style={{ fontSize: "12px", color: "var(--dim)", marginTop: 2 }}>
+                4 members • Discussion for the sales department
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 16, color: "var(--dim)" }}>
+              <Icon name="phone" size={18} style={{ cursor: "pointer" }} />
+              <Icon name="video" size={18} style={{ cursor: "pointer" }} />
+              <Icon name="info" size={18} style={{ cursor: "pointer" }} />
+            </div>
+          </div>
 
-            if (isSystem) {
-              return (
-                <div key={msg.id} style={{ display: "flex", justifyContent: "center", margin: "var(--space-md) 0" }}>
-                  <div style={{ background: "var(--panel-2)", padding: "4px 12px", borderRadius: 100, fontSize: "var(--text-xs)", color: "var(--dim)", display: "flex", alignItems: "center", gap: 6 }}>
-                    <Icon name="settings" size={12} /> {msg.text}
-                  </div>
-                </div>
-              );
-            }
+          {/* Messages Stream */}
+          <div style={{ flex: 1, padding: "24px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+            
+            <div style={{ textAlign: "center", margin: "20px 0" }}>
+              <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--dim)", background: "var(--panel-2)", padding: "4px 12px", borderRadius: 12 }}>Today</span>
+            </div>
 
-            return (
-              <div key={msg.id} style={{ display: "flex", gap: "var(--space-md)", marginTop: showAvatar ? "var(--space-md)" : 0 }}>
-                <div style={{ width: 40, flexShrink: 0, display: "flex", justifyContent: "center" }}>
-                  {showAvatar && <Avatar name={msg.user} size={36} />}
-                </div>
+            {messages.map((msg) => (
+              <div key={msg.id} style={{ display: "flex", gap: "var(--space-md)", alignItems: "flex-start" }}>
+                {!msg.isSystem && <Avatar name={msg.avatar} size={36} />}
+                
                 <div style={{ flex: 1 }}>
-                  {showAvatar && (
+                  {!msg.isSystem && (
                     <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontWeight: 600 }}>{msg.user}</span>
-                      <span style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{msg.time}</span>
+                      <span style={{ fontWeight: 600, fontSize: "14px" }}>{msg.sender}</span>
+                      <span style={{ fontSize: "11px", color: "var(--dim)" }}>{msg.time}</span>
                     </div>
                   )}
-                  <div style={{ lineHeight: 1.5, color: "var(--text)" }}>{msg.text}</div>
+                  
+                  {msg.isSystem ? (
+                     <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "13px", color: "var(--dim)", background: "rgba(16, 185, 129, 0.05)", padding: "8px 12px", borderRadius: 8, border: "1px dashed var(--color-success)" }}>
+                        {msg.content}
+                     </div>
+                  ) : (
+                    <div style={{ fontSize: "14px", lineHeight: "1.5", color: "var(--fg)" }}>
+                      {/* Highlight mentions */}
+                      {msg.content.split(/(@[\w\s]+)/).map((part, i) => {
+                        if (part.startsWith("@")) {
+                          return <span key={i} style={{ background: "rgba(59, 130, 246, 0.1)", color: "var(--color-primary)", padding: "0 4px", borderRadius: 4, fontWeight: 500 }}>{part}</span>;
+                        }
+                        return part;
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
 
-        {/* Input Area */}
-        <div style={{ padding: "var(--space-md)" }}>
-          <form onSubmit={handleSend} style={{ display: "flex", gap: "var(--space-sm)", background: "var(--panel-2)", padding: "var(--space-xs)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)" }}>
-            <button type="button" className="kc-btn kc-btn-ghost" style={{ padding: 8 }}><Icon name="plus" size={20} /></button>
-            <input 
-              type="text" 
-              className="kc-input" 
-              placeholder={`Message #${channels.find(c => c.id === activeChannel)?.name || "user"}...`}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              style={{ flex: 1, border: "none", background: "transparent", padding: 0, fontSize: "var(--text-md)" }}
-            />
-            <button type="submit" className="kc-btn kc-btn-primary" disabled={!input.trim()} style={{ borderRadius: "var(--radius-md)" }}>
-              <Icon name="send" size={16} />
-            </button>
-          </form>
+          {/* Input Area */}
+          <div style={{ padding: "16px 24px", borderTop: "1px solid var(--border)", background: "var(--panel)" }}>
+            <div style={{ border: "1px solid var(--border)", borderRadius: 8, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden", transition: "border-color 0.2s" }} onFocus={(e) => e.currentTarget.style.borderColor = "var(--color-primary)"} onBlur={(e) => e.currentTarget.style.borderColor = "var(--border)"}>
+              
+              <textarea 
+                placeholder={`Message ${activeChannel}...`} 
+                style={{ width: "100%", border: "none", background: "transparent", padding: "12px 16px", outline: "none", fontSize: "14px", color: "var(--fg)", resize: "none", minHeight: "60px" }}
+              />
+              
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 16px", background: "var(--panel-2)", borderTop: "1px solid var(--border)" }}>
+                <div style={{ display: "flex", gap: 12, color: "var(--dim)" }}>
+                  <Icon name="bold" size={14} style={{ cursor: "pointer" }} />
+                  <Icon name="italic" size={14} style={{ cursor: "pointer" }} />
+                  <Icon name="link" size={14} style={{ cursor: "pointer" }} />
+                  <div style={{ width: 1, height: 16, background: "var(--border)" }}></div>
+                  <Icon name="smile" size={14} style={{ cursor: "pointer" }} />
+                  <Icon name="paperclip" size={14} style={{ cursor: "pointer" }} title="Attach File" />
+                  <Icon name="at-sign" size={14} style={{ cursor: "pointer" }} title="Mention Someone" />
+                </div>
+                <button className="kc-btn kc-btn-primary" style={{ padding: "6px 16px" }}><Icon name="send" size={14} /> Send</button>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
