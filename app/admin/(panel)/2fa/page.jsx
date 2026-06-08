@@ -58,7 +58,7 @@ export default function TwoFactorAuthPage() {
                 <div style={{ width: "100%", height: "100%", background: "repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px)" }}></div>
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: 8 }}>Can't scan the code? Enter this manually:</div>
+                <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: 8 }}>Can&apos;t scan the code? Enter this manually:</div>
                 <div style={{ fontFamily: "monospace", fontSize: "var(--text-lg)", background: "var(--bg)", padding: "8px 12px", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)" }}>
                   JBSWY3DPEHPK3PXP
                 </div>
@@ -75,7 +75,7 @@ export default function TwoFactorAuthPage() {
           <div>
             <h3 className="kc-h3" style={{ marginBottom: "var(--space-md)" }}>2. Verify the Code</h3>
             <p style={{ color: "var(--dim)", marginBottom: "var(--space-lg)" }}>
-              Enter the 6-digit code from your authenticator app to verify it's working correctly.
+              Enter the 6-digit code from your authenticator app to verify it&apos;s working correctly.
             </p>
             
             <div style={{ maxWidth: 300 }}>
@@ -104,7 +104,7 @@ export default function TwoFactorAuthPage() {
             </div>
             <h3 className="kc-h3">2FA Successfully Enabled!</h3>
             <p style={{ color: "var(--dim)", maxWidth: 400, margin: "var(--space-md) auto var(--space-xl)" }}>
-              Your account is now protected. Next time you log in, you'll need to enter a code from your authenticator app.
+              Your account is now protected. Next time you log in, you&apos;ll need to enter a code from your authenticator app.
             </p>
             
             <div style={{ background: "color-mix(in srgb, var(--color-warning) 10%, transparent)", border: "1px solid color-mix(in srgb, var(--color-warning) 30%, transparent)", padding: "var(--space-md)", borderRadius: "var(--radius-md)", textAlign: "left", marginBottom: "var(--space-xl)" }}>
