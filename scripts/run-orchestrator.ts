@@ -282,12 +282,12 @@ async function runMonitorCycle() {
   console.log('\n🔍 [Monitor Squad] Running periodic agent heartbeat scan...');
   const { rows: agents } = await client.query('SELECT id, name, role, last_heartbeat, status FROM agents');
   const now = new Date();
-  
+
   let staleCount = 0;
   for (const agent of agents) {
     if (!agent.last_heartbeat) continue;
     const diff = now.getTime() - new Date(agent.last_heartbeat).getTime();
-    
+
     // If agent is not idle and hasn't updated heartbeat in over 2 minutes
     if (agent.status === 'busy' && diff > 120 * 1000) {
       console.log(`⚠️ [Monitor Squad] Agent ${agent.name} is stale (heartbeat age: ${Math.round(diff / 1000)}s). Resetting...`);
@@ -300,9 +300,112 @@ async function runMonitorCycle() {
       staleCount++;
     }
   }
-  
+
   if (staleCount === 0) {
     console.log('✅ [Monitor Squad] All agents healthy and active.');
+  }
+}
+
+async function dispatchDefaultTasks(agents: any[]) {
+  const DEFAULT_OBJECTIVES: Record<string, { type: string; payload: any }> = {
+    ui_ux: { type: 'polish_ui', payload: { target: 'layouts', objective: 'Verify responsiveness and glassmorphic stylings' } },
+    performance: { type: 'optimize_performance', payload: { target: 'hydration', objective: 'Audit react hydration logs and bundle sizes' } },
+    seo: { type: 'audit_seo', payload: { target: 'metadata', objective: 'Verify multilingual schema tags and robot index parameters' } },
+    security: { type: 'audit_security', payload: { target: 'api_protection', objective: 'Audit auth wrappers on all endpoints under app/api/admin' } },
+    payments: { type: 'verify_payment_routes', payload: { target: 'gateways', objective: 'Verify Przelewy24 notifications state handler' } },
+    ai_chatbot: { type: 'tune_llm', payload: { target: 'prompts', objective: 'Tune Orakul system prompts and guard against language mixing' } },
+    docs: { type: 'document_codebase', payload: { target: 'readme', objective: 'Verify inline code references and update documentation log' } },
+    devops: { type: 'ci_cd_audit', payload: { target: 'build_pipeline', objective: 'Run compiler logs checker and check edge/node boundaries' } },
+    analytics: { type: 'observe_analytics', payload: { target: 'performance_metrics', objective: 'Check speed insights logs' } },
+    lead_automation: { type: 'clean_leads', payload: { target: 'database', objective: 'Anonymize completed leads older than 30 days' } }
+  };
+
+  for (const agent of agents) {
+    const task = DEFAULT_OBJECTIVES[agent.role];
+    if (!task) continue;
+
+    await client.query("UPDATE agents SET status = 'busy', last_heartbeat = NOW() WHERE id = $1", [agent.id]);
+    await client.query(`
+      INSERT INTO agent_tasks (agent_id, type, payload, status, started_at)
+      VALUES ($1, $2, $3, 'queued', NOW())
+    `, [agent.id, task.type, JSON.stringify(task.payload)]);
+    console.log(`   [Autopilot] Dispatched fallback task "${task.type}" to ${agent.name}`);
+  }
+}
+
+async function runAutopilotTaskGenerator() {
+  console.log('\n🧠 [Autopilot] Checking if new tasks should be generated...');
+
+  // Check if there are any active/running tasks in the database
+  const activeRes = await client.query(
+    `SELECT count(*) FROM agent_tasks WHERE status IN ('queued', 'running')`
+  );
+  const activeCount = Number(activeRes.rows[0]?.count || 0);
+  if (activeCount > 0) {
+    console.log(`⏳ [Autopilot] Skipping task generation: ${activeCount} active tasks already in progress.`);
+    return;
+  }
+
+  console.log('🚀 [Autopilot] No active tasks. Generating new tasks for agents...');
+
+  // Fetch the list of agents
+  const { rows: agents } = await client.query("SELECT id, name, role FROM agents WHERE status = 'idle'");
+  if (agents.length === 0) {
+    console.log('⏳ [Autopilot] All agents are currently busy or error. Skipping...');
+    return;
+  }
+
+  const hasKey = !!(cleanEnv(process.env.GEMINI_API_KEY) || cleanEnv(process.env.ANTHROPIC_API_KEY) || cleanEnv(process.env.OPENAI_API_KEY));
+
+  if (hasKey) {
+    try {
+      const fileList = fs.readdirSync(process.cwd()).join(', ');
+
+      const systemPrompt = `You are the Primus Orchestrator, the central coordinator of the Kompas Migracji project.
+Your goal is to inspect the project context and generate 1 custom, actionable task for each of the following agents to improve the codebase.
+Agents:
+${agents.map((a: any) => `- ${a.name} (role: ${a.role})`).join('\n')}
+
+Based on the files and project context, define a specific task type and payload for each agent.
+Examples of task types: 'polish_ui', 'tune_llm', 'optimize_performance', 'verify_payment_routes', 'audit_security', 'document_codebase', 'audit_seo'.
+Choose targets like polishing layouts, checking Edge/Node runtime boundaries, sanitizing prompts, adding tests, etc.
+
+Return a JSON object in this exact format:
+{
+  "tasks": [
+    {
+      "agent_role": "role_name",
+      "type": "task_type",
+      "payload": { "target": "specific_target_or_file", "objective": "what_to_do" }
+    }
+  ]
+}`;
+
+      const userPrompt = `Project files: ${fileList}\n\nPlease generate the next round of improvement tasks for the idle agents.`;
+      const llmResponse = await callLLM(userPrompt, systemPrompt);
+      const generated = JSON.parse(llmResponse.substring(llmResponse.indexOf('{'), llmResponse.lastIndexOf('}') + 1));
+
+      if (generated.tasks && generated.tasks.length > 0) {
+        for (const t of generated.tasks) {
+          const agent = agents.find((a: any) => a.role === t.agent_role);
+          if (!agent) continue;
+
+          await client.query("UPDATE agents SET status = 'busy', last_heartbeat = NOW() WHERE id = $1", [agent.id]);
+          await client.query(`
+            INSERT INTO agent_tasks (agent_id, type, payload, status, started_at)
+            VALUES ($1, $2, $3, 'queued', NOW())
+          `, [agent.id, t.type, JSON.stringify(t.payload)]);
+          console.log(`   [Autopilot] Dispatched task "${t.type}" to ${agent.name} with objective: ${t.payload.objective}`);
+        }
+      } else {
+        await dispatchDefaultTasks(agents);
+      }
+    } catch (err: any) {
+      console.error('❌ [Autopilot] Error generating tasks via LLM:', err.message);
+      await dispatchDefaultTasks(agents);
+    }
+  } else {
+    await dispatchDefaultTasks(agents);
   }
 }
 
@@ -314,6 +417,10 @@ async function main() {
   console.log('👑 [Primus Engine] Active and listening for tasks. Press Ctrl+C to stop.');
 
   let monitorTimer = 0;
+  let autopilotTimer = 0;
+
+  // Run once on startup to bootstrap tasks if queue is empty
+  await runAutopilotTaskGenerator();
 
   while (true) {
     const worked = await processNextTask();
@@ -325,6 +432,12 @@ async function main() {
     if (monitorTimer >= 10000) {
       await runMonitorCycle();
       monitorTimer = 0;
+    }
+
+    autopilotTimer += 2000;
+    if (autopilotTimer >= 60000) {
+      await runAutopilotTaskGenerator();
+      autopilotTimer = 0;
     }
   }
 }
