@@ -1,7 +1,7 @@
 "use client";
 // F7 admin UI: Appointment management dashboard
 import React, { useEffect, useState } from "react";
-import { Spinner, Empty, Icon } from "@/components/admin/ui";
+import { Spinner, EmptyState, Icon, Badge } from "@/components/admin/ui";
 
 const STATUS_COLOR = {
   pending: "#F59E0B", confirmed: "#10B981", cancelled: "#EF4444",
@@ -74,7 +74,7 @@ export default function AppointmentsPage() {
 
       {msg && <div style={{ fontSize: 12, color: "#10B981", marginBottom: 12 }}>{msg}</div>}
 
-      {loading ? <Spinner /> : appts.length === 0 ? <Empty text="Немає записів" /> : (
+      {loading ? <Spinner /> : appts.length === 0 ? <EmptyState text="У вас немає записiв" /> : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {appts.map(a => {
             const dt = new Date(a.appointment_at);
