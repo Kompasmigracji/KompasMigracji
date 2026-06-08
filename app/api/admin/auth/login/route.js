@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* POST /api/admin/auth/login — вход, видає JWT в httpOnly-cookie. */
 export const runtime = "nodejs";
 

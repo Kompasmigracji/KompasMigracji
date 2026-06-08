@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* POST /api/admin/automations/:id/run */
 export const runtime = "nodejs";
 

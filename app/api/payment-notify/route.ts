@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/payment-notify — Przelewy24 IPN webhook.
    Після успішної верифікації:
    1. Знаходить лід за session_id

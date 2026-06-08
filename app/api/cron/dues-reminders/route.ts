@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F16: Auto dues reminder — Vercel Cron fires daily at 09:00 UTC
    Sends Telegram to members with unpaid dues (7 days / 1 day warnings) */
 export const runtime = "nodejs";

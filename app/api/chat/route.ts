@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 
 const SYSTEM_PROMPT = `Ти — AI-консультант компанії Kompas Migracji (Польща). Твоя задача — допомогти мігранту розібратись у ситуації і записати його на платну послугу або консультацію.

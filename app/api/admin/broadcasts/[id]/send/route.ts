@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F8: Telegram bulk broadcast execution
    F9: Auto delivery stats update after send */
 export const runtime = "nodejs";

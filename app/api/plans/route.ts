@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F1: Subscription plans API — public endpoint, no auth required
 export const revalidate = 3600;
 export const runtime = "nodejs";

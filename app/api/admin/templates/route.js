@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/templates — CRUD для шаблонів повідомлень.
    GET:    список усіх шаблонів (з фільтром за категорією).
    POST:   створити новий шаблон (тільки admin).

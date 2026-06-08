@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* POST /api/admin/auth/password — смена собственного пароля.
    Доступно любому залогиненному пользователю (admin / moderator / member). */
 export const runtime = "nodejs";

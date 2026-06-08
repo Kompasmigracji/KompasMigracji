@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/bot/webhook — Telegram Bot вебхук KompasCRM.
 
    Telegram надсилає сюди всі оновлення (messages + callback_queries).

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F18: Weekly digest to admin — Vercel Cron fires Monday 08:00 UTC
    Sends Telegram summary: new leads, conversions, revenue, members */
 export const runtime = "nodejs";

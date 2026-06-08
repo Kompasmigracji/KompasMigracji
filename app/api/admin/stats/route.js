@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 ﻿/* GET /api/admin/stats — агрегаты для дашборда KompasCRM.
    Читает компас-таблицы (members, cases, dues) + существующую таблицу leads. */
 export const runtime = "nodejs";

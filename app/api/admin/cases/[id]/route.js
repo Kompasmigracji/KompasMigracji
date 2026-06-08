@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/cases/[id] — окрема справа Понаглення.
    GET:    деталi справи + лог подiй.
    PATCH:  оновити поля (stage, status, документи тощо).

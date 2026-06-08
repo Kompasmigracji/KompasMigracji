@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F9: Public stats API — live social proof counters
 // Returns: members count, cases solved, success rate, years active
 // Cached 1h via Next.js fetch cache

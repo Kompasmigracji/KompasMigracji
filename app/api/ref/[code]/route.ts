@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F5: Referral click tracking + redirect
    GET /api/ref/KM3X9A → increments click count → redirects to /
    When a lead signs up with ref_code, F6 fires (handled in lead creation) */

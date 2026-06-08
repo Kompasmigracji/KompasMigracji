@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/telegram-send — надіслати повідомлення клієнту з адмін-панелі.
    POST { lead_id, text } — відправити text у Telegram чат ліда.
    Доступно тільки для admin і moderator. */

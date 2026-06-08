@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/tasks/[id]/documents — POST (додати) | DELETE (видалити) */
 export const runtime = "nodejs";
 

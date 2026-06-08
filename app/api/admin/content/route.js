@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/content — блоки контента сайта: список (GET) и сохранение (PUT).
    Юридический чек-лист kompasmigracji.com: offer / pricing / regulamin / privacy. */
 export const runtime = "nodejs";

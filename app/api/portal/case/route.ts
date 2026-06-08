@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 4: Client Portal — case status GET
    Admin creates portal session with PIN for each client
    F10: Manages portal session creation (POST) */

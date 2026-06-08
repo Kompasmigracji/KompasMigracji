@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/bot/viber-webhook — Viber Bot webhook KompasCRM.
    
    Реєструється у Viber REST API.

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/cases — справи Понаглення.
    GET:  список справ (фiльтр за stage, status, worker_id).
    POST: створити нову справу. */

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F3 admin: Manage subscriptions — list, cancel, activate
 export const runtime = "nodejs";
 

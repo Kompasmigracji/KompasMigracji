@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/tasks/[id]/ai — AI-асистент для аналізу і стратегії справи. */
 export const runtime = "nodejs";
 

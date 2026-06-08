@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F4: Subscription renewal cron — runs daily at 08:00 UTC
 // 1. Sends renewal warning 3 days before expiry
 // 2. Marks expired subscriptions as 'past_due'

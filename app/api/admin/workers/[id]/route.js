@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/workers/[id]
    GET    — профіль + активні справи + статистика (admin + moderator).
    PATCH  — редагувати спеціаліста (тільки admin).

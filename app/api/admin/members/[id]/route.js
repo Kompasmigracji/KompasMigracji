@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* GET  /api/admin/members/:id — профиль участника с взносами и делами.
    PATCH /api/admin/members/:id — обновить телефон и город.
    Доступ: admin/moderator видят любого; member — только себя. */

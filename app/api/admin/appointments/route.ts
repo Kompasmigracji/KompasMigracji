@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F7 admin: Manage appointments — list, confirm, cancel, complete
 export const runtime = "nodejs";
 

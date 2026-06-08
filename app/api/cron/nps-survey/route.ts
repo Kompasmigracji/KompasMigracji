@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F6: NPS auto-send cron — runs daily at 10:00 UTC
 // Finds cases closed/converted in last 24h and sends NPS survey via Telegram + email
 export const runtime = "nodejs";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/tasks — список і створення завдань. */
 export const runtime = "nodejs";
 

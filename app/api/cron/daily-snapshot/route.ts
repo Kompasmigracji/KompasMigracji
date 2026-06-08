@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F1: Daily Revenue Snapshot — Vercel Cron triggers at 23:00 UTC daily
    Saves MRR, members, leads metrics to kompas_revenue_snapshots */
 export const runtime = "nodejs";

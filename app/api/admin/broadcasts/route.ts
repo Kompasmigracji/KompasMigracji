@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 3: Broadcasts API
    F7: GET with segment preview (count of recipients per segment)
    F8/F9: POST creates draft; PUT /[id]/send triggers actual send */

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
 import { createTaskFromLead } from '@/lib/task-from-lead';

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 5: Smart Lead Scoring
    F13: Auto score (0-100) based on urgency + service + completeness
    F14: Auto-assign to least-busy active moderator */

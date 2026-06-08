@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/workers — команда (admin + moderator) зі статистикою.
    GET  — список (admin + moderator).
    POST — створити нового спеціаліста (тільки admin). */

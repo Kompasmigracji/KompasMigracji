@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/leads/trash — корзина лидов.
    GET:    список удалённых лидов (deleted_at IS NOT NULL).
    PATCH:  восстановить лид (deleted_at = NULL).

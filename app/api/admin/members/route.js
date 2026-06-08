@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/members — список (GET) и создание участника профсоюза (POST). */
 export const runtime = "nodejs";
 

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 4: Client Portal Auth
    F10: PIN lookup — returns case data if PIN matches
    F12: Auto log access timestamp */

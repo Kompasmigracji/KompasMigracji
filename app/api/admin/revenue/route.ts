@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 1: Revenue Analytics API
    F1: MRR auto-calculation (active_members × avg_due)
    F2: ARR = MRR × 12

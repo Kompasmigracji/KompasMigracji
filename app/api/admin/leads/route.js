@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/leads — лиды из таблицы leads (бот + сайт).
    GET:    список активных лидов (deleted_at IS NULL) с фильтром по статусу.
    PATCH:  смена статуса лида.

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F5: NPS survey — public submit by token + GET by token to show survey
 export const runtime = "nodejs";
 

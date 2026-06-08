@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* POST /api/admin/setup — one-time bootstrap: creates first admin user.
    Returns 403 if any admin already exists. Safe to call on empty DB. */
 export const runtime = "nodejs";

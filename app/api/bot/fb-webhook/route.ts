@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/bot/fb-webhook — Facebook Messenger webhook KompasCRM.
    
    Реєструється в Meta Developer Dashboard.

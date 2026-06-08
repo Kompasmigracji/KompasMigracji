@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/payment-mock-confirm — симулює IPN від Przelewy24.
    Використовується ТІЛЬКИ в мок-режимі (P24_SANDBOX=mock або без ключів P24).
    POST { sessionId, success: boolean }

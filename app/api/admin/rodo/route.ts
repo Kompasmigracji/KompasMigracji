@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/rodo — GDPR/RODO Compliance Dashboard API.
    Requires admin role authentication.
    GET  -> Fetch RODO audit log list

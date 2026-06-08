@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* F15: Lead escalation + F17: Case deadline alerts
    Vercel Cron fires every 6 hours
    - Escalates uncontacted new leads after 24h

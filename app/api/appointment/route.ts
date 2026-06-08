@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F3: Appointment booking — public endpoint
 // POST { name, email, phone, service, appointmentAt, notes }
 // Returns { id, appointmentAt }

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* GET /api/admin/automations — стан усіх автоматизацій + лог */
 export const runtime = "nodejs";
 

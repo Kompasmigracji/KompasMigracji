@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F2: Subscribe endpoint — creates subscription record + P24 payment
 // POST { planSlug, name, email, phone }
 // Returns { redirectUrl } to P24 checkout or mock

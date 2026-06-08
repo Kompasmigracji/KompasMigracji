@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* POST /api/admin/auth/logout — выход, стирает cookie. */
 export const runtime = "nodejs";
 

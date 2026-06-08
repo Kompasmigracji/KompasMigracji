@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* GET /api/admin/auth/me — данные текущего пользователя. */
 export const runtime = "nodejs";
 

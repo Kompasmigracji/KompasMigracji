@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/team — команда CMS (администраторы и модераторы).
    GET — список, POST — пригласить нового члена команды. Только admin. */
 export const runtime = "nodejs";

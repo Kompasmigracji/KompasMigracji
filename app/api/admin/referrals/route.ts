@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 2: Referral Program API
    F4: GET — list + stats; POST — generate unique ref code for user
    F5: Conversion tracking handled by /api/ref/[code]

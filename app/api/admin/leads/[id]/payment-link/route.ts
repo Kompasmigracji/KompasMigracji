@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* /api/admin/leads/[id]/payment-link
    POST { amount_pln, description?, email? }
    → реєструє транзакцію в Przelewy24

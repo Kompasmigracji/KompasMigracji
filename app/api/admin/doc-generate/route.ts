@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 /* Innovation 7: AI Document Generator
    F19: Auto fill {{vars}} from lead/member data
    F20: Auto generate unique doc number KM-YYYY-NNNN

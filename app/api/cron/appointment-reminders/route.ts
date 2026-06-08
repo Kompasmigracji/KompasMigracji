@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 // F8: Appointment reminders cron — runs every 2h
 // Sends Telegram + email reminder 24h before appointment
 export const runtime = "nodejs";
