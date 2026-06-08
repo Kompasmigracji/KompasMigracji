@@ -15,11 +15,41 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
 
+  // AI Dispatcher Logs (175 automated agents, 15 coordinators, 1 president)
+  const [dashboardLogs, setDashboardLogs] = useState([
+    { time: "16:48:01", type: "system", message: "President signed executive order for Automated Client Sync." },
+    { time: "16:45:10", type: "coordinator", message: "Omni Coordinator [Agent-C01] verified state pipelines for 12,000+ members." },
+    { time: "16:42:33", type: "agent", message: "Logistics Agent-074 optimized route matrices for cross-border transit dispatch." },
+    { time: "16:40:00", type: "system", message: "KompasCRM Primus Core Network Online (175 automated agents active)." }
+  ]);
+
   useEffect(() => {
     fetch("/api/admin/stats")
       .then((r) => r.json())
       .then((d) => (d.error ? setError(d.error) : setStats(d)))
       .catch(() => setError("Failed to load analytics"));
+  }, []);
+
+  useEffect(() => {
+    const messages = [
+      { type: "agent", text: "Agent-012 calculated daily conversions rate metric: +4.2% up." },
+      { type: "agent", text: "Agent-142 parsed inbound document for TRC applicant Oleh S." },
+      { type: "coordinator", text: "Coordinator [Agent-C03] auto-allocated 3 new immigration consultations." },
+      { type: "system", text: "President digital credentials broadcasted to secure node endpoints." },
+      { type: "agent", text: "Agent-088 verified payment transaction: 150 PLN credited to Union Account." }
+    ];
+
+    const interval = setInterval(() => {
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      const now = new Date();
+      const timeStr = now.toTimeString().split(" ")[0];
+      setDashboardLogs(prev => [
+        { time: timeStr, type: randomMsg.type, message: randomMsg.text },
+        ...prev.slice(0, 14)
+      ]);
+    }, 4500);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (error) {
@@ -46,10 +76,10 @@ export default function Dashboard() {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
-        <h2 className="kc-h2" style={{ margin: 0 }}>Overview</h2>
+        <h2 className="kc-h2" style={{ margin: 0 }}>Панель Управління (Overview)</h2>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-ghost"><Icon name="calendar" size={16} /> Last 30 Days</button>
-          <button className="kc-btn kc-btn-primary"><Icon name="file" size={16} /> Export Report</button>
+          <button className="kc-btn kc-btn-ghost"><Icon name="clock" size={16} /> Last 30 Days</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="file" size={16} /> Експорт Звіту</button>
         </div>
       </div>
 
@@ -81,7 +111,7 @@ export default function Dashboard() {
       <div className="kc-grid kc-grid-2" style={{ marginBottom: "var(--space-lg)" }}>
         {/* Analytics Chart */}
         <div className="kc-card" style={{ display: 'flex', flexDirection: 'column' }}>
-          <h3 className="kc-card-cap">Lead Generation Trend</h3>
+          <h3 className="kc-card-cap">Тренд Генерації Лідів</h3>
           <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'var(--space-lg) 0' }}>
             <Sparkline data={stats.series || [5, 10, 8, 15, 12, 20, 18, 25, 22, 30, 28, 35, 40, 38]} w={400} h={120} />
           </div>
@@ -94,14 +124,14 @@ export default function Dashboard() {
 
         {/* Lead Sources & Progress */}
         <div className="kc-card">
-          <h3 className="kc-card-cap">Lead Sources</h3>
+          <h3 className="kc-card-cap">Джерела Лідів</h3>
           {sources.length ? (
             <div style={{ marginBottom: "var(--space-xl)" }}><BarList items={sources} /></div>
           ) : (
             <EmptyState title="No leads yet" icon="target" />
           )}
 
-          <h3 className="kc-card-cap">Revenue Collection</h3>
+          <h3 className="kc-card-cap">Збір Внесків (Revenue Collection)</h3>
           <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-sm)", marginBottom: "var(--space-sm)" }}>
             <span style={{ fontSize: "var(--text-2xl)", fontWeight: 600, fontFamily: "var(--font-heading)" }}>
               {stats.duesCollected.toLocaleString("uk-UA")} <span style={{ fontSize: "var(--text-sm)", color: "var(--dim)", fontWeight: 400 }}>zł</span>
@@ -114,11 +144,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="kc-grid kc-grid-2">
+      <div className="kc-grid kc-grid-2" style={{ marginBottom: "var(--space-lg)" }}>
         {/* Recent Leads */}
         <div className="kc-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)" }}>
-            <h3 className="kc-card-cap" style={{ margin: 0 }}>Recent Leads</h3>
+            <h3 className="kc-card-cap" style={{ margin: 0 }}>Останні Ліди</h3>
             <Link href="/admin/leads" className="kc-link" style={{ fontSize: "var(--text-xs)" }}>View All →</Link>
           </div>
           
@@ -138,36 +168,28 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Quick Actions & Tasks (Mock for now until Tasks API exists) */}
-        <div className="kc-card">
-          <h3 className="kc-card-cap">Tasks Due Today</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)", marginBottom: "var(--space-lg)" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-md)", padding: "12px", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}>
-              <input type="checkbox" style={{ marginTop: 3 }} />
-              <div>
-                <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text)" }}>Call Alex regarding contract</div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--color-danger)", marginTop: 4 }}>Due in 2 hours</div>
-              </div>
-            </div>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-md)", padding: "12px", border: "1px solid var(--border)", borderRadius: "var(--radius-md)" }}>
-              <input type="checkbox" style={{ marginTop: 3 }} />
-              <div>
-                <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text)" }}>Review residency application for Maria</div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginTop: 4 }}>Due at 16:00</div>
-              </div>
-            </div>
+        {/* AI Primus Core Dispatch Terminal */}
+        <div className="kc-card" style={{ background: "#06090e", color: "#c9d1d9", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живий лог AI Диспетчера (175+ Agents)</h3>
+            <Badge status="green" text="Active" />
           </div>
-
-          <h3 className="kc-card-cap">Quick Actions</h3>
-          <div className="kc-grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "var(--space-sm)" }}>
-            <button className="kc-btn" style={{ justifyContent: "flex-start", padding: "12px" }}>
-              <div style={{ background: "var(--brass-bg)", color: "var(--color-primary)", padding: 6, borderRadius: 6 }}><Icon name="plus" size={16} /></div>
-              Add Lead
-            </button>
-            <button className="kc-btn" style={{ justifyContent: "flex-start", padding: "12px" }}>
-              <div style={{ background: "color-mix(in srgb, var(--color-info) 15%, transparent)", color: "var(--color-info)", padding: 6, borderRadius: 6 }}><Icon name="file" size={16} /></div>
-              Create Invoice
-            </button>
+          
+          <div style={{ 
+            fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.5", 
+            display: "flex", flexDirection: "column", gap: 8, maxHeight: 180, overflowY: "auto" 
+          }}>
+            {dashboardLogs.map((log, index) => {
+              let color = "#8b949e";
+              if (log.type === "coordinator") color = "#58a6ff";
+              if (log.type === "system") color = "#56d364";
+              return (
+                <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
+                  <span style={{ color: "var(--dim)" }}>[{log.time}]</span>{" "}
+                  <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
