@@ -5,11 +5,13 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { navFor, ROLE_LABEL } from "@/lib/rbac";
 import { Icon, Spinner, Avatar } from "./ui";
+import GlobalSearch from "./GlobalSearch";
 
 export default function Shell({ children }) {
   const [user, setUser] = useState(undefined); // undefined=loading, null=none
   const [theme, setTheme] = useState("dark");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -131,7 +133,7 @@ export default function Shell({ children }) {
             </div>
 
             <div className="kc-topbar-right">
-              <button className="kc-theme-btn" title="Global Search" onClick={() => alert("Search coming soon")}>
+              <button className="kc-theme-btn" title="Global Search (Cmd+K)" onClick={() => setIsSearchOpen(true)}>
                 <Icon name="search" size={16} />
               </button>
               
@@ -156,6 +158,7 @@ export default function Shell({ children }) {
           </main>
         </div>
       </div>
+      <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }
