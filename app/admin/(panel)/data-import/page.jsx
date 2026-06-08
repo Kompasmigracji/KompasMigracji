@@ -89,7 +89,7 @@ export default function DataImportPage() {
               <Icon name="arrow-right" size={20} color="var(--dim)" />
             </div>
             <div>
-              <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginBottom: 4, fontWeight: 600 }}>CRM Field (iPhoenix)</div>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginBottom: 4, fontWeight: 600 }}>CRM Field (Kompas)</div>
               <div style={{ display: "flex", gap: "var(--space-sm)" }}>
                 <Badge status="success" text="Contact -> First Name" />
                 <Badge status="success" text="Contact -> Last Name" />

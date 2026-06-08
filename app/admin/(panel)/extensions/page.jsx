@@ -7,9 +7,9 @@ export default function ExtensionsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
 
   const [plugins, setPlugins] = useState([
-    { id: "plg_1", name: "Stripe Payments Pro", provider: "iPhoenix Core", category: "finance", rating: 4.9, installs: "10k+", status: "installed", desc: "Process credit cards and Apple Pay directly on your invoices." },
+    { id: "plg_1", name: "Stripe Payments Pro", provider: "Kompas Core", category: "finance", rating: 4.9, installs: "10k+", status: "installed", desc: "Process credit cards and Apple Pay directly on your invoices." },
     { id: "plg_2", name: "Telegram Bot Integration", provider: "Community", category: "communication", rating: 4.7, installs: "5k+", status: "available", desc: "Receive lead notifications and reply to clients via Telegram." },
-    { id: "plg_3", name: "Google Calendar Sync", provider: "iPhoenix Core", category: "productivity", rating: 4.8, installs: "25k+", status: "installed", desc: "Two-way sync for appointments and team tasks." },
+    { id: "plg_3", name: "Google Calendar Sync", provider: "Kompas Core", category: "productivity", rating: 4.8, installs: "25k+", status: "installed", desc: "Two-way sync for appointments and team tasks." },
     { id: "plg_4", name: "OpenAI Auto-Responder", provider: "AI Labs", category: "ai", rating: 4.5, installs: "2k+", status: "available", desc: "Draft email replies automatically based on previous conversations." },
     { id: "plg_5", name: "WooCommerce Importer", provider: "Community", category: "ecommerce", rating: 4.2, installs: "1k+", status: "update_available", desc: "Sync products and orders from your legacy WooCommerce site." }
   ]);
@@ -112,7 +112,7 @@ export default function ExtensionsPage() {
                   <div style={{ fontWeight: 600, fontSize: "var(--text-md)" }}>{plugin.name}</div>
                   <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", display: "flex", alignItems: "center", gap: 4 }}>
                     By {plugin.provider}
-                    {plugin.provider === "iPhoenix Core" && <Icon name="check" size={12} color="var(--color-success)" />}
+                    {plugin.provider === "Kompas Core" && <Icon name="check" size={12} color="var(--color-success)" />}
                   </div>
                 </div>
               </div>

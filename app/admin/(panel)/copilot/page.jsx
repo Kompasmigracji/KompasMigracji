@@ -5,7 +5,7 @@ import { Icon, Avatar } from "@/components/admin/ui";
 
 export default function CopilotPage() {
   const [messages] = useState([
-    { id: 1, role: "assistant", text: "Hi! I'm iPhoenix AI. I can analyze your sales, draft emails to clients, or find specific legal cases. How can I help you today?", time: "10:00 AM" },
+    { id: 1, role: "assistant", text: "Hi! I'm Kompas AI. I can analyze your sales, draft emails to clients, or find specific legal cases. How can I help you today?", time: "10:00 AM" },
     { id: 2, role: "user", text: "Summarize the last 5 interactions with TechCorp Ltd.", time: "10:05 AM" },
     { id: 3, role: "assistant", text: "Sure! Here is a summary of TechCorp Ltd:\n\n1. **Yesterday**: Sent B2B Contract via DocuSign.\n2. **3 days ago**: 45-min Zoom call regarding franchise rules.\n3. **1 week ago**: They paid Invoice #4092 (€2,500).\n4. **2 weeks ago**: Opened 3 support tickets (all resolved).\n\n**AI Suggestion**: Since they just signed the contract, it's a good time to offer our VIP Onboarding package.", time: "10:05 AM" }
   ]);
@@ -27,7 +27,7 @@ export default function CopilotPage() {
             <Icon name="cpu" size={24} color="white" />
           </div>
           <div>
-            <h2 className="kc-h2" style={{ margin: 0 }}>iPhoenix AI Copilot</h2>
+            <h2 className="kc-h2" style={{ margin: 0 }}>Kompas AI Copilot</h2>
             <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
               Your intelligent assistant. Ask questions, generate emails, or analyze CRM data.
             </p>
@@ -96,7 +96,7 @@ export default function CopilotPage() {
               <button className="kc-btn kc-btn-primary" style={{ borderRadius: 8 }}><Icon name="arrow-up" size={18} /></button>
             </div>
             <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 8, textAlign: "center" }}>
-              iPhoenix AI can make mistakes. Consider verifying important legal information.
+              Kompas AI can make mistakes. Consider verifying important legal information.
             </div>
           </div>
         </div>

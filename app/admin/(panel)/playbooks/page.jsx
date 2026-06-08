@@ -82,7 +82,7 @@ export default function PlaybooksPage() {
             <div style={{ opacity: 0.5 }}>
               <div style={{ fontSize: "var(--text-xs)", color: "var(--color-success)", fontWeight: 700, textTransform: "uppercase", marginBottom: 4 }}><Icon name="check-circle" size={12} /> Step 1: Introduction</div>
               <div style={{ background: "var(--panel-2)", padding: "var(--space-md)", borderRadius: 8, fontSize: "var(--text-md)", fontStyle: "italic" }}>
-                "Hi, this is [Your Name] from iPhoenix. I saw you requested a consultation about B2B relocation to Poland. Do you have 5 minutes to chat?"
+                "Hi, this is [Your Name] from KompasCRM. I saw you requested a consultation about B2B relocation to Poland. Do you have 5 minutes to chat?"
               </div>
             </div>
 
