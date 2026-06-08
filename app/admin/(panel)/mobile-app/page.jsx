@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Mobile App Builder & White-Label Portal */
+/* KompasCRM — Mobile App Builder & White-Label Portal */
 import React, { useState } from "react";
 import { Icon, Badge } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Customer Success & Health Scores (Gainsight style) */
+/* KompasCRM — Customer Success & Health Scores (Gainsight style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Translation & Localization (Lokalise style) */
+/* KompasCRM — Translation & Localization (Lokalise style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

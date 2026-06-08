@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Relationships & Connections (Knowledge Graph) */
+/* KompasCRM — Relationships & Connections (Knowledge Graph) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

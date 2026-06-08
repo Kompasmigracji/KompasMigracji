@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — E-commerce & Inventory Management (Saleor style) */
+/* KompasCRM — E-commerce & Inventory Management (Saleor style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

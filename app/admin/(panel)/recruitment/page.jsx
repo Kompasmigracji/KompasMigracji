@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Recruitment & ATS (Workable / Lever style) */
+/* KompasCRM — Recruitment & ATS (Workable / Lever style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

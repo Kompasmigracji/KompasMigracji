@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Partner Portal & B2B Resellers */
+/* KompasCRM — Partner Portal & B2B Resellers */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

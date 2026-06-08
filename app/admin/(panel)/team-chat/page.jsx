@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Team Chat & Internal Comms (Slack style) */
+/* KompasCRM — Team Chat & Internal Comms (Slack style) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
 

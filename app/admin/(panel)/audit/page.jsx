@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Audit Log Viewer */
+/* KompasCRM — Audit Log Viewer */
 import React, { useEffect, useState } from "react";
 import { Spinner, EmptyState, Icon, Badge, DataTable } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — E-Signatures & Contracts (DocuSign / PandaDoc style) */
+/* KompasCRM — E-Signatures & Contracts (DocuSign / PandaDoc style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

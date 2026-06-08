@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Office Appointments (E-Kolejka) */
+/* KompasCRM — Office Appointments (E-Kolejka) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

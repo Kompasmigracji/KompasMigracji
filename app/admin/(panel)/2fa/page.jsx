@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Two-Factor Authentication Setup */
+/* KompasCRM — Two-Factor Authentication Setup */
 import React, { useState } from "react";
 import { Icon, Badge } from "@/components/admin/ui";
 
@@ -23,7 +23,7 @@ export default function TwoFactorAuthPage() {
         <div>
           <h2 className="kc-h2" style={{ margin: 0 }}>Two-Factor Authentication (2FA)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Add an extra layer of security to your iPhoenixCRM account.
+            Add an extra layer of security to your KompasCRM account.
           </p>
         </div>
         <Badge status={isEnabled ? "success" : "dim"} text={isEnabled ? "Enabled" : "Disabled"} />

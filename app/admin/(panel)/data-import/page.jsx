@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Data Import & Migration */
+/* KompasCRM — Data Import & Migration */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

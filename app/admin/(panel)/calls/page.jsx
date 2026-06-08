@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Cloud Phone System (Aircall / RingCentral style) */
+/* KompasCRM — Cloud Phone System (Aircall / RingCentral style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

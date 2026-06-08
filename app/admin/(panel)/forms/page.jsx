@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Forms & Surveys (Typeform / Google Forms style) */
+/* KompasCRM — Forms & Surveys (Typeform / Google Forms style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

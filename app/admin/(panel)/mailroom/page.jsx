@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Virtual Office & Mailroom Coordinator (Poczta i Wirtualne Biuro) */
+/* KompasCRM — Virtual Office & Mailroom Coordinator (Poczta i Wirtualne Biuro) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

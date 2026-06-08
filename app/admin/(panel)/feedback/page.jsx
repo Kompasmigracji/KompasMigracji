@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Client Feedback & NPS */
+/* KompasCRM — Client Feedback & NPS */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

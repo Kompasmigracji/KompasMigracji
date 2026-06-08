@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Email Campaigns & Newsletters (Mailchimp style) */
+/* KompasCRM — Email Campaigns & Newsletters (Mailchimp style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

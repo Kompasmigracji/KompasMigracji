@@ -4,7 +4,7 @@
 import "@/styles/kompascrm.css";
 import Shell from "@/components/admin/Shell";
 
-export const metadata = { title: "iPhoenixCRM" };
+export const metadata = { title: "KompasCRM" };
 
 export default function PanelLayout({ children }) {
   return <Shell>{children}</Shell>;

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Email Sequences & Drip Campaigns */
+/* KompasCRM — Email Sequences & Drip Campaigns */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Gov Portals Integration (RPA Bots) */
+/* KompasCRM — Gov Portals Integration (RPA Bots) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

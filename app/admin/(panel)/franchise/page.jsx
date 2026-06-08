@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Franchise Management (HQ) */
+/* KompasCRM — Franchise Management (HQ) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — KSeF E-Invoicing & Tax Compliance */
+/* KompasCRM — KSeF E-Invoicing & Tax Compliance */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

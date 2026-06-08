@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Gamification & Sales Leaderboards */
+/* KompasCRM — Gamification & Sales Leaderboards */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
 

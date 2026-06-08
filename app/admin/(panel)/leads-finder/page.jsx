@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Lead Finder & B2B Scraping (Apollo.io style) */
+/* KompasCRM — Lead Finder & B2B Scraping (Apollo.io style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

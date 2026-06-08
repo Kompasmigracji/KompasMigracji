@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Leads Management Page (Kanban & List Views) */
+/* KompasCRM — Leads Management Page (Kanban & List Views) */
 import React, { useEffect, useState, useCallback } from "react";
 import { Spinner, EmptyState, Icon, Badge, DataTable } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";

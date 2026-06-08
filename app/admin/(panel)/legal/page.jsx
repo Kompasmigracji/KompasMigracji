@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Legal Case Management (Immigration / Visas) */
+/* KompasCRM — Legal Case Management (Immigration / Visas) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

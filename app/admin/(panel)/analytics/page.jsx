@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Advanced Analytics (PostHog style) */
+/* KompasCRM — Advanced Analytics (PostHog style) */
 import React from "react";
 import { Icon } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Visual Workflow Builder */
+/* KompasCRM — Visual Workflow Builder */
 import React, { useState, useEffect } from "react";
 import { Icon, Spinner, EmptyState, Badge } from "@/components/admin/ui";
 

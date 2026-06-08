@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Knowledge Base & Wiki (Notion / Confluence style) */
+/* KompasCRM — Knowledge Base & Wiki (Notion / Confluence style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

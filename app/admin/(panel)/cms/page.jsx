@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Headless CMS (WordPress / Joomla style) */
+/* KompasCRM — Headless CMS (WordPress / Joomla style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

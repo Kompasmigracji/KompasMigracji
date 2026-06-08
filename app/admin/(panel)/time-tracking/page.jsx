@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Time Tracking & Timesheets */
+/* KompasCRM — Time Tracking & Timesheets */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

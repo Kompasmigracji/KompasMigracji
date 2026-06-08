@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Document Templates Builder (Generator) */
+/* KompasCRM — Document Templates Builder (Generator) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

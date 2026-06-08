@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Email Inbox */
+/* KompasCRM — Email Inbox */
 import React, { useState, useEffect } from "react";
 import { Icon, Spinner, EmptyState, Badge, Avatar } from "@/components/admin/ui";
 
@@ -16,7 +16,7 @@ export default function EmailsPage() {
       setEmails([
         { id: 1, subject: "Re: Your residency application", from: "mariia.k@example.com", preview: "Hello! Thank you for the update. Could you please clarify what documents...", folder: "inbox", date: "10:30 AM", read: false },
         { id: 2, subject: "Invoice #INV-2026-05", from: "billing@company.com", preview: "Attached is the invoice for the last period.", folder: "inbox", date: "Yesterday", read: true },
-        { id: 3, subject: "New inquiry from website", from: "system@iphoenixcrm.com", preview: "You have a new lead. Name: John Doe...", folder: "inbox", date: "May 12", read: true },
+        { id: 3, subject: "New inquiry from website", from: "system@KompasCRM.com", preview: "You have a new lead. Name: John Doe...", folder: "inbox", date: "May 12", read: true },
       ]);
       setLoading(false);
     }, 600);

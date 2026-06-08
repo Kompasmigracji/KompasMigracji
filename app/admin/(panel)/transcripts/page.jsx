@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — AI Meeting Intelligence (Otter.ai / Fireflies.ai style) */
+/* KompasCRM — AI Meeting Intelligence (Otter.ai / Fireflies.ai style) */
 import React, { useState } from "react";
 import { Icon, Badge, Avatar } from "@/components/admin/ui";
 

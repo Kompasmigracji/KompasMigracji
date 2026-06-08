@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Loyalty & Rewards Program (Smile.io style) */
+/* KompasCRM — Loyalty & Rewards Program (Smile.io style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

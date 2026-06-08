@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — SLA Management & Deadlines */
+/* KompasCRM — SLA Management & Deadlines */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

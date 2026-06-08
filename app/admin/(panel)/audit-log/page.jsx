@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Audit Log & Security (Okta style) */
+/* KompasCRM — Audit Log & Security (Okta style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

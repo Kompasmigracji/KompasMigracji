@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Commissions & Payouts (Spiff / CaptivateIQ style) */
+/* KompasCRM — Commissions & Payouts (Spiff / CaptivateIQ style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

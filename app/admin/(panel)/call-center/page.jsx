@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Cloud Call Center & VoIP */
+/* KompasCRM — Cloud Call Center & VoIP */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

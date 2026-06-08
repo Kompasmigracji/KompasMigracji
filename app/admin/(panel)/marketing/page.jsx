@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Email Marketing & Campaigns */
+/* KompasCRM — Email Marketing & Campaigns */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

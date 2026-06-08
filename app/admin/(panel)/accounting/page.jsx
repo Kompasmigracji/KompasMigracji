@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Accounting & Payroll (Księgowość) */
+/* KompasCRM — Accounting & Payroll (Księgowość) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

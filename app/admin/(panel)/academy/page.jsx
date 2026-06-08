@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Training Academy (Lessonly / 360Learning style) */
+/* KompasCRM — Training Academy (Lessonly / 360Learning style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
@@ -7,7 +7,7 @@ export default function AcademyPage() {
   const [courses] = useState([
     { id: "CRS-01", title: "Sales Onboarding 101", category: "Sales", enrolled: 12, completed: 8, avgScore: "94%", status: "active" },
     { id: "CRS-02", title: "TRC Legal Framework 2026", category: "Legal & Compliance", enrolled: 45, completed: 45, avgScore: "88%", status: "active" },
-    { id: "CRS-03", title: "How to use iPhoenixCRM", category: "Tools", enrolled: 156, completed: 150, avgScore: "99%", status: "active" },
+    { id: "CRS-03", title: "How to use KompasCRM", category: "Tools", enrolled: 156, completed: 150, avgScore: "99%", status: "active" },
     { id: "CRS-04", title: "Advanced Negotiation Tactics", category: "Sales", enrolled: 0, completed: 0, avgScore: "—", status: "draft" }
   ]);
 

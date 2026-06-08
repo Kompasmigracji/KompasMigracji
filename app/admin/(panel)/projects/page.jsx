@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Project Management & Tasks (Asana / Trello style) */
+/* KompasCRM — Project Management & Tasks (Asana / Trello style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

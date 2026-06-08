@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Work Permits & Legalizations Tracker (Oświadczenia i Zezwolenia) */
+/* KompasCRM — Work Permits & Legalizations Tracker (Oświadczenia i Zezwolenia) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

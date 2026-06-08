@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Plugin & Extensions Marketplace (Mozilla/WP style) */
+/* KompasCRM — Plugin & Extensions Marketplace (Mozilla/WP style) */
 import React, { useState } from "react";
 import { Icon, Badge } from "@/components/admin/ui";
 

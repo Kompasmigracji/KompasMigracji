@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — IT Assets & Inventory (Snipe-IT style) */
+/* KompasCRM — IT Assets & Inventory (Snipe-IT style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

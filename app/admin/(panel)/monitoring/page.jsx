@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — System Monitoring & Alerts (Cabot / Datadog style) */
+/* KompasCRM — System Monitoring & Alerts (Cabot / Datadog style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

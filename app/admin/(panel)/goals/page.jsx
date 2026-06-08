@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Goals, Targets & OKRs */
+/* KompasCRM — Goals, Targets & OKRs */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

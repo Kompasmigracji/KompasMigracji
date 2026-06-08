@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Employee HR & Onboarding */
+/* KompasCRM — Employee HR & Onboarding */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

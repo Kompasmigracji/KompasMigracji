@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Service Catalog & Price Books */
+/* KompasCRM — Service Catalog & Price Books */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

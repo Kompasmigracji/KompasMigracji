@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Custom Fields & Object Builder (Salesforce style) */
+/* KompasCRM — Custom Fields & Object Builder (Salesforce style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

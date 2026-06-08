@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — AI Copilot & Assistant (ChatGPT style) */
+/* KompasCRM — AI Copilot & Assistant (ChatGPT style) */
 import React, { useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Lead Routing & Auto-Assignment */
+/* KompasCRM — Lead Routing & Auto-Assignment */
 import React, { useState } from "react";
 import { Icon, Badge, Avatar } from "@/components/admin/ui";
 

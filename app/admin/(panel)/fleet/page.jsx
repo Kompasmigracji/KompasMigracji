@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Fleet Management & Logistics (Samsara style) */
+/* KompasCRM — Fleet Management & Logistics (Samsara style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

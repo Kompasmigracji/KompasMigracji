@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — GDPR & RODO Compliance Dashboard */
+/* KompasCRM — GDPR & RODO Compliance Dashboard */
 import React, { useState, useEffect } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

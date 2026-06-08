@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — E-Signatures & Digital Contracts */
+/* KompasCRM — E-Signatures & Digital Contracts */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

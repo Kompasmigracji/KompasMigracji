@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Orders & Fulfillment Management */
+/* KompasCRM — Orders & Fulfillment Management */
 import React, { useState } from "react";
 import { Icon, Badge, EmptyState, DataTable, Avatar } from "@/components/admin/ui";
 

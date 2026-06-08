@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Subscriptions & MRR */
+/* KompasCRM — Subscriptions & MRR */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

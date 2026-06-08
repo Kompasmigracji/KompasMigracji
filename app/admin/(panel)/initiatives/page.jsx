@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Initiatives & Services Directory (Ship style) */
+/* KompasCRM — Initiatives & Services Directory (Ship style) */
 import React, { useState } from "react";
 import { Icon, Badge, Avatar } from "@/components/admin/ui";
 

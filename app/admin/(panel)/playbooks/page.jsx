@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Sales Playbooks & Call Scripts (Salesloft style) */
+/* KompasCRM — Sales Playbooks & Call Scripts (Salesloft style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

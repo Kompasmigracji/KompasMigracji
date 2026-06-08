@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — HR Leave Management (Vacations, Sick Leaves) */
+/* KompasCRM — HR Leave Management (Vacations, Sick Leaves) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

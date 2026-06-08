@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Health Insurance & ZUS Coordinator (Ubezpieczenia i ZUS) */
+/* KompasCRM — Health Insurance & ZUS Coordinator (Ubezpieczenia i ZUS) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

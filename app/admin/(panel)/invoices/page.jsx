@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Billing & Invoicing (QuickBooks / Stripe style) */
+/* KompasCRM — Billing & Invoicing (QuickBooks / Stripe style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

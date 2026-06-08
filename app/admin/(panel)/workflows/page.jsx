@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Automated Workflows & Rules Engine (HubSpot style) */
+/* KompasCRM — Automated Workflows & Rules Engine (HubSpot style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Relocation Housing & Property Management */
+/* KompasCRM — Relocation Housing & Property Management */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Expense Tracking & P&L */
+/* KompasCRM — Expense Tracking & P&L */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

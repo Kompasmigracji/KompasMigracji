@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Live Chat & Omnichannel Inbox (Intercom style) */
+/* KompasCRM — Live Chat & Omnichannel Inbox (Intercom style) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
 

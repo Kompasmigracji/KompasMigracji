@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Affiliate Program & Promo Codes */
+/* KompasCRM — Affiliate Program & Promo Codes */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

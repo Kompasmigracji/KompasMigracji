@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Social Media Management (Hootsuite / Buffer style) */
+/* KompasCRM — Social Media Management (Hootsuite / Buffer style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Virtual Data Room & Secure Sharing (DocSend style) */
+/* KompasCRM — Virtual Data Room & Secure Sharing (DocSend style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 

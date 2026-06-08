@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Helpdesk & Support Tickets (Zendesk style) */
+/* KompasCRM — Helpdesk & Support Tickets (Zendesk style) */
 import React, { useState } from "react";
 import { Icon, Badge, Avatar, DataTable } from "@/components/admin/ui";
 

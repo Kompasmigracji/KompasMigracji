@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Knowledge Base & NLP Annotation (Doccano/Piaf style) */
+/* KompasCRM — Knowledge Base & NLP Annotation (Doccano/Piaf style) */
 import React, { useState } from "react";
 import { Icon, Badge, EmptyState } from "@/components/admin/ui";
 

@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Issue & Bug Tracking (Taiga / Sentry style) */
+/* KompasCRM — Issue & Bug Tracking (Taiga / Sentry style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

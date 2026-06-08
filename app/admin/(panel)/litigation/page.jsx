@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Legal Appeals & Litigation Tracker */
+/* KompasCRM — Legal Appeals & Litigation Tracker */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 

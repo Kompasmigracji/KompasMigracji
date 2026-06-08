@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — API Hub & Webhooks (Developer Portal) */
+/* KompasCRM — API Hub & Webhooks (Developer Portal) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 

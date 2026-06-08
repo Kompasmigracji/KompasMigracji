@@ -1,5 +1,5 @@
 "use client";
-/* iPhoenixCRM — Sworn Translations (Tłumacz Przysięgły) */
+/* KompasCRM — Sworn Translations (Tłumacz Przysięgły) */
 import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
