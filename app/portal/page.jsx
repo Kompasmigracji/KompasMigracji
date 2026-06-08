@@ -1,7 +1,6 @@
 /* Innovation 4: Client Self-Service Portal — PIN login
    F10: auto PIN lookup, F12: access log */
 "use client";
-export const dynamic = "force-dynamic";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
