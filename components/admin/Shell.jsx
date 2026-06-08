@@ -6,12 +6,14 @@ import Link from "next/link";
 import { navFor, ROLE_LABEL } from "@/lib/rbac";
 import { Icon, Spinner, Avatar } from "./ui";
 import GlobalSearch from "./GlobalSearch";
+import NotificationCenter from "./NotificationCenter";
 
 export default function Shell({ children }) {
   const [user, setUser] = useState(undefined); // undefined=loading, null=none
   const [theme, setTheme] = useState("dark");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -137,7 +139,7 @@ export default function Shell({ children }) {
                 <Icon name="search" size={16} />
               </button>
               
-              <button className="kc-theme-btn" title="Notifications">
+              <button className="kc-theme-btn" title="Notifications" onClick={() => setIsNotificationsOpen(true)}>
                 <div style={{ position: 'relative' }}>
                   <Icon name="bell" size={16} />
                   <span style={{ position: 'absolute', top: -2, right: -2, width: 6, height: 6, background: 'var(--color-danger)', borderRadius: '50%' }} />
@@ -159,6 +161,7 @@ export default function Shell({ children }) {
         </div>
       </div>
       <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <NotificationCenter isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)} />
     </div>
   );
 }
