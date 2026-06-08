@@ -1,11 +1,13 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { q } from "@/lib/db";
 
 export async function GET(req) {
   try {
-    const session = await requireAuth();
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q") || "";
@@ -18,67 +20,75 @@ export async function GET(req) {
     const results = [];
 
     // Search Users (Agents / Staff)
-    const users = db.prepare(`
-      SELECT id, name, role, email 
-      FROM users 
-      WHERE name LIKE ? OR email LIKE ? 
-      LIMIT 5
-    `).all(likeQuery, likeQuery);
-    
-    if (users.length > 0) {
-      results.push({
-        type: "Users",
-        items: users.map(u => ({
-          title: u.name,
-          subtitle: `${u.role} • ${u.email}`,
-          icon: "user",
-          url: `/admin/members`
-        }))
-      });
-    }
-
-    // Search Leads
-    const leads = db.prepare(`
-      SELECT id, name, phone, status 
-      FROM leads 
-      WHERE name LIKE ? OR phone LIKE ? 
-      LIMIT 5
-    `).all(likeQuery, likeQuery);
-
-    if (leads.length > 0) {
-      results.push({
-        type: "Leads",
-        items: leads.map(l => ({
-          title: l.name || "Unnamed Lead",
-          subtitle: `${l.phone || "No phone"} • ${l.status}`,
-          icon: "target",
-          url: `/admin/leads?id=${l.id}`
-        }))
-      });
-    }
-
-    // Search Invoices
     try {
-      const invoices = db.prepare(`
-        SELECT id, amount, currency, status, created_at
-        FROM invoices
-        WHERE id LIKE ? OR status LIKE ?
+      const users = await q(`
+        SELECT id, full_name as name, role, email 
+        FROM kompas_users 
+        WHERE full_name ILIKE $1 OR email ILIKE $1 
         LIMIT 5
-      `).all(likeQuery, likeQuery);
-
-      if (invoices.length > 0) {
+      `, [likeQuery]);
+      
+      if (users && users.length > 0) {
         results.push({
-          type: "Invoices",
-          items: invoices.map(inv => ({
-            title: `Invoice #${inv.id}`,
-            subtitle: `${inv.amount} ${inv.currency} • ${inv.status}`,
-            icon: "cash",
-            url: `/admin/finance`
+          type: "Users",
+          items: users.map(u => ({
+            title: u.name,
+            subtitle: `${u.role} • ${u.email}`,
+            icon: "user",
+            url: `/admin/members`
           }))
         });
       }
     } catch (e) {
-      // Invoices table might not exist yet if migrations aren't fully run, ignore gracefully
+      console.error(e);
+    }
+
+    // Search Leads
+    try {
+      const leads = await q(`
+        SELECT id, COALESCE(first_name, 'Unnamed') as name, contact as phone, status 
+        FROM leads 
+        WHERE first_name ILIKE $1 OR contact ILIKE $1 OR username ILIKE $1
+        LIMIT 5
+      `, [likeQuery]);
+
+      if (leads && leads.length > 0) {
+        results.push({
+          type: "Leads",
+          items: leads.map(l => ({
+            title: l.name,
+            subtitle: `${l.phone || "No phone"} • ${l.status || "new"}`,
+            icon: "target",
+            url: `/admin/leads/${l.id}`
+          }))
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    // Search Cases
+    try {
+      const cases = await q(`
+        SELECT id, title, status
+        FROM kompas_cases
+        WHERE title ILIKE $1 OR description ILIKE $1
+        LIMIT 5
+      `, [likeQuery]);
+
+      if (cases && cases.length > 0) {
+        results.push({
+          type: "Cases",
+          items: cases.map(c => ({
+            title: c.title,
+            subtitle: `Case • ${c.status}`,
+            icon: "briefcase",
+            url: `/admin/cases`
+          }))
+        });
+      }
+    } catch (e) {
+      console.error(e);
     }
 
     return NextResponse.json({ results });

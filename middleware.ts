@@ -1,4 +1,4 @@
-﻿/* middleware.ts — KompasCRM + next-intl.
+/* middleware.ts — KompasCRM + next-intl.
    • /admin/* и /api/admin/* — защита JWT (кроме /admin/login и /api/admin/auth/*)
    • Все остальные маршруты — next-intl локализация.
 */
@@ -7,6 +7,28 @@ import createMiddleware from "next-intl/middleware";
 import { jwtVerify } from "jose";
 
 const COOKIE = "kompascrm_session";
+const rateLimitMap = new Map();
+
+function rateLimit(ip) {
+  const now = Date.now();
+  const windowMs = 60 * 1000; // 1 minute
+  const maxReqs = 100; // 100 requests per minute
+  
+  if (!rateLimitMap.has(ip)) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+    return true;
+  }
+  
+  const record = rateLimitMap.get(ip);
+  if (now > record.resetTime) {
+    record.count = 1;
+    record.resetTime = now + windowMs;
+    return true;
+  }
+  
+  record.count += 1;
+  return record.count <= maxReqs;
+}
 
 /** Видаляє BOM (U+FEFF, charCode 65279) та \r — захист від PowerShell pipe артефактів. */
 function cleanEnv(s: string | undefined): string {
@@ -31,9 +53,17 @@ const intlMiddleware = createMiddleware({
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // ── Rate Limiting ───────────────────────────────────────────────────────────
+  const ip = req.headers.get("x-forwarded-for") || req.ip || "127.0.0.1";
+  if (pathname.startsWith("/api/") && !rateLimit(ip)) {
+    return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
+  }
+
   // ── Non-admin API routes: pass through unchanged ──────────────────────────
   if (pathname.startsWith("/api/") && !pathname.startsWith("/api/admin")) {
-    return NextResponse.next();
+    const res = NextResponse.next();
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    return res;
   }
 
   // ── Strip locale prefix from admin routes: /uk/admin → /admin ────────────
@@ -119,7 +149,12 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    return NextResponse.next();
+    const res = NextResponse.next();
+    // Add CSRF & Security Headers to all admin pages & APIs
+    res.headers.set("X-Frame-Options", "DENY");
+    res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    return res;
   }
 
   // ── Public routes: next-intl localization ─────────────────────────────────

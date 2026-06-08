@@ -1,55 +1,40 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth";
-import { db } from "@/lib/db";
-
-// Ensure table exists
-function initTable() {
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS notifications (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      title TEXT NOT NULL,
-      message TEXT,
-      type TEXT DEFAULT 'info',
-      is_read INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-}
+import { q } from "@/lib/db";
 
 export async function GET(req) {
   try {
-    const session = await requireAuth();
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-    initTable();
-
-    const notifications = db.prepare(`
-      SELECT * FROM notifications 
-      WHERE user_id = ? 
+    const notifications = await q(`
+      SELECT * FROM kompas_notifications 
+      WHERE user_id = $1 
       ORDER BY created_at DESC 
       LIMIT 50
-    `).all(session.user_id);
+    `, [auth.user.id]);
 
-    return NextResponse.json({ notifications });
+    return NextResponse.json({ notifications: notifications || [] });
   } catch (err) {
     console.error("Notifications GET error:", err);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    // Return empty if table not yet migrated
+    return NextResponse.json({ notifications: [] });
   }
 }
 
 export async function PUT(req) {
   try {
-    const session = await requireAuth();
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const body = await req.json();
-    initTable();
 
     if (body.all) {
-      db.prepare(`UPDATE notifications SET is_read = 1 WHERE user_id = ?`).run(session.user_id);
+      await q(`UPDATE kompas_notifications SET read = true WHERE user_id = $1`, [auth.user.id]);
     } else if (body.id) {
-      db.prepare(`UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?`).run(body.id, session.user_id);
+      await q(`UPDATE kompas_notifications SET read = true WHERE id = $1 AND user_id = $2`, [body.id, auth.user.id]);
     } else {
       return NextResponse.json({ error: "Bad request" }, { status: 400 });
     }
