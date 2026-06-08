@@ -1,7 +1,7 @@
 "use client";
 // F3 admin UI: Subscription management dashboard
 import React, { useEffect, useState } from "react";
-import { Spinner, Empty, Badge, StatCard } from "@/components/admin/ui";
+import { Spinner, EmptyState, Badge, StatCard } from "@/components/admin/ui";
 
 const STATUS_COLOR = {
   active: "#10B981", trial: "#3B82F6", past_due: "#F59E0B",
@@ -81,7 +81,7 @@ export default function SubscriptionsPage() {
 
       {msg && <div style={{ fontSize: 12, color: "#10B981", marginBottom: 12 }}>{msg}</div>}
 
-      {loading ? <Spinner /> : subs.length === 0 ? <Empty text="Немає підписок" /> : (
+      {loading ? <Spinner /> : subs.length === 0 ? <EmptyState text="Немає пiдписок" /> : (
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {subs.map(sub => {
             const plan = PLAN_BADGE[sub.plan_slug] || { color: "#6B7280", label: sub.plan_slug };
