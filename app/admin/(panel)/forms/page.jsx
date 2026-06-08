@@ -1,26 +1,44 @@
 "use client";
-/* iPhoenixCRM — Dynamic Forms & Surveys (Typeform style) */
+/* iPhoenixCRM — Forms & Surveys (Typeform / Google Forms style) */
 import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function FormsPage() {
   const [forms] = useState([
-    { id: "form_1", name: "Website Lead Capture", status: "active", views: 1250, submissions: 142, conversion: "11.3%", updated: "3 days ago" },
-    { id: "form_2", name: "Customer Satisfaction Survey (NPS)", status: "active", views: 300, submissions: 120, conversion: "40.0%", updated: "1 week ago" },
-    { id: "form_3", name: "Job Application - Sales Rep", status: "draft", views: 0, submissions: 0, conversion: "0%", updated: "Just now" }
+    { id: "FRM-501", name: "Visa Application Questionnaire", type: "Client Intake", responses: 1240, conversion: "68%", status: "active", created: "Jan 10, 2026" },
+    { id: "FRM-502", name: "Customer Satisfaction Survey (NPS)", type: "Survey", responses: 312, conversion: "45%", status: "active", created: "Mar 05, 2026" },
+    { id: "FRM-503", name: "Partner Registration Form", type: "B2B Lead Gen", responses: 45, conversion: "12%", status: "active", created: "May 20, 2026" },
+    { id: "FRM-504", name: "Old Job Application Form", type: "Recruitment", responses: 890, conversion: "85%", status: "archived", created: "Aug 15, 2025" }
   ]);
 
   const columns = [
-    { header: "Form Name", cell: (row) => <span style={{ fontWeight: 600 }}>{row.name}</span> },
-    { header: "Status", cell: (row) => <Badge status={row.status === "active" ? "success" : "warning"} text={row.status.toUpperCase()} /> },
-    { header: "Views", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.views.toLocaleString()}</span> },
-    { header: "Submissions", cell: (row) => <span style={{ fontWeight: 600, color: "var(--fg)" }}>{row.submissions}</span> },
-    { header: "Conversion", cell: (row) => <span style={{ color: "var(--color-primary)", fontWeight: 600 }}>{row.conversion}</span> },
-    { header: "Last Edited", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.updated}</span> },
+    { header: "Form Name", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+        <Icon name="check-square" size={16} color={row.status === "active" ? "var(--color-primary)" : "var(--dim)"} />
+        <div>
+          <div style={{ fontWeight: 600 }}>{row.name}</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</div>
+        </div>
+      </div>
+    )},
+    { header: "Type", cell: (row) => <Badge status="info" text={row.type} /> },
+    { header: "Status", cell: (row) => {
+      let color = "success";
+      if (row.status === "archived") color = "default";
+      return <Badge status={color} text={row.status.toUpperCase()} />;
+    }},
+    { header: "Total Responses", cell: (row) => <span style={{ fontWeight: 600 }}>{row.responses.toLocaleString()}</span> },
+    { header: "Conversion Rate", cell: (row) => (
+      <span style={{ color: parseInt(row.conversion) > 50 ? "var(--color-success)" : "var(--color-warning)" }}>
+        {row.conversion}
+      </span>
+    )},
+    { header: "Created On", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.created}</span> },
     { header: "", cell: () => (
       <div style={{ display: "flex", gap: 8 }}>
-        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
-        <button className="kc-btn kc-btn-ghost"><Icon name="share-2" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="pie-chart" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="copy" size={16} /></button>
       </div>
     )}
   ];
@@ -31,35 +49,40 @@ export default function FormsPage() {
         <div>
           <h2 className="kc-h2" style={{ margin: 0 }}>Forms & Surveys</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Build custom web forms, capture leads, and collect customer feedback.
+            Build custom forms to collect client data, documents, and feedback.
           </p>
         </div>
-        <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Create Form</button>
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <button className="kc-btn kc-btn-secondary"><Icon name="layout" size={16} /> Templates</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Create Form</button>
+        </div>
       </div>
 
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-lg)" }}>
-        {/* Left: Forms Table */}
-        <div className="kc-card" style={{ flex: 2, padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
-            <Icon name="layout" size={18} color="var(--dim)" />
-            <h3 className="kc-h3" style={{ margin: 0, fontSize: "var(--text-sm)" }}>Your Forms</h3>
-          </div>
-          <DataTable columns={columns} data={forms} />
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Forms</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>14</div>
         </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Total Responses (30d)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>842</div>
+        </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Avg Conversion Rate</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>48%</div>
+        </div>
+      </div>
 
-        {/* Right: Quick Builder CTA */}
-        <div className="kc-card" style={{ flex: 1, display: "flex", flexDirection: "column", background: "color-mix(in srgb, var(--color-primary) 5%, var(--panel))" }}>
-          <div style={{ width: 48, height: 48, borderRadius: "50%", background: "var(--color-primary)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", marginBottom: "var(--space-md)" }}>
-            <Icon name="zap" size={24} />
+      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1 }}>
+        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
+            <Icon name="search" size={16} color="var(--dim)" />
+            <input type="text" placeholder="Search forms by name or type..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
           </div>
-          <h3 className="kc-h3" style={{ fontSize: "var(--text-md)", marginBottom: "var(--space-sm)" }}>Need a form fast?</h3>
-          <p style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: "var(--space-md)", lineHeight: 1.5 }}>
-            Use our AI Assistant to generate a complete form with validation rules and notification webhooks in just 5 seconds.
-          </p>
-          <button className="kc-btn kc-btn-secondary" style={{ marginTop: "auto", justifyContent: "center" }}>
-            <Icon name="cpu" size={16} /> Generate with AI
-          </button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Status</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="download" size={16} /> Export CSV</button>
         </div>
+        <DataTable columns={columns} data={forms} />
       </div>
     </div>
   );
