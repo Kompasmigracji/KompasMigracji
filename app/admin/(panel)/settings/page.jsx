@@ -1,7 +1,7 @@
 "use client";
 /* /admin/settings — налаштування CRM: команда, змiна пароля, безпека. */
 import React, { useEffect, useState } from "react";
-import { Icon, Spinner, Badge, Empty } from "@/components/admin/ui";
+import { Icon, Spinner, Badge, EmptyState } from "@/components/admin/ui";
 import { ROLE_LABEL } from "@/lib/rbac";
 
 export default function SettingsPage() {
@@ -96,7 +96,7 @@ export default function SettingsPage() {
               <Icon name="plus" size={14} /> Запросити
             </button>
           </div>
-          {!team ? <Spinner /> : team.length === 0 ? <Empty text="Команда порожня" /> : (
+          {!team ? <Spinner /> : team.length === 0 ? <EmptyState text="Команда порожня" /> : (
             <div>
               {team.map((u) => (
                 <div key={u.id} className="kc-row"
