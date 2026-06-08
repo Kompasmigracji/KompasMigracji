@@ -1,140 +1,88 @@
 "use client";
-// F3 admin UI: Subscription management dashboard
-import React, { useEffect, useState } from "react";
-import { Spinner, EmptyState, Badge, StatCard } from "@/components/admin/ui";
-
-const STATUS_COLOR = {
-  active: "#10B981", trial: "#3B82F6", past_due: "#F59E0B",
-  expired: "#6B7280", cancelled: "#EF4444",
-};
-const STATUS_LABEL = {
-  active: "Активна", trial: "Пробний", past_due: "Прострочена",
-  expired: "Закінчилась", cancelled: "Скасована",
-};
-
-const PLAN_BADGE = {
-  basic: { color: "#6B7280", label: "Basic" },
-  standard: { color: "#D8232A", label: "Standard" },
-  premium: { color: "#7C3AED", label: "Premium" },
-};
+/* iPhoenixCRM — Subscriptions & Billing (Stripe / Chargebee style) */
+import React, { useState } from "react";
+import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function SubscriptionsPage() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("active");
-  const [msg, setMsg] = useState("");
+  const [subscriptions] = useState([
+    { id: "SUB-8091", customer: "TechCorp Ltd", plan: "B2B Legal Retainer", amount: "€1,200/mo", status: "active", nextBilling: "Jun 15, 2026" },
+    { id: "SUB-8092", customer: "BuildBud Sp. z o.o.", plan: "HR & Payroll Pro", amount: "€850/mo", status: "active", nextBilling: "Jun 01, 2026" },
+    { id: "SUB-8093", customer: "Ivan Ivanov", plan: "Personal VIP Support", amount: "€50/mo", status: "past_due", nextBilling: "May 25, 2026" },
+    { id: "SUB-8094", customer: "Logex Warehouse", plan: "Basic Recruiting", amount: "€300/mo", status: "canceled", nextBilling: "—" }
+  ]);
 
-  const load = (status) =>
-    fetch(`/api/admin/subscriptions?status=${status}`)
-      .then(r => r.json())
-      .then(d => { setData(d); setLoading(false); })
-      .catch(() => setLoading(false));
-
-  useEffect(() => { load(filter); }, [filter]);
-
-  const changeStatus = async (id, status) => {
-    setMsg("");
-    const r = await fetch("/api/admin/subscriptions", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status }),
-    });
-    const d = await r.json();
-    if (d.ok) { setMsg("Збережено"); load(filter); }
-    else setMsg(d.error || "Помилка");
-  };
-
-  const stats = data?.stats || {};
-  const subs = data?.subscriptions || [];
+  const columns = [
+    { header: "Customer", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+        <Avatar name={row.customer} size={32} />
+        <div>
+          <div style={{ fontWeight: 600 }}>{row.customer}</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</div>
+        </div>
+      </div>
+    )},
+    { header: "Plan / Product", cell: (row) => <span style={{ fontWeight: 500 }}>{row.plan}</span> },
+    { header: "Status", cell: (row) => {
+      let color = "success";
+      if (row.status === "past_due") color = "warning";
+      if (row.status === "canceled") color = "danger";
+      return <Badge status={color} text={row.status.replace("_", " ").toUpperCase()} />;
+    }},
+    { header: "Amount", cell: (row) => <span style={{ fontWeight: 600, color: "var(--color-success)" }}>{row.amount}</span> },
+    { header: "Next Billing", cell: (row) => (
+      <span style={{ color: row.status === "past_due" ? "var(--color-danger)" : "var(--dim)", fontWeight: row.status === "past_due" ? 600 : 400 }}>
+        {row.nextBilling}
+      </span>
+    )},
+    { header: "", cell: () => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <button className="kc-btn kc-btn-ghost"><Icon name="credit-card" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="more-horizontal" size={16} /></button>
+      </div>
+    )}
+  ];
 
   return (
-    <div style={{ maxWidth: 960, margin: "0 auto" }}>
-      <div style={{ marginBottom: 20 }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: "var(--text)" }}>Підписки</div>
-        <div style={{ fontSize: 12, color: "var(--dim)", marginTop: 2 }}>
-          F1-F4 · Управління активними та прострочeними підписками
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
+        <div>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Subscriptions & Billing</h2>
+          <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
+            Manage recurring revenue, billing cycles, and subscriber churn.
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <button className="kc-btn kc-btn-secondary"><Icon name="settings" size={16} /> Pricing Plans</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> New Subscription</button>
         </div>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 24 }}>
-        <StatCard icon="users" value={stats.active || 0} label="Активних" />
-        <StatCard icon="alert" value={stats.past_due || 0} label="Прострочених" />
-        <StatCard icon="cash" value={`${stats.mrr || 0} PLN`} label="MRR з підписок" />
-      </div>
-
-      {/* Filter tabs */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-        {["active", "trial", "past_due", "cancelled", "expired"].map(s => (
-          <button key={s} onClick={() => { setFilter(s); setLoading(true); }}
-            style={{
-              padding: "6px 14px", borderRadius: 20, fontSize: 12, fontWeight: 600,
-              cursor: "pointer",
-              border: filter === s ? `2px solid ${STATUS_COLOR[s] || "#6B7280"}` : "2px solid var(--border)",
-              background: filter === s ? (STATUS_COLOR[s] || "#6B7280") + "18" : "transparent",
-              color: filter === s ? (STATUS_COLOR[s] || "#6B7280") : "var(--dim)",
-            }}>
-            {STATUS_LABEL[s] || s}
-          </button>
-        ))}
-      </div>
-
-      {msg && <div style={{ fontSize: 12, color: "#10B981", marginBottom: 12 }}>{msg}</div>}
-
-      {loading ? <Spinner /> : subs.length === 0 ? <EmptyState text="Немає пiдписок" /> : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {subs.map(sub => {
-            const plan = PLAN_BADGE[sub.plan_slug] || { color: "#6B7280", label: sub.plan_slug };
-            return (
-              <div key={sub.id} className="kc-card" style={{ padding: "14px 16px" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
-                  <div style={{ flex: 1, minWidth: 200 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>
-                        {sub.client_name || sub.member_name || "—"}
-                      </span>
-                      <span style={{
-                        padding: "2px 8px", borderRadius: 10, fontSize: 11, fontWeight: 700,
-                        background: plan.color + "20", color: plan.color,
-                      }}>{plan.label}</span>
-                      <span style={{
-                        padding: "2px 8px", borderRadius: 10, fontSize: 11,
-                        background: (STATUS_COLOR[sub.status] || "#6B7280") + "15",
-                        color: STATUS_COLOR[sub.status] || "#6B7280",
-                      }}>{STATUS_LABEL[sub.status] || sub.status}</span>
-                    </div>
-                    <div style={{ fontSize: 12, color: "var(--dim)", marginTop: 4 }}>
-                      {sub.email || sub.member_email || "Без email"}
-                      {sub.amount_pln ? ` · ${sub.amount_pln} PLN/мiс` : ""}
-                    </div>
-                    <div style={{ fontSize: 11, color: "var(--faint)", marginTop: 2 }}>
-                      {sub.next_billing_at
-                        ? `Наступне: ${new Date(sub.next_billing_at).toLocaleDateString("uk-UA")}`
-                        : "Дата невизначена"}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                    {sub.status !== "active" && (
-                      <button onClick={() => changeStatus(sub.id, "active")}
-                        style={{ padding: "5px 10px", borderRadius: 6, fontSize: 11, fontWeight: 600,
-                          background: "#10B98118", color: "#10B981", border: "none", cursor: "pointer" }}>
-                        Активувати
-                      </button>
-                    )}
-                    {sub.status === "active" && (
-                      <button onClick={() => changeStatus(sub.id, "cancelled")}
-                        style={{ padding: "5px 10px", borderRadius: 6, fontSize: 11,
-                          background: "#EF444418", color: "#EF4444", border: "none", cursor: "pointer" }}>
-                        Скасувати
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Monthly Recurring (MRR)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>€24,500</div>
         </div>
-      )}
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Subscribers</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>142</div>
+        </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Churn Rate (30d)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>2.4%</div>
+        </div>
+      </div>
+
+      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1 }}>
+        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
+            <Icon name="search" size={16} color="var(--dim)" />
+            <input type="text" placeholder="Search subscriptions by customer or ID..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
+          </div>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Plan</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Status</button>
+        </div>
+        <DataTable columns={columns} data={subscriptions} />
+      </div>
     </div>
   );
 }
