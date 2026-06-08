@@ -182,7 +182,7 @@ export default function MemberDetailPage() {
             <span style={{ color: "var(--dim)" }}>{Number(d.amount).toFixed(2)} zł</span>
             <Badge status={d.paid ? "paid" : "unpaid"} />
           </div>
-        )) : <Empty text="Внескiв немає" />}
+        )) : <EmptyState text="Історія порожня" />}
       </div>
     </div>
   );

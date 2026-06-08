@@ -69,7 +69,7 @@ export default function LeadDetailPage() {
               <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
                 <div style={{ color: "var(--color-primary)" }}><Icon name="user" size={18} /></div>
                 <div>
-                  <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Ім'я</div>
+                  <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Ім&apos;я</div>
                   <div style={{ fontWeight: 500 }}>{lead.name || "Не вказано"}</div>
                 </div>
               </div>
