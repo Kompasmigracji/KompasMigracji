@@ -3,7 +3,7 @@
    Учасник бачить тiльки своi данi (middleware + RBAC) i редагує своi контакти. */
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Badge, Spinner, Empty, Icon, StatCard } from "@/components/admin/ui";
+import { Badge, Spinner, EmptyState, Icon, StatCard } from "@/components/admin/ui";
 
 export default function Cabinet() {
   const router = useRouter();
@@ -175,7 +175,7 @@ export default function Cabinet() {
             <span style={{ flex: 1, fontSize: 13.5 }}>{c.title}</span>
             <Badge status={c.status} />
           </div>
-        )) : <Empty text="Звернень поки немає" />}
+        )) : <EmptyState text="Звернень поки немає" />}
       </div>
 
       {/* мої внески */}
@@ -188,7 +188,7 @@ export default function Cabinet() {
             <span style={{ color: "#828c9b" }}>{Number(d.amount).toFixed(2)} zł</span>
             <Badge status={d.paid ? "paid" : "unpaid"} />
           </div>
-        )) : <Empty text="Внескiв немає" />}
+        )) : <EmptyState text="Історія порожня" />}
       </div>
     </div>
   );
