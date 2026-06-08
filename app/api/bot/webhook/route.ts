@@ -6,8 +6,9 @@
    Потоки:
    ┌──────────────────────────────────────────────────────────────────────┐
    │ /start            → зберегти chat_id, надіслати кваліфікаційні кнопки │
-   │ callback qual_*   → зберегти qualification, надіслати підтвердження   │
-   │ звичайне текст    → зберегти як situation, відповісти «отримано»       │
+   │ callback qual_*   → зберегти qualification, надіслати клуб + асистента│
+   │ callback action_* → зв'язатися з живим асистентом (вимкнути бота)   │
+   │ звичайний текст   → зберегти як situation, відповісти (якщо не mute) │
    └──────────────────────────────────────────────────────────────────────┘ */
 export const runtime = "nodejs";
 
@@ -31,8 +32,8 @@ interface TgUpdate {
   message?: TgMessage;
 }
 
-/* ── Кнопки кваліфікації ────────────────────────────────────────────── */
-const QUAL_BUTTONS = [
+/* ── Кнопки кваліфікації та меню ────────────────────────────────────── */
+const START_BUTTONS = [
   [
     { text: "🏢 Праця",    callback_data: "qual_work" },
     { text: "💍 Шлюб",    callback_data: "qual_marriage" },
@@ -40,6 +41,9 @@ const QUAL_BUTTONS = [
   [
     { text: "📚 Навчання", callback_data: "qual_study" },
     { text: "💼 Бізнес",  callback_data: "qual_business" },
+  ],
+  [
+    { text: "👤 Зв'язатися з асистентом", callback_data: "action_call_human" }
   ],
 ];
 
@@ -64,16 +68,17 @@ async function getOrCreateLead(
   username: string | null,
 ): Promise<string> {
   const existing = (await one(
-    `SELECT id FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
-    [chatId],
-  )) as { id: string } | null;
+    `SELECT id, status FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+    [String(chatId)],
+  )) as { id: string; status: string } | null;
+
   if (existing) {
     await q(
       `UPDATE leads
           SET first_name = COALESCE($2, first_name),
               username   = COALESCE($3, username)
         WHERE chat_id = $1 AND deleted_at IS NULL`,
-      [chatId, firstName, username],
+      [String(chatId), firstName, username],
     );
     return existing.id;
   }
@@ -82,15 +87,20 @@ async function getOrCreateLead(
     `INSERT INTO leads (chat_id, source, first_name, username, status)
      VALUES ($1, 'bot', $2, $3, 'new')
      RETURNING id`,
-    [chatId, firstName, username],
+    [String(chatId), firstName, username],
   )) as { id: string };
-  await createTaskFromLead({ name: firstName, contact: username ? `@${username}` : null, source: "bot" });
+
+  await createTaskFromLead({
+    name: firstName || "Користувач Telegram",
+    contact: username ? `@${username}` : String(chatId),
+    source: "bot",
+  });
   return row.id;
 }
 
 /* ── Вебхук ─────────────────────────────────────────────────────────── */
 export async function POST(req: NextRequest) {
-  // Перевірка секретного токена (якщо заданий)
+  // Перевірка секретного токена
   if (process.env.TELEGRAM_WEBHOOK_SECRET) {
     const secret = req.headers.get("x-telegram-bot-api-secret-token");
     if (secret !== process.env.TELEGRAM_WEBHOOK_SECRET) {
@@ -99,30 +109,92 @@ export async function POST(req: NextRequest) {
   }
 
   let upd: TgUpdate;
-  try { upd = (await req.json()) as TgUpdate; } catch { return NextResponse.json({ ok: true }); }
+  try {
+    upd = (await req.json()) as TgUpdate;
+  } catch {
+    return NextResponse.json({ ok: true });
+  }
+
+  const chatId = upd.callback_query?.message?.chat?.id ?? upd.callback_query?.from?.id ?? upd.message?.chat.id;
+  if (!chatId) return NextResponse.json({ ok: true });
+
+  // 1. Check if lead is muted (pending_manual status)
+  const existingLead = (await one(
+    `SELECT status FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+    [String(chatId)],
+  )) as { status: string } | null;
+
+  const isStartCommand = upd.message?.text?.trim().startsWith("/start");
+
+  // If chat is muted, we ignore bot responses unless it's an explicit /start command to reset
+  if (existingLead?.status === "pending_manual" && !isStartCommand) {
+    // If it's a callback request to connect to assistant, answer to clear the spinner
+    if (upd.callback_query) {
+      await answerCallback(upd.callback_query.id, "Вже підключено до асистента");
+    }
+    return NextResponse.json({ ok: true });
+  }
 
   /* ── Натискання inline-кнопки ─────────────────────────────────────── */
   if (upd.callback_query) {
-    const cb     = upd.callback_query;
-    const data   = cb.data ?? "";
-    const chatId = cb.message?.chat?.id ?? cb.from?.id;
+    const cb   = upd.callback_query;
+    const data = cb.data ?? "";
 
-    if (chatId && QUAL_VALUE[data]) {
+    if (QUAL_VALUE[data]) {
       const value = QUAL_VALUE[data];
       const label = QUAL_LABEL[data];
 
       await q(
         `UPDATE leads SET qualification = $1
           WHERE chat_id = $2 AND deleted_at IS NULL`,
-        [value, chatId],
+        [value, String(chatId)],
       );
 
       await answerCallback(cb.id, `✅ ${label}`);
-      await sendMessage(
+
+      // Community / Club Invitation block
+      await sendInlineKeyboard(
         chatId,
         `✅ Дякуємо! Ваша категорія: <b>${label}</b>.\n\n` +
-        `Наш менеджер зв’яжеться з вами найближчим часом.\n` +
-        `Якщо терміново — телефонуйте: <b>+48 729 271 848</b>`,
+        `Разом з тим, запрошуємо тебе приєднатися до нашої <b>спільноти / клубу членів</b> Компасу Міграції!\n` +
+        `Тут ми гуртуємося, щоб бути в курсі та допомагати один одному: ділимося локальними новинами ЄС, обговорюємо зміни в законах, публікуємо корисні гайди та перевірені вакансії. Ми не агенція працевлаштування — ми допомагаємо зорієнтуватися, легалізуватися та стати на ноги.\n\n` +
+        `Наш координатор зв’яжеться з тобою найближчим часом. Якщо твоя справа термінова, ти завжди можеш покликати живого асистента:`,
+        [
+          [
+            { text: "📢 Telegram-канал", url: "https://t.me/kompasmigracji" },
+            { text: "📳 Viber-спільнота", url: "viber://chat?number=48729271848" }
+          ],
+          [
+            { text: "👤 Зв'язатися з асистентом", callback_data: "action_call_human" }
+          ]
+        ]
+      );
+    } else if (data === "action_call_human") {
+      // Set lead status to pending_manual to halt automated bot loops for this user
+      await q(
+        `UPDATE leads SET status = 'pending_manual'
+          WHERE chat_id = $1 AND deleted_at IS NULL`,
+        [String(chatId)],
+      );
+
+      const lead = (await one(
+        `SELECT first_name, username, phone FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+        [String(chatId)],
+      )) as { first_name?: string; username?: string; phone?: string } | null;
+
+      // Create a task for live assistance
+      await createTaskFromLead({
+        name: lead?.first_name || "Користувач Telegram",
+        contact: lead?.username ? `@${lead.username}` : (lead?.phone || String(chatId)),
+        source: "bot_manual_request",
+      });
+
+      await answerCallback(cb.id, "✅ Запит надіслано");
+      await sendMessage(
+        chatId,
+        `🔔 <b>Запит прийнято!</b> Бот-помічник призупинено для цього діалогу.\n\n` +
+        `Наш живий асистент зв’яжеться з тобою найближчим часом.\n` +
+        `Якщо виникло термінове питання — телефонуй або пиши в WhatsApp: <b>+48 729 271 848</b>`
       );
     } else {
       await answerCallback(cb.id);
@@ -134,22 +206,29 @@ export async function POST(req: NextRequest) {
   const msg = upd.message;
   if (!msg) return NextResponse.json({ ok: true });
 
-  const chatId    = msg.chat.id;
   const from      = msg.from;
   const text      = (msg.text ?? "").trim();
   const username  = from?.username  ?? null;
   const firstName = from?.first_name ?? null;
 
-  /* /start */
-  if (text.startsWith("/start")) {
+  /* /start - Reset and begin chat flow */
+  if (isStartCommand) {
     await getOrCreateLead(chatId, firstName, username);
+    
+    // Reset status back to 'new' if they had previously muted the bot, allowing interaction again
+    await q(
+      `UPDATE leads SET status = 'new'
+        WHERE chat_id = $1 AND deleted_at IS NULL`,
+      [String(chatId)],
+    );
 
     const name = firstName ? `<b>${firstName}</b>` : "вас";
     await sendInlineKeyboard(
       chatId,
-      `👋 Вітаємо, ${name}! Це бот <b>KompasMigracji</b>.\n\n` +
+      `👋 Вітаємо, ${name}! Я — твій помічник у <b>Компасі Міграції</b>.\n\n` +
+      `Ми допомагаємо українцям впевнено влаштуватися в Польщі, Іспанії та інших країнах ЄС — легально, прозоро та без жодної корупції.\n\n` +
       `Оберіть вашу ситуацію — це допоможе нам підготувати правильну інформацію:`,
-      QUAL_BUTTONS,
+      START_BUTTONS,
     );
     return NextResponse.json({ ok: true });
   }
@@ -160,13 +239,23 @@ export async function POST(req: NextRequest) {
     await q(
       `UPDATE leads SET situation = $1
         WHERE chat_id = $2 AND deleted_at IS NULL`,
-      [text, chatId],
+      [text, String(chatId)],
     );
-    await sendMessage(
+
+    await sendInlineKeyboard(
       chatId,
       `✅ Повідомлення отримано!\n\n` +
-      `Менеджер відповість найближчим часом. Якщо не відповіли протягом 24 год — ` +
-      `зателефонуйте: <b>+48 729 271 848</b>`,
+      `Менеджер відповість найближчим часом. Також запрошуємо тебе приєднатися до нашої <b>спільноти / клубу членів</b>, де ми ділимося вакансіями та корисними гайдами.\n\n` +
+      `Якщо виникло термінове питання або хочеш поспілкуватися безпосередньо, натисни кнопку нижче:`,
+      [
+        [
+          { text: "📢 Telegram-канал", url: "https://t.me/kompasmigracji" },
+          { text: "📳 Viber-спільнота", url: "viber://chat?number=48729271848" }
+        ],
+        [
+          { text: "👤 Зв'язатися з асистентом", callback_data: "action_call_human" }
+        ]
+      ]
     );
   }
 

@@ -31,7 +31,7 @@ export function sendMessage(
 export function sendInlineKeyboard(
   chatId: number | string,
   text: string,
-  buttons: Array<Array<{ text: string; callback_data: string }>>,
+  buttons: Array<Array<{ text: string; callback_data?: string; url?: string }>>,
 ) {
   return tgPost("sendMessage", {
     chat_id: chatId,
