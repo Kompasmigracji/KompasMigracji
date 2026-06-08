@@ -9,7 +9,7 @@ import { jwtVerify } from "jose";
 const COOKIE = "kompascrm_session";
 const rateLimitMap = new Map();
 
-function rateLimit(ip) {
+function rateLimit(ip: string) {
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute
   const maxReqs = 100; // 100 requests per minute
