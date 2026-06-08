@@ -1,71 +1,96 @@
 "use client";
-/* iPhoenixCRM — Knowledge Base & AI Auto-Responder (Intercom style) */
+/* iPhoenixCRM — Knowledge Base & Legal Wiki */
 import React, { useState } from "react";
-import { Icon, Badge, DataTable } from "@/components/admin/ui";
+import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function KnowledgeBasePage() {
   const [articles] = useState([
-    { id: "kb_1", title: "How to reset your password", category: "Account Setup", views: 1240, helpful: "94%", status: "published", updated: "2 days ago" },
-    { id: "kb_2", title: "Configuring the API Webhooks", category: "Developers", views: 85, helpful: "100%", status: "published", updated: "1 month ago" },
-    { id: "kb_3", title: "Refund Policy 2026", category: "Billing", views: 0, helpful: "N/A", status: "draft", updated: "Just now" }
+    { id: "KB-01", title: "Karta Pobytu: Requirements 2026 Update", category: "Legal Updates", author: "Anna S.", date: "Today", views: 24, status: "published", urgent: true },
+    { id: "KB-02", title: "How to register a car for a foreigner", category: "Guides", author: "Oleg V.", date: "June 01, 2026", views: 142, status: "published", urgent: false },
+    { id: "KB-03", title: "Appeals (Odwołanie) Template", category: "Templates", author: "Maria G.", date: "May 15, 2026", views: 89, status: "published", urgent: false },
+    { id: "KB-04", title: "Blue Card Salary Minimums", category: "Legal Updates", author: "Anna S.", date: "Draft", views: 0, status: "draft", urgent: false }
   ]);
 
   const columns = [
-    { header: "Article Title", cell: (row) => <span style={{ fontWeight: 600 }}>{row.title}</span> },
-    { header: "Category", cell: (row) => <Badge status="info" text={row.category} /> },
-    { header: "Views", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.views.toLocaleString()}</span> },
-    { header: "Helpful Score", cell: (row) => <span style={{ color: row.helpful.includes("9") || row.helpful.includes("100") ? "var(--color-success)" : "var(--dim)" }}>{row.helpful}</span> },
-    { header: "Last Updated", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.updated}</span> },
-    { header: "Status", cell: (row) => <Badge status={row.status === "published" ? "success" : "warning"} text={row.status.toUpperCase()} /> },
-    { header: "", cell: () => <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button> }
+    { header: "Article Title", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
+        <div style={{ width: 36, height: 36, borderRadius: 8, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Icon name={row.category === "Legal Updates" ? "alert-circle" : row.category === "Guides" ? "book-open" : "file-text"} size={16} color="var(--color-primary)" />
+        </div>
+        <div>
+          <div style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+            {row.title}
+            {row.urgent && <Badge status="danger" text="URGENT READ" />}
+          </div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id} • {row.category}</div>
+        </div>
+      </div>
+    )},
+    { header: "Author", cell: (row) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <Avatar name={row.author.substring(0,2).toUpperCase()} size={24} />
+        <span style={{ fontSize: "var(--text-sm)" }}>{row.author}</span>
+      </div>
+    )},
+    { header: "Last Updated", cell: (row) => <span style={{ fontSize: "var(--text-sm)", color: "var(--dim)" }}>{row.date}</span> },
+    { header: "Views", cell: (row) => <span style={{ fontWeight: 600 }}>{row.views}</span> },
+    { header: "Status", cell: (row) => (
+      <Badge status={row.status === "published" ? "success" : "default"} text={row.status.toUpperCase()} />
+    )},
+    { header: "", cell: (row) => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <button className="kc-btn kc-btn-ghost"><Icon name="eye" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
+      </div>
+    )}
   ];
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>Knowledge Base & AI</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Knowledge Base (Baza Wiedzy)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Manage FAQ articles and train your AI Auto-Responder.
+            Internal wiki for SOPs, legal updates, templates, and procedures.
           </p>
         </div>
-        <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> New Article</button>
+        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <button className="kc-btn kc-btn-secondary"><Icon name="folder" size={16} /> Categories</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Write Article</button>
+        </div>
       </div>
 
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-lg)" }}>
-        {/* Left: Articles */}
-        <div className="kc-card" style={{ flex: 2, padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
-            <Icon name="book-open" size={18} color="var(--dim)" />
-            <h3 className="kc-h3" style={{ margin: 0, fontSize: "var(--text-sm)" }}>Published Articles</h3>
-          </div>
-          <DataTable columns={columns} data={articles} />
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Total Articles</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>128</div>
         </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Most Read Category</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>Legal Updates</div>
+        </div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)" }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Missing Acknowledgment</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>2</div>
+          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Sales reps haven't read new rules.</div>
+        </div>
+      </div>
 
-        {/* Right: AI Auto-Responder Settings */}
-        <div className="kc-card" style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          <h3 className="kc-h3" style={{ fontSize: "var(--text-sm)", marginBottom: "var(--space-sm)", display: "flex", alignItems: "center", gap: 8 }}>
-            <Icon name="cpu" size={18} color="var(--color-primary)" /> AI Auto-Responder
-          </h3>
-          <p style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginBottom: "var(--space-md)" }}>
-            When clients open a ticket or start a chat, the AI will instantly suggest relevant articles based on their message.
-          </p>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, flex: 1 }}>
-            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", cursor: "pointer" }}>
-              <input type="checkbox" defaultChecked /> Enable AI in Support Chat
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", cursor: "pointer" }}>
-              <input type="checkbox" defaultChecked /> Auto-Reply to Email Tickets
-            </label>
-            <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", cursor: "pointer" }}>
-              <input type="checkbox" /> Automatically Close resolved tickets (Beta)
-            </label>
+      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
+            <Icon name="search" size={16} color="var(--dim)" />
+            <input type="text" placeholder="Search the Wiki (e.g., 'Blue Card requirements')..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
           </div>
-
-          <div style={{ background: "var(--panel-2)", padding: "var(--space-sm)", borderRadius: 6, fontSize: "var(--text-xs)", color: "var(--dim)", marginTop: "var(--space-md)" }}>
-            <strong>AI Deflection Rate:</strong> 34% of tickets were resolved by AI this week.
-          </div>
+          <select className="kc-input" style={{ width: 160 }}>
+            <option>All Categories</option>
+            <option>Legal Updates</option>
+            <option>Guides & SOPs</option>
+            <option>Document Templates</option>
+          </select>
+        </div>
+        <div style={{ flex: 1, overflowY: "auto" }}>
+          <DataTable columns={columns} data={articles} />
         </div>
       </div>
     </div>
