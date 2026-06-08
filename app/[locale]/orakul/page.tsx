@@ -716,7 +716,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wSentDesc: 'Координатор зв’яжеться з вами протягом 24 годин.',
     employersTitle: 'Розвиток промислового потенціалу',
     employersDesc: 'Оперативно комплектуємо об\'єкти перевіреними зварювальниками та монтерами з підтвердженою кваліфікацією та готовим пакетом документів.',
-    stat1: 'перевірених майстрів',
+    stat1: 'аудиторія',
     stat2: 'офіційні контракти',
     stat3: 'прихованих витрат',
     employersItems: [
@@ -740,7 +740,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'У довгостроковому партнерстві з проєктом «Компас Міграції» (співзасновник — Олександр Василишин), ми створюємо непорушний соціально-юридичний щит для робітників, захищаючи інтереси їхніх сімей в ЄС.',
     quote: 'Шов ляже ідеально, коли поспішати нікуди. Простота — це складність, яку вже ніхто не помічає.',
     quote2: 'Ми ті , хто міцним швом заварює, працедавців з виконавцями !',
-    socialStrip: ['перевірених майстрів', 'офіційні контракти', 'відповідь координатора', 'країн ЄС'],
+    socialStrip: ['аудиторія', 'офіційні контракти', 'відповідь координатора', 'країв ЄС'],
     faqTitle: 'Часті запитання',
     faqSub: 'Відповіді на найпоширеніші питання зварювальників та роботодавців',
     faqItems: [
@@ -789,7 +789,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wSentDesc: 'A coordinator will contact you within 24 hours.',
     employersTitle: 'Developing Industrial Potential',
     employersDesc: 'We rapidly staff projects with vetted welders and fitters who have certified qualifications and a complete set of documents.',
-    stat1: 'vetted masters',
+    stat1: 'audience',
     stat2: 'official contracts',
     stat3: 'hidden costs',
     employersItems: [
@@ -813,7 +813,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'In long-term partnership with the Kompas Migracji project (co-founder — Oleksandr Vasylyshyn), we create an unbreakable social-legal shield for workers, protecting the interests of their families in the EU.',
     quote: 'The weld will lie perfectly when there is no rush. Simplicity is the complexity that no one notices anymore.',
     quote2: 'We are the ones who weld employers and workers together with a strong seam.',
-    socialStrip: ['vetted masters', 'official contracts', 'coordinator response', 'EU countries'],
+    socialStrip: ['audience', 'official contracts', 'coordinator response', 'EU countries'],
     faqTitle: 'Frequently Asked Questions',
     faqSub: 'Answers to the most common questions from welders and employers',
     faqItems: [
@@ -862,8 +862,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wSentDesc: 'Координатор свяжется с вами в течение 24 часов.',
     employersTitle: 'Развитие промышленного потенциала',
     employersDesc: 'Оперативно комплектуем объекты проверенными сварщиками и монтажниками с подтверждённой квалификацией и готовым пакетом документов.',
-    stat1: 'проверенных мастеров',
-    stat2: 'официальные контракты',
+    stat1: 'аудитория',
+    stat2: 'официальные контракти',
     stat3: 'скрытых расходов',
     employersItems: [
       'Сертифицированные сварщики методов MIG, MAG, TIG, MMA',
@@ -886,7 +886,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'В долгосрочном партнёрстве с проектом «Kompas Migracji» (сооснователь — Александр Василишин), мы создаём несокрушимый социально-юридический щит для рабочих, защищая интересы их семей в ЕС.',
     quote: 'Шов ляжет идеально, когда некуда спешить. Простота — это сложность, которую уже никто не замечает.',
     quote2: 'Мы те, кто крепким швом сваривает работодателей с исполнителями!',
-    socialStrip: ['проверенных мастеров', 'официальные контракты', 'ответ координатора', 'стран ЕС'],
+    socialStrip: ['аудитория', 'официальные контракты', 'ответ координатора', 'стран ЕС'],
     faqTitle: 'Часто задаваемые вопросы',
     faqSub: 'Ответы на самые популярные вопросы сварщиков и работодателей',
     faqItems: [
@@ -935,7 +935,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     wSentDesc: 'Koordynator skontaktuje się z Tobą w ciągu 24 godzin.',
     employersTitle: 'Rozwój potencjału przemysłowego',
     employersDesc: 'Szybko kompletujemy obiekty sprawdzonymi spawaczami i monterami z potwierdzonymi kwalifikacjami i gotowym pakietem dokumentów.',
-    stat1: 'sprawdzonych mistrzów',
+    stat1: 'audytorium',
     stat2: 'oficjalne kontrakty',
     stat3: 'ukrytych kosztów',
     employersItems: [
@@ -959,7 +959,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP2: 'W długoterminowym partnerstwie z projektem «Kompas Migracji» (współzałożyciel — Oleksandr Vasylyshyn), tworzymy niezłomną tarczę społeczno-prawną dla pracowników, chroniąc interesy ich rodzin w UE.',
     quote: 'Spoina będzie idealna, gdy nie ma pośpiechu. Prostota to złożoność, której już nikt nie zauważa.',
     quote2: 'My jesteśmy tymi, którzy mocnym szwem łączą pracodawców z wykonawcami!',
-    socialStrip: ['sprawdzonych mistrzów', 'oficjalne kontrakty', 'odpowiedź koordynatora', 'krajów UE'],
+    socialStrip: ['audytorium', 'oficjalne kontrakty', 'odpowiedź koordynatora', 'krajów UE'],
     faqTitle: 'Często zadawane pytania',
     faqSub: 'Odpowiedzi na najczęstsze pytania spawaczy i pracodawców',
     faqItems: [
@@ -1836,7 +1836,7 @@ export default function OrakulPage() {
 
         {/* ── SOCIAL PROOF STRIP ── */}
         <div className="e-social-strip">
-          <div className="e-social-pill">✅ <span className="num">40 000+</span> {T.socialStrip[0]}</div>
+          <div className="e-social-pill">✅ <span className="num">40K+</span> {T.socialStrip[0]}</div>
           <div className="e-social-pill">📋 <span className="num">100%</span> {T.socialStrip[1]}</div>
           <div className="e-social-pill">⚡ <span className="num">24h</span> {T.socialStrip[2]}</div>
           <div className="e-social-pill">🌍 <span className="num">12+</span> {T.socialStrip[3]}</div>
