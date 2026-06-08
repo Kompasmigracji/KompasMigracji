@@ -1,133 +1,142 @@
 "use client";
-/* KompasCRM — API Integrations & Webhooks */
-import React, { useState } from "react";
-import { Icon, Badge, DataTable } from "@/components/admin/ui";
+/* KompasCRM — Integrations & Connected Apps */
+import React, { useState, useEffect } from "react";
+import { Icon, Badge } from "@/components/admin/ui";
 
 export default function IntegrationsPage() {
-  const [webhooks] = useState([
-    { id: "WH-01", name: "Make.com (Integromat) - FB Leads", url: "https://hook.us1.make.com/abc123xyz...", event: "Lead Created", status: "active", lastTrigger: "2 mins ago" },
-    { id: "WH-02", name: "Stripe Payment Success", url: "https://api.stripe.com/v1/webhook...", event: "Invoice Paid", status: "active", lastTrigger: "1 hour ago" },
-    { id: "WH-03", name: "Zapier - Slack Notifications", url: "https://hooks.zapier.com/hooks/catch...", event: "Deal Won", status: "paused", lastTrigger: "2 days ago" }
+  const [integrations, setIntegrations] = useState([
+    { id: "stripe", name: "Stripe Payment Gateway", desc: "Accept international card payments and automate invoice statuses.", status: "connected", logo: "card" },
+    { id: "telegram", name: "Telegram Business Bot", desc: "Receive lead notifications and reply directly via messengers.", status: "connected", logo: "message-square" },
+    { id: "twilio", name: "Twilio SMS & Phone", desc: "Send automated text reminders to tenants and visa applicants.", status: "configured", logo: "phone" },
+    { id: "outlook", name: "Microsoft Outlook Sync", desc: "Synchronize company emails and schedules with managers.", status: "available", logo: "mail" }
   ]);
 
-  const [apiKeys] = useState([
-    { id: "KEY-01", name: "Website Lead Form", token: "pk_live_8f9a...3b2c", role: "Write Only", created: "Jan 15, 2026", lastUsed: "10 mins ago" },
-    { id: "KEY-02", name: "Mobile App Beta", token: "sk_test_1a2b...9z8x", role: "Full Access", created: "May 20, 2026", lastUsed: "Yesterday" }
+  // AI Integrations logs
+  const [apiLogs, setApiLogs] = useState([
+    { time: "14:32:01", type: "system", message: "President authorized API token renewal for Stripe Gateway." },
+    { time: "14:30:15", type: "coordinator", message: "Integration Coordinator [Agent-C05] updated webhook listening endpoint." },
+    { time: "14:28:11", type: "agent", message: "API Agent-008 synced 42 incoming Telegram chat threads." },
+    { time: "14:25:00", type: "system", message: "KompasCRM API Integrator active (175 background agents checking connected webhooks)." }
   ]);
 
-  const columnsWebhooks = [
-    { header: "Webhook Name & URL", cell: (row) => (
-      <div>
-        <div style={{ fontWeight: 600 }}>{row.name}</div>
-        <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", fontFamily: "monospace", marginTop: 2 }}>{row.url}</div>
-      </div>
-    )},
-    { header: "Trigger Event", cell: (row) => (
-      <Badge status="default" text={row.event} />
-    )},
-    { header: "Last Trigger", cell: (row) => <span style={{ fontSize: "var(--text-sm)" }}>{row.lastTrigger}</span> },
-    { header: "Status", cell: (row) => (
-      <Badge status={row.status === "active" ? "success" : "warning"} text={row.status.toUpperCase()} />
-    )},
-    { header: "", cell: () => (
-      <div style={{ display: "flex", gap: 8 }}>
-        <button className="kc-btn kc-btn-ghost"><Icon name="activity" size={16} /></button>
-        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
-      </div>
-    )}
-  ];
+  useEffect(() => {
+    const messages = [
+      { type: "agent", text: "Agent-095 validated Twilio credit balance: Balance Ok." },
+      { type: "agent", text: "Agent-128 received Stripe webhook event: charge.succeeded." },
+      { type: "coordinator", text: "Coordinator [Agent-C11] re-routed failed webhook payload to retry queue." },
+      { type: "system", text: "President digital certificate approved for custom database webhook dispatch." },
+      { type: "agent", text: "Agent-110 updated Telegram bot status to Online." }
+    ];
 
-  const columnsApiKeys = [
-    { header: "Key Name", cell: (row) => <span style={{ fontWeight: 600 }}>{row.name}</span> },
-    { header: "Token (Masked)", cell: (row) => <span style={{ fontFamily: "monospace", color: "var(--dim)" }}>{row.token}</span> },
-    { header: "Permissions", cell: (row) => <Badge status={row.role === "Full Access" ? "danger" : "primary"} text={row.role} /> },
-    { header: "Created / Last Used", cell: (row) => (
-      <div>
-        <div style={{ fontSize: "var(--text-sm)" }}>{row.lastUsed}</div>
-        <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Created {row.created}</div>
-      </div>
-    )},
-    { header: "", cell: () => (
-      <div style={{ display: "flex", gap: 8 }}>
-        <button className="kc-btn kc-btn-ghost"><Icon name="copy" size={16} /></button>
-        <button className="kc-btn kc-btn-ghost" style={{ color: "var(--color-danger)" }}><Icon name="trash" size={16} /></button>
-      </div>
-    )}
-  ];
+    const interval = setInterval(() => {
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      const now = new Date();
+      const timeStr = now.toTimeString().split(" ")[0];
+      setApiLogs(prev => [
+        { time: timeStr, type: randomMsg.type, message: randomMsg.text },
+        ...prev.slice(0, 19)
+      ]);
+    }, 4800);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const toggleConnection = (id) => {
+    setIntegrations(prev => prev.map(item => {
+      if (item.id === id) {
+        return { ...item, status: item.status === "connected" || item.status === "configured" ? "available" : "connected" };
+      }
+      return item;
+    }));
+  };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", overflowY: "auto", paddingRight: "8px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>API Integrations & Webhooks</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Інтеграції API & Сервіси (Connected Apps)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Connect KompasMigracji CRM to other apps. Manage API keys and Webhook events.
+            Підключення платіжних шлюзів, SMS-провайдерів та чат-ботів Telegram/Viber.
           </p>
         </div>
-        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-secondary"><Icon name="book" size={16} /> API Docs</button>
-        </div>
       </div>
 
-      {/* Featured Apps Catalog */}
-      <h3 style={{ margin: "0 0 var(--space-md) 0" }}>Featured Connections</h3>
-      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-xl)", flexShrink: 0 }}>
-        <div className="kc-card" style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--space-md)", cursor: "pointer", border: "1px solid var(--border)" }}>
-          <div style={{ width: 48, height: 48, borderRadius: 8, background: "#1877F2", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <Icon name="facebook" size={24} color="white" />
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600 }}>Facebook Lead Ads</div>
-            <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Sync leads automatically.</div>
-          </div>
-          <Badge status="success" text="CONNECTED" />
-        </div>
-        <div className="kc-card" style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--space-md)", cursor: "pointer", border: "1px solid var(--border)" }}>
-          <div style={{ width: 48, height: 48, borderRadius: 8, background: "#FF4F00", display: "flex", alignItems: "center", justifyContent: "center" }}>
-             <span style={{ color: "white", fontWeight: 700, fontSize: "20px" }}>_z</span>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600 }}>Zapier</div>
-            <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Connect 5000+ apps.</div>
-          </div>
-          <button className="kc-btn kc-btn-secondary" style={{ padding: "4px 8px", fontSize: "12px" }}>Connect</button>
-        </div>
-        <div className="kc-card" style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--space-md)", cursor: "pointer", border: "1px solid var(--border)" }}>
-          <div style={{ width: 48, height: 48, borderRadius: 8, background: "#635BFF", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ color: "white", fontWeight: 700, fontSize: "24px" }}>S</span>
-          </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600 }}>Stripe</div>
-            <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Process online payments.</div>
-          </div>
-          <button className="kc-btn kc-btn-secondary" style={{ padding: "4px 8px", fontSize: "12px" }}>Connect</button>
-        </div>
-      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "2.5fr 1.5fr", gap: "var(--space-lg)" }}>
+        {/* Marketplace cards */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "var(--space-md)", alignContent: "start" }}>
+          {integrations.map(app => (
+            <div key={app.id} className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: app.status === "connected" ? "1px solid var(--color-primary)" : "1px solid var(--border)" }}>
+              <div style={{ display: "flex", gap: "var(--space-sm)", alignItems: "center" }}>
+                <div style={{ width: 40, height: 40, borderRadius: "var(--radius-md)", background: "var(--panel-2)", display: "flex", alignItems: "center", justifyItems: "center", justifyContent: "center" }}>
+                  <Icon name={app.logo} size={20} color="var(--dim)" />
+                </div>
+                <div>
+                  <h4 style={{ margin: 0 }}>{app.name}</h4>
+                  <span style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>API Core</span>
+                </div>
+              </div>
+              
+              <p style={{ margin: 0, fontSize: "var(--text-xs)", color: "var(--dim)", lineHeight: 1.5, flex: 1 }}>
+                {app.desc}
+              </p>
 
-      <div style={{ display: "flex", gap: "var(--space-lg)", flexShrink: 0, flexDirection: "column" }}>
-        
-        {/* Webhooks Table */}
-        <div className="kc-card" style={{ padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <Icon name="zap" size={18} color="var(--color-primary)" /> Webhooks
-            </h3>
-            <button className="kc-btn kc-btn-primary" style={{ padding: "4px 12px", fontSize: "12px" }}><Icon name="plus" size={14} /> Add Webhook</button>
-          </div>
-          <DataTable columns={columnsWebhooks} data={webhooks} />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)" }}>
+                {app.status === "connected" && <Badge status="green" text="Connected" />}
+                {app.status === "configured" && <Badge status="blue" text="Configured" />}
+                {app.status === "available" && <Badge status="dim" text="Available" />}
+                
+                <button 
+                  className={`kc-btn ${app.status === "available" ? "kc-btn-primary" : "kc-btn-ghost"}`}
+                  style={{ minHeight: "auto", padding: "4px 8px", fontSize: "var(--text-xs)", color: app.status !== "available" ? "var(--color-danger)" : "" }}
+                  onClick={() => toggleConnection(app.id)}
+                >
+                  {app.status === "available" ? "Connect" : "Disconnect"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* API Keys Table */}
-        <div className="kc-card" style={{ padding: 0, overflow: "hidden" }}>
-          <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 style={{ margin: 0, display: "flex", alignItems: "center", gap: 8 }}>
-              <Icon name="key" size={18} color="var(--color-warning)" /> API Keys
-            </h3>
-            <button className="kc-btn kc-btn-primary" style={{ padding: "4px 12px", fontSize: "12px" }}><Icon name="plus" size={14} /> Generate Token</button>
+        {/* AI Integration logs */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
+          <div className="kc-card">
+            <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Webhook Dispatcher</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)", marginTop: "var(--space-md)", fontSize: "var(--text-sm)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>API Health Monitors:</span>
+                <strong>175 active</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Webhooks Handled:</span>
+                <strong>1,420 / min</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Signature Validations:</span>
+                <Badge status="green" text="Passing" />
+              </div>
+            </div>
           </div>
-          <DataTable columns={columnsApiKeys} data={apiKeys} />
+
+          <div className="kc-card" style={{ background: "#06090e", flex: 1 }}>
+            <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живі логи шлюзів (AI Webhook logs)</h3>
+            <div style={{ 
+              marginTop: "var(--space-md)", maxHeight: 200, overflowY: "auto", 
+              fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: 1.6,
+              color: "#c9d1d9", display: "flex", flexDirection: "column", gap: 8
+            }}>
+              {apiLogs.map((log, index) => {
+                let color = "#8b949e";
+                if (log.type === "coordinator") color = "#58a6ff";
+                if (log.type === "system") color = "#56d364";
+                return (
+                  <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
+                    <span style={{ color: "var(--dim)" }}>[{log.time}]</span> <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-        
       </div>
     </div>
   );

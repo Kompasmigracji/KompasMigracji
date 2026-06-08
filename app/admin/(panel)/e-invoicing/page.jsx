@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — KSeF E-Invoicing & Tax Compliance */
-import React, { useState } from "react";
-import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
+import React, { useState, useEffect } from "react";
+import { Icon, Badge, DataTable, SearchInput } from "@/components/admin/ui";
 
 export default function EInvoicingPage() {
   const [invoices] = useState([
@@ -10,6 +10,39 @@ export default function EInvoicingPage() {
     { id: "INV-2026-06-14", client: "Rent-PL Real Estate", amount: "€240.00", tax: "23% VAT", ksefStatus: "Error / Rejected", ksefId: "—", date: "Yesterday", paymentStatus: "Unpaid" },
     { id: "INV-2026-05-89", client: "Global IT Group", amount: "€1,200.00", tax: "23% VAT", ksefStatus: "Accepted by KSeF", ksefId: "89912003...C4D5", date: "May 31, 2026", paymentStatus: "Paid" }
   ]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("invoices");
+
+  // AI E-Invoicing logs
+  const [invoiceLogs, setInvoiceLogs] = useState([
+    { time: "14:30:15", type: "system", message: "President key verified on Ministry of Finance sandbox portal." },
+    { time: "14:28:44", type: "coordinator", message: "Invoicing Coordinator [Agent-C04] batched 12 signed invoices to production gate." },
+    { time: "14:25:12", type: "agent", message: "XML Validator Agent-039 generated FA-2 schema structure for INV-2026-06-13." },
+    { time: "14:20:00", type: "system", message: "KompasCRM KSeF Dispatcher Network online (175 automated agents active)." }
+  ]);
+
+  useEffect(() => {
+    const messages = [
+      { type: "agent", text: "Agent-077 transmitted signed XML packet to KSeF server. Code: 200 OK." },
+      { type: "agent", text: "Agent-102 verified NIP number database check for TechCorp Sp. z.o.o." },
+      { type: "coordinator", text: "Coordinator [Agent-C12] auto-resolved validation discrepancy in TAX rate code for Rent-PL." },
+      { type: "system", text: "President digital encryption layer checked. UPO certificate received." },
+      { type: "agent", text: "Agent-154 calculated exchange rate for EUR invoices matching National Bank of Poland (NBP)." }
+    ];
+
+    const interval = setInterval(() => {
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      const now = new Date();
+      const timeStr = now.toTimeString().split(" ")[0];
+      setInvoiceLogs(prev => [
+        { time: timeStr, type: randomMsg.type, message: randomMsg.text },
+        ...prev.slice(0, 19)
+      ]);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const columns = [
     { header: "Invoice Number", cell: (row) => (
@@ -35,9 +68,9 @@ export default function EInvoicingPage() {
       </div>
     )},
     { header: "KSeF Status", cell: (row) => {
-      let color = "warning";
-      if (row.ksefStatus.includes("Accepted")) color = "success";
-      if (row.ksefStatus.includes("Error")) color = "danger";
+      let color = "brass";
+      if (row.ksefStatus.includes("Accepted")) color = "green";
+      if (row.ksefStatus.includes("Error")) color = "red";
       return (
         <div>
           <Badge status={color} text={row.ksefStatus} />
@@ -55,85 +88,115 @@ export default function EInvoicingPage() {
     { header: "Actions", cell: (row) => (
       <div style={{ display: "flex", gap: 8 }}>
         {row.ksefStatus.includes("Error") ? (
-          <button className="kc-btn kc-btn-primary" style={{ padding: "4px 8px", fontSize: "12px", background: "var(--color-danger)", border: "none" }}>Fix Errors</button>
+          <button className="kc-btn kc-btn-primary" style={{ padding: "4px 8px", fontSize: "12px", background: "var(--color-danger)", border: "none" }}>Виправити</button>
         ) : (
           <>
             <button className="kc-btn kc-btn-secondary" style={{ padding: "4px 8px", fontSize: "12px" }}>
               <Icon name="download" size={14} /> PDF
             </button>
-            <button className="kc-btn kc-btn-ghost"><Icon name="send" size={16} /></button>
           </>
         )}
       </div>
     )}
   ];
 
+  const filteredInvoices = invoices.filter(inv =>
+    inv.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inv.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    inv.ksefStatus.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-xs)", flexShrink: 0 }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>E-Invoicing & KSeF Integration</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Е-Інвойсинг (KSeF Integration)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Generate fully compliant electronic invoices for the Polish Ministry of Finance.
+            Генерація та валідація структурованих податкових інвойсів для надсилання до державної системи KSeF.
           </p>
         </div>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-secondary"><Icon name="shield" size={16} /> KSeF Token Settings</button>
-          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> New Invoice</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="shield" size={16} /> Налаштування Токену KSeF</button>
+          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Новий Інвойс</button>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
-        
-        {/* API Status Card */}
-        <div className="kc-card" style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--space-lg)", background: "linear-gradient(135deg, var(--panel) 0%, rgba(59, 130, 246, 0.05) 100%)", border: "1px solid var(--color-primary)" }}>
-          <div style={{ width: 64, height: 64, borderRadius: 16, background: "rgba(59, 130, 246, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <Icon name="activity" size={32} color="var(--color-primary)" />
+      {/* KPI Stats */}
+      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-sm)", flexShrink: 0, flexWrap: "wrap" }}>
+        {/* Gov API Connection */}
+        <div className="kc-card" style={{ flex: 1, display: "flex", alignItems: "center", gap: "var(--space-lg)", background: "linear-gradient(135deg, var(--panel) 0%, rgba(59, 130, 246, 0.05) 100%)", border: "1px solid var(--color-primary)", minWidth: 250 }}>
+          <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(59, 130, 246, 0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <Icon name="activity" size={24} color="var(--color-primary)" />
           </div>
           <div>
-            <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 700, letterSpacing: "0.5px" }}>Gov API Connection</div>
-            <div style={{ fontSize: "16px", fontWeight: 600, marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 10, height: 10, borderRadius: 5, background: "var(--color-success)" }}></div>
+            <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 700 }}>Державний Шлюз API</div>
+            <div style={{ fontSize: "14px", fontWeight: 600, marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--color-success)" }}></div>
               KSeF Production API Online
             </div>
-            <div style={{ fontSize: "12px", color: "var(--dim)", marginTop: 4 }}>Last ping: 2 seconds ago</div>
           </div>
         </div>
 
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Successfully Sent (This Month)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>214</div>
-          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Invoices accepted by the Ministry.</div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)", minWidth: 150 }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Надіслано (Цей місяць)</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>214</div>
         </div>
         
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Rejected by KSeF</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>1</div>
-          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Validation errors require your attention!</div>
+        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)", minWidth: 150 }}>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Помилки валідації</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>1</div>
         </div>
       </div>
 
-      <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
-            <Icon name="search" size={16} color="var(--dim)" />
-            <input type="text" placeholder="Search by Invoice Number, KSeF ID, or Client NIP..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
+      {/* Tabs */}
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+        <button onClick={() => setActiveTab("invoices")} 
+          style={{
+            padding: "12px 16px", background: "none", border: "none",
+            borderBottom: activeTab === "invoices" ? "2px solid var(--color-primary)" : "2px solid transparent",
+            color: activeTab === "invoices" ? "var(--color-primary)" : "var(--dim)",
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+          }}>
+          <Icon name="file-text" size={16} /> Реєстр Інвойсів
+        </button>
+        <button onClick={() => setActiveTab("logs")} 
+          style={{
+            padding: "12px 16px", background: "none", border: "none",
+            borderBottom: activeTab === "logs" ? "2px solid var(--color-primary)" : "2px solid transparent",
+            color: activeTab === "logs" ? "var(--color-primary)" : "var(--dim)",
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+          }}>
+          <Icon name="cpu" size={16} /> AI KSeF Gate Logs
+        </button>
+      </div>
+
+      <div style={{ flex: 1, minHeight: 300 }}>
+        {activeTab === "invoices" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Пошук інвойсів за номером, клієнтом чи статусом..." />
+            <DataTable columns={columns} data={filteredInvoices} />
           </div>
-          <select className="kc-input" style={{ width: 160 }}>
-            <option>All KSeF Statuses</option>
-            <option>Accepted</option>
-            <option>Processing</option>
-            <option>Rejected</option>
-          </select>
-          <select className="kc-input" style={{ width: 150 }}>
-            <option>All Payments</option>
-            <option>Paid</option>
-            <option>Unpaid</option>
-          </select>
-        </div>
-        <div style={{ flex: 1, overflowY: "auto" }}>
-          <DataTable columns={columns} data={invoices} />
-        </div>
+        )}
+
+        {activeTab === "logs" && (
+          <div className="kc-card" style={{ background: "#06090e", color: "#c9d1d9", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+            <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живі логи трансляцій KSeF шлюзу</h3>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.6", display: "flex", flexDirection: "column", gap: 8, maxHeight: 300, overflowY: "auto" }}>
+              {invoiceLogs.map((log, index) => {
+                let color = "#8b949e";
+                if (log.type === "coordinator") color = "#58a6ff";
+                if (log.type === "system") color = "#56d364";
+                return (
+                  <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
+                    <span style={{ color: "var(--dim)" }}>[{log.time}]</span>{" "}
+                    <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
