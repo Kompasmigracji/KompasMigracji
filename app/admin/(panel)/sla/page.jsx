@@ -72,7 +72,7 @@ export default function SLAManagementPage() {
           <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>98.2%</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>At Risk (< 24 hrs left)</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>At Risk (&lt; 24 hrs left)</div>
           <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)", display: "flex", alignItems: "center", gap: 8 }}>
             <Icon name="alert-triangle" size={24} color="var(--color-warning)" /> 1
           </div>
