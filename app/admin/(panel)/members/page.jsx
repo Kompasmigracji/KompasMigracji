@@ -2,7 +2,7 @@
 /* /admin/members — учасники профспiлки: список, пошук, додавання. */
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Badge, Spinner, Empty, Icon } from "@/components/admin/ui";
+import { Badge, Spinner, EmptyState, Icon } from "@/components/admin/ui";
 
 export default function MembersPage() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function MembersPage() {
       </div>
 
       {members === null ? <Spinner /> : members.length === 0 ? (
-        <Empty text="Учасникiв не знайдено" />
+        <EmptyState text="Учасникiв не знайдено" />
       ) : (
         <div className="kc-table-wrap">
           <table className="kc-table">
