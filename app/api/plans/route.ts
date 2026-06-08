@@ -7,15 +7,26 @@ import { q } from "@/lib/db";
 
 export async function GET() {
   try {
-    const plans = await q(
+    // 2-second query timeout to prevent API hangs and ensure fast fallback
+    const dbPromise = q(
       `SELECT id, name, slug, price_pln, price_eur, billing_cycle, features, is_popular, sort_order
        FROM kompas_subscription_plans
        WHERE is_active = true
        ORDER BY sort_order ASC`,
     );
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Database query timeout")), 2000)
+    );
+    const plans = await Promise.race([dbPromise, timeoutPromise]);
+
+    if (!plans || plans.length === 0) {
+      throw new Error("No active subscription plans found in DB");
+    }
+
     return NextResponse.json({ plans });
-  } catch {
-    // Fallback static plans if DB unavailable
+  } catch (err: any) {
+    console.error("[api/plans] Error or timeout retrieving plans:", err?.message || err);
+    // Fallback static plans if DB unavailable or slow
     return NextResponse.json({
       plans: [
         {

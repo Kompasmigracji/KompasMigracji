@@ -718,7 +718,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersDesc: 'Оперативно комплектуємо об\'єкти перевіреними зварювальниками та монтерами з підтвердженою кваліфікацією та готовим пакетом документів.',
     stat1: 'аудиторія',
     stat2: 'офіційні контракти',
-    stat3: 'прихованих витрат',
+    stat3: 'прозорість потоків грошей',
     employersItems: [
       'Сертифіковані майстри методів MIG, MAG, TIG, MMA',
       'Повне адміністрування відряджень, житла та податків',
@@ -726,7 +726,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
       "Координатор на об'єкті: нуль простоїв та непорозумінь",
       'Гарантована заміна при необхідності',
     ],
-    eFormTitle: 'Надіслати запит',
+    eFormTitle: 'Заповни анкету і ми зв’яжемось з тобою',
     eNamePlh: "Ім'я або назва компанії",
     ePhonePlh: 'Телефон або WhatsApp',
     eEmailPlh: 'Email компанії',
@@ -739,7 +739,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'Європейський Союз Зварювальників (EWU) — міжнародна індустріальна платформа, що об\'єднує професійних майстрів та провідних роботодавців ЄС.',
     aboutP2: 'У довгостроковому партнерстві з проєктом «Компас Міграції» (співзасновник — Олександр Василишин), ми створюємо непорушний соціально-юридичний щит для робітників, захищаючи інтереси їхніх сімей в ЄС.',
     quote: 'Шов ляже ідеально, коли поспішати нікуди. Простота — це складність, яку вже ніхто не помічає.',
-    quote2: 'Ми ті , хто міцним швом заварює, працедавців з виконавцями !',
+    quote2: 'Ми — ті, хто надійним швом поєднує роботодавців із виконавцями!',
     socialStrip: ['аудиторія', 'офіційні контракти', 'відповідь координатора', 'країв ЄС'],
     faqTitle: 'Часті запитання',
     faqSub: 'Відповіді на найпоширеніші питання зварювальників та роботодавців',
@@ -791,7 +791,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersDesc: 'We rapidly staff projects with vetted welders and fitters who have certified qualifications and a complete set of documents.',
     stat1: 'audience',
     stat2: 'official contracts',
-    stat3: 'hidden costs',
+    stat3: 'money flow transparency',
     employersItems: [
       'Certified MIG, MAG, TIG, MMA welding specialists',
       'Full administration of secondments, housing and taxes',
@@ -799,7 +799,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
       'On-site coordinator: zero downtime or misunderstandings',
       'Guaranteed replacement when needed',
     ],
-    eFormTitle: 'Send a request',
+    eFormTitle: 'Fill out the form and we will contact you',
     eNamePlh: 'Name or company name',
     ePhonePlh: 'Phone or WhatsApp',
     eEmailPlh: 'Company email',
@@ -812,7 +812,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'European Welding Union (EWU) — an international industrial platform uniting professional welders and leading employers across the EU.',
     aboutP2: 'In long-term partnership with the Kompas Migracji project (co-founder — Oleksandr Vasylyshyn), we create an unbreakable social-legal shield for workers, protecting the interests of their families in the EU.',
     quote: 'The weld will lie perfectly when there is no rush. Simplicity is the complexity that no one notices anymore.',
-    quote2: 'We are the ones who weld employers and workers together with a strong seam.',
+    quote2: 'We are the ones who connect employers and workers with a reliable seam.',
     socialStrip: ['audience', 'official contracts', 'coordinator response', 'EU countries'],
     faqTitle: 'Frequently Asked Questions',
     faqSub: 'Answers to the most common questions from welders and employers',
@@ -863,8 +863,8 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersTitle: 'Развитие промышленного потенциала',
     employersDesc: 'Оперативно комплектуем объекты проверенными сварщиками и монтажниками с подтверждённой квалификацией и готовым пакетом документов.',
     stat1: 'аудитория',
-    stat2: 'официальные контракти',
-    stat3: 'скрытых расходов',
+    stat2: 'официальные контракты',
+    stat3: 'прозрачность денежных потоков',
     employersItems: [
       'Сертифицированные сварщики методов MIG, MAG, TIG, MMA',
       'Полное администрирование командировок, жилья и налогов',
@@ -872,7 +872,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
       'Координатор на объекте: ноль простоев и недоразумений',
       'Гарантированная замена при необходимости',
     ],
-    eFormTitle: 'Отправить запрос',
+    eFormTitle: 'Заполни анкету и мы свяжемся с тобой',
     eNamePlh: 'Имя или название компании',
     ePhonePlh: 'Телефон или WhatsApp',
     eEmailPlh: 'Email компании',
@@ -885,7 +885,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'Европейский Союз Сварщиков (EWU) — международная индустриальная платформа, объединяющая профессиональных мастеров и ведущих работодателей ЕС.',
     aboutP2: 'В долгосрочном партнёрстве с проектом «Kompas Migracji» (сооснователь — Александр Василишин), мы создаём несокрушимый социально-юридический щит для рабочих, защищая интересы их семей в ЕС.',
     quote: 'Шов ляжет идеально, когда некуда спешить. Простота — это сложность, которую уже никто не замечает.',
-    quote2: 'Мы те, кто крепким швом сваривает работодателей с исполнителями!',
+    quote2: 'Мы — те, кто надежным швом объединяет работодателей с исполнителями!',
     socialStrip: ['аудитория', 'официальные контракты', 'ответ координатора', 'стран ЕС'],
     faqTitle: 'Часто задаваемые вопросы',
     faqSub: 'Ответы на самые популярные вопросы сварщиков и работодателей',
@@ -937,7 +937,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     employersDesc: 'Szybko kompletujemy obiekty sprawdzonymi spawaczami i monterami z potwierdzonymi kwalifikacjami i gotowym pakietem dokumentów.',
     stat1: 'audytorium',
     stat2: 'oficjalne kontrakty',
-    stat3: 'ukrytych kosztów',
+    stat3: 'przejrzystość przepływów pieniężnych',
     employersItems: [
       'Certyfikowani spawacze metodami MIG, MAG, TIG, MMA',
       'Pełna administracja delegacji, zakwaterowania i podatków',
@@ -945,7 +945,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
       'Koordynator na obiekcie: zero przestojów i nieporozumień',
       'Gwarantowana wymiana w razie potrzeby',
     ],
-    eFormTitle: 'Wyślij zapytanie',
+    eFormTitle: 'Wypełnij ankietę i skontaktujemy się z Tobą',
     eNamePlh: 'Imię lub nazwa firmy',
     ePhonePlh: 'Telefon lub WhatsApp',
     eEmailPlh: 'Email firmy',
@@ -958,7 +958,7 @@ const TRANSLATIONS: Record<LangKey, PageTrans> = {
     aboutP1: 'Europejski Związek Spawaczy (EWU) — międzynarodowa platforma przemysłowa łącząca profesjonalnych spawaczy i wiodących pracodawców w UE.',
     aboutP2: 'W długoterminowym partnerstwie z projektem «Kompas Migracji» (współzałożyciel — Oleksandr Vasylyshyn), tworzymy niezłomną tarczę społeczno-prawną dla pracowników, chroniąc interesy ich rodzin w UE.',
     quote: 'Spoina będzie idealna, gdy nie ma pośpiechu. Prostota to złożoność, której już nikt nie zauważa.',
-    quote2: 'My jesteśmy tymi, którzy mocnym szwem łączą pracodawców z wykonawcami!',
+    quote2: 'Jesteśmy tymi, którzy mocnym szwem łączą pracodawców z wykonawcami!',
     socialStrip: ['audytorium', 'oficjalne kontrakty', 'odpowiedź koordynatora', 'krajów UE'],
     faqTitle: 'Często zadawane pytania',
     faqSub: 'Odpowiedzi na najczęstsze pytania spawaczy i pracodawców',
@@ -1787,7 +1787,7 @@ export default function OrakulPage() {
                     <div className="e-stat-l">{T.stat2}</div>
                   </div>
                   <div className="e-stat">
-                    <div className="e-stat-n">0</div>
+                    <div className="e-stat-n">100%</div>
                     <div className="e-stat-l">{T.stat3}</div>
                   </div>
                 </div>
