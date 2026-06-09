@@ -7,6 +7,7 @@ import { Icon, Spinner } from "@/components/admin/ui";
 
 const CATEGORIES = [
   { value: "",              label: "Всi" },
+  { value: "email",        label: "Email-шаблони" },
   { value: "payment",      label: "Оплата" },
   { value: "qualification",label: "Квалiфiкацiя" },
   { value: "checklist",    label: "Чеклiсти" },
@@ -16,6 +17,7 @@ const CATEGORIES = [
 ];
 
 const CAT_COLOR = {
+  email:        "var(--color-info)",
   payment:      "#7cbf8e",
   qualification:"#6fa3d4",
   checklist:    "#d99e54",
@@ -23,6 +25,7 @@ const CAT_COLOR = {
   reminder:     "#9b8ecf",
   other:        "#8a96a3",
 };
+
 
 const EMPTY = { slug:"", category:"payment", title:"", body:"", auto_send:false, sort_order:0 };
 
@@ -101,7 +104,14 @@ export default function TemplatesPage() {
 
   const patchEdit = (k, v) => setEditing(e => ({ ...e, [k]: v }));
 
+  const insertPlaceholder = (ph) => {
+    if (!editing) return;
+    const currentBody = editing.body || "";
+    patchEdit("body", currentBody + (currentBody ? " " : "") + ph);
+  };
+
   if (!templates) return <Spinner />;
+
 
   return (
     <div>
@@ -266,17 +276,58 @@ export default function TemplatesPage() {
                 placeholder="Оплату отримано" />
             </div>
 
-            <div className="kc-field" style={{ marginBottom:10 }}>
-              <label className="kc-label">
-                Текст шаблону
-                <span style={{ fontWeight:400, color:"#8a96a3", marginLeft:8, fontSize:11 }}>
-                  Плейсхолдери: {"{{name}}"} {"{{service}}"} {"{{contact}}"}
-                </span>
-              </label>
+            {/* Merge Fields Picker */}
+            <div style={{ marginBottom: 12 }}>
+              <label className="kc-label" style={{ marginBottom: 6 }}>Поля злиття (Merge Fields) — натисніть для вставки</label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, padding: "8px", background: "var(--panel-2)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
+                {[
+                  { tag: "{{name}}", label: "Ім'я клієнта" },
+                  { tag: "{{contact}}", label: "Контакт" },
+                  { tag: "{{service}}", label: "Послуга / Справа" },
+                  { tag: "{{lead.name}}", label: "Ім'я ліда" },
+                  { tag: "{{deal.amount}}", label: "Сума угоди" },
+                  { tag: "{{member.email}}", label: "Email члена" },
+                ].map(item => (
+                  <button
+                    key={item.tag}
+                    type="button"
+                    onClick={() => insertPlaceholder(item.tag)}
+                    className="kc-btn"
+                    style={{ fontSize: 10, minHeight: 24, padding: "2px 6px" }}
+                    title={item.label}
+                  >
+                    {item.tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="kc-field" style={{ marginBottom:12 }}>
+              <label className="kc-label">Текст шаблону</label>
               <textarea className="kc-textarea" rows={7} value={editing.body}
                 onChange={e => patchEdit("body", e.target.value)}
                 placeholder="Вiтаємо, {{name}}! ..." />
             </div>
+
+            {/* Preview Section */}
+            <div style={{ marginBottom: 16 }}>
+              <label className="kc-label" style={{ marginBottom: 6 }}>Попередній перегляд (Preview з тестовими даними)</label>
+              <div style={{
+                padding: "12px", background: "var(--panel-2)", border: "1px solid var(--border)",
+                borderRadius: "var(--radius-md)", fontSize: 12, color: "var(--text)", whiteSpace: "pre-wrap",
+                fontFamily: "var(--font-body)", lineHeight: 1.5, minHeight: 80
+              }}>
+                {(editing.body || "")
+                  .replace(/\{\{name\}\}/g, "Олександр")
+                  .replace(/\{\{lead\.name\}\}/g, "Михайло")
+                  .replace(/\{\{contact\}\}/g, "+48 501 222 333")
+                  .replace(/\{\{service\}\}/g, "Карта Побиту")
+                  .replace(/\{\{deal\.amount\}\}/g, "2,500")
+                  .replace(/\{\{member\.email\}\}/g, "member@kompasmigracji.pl")
+                  || "(Порожній вміст шаблону)"}
+              </div>
+            </div>
+
 
             <div className="kc-row" style={{ gap:16, marginBottom:16 }}>
               <label className="kc-row" style={{ gap:8, cursor:"pointer" }}>
