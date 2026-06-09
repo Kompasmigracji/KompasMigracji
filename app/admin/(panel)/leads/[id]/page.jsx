@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Spinner, EmptyState, Icon, Badge, Avatar } from "@/components/admin/ui";
+import Timeline from "@/components/admin/Timeline";
+import FileUpload from "@/components/admin/FileUpload";
 
 export default function LeadDetailPage() {
   const { id } = useParams();
@@ -115,6 +117,11 @@ export default function LeadDetailPage() {
           </div>
 
           <div className="kc-card">
+            <h3 className="kc-card-cap">Документи / Файли</h3>
+            <FileUpload entityType="lead" entityId={id} />
+          </div>
+
+          <div className="kc-card">
             <h3 className="kc-card-cap">Швидкі дії</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)" }}>
               <button className="kc-btn kc-btn-primary" style={{ justifyContent: "flex-start" }}>
@@ -132,45 +139,8 @@ export default function LeadDetailPage() {
 
         {/* Right Column: Timeline / Activity */}
         <div className="kc-card" style={{ minHeight: 600 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
-            <h3 className="kc-card-cap" style={{ margin: 0 }}>Історія взаємодій (Timeline)</h3>
-            <button className="kc-btn kc-btn-ghost" style={{ padding: "4px 8px" }}>
-              <Icon name="plus" size={16} /> Нова нотатка
-            </button>
-          </div>
-
-          {/* Simple Timeline Mockup (until we build the backend) */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
-            <div style={{ display: "flex", gap: "var(--space-md)" }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--color-primary)", color: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Icon name="zap" size={16} />
-              </div>
-              <div>
-                <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: 4 }}>
-                  <strong style={{ color: "var(--text)" }}>Система</strong> створила лід з джерела {lead.source}
-                </div>
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--faint)" }}>
-                  {new Date(lead.created_at).toLocaleString()}
-                </div>
-              </div>
-            </div>
-            
-            {lead.status !== "new" && (
-              <div style={{ display: "flex", gap: "var(--space-md)" }}>
-                <div style={{ width: 32, height: 32, borderRadius: "50%", background: "var(--color-info)", color: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <Icon name="target" size={16} />
-                </div>
-                <div>
-                  <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: 4 }}>
-                    Статус змінено на <Badge status={lead.status} />
-                  </div>
-                  <div style={{ fontSize: "var(--text-xs)", color: "var(--faint)" }}>
-                    Нещодавно
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <h3 className="kc-card-cap" style={{ marginBottom: "var(--space-lg)" }}>Історія взаємодій (Timeline)</h3>
+          <Timeline entityType="lead" entityId={id} />
         </div>
 
       </div>

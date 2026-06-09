@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Spinner, EmptyState, Icon, Badge, DataTable } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
+import ImportWizard from "@/components/admin/ImportWizard";
 
 const FILTERS = [
   { id: "", label: "Всi" },
@@ -27,6 +28,7 @@ export default function LeadsPage() {
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState("kanban"); // "list" | "kanban"
   const [isLoading, setIsLoading] = useState(true);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const loadLeads = useCallback(async (statusFilter) => {
     setIsLoading(true);
@@ -127,6 +129,13 @@ export default function LeadsPage() {
 
         {/* View Toggles & Actions */}
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
+          <a href="/api/admin/export?entity_type=leads" download className="kc-btn">
+            <Icon name="download" size={16} /> Експорт
+          </a>
+          <button onClick={() => setIsImportOpen(true)} className="kc-btn">
+            <Icon name="upload" size={16} /> Імпорт
+          </button>
+          
           <div style={{ display: "flex", background: "var(--panel-2)", padding: 4, borderRadius: "var(--radius-md)" }}>
             <button 
               className={`kc-btn ${viewMode === 'kanban' ? 'kc-btn-primary' : 'kc-btn-ghost'}`}
@@ -175,6 +184,13 @@ export default function LeadsPage() {
           />
         )
       )}
+
+      <ImportWizard 
+        entityType="leads"
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onSuccess={() => loadLeads(filter)}
+      />
     </div>
   );
 }
