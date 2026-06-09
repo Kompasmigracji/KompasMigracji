@@ -4,6 +4,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Icon, Spinner } from "@/components/admin/ui";
+import ImportWizard from "@/components/admin/ImportWizard";
 
 const STAGES = [
   {
@@ -41,6 +42,7 @@ export default function CasesPage() {
   const [busy, setBusy]       = useState("");
   const [toast, setToast]     = useState("");
   const [mounted, setMounted] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -130,16 +132,26 @@ export default function CasesPage() {
       {toast && <div className="kc-note" style={{ marginBottom:12 }}>{toast}</div>}
 
       {/* Заголовок */}
-      <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:16 }}>
+      <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:16, gap: "var(--space-sm)", flexWrap: "wrap" }}>
         <div>
           <div style={{ fontWeight:700, fontSize:17 }}>Воронка Понаглення</div>
           <div style={{ color:"#8a96a3", fontSize:12, marginTop:2 }}>
             {cases.length} активних справ
           </div>
         </div>
-        <button className="kc-btn kc-btn-primary" onClick={() => setForm({ ...EMPTY_FORM })}>
-          <Icon name="plus" size={14} /> Нова справа
-        </button>
+        
+        <div style={{ display: "flex", gap: "var(--space-sm)", flexWrap: "wrap" }}>
+          <a href="/api/admin/export?entity_type=cases" download className="kc-btn">
+            <Icon name="download" size={16} /> Експорт
+          </a>
+          <button onClick={() => setIsImportOpen(true)} className="kc-btn">
+            <Icon name="upload" size={16} /> Імпорт
+          </button>
+          
+          <button className="kc-btn kc-btn-primary" onClick={() => setForm({ ...EMPTY_FORM })}>
+            <Icon name="plus" size={14} /> Нова справа
+          </button>
+        </div>
       </div>
 
       {/* Канбан */}
@@ -414,6 +426,12 @@ export default function CasesPage() {
         </div>,
         document.body
       )}
+      <ImportWizard 
+        entityType="cases"
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onSuccess={load}
+      />
     </div>
   );
 }

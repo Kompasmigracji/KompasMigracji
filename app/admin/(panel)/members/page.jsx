@@ -3,12 +3,14 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Spinner, EmptyState, Icon } from "@/components/admin/ui";
+import ImportWizard from "@/components/admin/ImportWizard";
 
 export default function MembersPage() {
   const router = useRouter();
   const [members, setMembers] = useState(null);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   const load = useCallback(async (s) => {
     setMembers(null);
@@ -21,7 +23,7 @@ export default function MembersPage() {
 
   return (
     <div>
-      <div className="kc-row" style={{ marginBottom: 14 }}>
+      <div className="kc-row" style={{ marginBottom: 14, gap: "var(--space-sm)" }}>
         <div style={{ flex: 1, position: "relative" }}>
           <span style={{ position: "absolute", left: 11, top: 10, color: "#5a6470" }}>
             <Icon name="search" size={16} />
@@ -31,6 +33,14 @@ export default function MembersPage() {
             value={search} onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && load(search)} />
         </div>
+        
+        <a href="/api/admin/export?entity_type=members" download className="kc-btn">
+          <Icon name="download" size={16} /> Експорт
+        </a>
+        <button onClick={() => setIsImportOpen(true)} className="kc-btn">
+          <Icon name="upload" size={16} /> Імпорт
+        </button>
+        
         <button className="kc-btn kc-btn-primary" onClick={() => setModal(true)}>
           <Icon name="plus" size={16} /> Новий учасник
         </button>
@@ -70,6 +80,13 @@ export default function MembersPage() {
         <AddMemberModal onClose={() => setModal(false)}
           onCreated={() => { setModal(false); load(search); }} />
       )}
+
+      <ImportWizard 
+        entityType="members"
+        isOpen={isImportOpen}
+        onClose={() => setIsImportOpen(false)}
+        onSuccess={() => load(search)}
+      />
     </div>
   );
 }
