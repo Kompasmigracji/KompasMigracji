@@ -48,14 +48,14 @@ export async function POST(req: NextRequest) {
 
           // Check if lead already exists by FB sender ID (stored in chat_id/tg_chat_id or meta metadata jsonb)
           const existing = (await one(
-            `SELECT id FROM leads WHERE chat_id = $1 AND source = 'facebook' AND deleted_at IS NULL LIMIT 1`,
+            `SELECT id FROM kompas_leads WHERE chat_id = $1 AND source = 'facebook' AND deleted_at IS NULL LIMIT 1`,
             [senderId]
           )) as { id: string } | null;
 
           if (existing) {
             // Update existing lead situation details
             await q(
-              `UPDATE leads 
+              `UPDATE kompas_leads 
                   SET situation = $1, 
                       message = COALESCE($1, message)
                 WHERE id = $2`,
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
           } else {
             // Create a new lead record
             const newLead = (await one(
-              `INSERT INTO leads (chat_id, source, first_name, situation, status)
+              `INSERT INTO kompas_leads (chat_id, source, first_name, situation, status)
                VALUES ($1, 'facebook', $2, $3, 'new')
                RETURNING id`,
               [senderId, `FB User ${senderId.slice(-4)}`, messageText]

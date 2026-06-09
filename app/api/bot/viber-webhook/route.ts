@@ -30,14 +30,14 @@ export async function POST(req: NextRequest) {
 
         // Check if lead already exists by Viber sender ID
         const existing = (await one(
-          `SELECT id FROM leads WHERE chat_id = $1 AND source = 'viber' AND deleted_at IS NULL LIMIT 1`,
+          `SELECT id FROM kompas_leads WHERE chat_id = $1 AND source = 'viber' AND deleted_at IS NULL LIMIT 1`,
           [senderId]
         )) as { id: string } | null;
 
         if (existing) {
           // Update existing lead details
           await q(
-            `UPDATE leads 
+            `UPDATE kompas_leads 
                 SET situation = $1, 
                     message = COALESCE($1, message)
               WHERE id = $2`,
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         } else {
           // Create new lead record
           await one(
-            `INSERT INTO leads (chat_id, source, first_name, situation, status)
+            `INSERT INTO kompas_leads (chat_id, source, first_name, situation, status)
              VALUES ($1, 'viber', $2, $3, 'new')
              RETURNING id`,
             [senderId, senderName, messageText]

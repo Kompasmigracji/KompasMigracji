@@ -7,13 +7,22 @@ import { navFor, ROLE_LABEL } from "@/lib/rbac";
 import { Icon, Spinner, Avatar } from "./ui";
 import GlobalSearch from "./GlobalSearch";
 import NotificationCenter from "./NotificationCenter";
+import enMsg from "@/messages/admin/en.json";
+import plMsg from "@/messages/admin/pl.json";
+import ukMsg from "@/messages/admin/uk.json";
+import ruMsg from "@/messages/admin/ru.json";
+
+const translations = { en: enMsg, pl: plMsg, uk: ukMsg, ru: ruMsg };
+
 
 export default function Shell({ children }) {
   const [user, setUser] = useState(undefined); // undefined=loading, null=none
   const [theme, setTheme] = useState("dark");
+  const [lang, setLang] = useState("en");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -25,6 +34,9 @@ export default function Shell({ children }) {
       
     const saved = localStorage.getItem("kc-theme");
     if (saved === "light" || saved === "dark") setTheme(saved);
+
+    const savedLang = localStorage.getItem("kc-lang");
+    if (savedLang && translations[savedLang]) setLang(savedLang);
   }, []);
 
   // Close mobile menu when route changes
@@ -36,6 +48,12 @@ export default function Shell({ children }) {
     const next = theme === "dark" ? "light" : "dark";
     setTheme(next);
     localStorage.setItem("kc-theme", next);
+  };
+
+  const changeLang = (l) => {
+    setLang(l);
+    localStorage.setItem("kc-lang", l);
+    setIsLangMenuOpen(false);
   };
 
   const logout = async () => {
@@ -55,6 +73,8 @@ export default function Shell({ children }) {
   const current = nav.find((n) =>
     n.href === "/admin" ? pathname === "/admin" : pathname.startsWith(n.href)
   );
+
+  const t = translations[lang] || translations.en;
 
   return (
     <div className="kc-root" data-theme={theme}>
@@ -81,7 +101,7 @@ export default function Shell({ children }) {
           </div>
 
           <nav className="kc-nav">
-            <div className="kc-nav-cap">Main Menu</div>
+            <div className="kc-nav-cap">{t.mainMenu}</div>
             {nav.map((n) => {
               const on = n.href === "/admin"
                 ? pathname === "/admin"
@@ -102,9 +122,27 @@ export default function Shell({ children }) {
                 <div className="kc-user-name">{user?.name}</div>
                 <div className="kc-user-role">{ROLE_LABEL[user?.role] || user?.role}</div>
               </div>
+              <div style={{ position: "relative" }}>
+                <button 
+                  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} 
+                  title={t.language}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)", padding: 4 }}
+                >
+                  <Icon name="globe" size={18} />
+                </button>
+                {isLangMenuOpen && (
+                  <div style={{ position: "absolute", bottom: "100%", right: 0, marginBottom: 8, background: "var(--bg-elevated)", border: "1px solid var(--border)", borderRadius: 6, padding: 4, zIndex: 100, display: "flex", flexDirection: "column", gap: 2 }}>
+                    {Object.keys(translations).map(l => (
+                      <button key={l} onClick={() => changeLang(l)} style={{ background: lang === l ? "var(--bg-hover)" : "none", border: "none", color: "var(--fg)", padding: "4px 12px", textAlign: "left", cursor: "pointer", borderRadius: 4 }}>
+                        {l.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <button 
                 onClick={logout} 
-                title="Logout"
+                title={t.logout}
                 style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)", padding: 4 }}
               >
                 <Icon name="logout" size={18} />
@@ -135,11 +173,11 @@ export default function Shell({ children }) {
             </div>
 
             <div className="kc-topbar-right">
-              <button className="kc-theme-btn" title="Global Search (Cmd+K)" onClick={() => setIsSearchOpen(true)}>
+              <button className="kc-theme-btn" title={t.search} onClick={() => setIsSearchOpen(true)}>
                 <Icon name="search" size={16} />
               </button>
               
-              <button className="kc-theme-btn" title="Notifications" onClick={() => setIsNotificationsOpen(true)}>
+              <button className="kc-theme-btn" title={t.notifications} onClick={() => setIsNotificationsOpen(true)}>
                 <div style={{ position: 'relative' }}>
                   <Icon name="bell" size={16} />
                   <span style={{ position: 'absolute', top: -2, right: -2, width: 6, height: 6, background: 'var(--color-danger)', borderRadius: '50%' }} />
@@ -148,9 +186,9 @@ export default function Shell({ children }) {
 
               <div style={{ width: 1, height: 24, background: 'var(--border)', margin: '0 8px' }} />
 
-              <button onClick={toggleTheme} className="kc-theme-btn" title="Toggle Theme">
+              <button onClick={toggleTheme} className="kc-theme-btn" title={t.theme}>
                 <Icon name={theme === "dark" ? "sun" : "moon"} size={16} />
-                <span>{theme === "dark" ? "Light" : "Dark"}</span>
+                <span>{theme === "dark" ? t.light : t.dark}</span>
               </button>
             </div>
           </header>

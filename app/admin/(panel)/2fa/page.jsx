@@ -1,12 +1,30 @@
 "use client";
 /* KompasCRM — Two-Factor Authentication Setup */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import * as OTPAuth from "otpauth";
+import { QRCodeSVG } from "qrcode.react";
 import { Icon, Badge } from "@/components/admin/ui";
 
 export default function TwoFactorAuthPage() {
   const [isEnabled, setIsEnabled] = useState(false);
   const [setupStep, setSetupStep] = useState(0); // 0: overview, 1: QR code, 2: verify, 3: success
   const [code, setCode] = useState("");
+  const [secret, setSecret] = useState("");
+  const [qrUrl, setQrUrl] = useState("");
+
+  useEffect(() => {
+    const totp = new OTPAuth.TOTP({
+      issuer: "KompasCRM",
+      label: "admin@kompasmigracji.pl",
+      algorithm: "SHA1",
+      digits: 6,
+      period: 30,
+      secret: "JBSWY3DPEHPK3PXP" // In a real app, this comes from the backend
+    });
+    
+    setSecret(totp.secret.base32);
+    setQrUrl(totp.toString());
+  }, []);
 
   const handleVerify = () => {
     if (code.length === 6) {
@@ -54,13 +72,12 @@ export default function TwoFactorAuthPage() {
             
             <div style={{ background: "var(--panel-2)", padding: "var(--space-lg)", borderRadius: "var(--radius-lg)", display: "flex", gap: "var(--space-xl)", alignItems: "center" }}>
               <div style={{ width: 160, height: 160, background: "white", padding: 10, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {/* Mock QR Code */}
-                <div style={{ width: "100%", height: "100%", background: "repeating-linear-gradient(45deg, #000, #000 10px, #fff 10px, #fff 20px)" }}></div>
+                {qrUrl ? <QRCodeSVG value={qrUrl} size={140} /> : "Loading..."}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: 8 }}>Can&apos;t scan the code? Enter this manually:</div>
                 <div style={{ fontFamily: "monospace", fontSize: "var(--text-lg)", background: "var(--bg)", padding: "8px 12px", border: "1px solid var(--border)", borderRadius: "var(--radius-sm)" }}>
-                  JBSWY3DPEHPK3PXP
+                  {secret}
                 </div>
               </div>
             </div>

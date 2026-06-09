@@ -9,17 +9,18 @@ import { jwtVerify } from "jose";
 const COOKIE = "kompascrm_session";
 const rateLimitMap = new Map();
 
-function rateLimit(ip: string) {
+function rateLimit(ip: string, isAuth: boolean) {
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute
-  const maxReqs = 100; // 100 requests per minute
+  const maxReqs = isAuth ? 20 : 100;
+  const key = `${ip}_${isAuth ? 'auth' : 'api'}`;
   
-  if (!rateLimitMap.has(ip)) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+  if (!rateLimitMap.has(key)) {
+    rateLimitMap.set(key, { count: 1, resetTime: now + windowMs });
     return true;
   }
   
-  const record = rateLimitMap.get(ip);
+  const record = rateLimitMap.get(key);
   if (now > record.resetTime) {
     record.count = 1;
     record.resetTime = now + windowMs;
@@ -53,10 +54,28 @@ const intlMiddleware = createMiddleware({
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // ── Request Logging ─────────────────────────────────────────────────────────
+  console.log(`[${new Date().toISOString()}] ${req.method} ${pathname}`);
+
+  // ── CSRF Protection for mutations ───────────────────────────────────────────
+  if (req.method !== "GET" && req.method !== "OPTIONS" && req.method !== "HEAD") {
+    const origin = req.headers.get("origin");
+    const host = req.headers.get("host");
+    if (origin && host) {
+      const originUrl = new URL(origin);
+      if (originUrl.host !== host) {
+        return NextResponse.json({ error: "CSRF check failed." }, { status: 403 });
+      }
+    }
+  }
+
   // ── Rate Limiting ───────────────────────────────────────────────────────────
   const ip = req.headers.get("x-forwarded-for") || req.ip || "127.0.0.1";
-  if (pathname.startsWith("/api/") && !rateLimit(ip)) {
-    return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
+  if (pathname.startsWith("/api/")) {
+    const isAuth = pathname.startsWith("/api/admin/auth/");
+    if (!rateLimit(ip, isAuth)) {
+      return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
+    }
   }
 
   // ── Non-admin API routes: pass through unchanged ──────────────────────────

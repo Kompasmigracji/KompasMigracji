@@ -38,6 +38,20 @@ export async function POST(req) {
     return NextResponse.json({ error: "Неверный email или пароль" }, { status: 401 });
   }
 
+  if (user.two_factor_enabled) {
+    const { signTempToken } = await import("@/lib/auth");
+    const tempToken = await signTempToken({
+      sub: String(user.id),
+      email: user.email,
+      temp: true
+    });
+    return NextResponse.json({
+      ok: true,
+      require2FA: true,
+      tempToken
+    });
+  }
+
   const token = await signToken({
     sub: String(user.id),
     email: user.email,
