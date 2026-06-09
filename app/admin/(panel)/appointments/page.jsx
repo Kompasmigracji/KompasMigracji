@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — Appointments & Scheduling */
 import React, { useState, useEffect } from "react";
-import { Icon, Badge, Spinner, EmptyState, Avatar } from "@/components/admin/ui";
+import { Icon, Badge, Spinner, EmptyState, Avatar, SearchInput } from "@/components/admin/ui";
 
 const STATUS_COLOR = {
   pending: "brass",

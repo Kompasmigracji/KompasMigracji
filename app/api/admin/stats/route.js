@@ -71,6 +71,50 @@ export async function GET() {
       created_at
     FROM leads ORDER BY created_at DESC LIMIT 6`);
 
+  // Угоды / Пайплайн (компас-таблица)
+  const pipeline = await q(`
+    SELECT
+      stage,
+      count(*) AS count,
+      coalesce(sum(amount), 0) AS total_amount
+    FROM kompas_deals
+    GROUP BY stage`);
+
+  // Предстоящие дедлайны по делам (SLA)
+  const slaDeadlines = await q(`
+    SELECT
+      id,
+      full_name,
+      case_number,
+      deadline_date,
+      urzad,
+      stage,
+      status,
+      CASE WHEN deadline_date IS NOT NULL
+           THEN (deadline_date - CURRENT_DATE)::int
+           ELSE NULL
+      END AS days_left
+    FROM cases
+    WHERE status != 'closed' AND deadline_date IS NOT NULL
+    ORDER BY deadline_date ASC
+    LIMIT 8`);
+
+  // Последние 10 активностей глобально
+  const recentActivities = await q(`
+    SELECT
+      a.id,
+      a.entity_type,
+      a.entity_id,
+      a.type,
+      a.title,
+      a.body,
+      a.created_at,
+      u.full_name AS actor_name
+    FROM kompas_activities a
+    LEFT JOIN kompas_users u ON u.id = a.actor_id
+    ORDER BY a.created_at DESC
+    LIMIT 10`);
+
   return NextResponse.json({
     members: {
       total: Number(members?.total || 0),
@@ -91,5 +135,16 @@ export async function GET() {
     series: series.map((r) => Number(r.cnt)),
     leadsBySource: bySource.map((r) => ({ source: r.source, count: Number(r.cnt) })),
     recentLeads,
+    pipeline: pipeline.map((p) => ({
+      stage: p.stage,
+      count: Number(p.count),
+      amount: Number(p.total_amount)
+    })),
+    slaDeadlines: slaDeadlines.map((s) => ({
+      ...s,
+      days_left: s.days_left !== null ? Number(s.days_left) : null
+    })),
+    recentActivities
   });
 }
+
