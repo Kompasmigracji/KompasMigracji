@@ -55,6 +55,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
       display: "flex", 
       gap: "var(--space-md)", 
       overflowX: "auto", 
+      width: "100%",
       paddingBottom: "var(--space-md)",
       minHeight: "calc(100vh - 200px)"
     }}>

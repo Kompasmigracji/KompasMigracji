@@ -588,7 +588,7 @@ function KanbanBoard({
 
       {/* Board or List */}
       {viewMode === "board" ? (
-        <div style={{ display: "flex", gap: 12, alignItems: "start", overflowX: "auto", paddingBottom: 8 }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "start", overflowX: "auto", width: "100%", paddingBottom: 8 }}>
           {STAGES.map(stage => {
             const isCollapsed = collapsed.has(stage.key);
             const stageTasks  = byStage(stage.key);
