@@ -7,7 +7,7 @@ type Theme = 'light' | 'dark';
 export default function ThemeSwitch() {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'dark';
-    const stored = (localStorage.getItem('site-theme') as Theme | null) || null;
+    const stored = (localStorage.getItem('theme') as Theme | null) || null;
     if (stored === 'light' || stored === 'dark') return stored;
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
     return 'dark';
@@ -16,13 +16,13 @@ export default function ThemeSwitch() {
   useEffect(() => {
     try {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('site-theme', theme);
+      localStorage.setItem('theme', theme);
     } catch (e) { /* ignore */ }
   }, [theme]);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      if (e.key === 'site-theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
+      if (e.key === 'theme' && (e.newValue === 'light' || e.newValue === 'dark')) {
         setTheme(e.newValue as Theme);
       }
     };
