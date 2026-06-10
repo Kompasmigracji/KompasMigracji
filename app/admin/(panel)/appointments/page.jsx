@@ -29,6 +29,8 @@ export default function AppointmentsPage() {
   const [selectedAppt, setSelectedAppt] = useState(null);
   const [meetLinkInput, setMeetLinkInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [showRequestModal, setShowRequestModal] = useState(false);
 
   // AI Calendar Agent Logs (175 agents, 15 coordinators, 1 president)
   const [apptLogs, setApptLogs] = useState([
@@ -131,7 +133,7 @@ export default function AppointmentsPage() {
         </div>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
           <button className="kc-btn kc-btn-secondary"><Icon name="calendar" size={16} /> Синхронізувати Google Cal</button>
-          <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Додати запис</button>
+          <button className="kc-btn kc-btn-primary" onClick={() => setShowRequestModal(true)}><Icon name="plus" size={16} /> Додати запис</button>
         </div>
       </div>
 
@@ -183,7 +185,7 @@ export default function AppointmentsPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         {[
           { key: "upcoming", label: "Майбутні записи" },
           { key: "pending", label: "Очікують" },
@@ -199,7 +201,8 @@ export default function AppointmentsPage() {
               padding: "12px 16px", background: "none", border: "none",
               borderBottom: activeTab === t.key ? "2px solid var(--color-primary)" : "2px solid transparent",
               color: activeTab === t.key ? "var(--color-primary)" : "var(--dim)",
-              fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+              fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+              flexShrink: 0
             }}
           >
             {t.label}
@@ -222,14 +225,14 @@ export default function AppointmentsPage() {
             ) : filteredAppts.length === 0 ? (
               <EmptyState title="Немає записів" description="Для цього фільтра записів не знайдено." />
             ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px, 1fr))", gap: "var(--space-md)" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 400px), 1fr))", gap: "var(--space-md)" }}>
                 {filteredAppts.map(appt => {
                   const dt = new Date(appt.appointment_at);
                   const dateStr = dt.toLocaleDateString("uk-UA", { weekday: "short", day: "2-digit", month: "short" });
                   const timeStr = dt.toLocaleTimeString("uk-UA", { hour: "2-digit", minute: "2-digit" });
                   
                   return (
-                    <div key={appt.id} className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", borderLeft: `4px solid var(--color-${STATUS_COLOR[appt.status]})` }}>
+                    <div key={appt.id} className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", borderLeft: `4px solid var(--${STATUS_COLOR[appt.status]})` }}>
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
                           <Avatar name={appt.client_name} size={32} />

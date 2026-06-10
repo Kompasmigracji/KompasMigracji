@@ -235,7 +235,7 @@ export default function EmailsPage() {
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "var(--space-lg)", alignItems: "start" }}>
+    <div className="kc-emails-layout">
       {toast && (
         <div style={{ position: "fixed", top: 80, right: 24, zIndex: 1000 }} className="kc-note">
           {toast}
@@ -243,7 +243,7 @@ export default function EmailsPage() {
       )}
 
       {/* Sidebar navigation */}
-      <aside className="kc-card" style={{ padding: "var(--space-md)", position: "sticky", top: 80 }}>
+      <aside className="kc-card kc-emails-sidebar" style={{ padding: "var(--space-md)" }}>
         <button 
           className="kc-btn kc-btn-primary" 
           style={{ width: "100%", justifyContent: "center", marginBottom: "var(--space-md)" }}
@@ -420,10 +420,10 @@ export default function EmailsPage() {
             </div>
 
             {/* Email Workspace split: List (left) + detail (right) */}
-            <div style={{ display: "grid", gridTemplateColumns: selectedEmail ? "340px 1fr" : "1fr", gap: "var(--space-lg)", flex: 1 }}>
+            <div className={`kc-emails-split ${selectedEmail ? 'kc-split-active' : ''}`} style={{ gridTemplateColumns: selectedEmail ? undefined : "1fr", flex: 1 }}>
               
               {/* 2a. List pane */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
+              <div className="kc-emails-list" style={{ display: "flex", flexDirection: "column", gap: "var(--space-xs)" }}>
                 {emails.length === 0 ? (
                   <EmptyState title="Скринька порожня" description="Листів у цій папці немає." icon="inbox" />
                 ) : (

@@ -206,14 +206,15 @@ export default function AcademyPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button 
           onClick={() => setActiveTab("courses")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "courses" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "courses" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="book-open" size={16} /> Доступні курси
@@ -224,7 +225,8 @@ export default function AcademyPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "ai_tutor" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "ai_tutor" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="cpu" size={16} /> AI Екзаменатор (175+ Agents)
@@ -301,7 +303,7 @@ export default function AcademyPage() {
         )}
 
         {activeTab === "ai_tutor" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "var(--space-lg)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
             {/* AI Tutor Cockpit */}
             <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
               <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Grading & LMS Engine</h3>

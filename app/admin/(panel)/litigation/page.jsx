@@ -110,29 +110,50 @@ export default function LitigationPage() {
       </div>
 
       {/* KPI Stats */}
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-sm)", flexWrap: "wrap" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Активні апеляції</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>12</div>
+      <div className="kc-grid kc-grid-3" style={{ marginBottom: "var(--space-sm)" }}>
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "var(--brass-bg)" }}>
+              <Icon name="folder" size={18} color="var(--color-primary)" />
+            </div>
+            <Badge status="brass" text="Active" />
+          </div>
+          <div className="kc-stat-val">12</div>
+          <div className="kc-stat-lbl">Активні апеляції</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Успішність (Win Rate)</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>84.5%</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(95,184,122,0.1)" }}>
+              <Icon name="check" size={18} color="var(--color-success)" />
+            </div>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--color-success)" }}>Good</span>
+          </div>
+          <div className="kc-stat-val">84.5%</div>
+          <div className="kc-stat-lbl">Успішність (Win Rate)</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Судові засідання</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)" }}>2</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(95,155,213,0.1)" }}>
+              <Icon name="calendar" size={18} color="var(--color-info)" />
+            </div>
+            <Badge status="blue" text="Court" />
+          </div>
+          <div className="kc-stat-val">2</div>
+          <div className="kc-stat-lbl">Судові засідання</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button onClick={() => setActiveTab("appeals")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "appeals" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "appeals" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="folder" size={16} /> Реєстр апеляцій
         </button>
@@ -141,7 +162,8 @@ export default function LitigationPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "hearings" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "hearings" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="calendar" size={16} /> Судові засідання
         </button>
@@ -150,7 +172,8 @@ export default function LitigationPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "logs" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "logs" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="cpu" size={16} /> AI Legal Logs
         </button>
@@ -215,12 +238,14 @@ export default function LitigationPage() {
 
       {/* Template Modal */}
       {showTemplateModal && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
-        }}>
-          <div className="kc-card" style={{ maxWidth: "600px", width: "90%" }}>
-            <h3 style={{ margin: "0 0 var(--space-sm) 0" }}>Генерація проекту документа</h3>
+        <div className="kc-modal-bg" onClick={() => setShowTemplateModal(false)}>
+          <div className="kc-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "600px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-sm)" }}>
+              <h3 className="kc-modal-title" style={{ margin: 0 }}>Генерація проекту документа</h3>
+              <button onClick={() => setShowTemplateModal(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dim)" }}>
+                <Icon name="x" size={20} />
+              </button>
+            </div>
             <p style={{ fontSize: "var(--text-sm)", color: "var(--dim)", marginBottom: "var(--space-md)" }}>
               Офіційний шаблон оскарження для: <strong>{selectedTemplate}</strong>.
             </p>
@@ -234,7 +259,7 @@ export default function LitigationPage() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-sm)" }}>
-              <button className="kc-btn kc-btn-secondary" onClick={() => setShowTemplateModal(false)}>Закрити</button>
+              <button className="kc-btn" onClick={() => setShowTemplateModal(false)}>Закрити</button>
               <button className="kc-btn kc-btn-primary" onClick={() => {
                 alert("Проект оскарження успішно згенерований AI Юристом!");
                 setShowTemplateModal(false);

@@ -23,9 +23,9 @@ export default function MembersPage() {
 
   return (
     <div>
-      <div className="kc-row" style={{ marginBottom: 14, gap: "var(--space-sm)" }}>
-        <div style={{ flex: 1, position: "relative" }}>
-          <span style={{ position: "absolute", left: 11, top: 10, color: "#5a6470" }}>
+      <div className="kc-row" style={{ marginBottom: 14, gap: "var(--space-sm)", flexWrap: "wrap" }}>
+        <div style={{ flex: 1, position: "relative", minWidth: 280 }}>
+          <span style={{ position: "absolute", left: 11, top: 10, color: "var(--faint)" }}>
             <Icon name="search" size={16} />
           </span>
           <input className="kc-input" style={{ paddingLeft: 34 }}
@@ -47,7 +47,7 @@ export default function MembersPage() {
       </div>
 
       {members === null ? <Spinner /> : members.length === 0 ? (
-        <EmptyState text="Учасникiв не знайдено" />
+        <EmptyState title="Учасникiв не знайдено" description="Спробуйте змінити запит пошуку" icon="users" />
       ) : (
         <div className="kc-table-wrap">
           <table className="kc-table">
@@ -60,13 +60,13 @@ export default function MembersPage() {
             <tbody>
               {members.map((m) => (
                 <tr key={m.id} onClick={() => router.push("/admin/members/" + m.id)}>
-                  <td className="kc-mono" style={{ color: "#d99e54" }}>{m.member_no || "—"}</td>
+                  <td className="kc-mono" style={{ color: "var(--color-primary)" }}>{m.member_no || "—"}</td>
                   <td>
                     <div style={{ fontWeight: 500 }}>{m.full_name}</div>
-                    <div style={{ color: "#5a6470", fontSize: 12 }}>{m.email}</div>
+                    <div style={{ color: "var(--dim)", fontSize: 12 }}>{m.email}</div>
                   </td>
-                  <td style={{ color: "#828c9b" }}>{m.city || "—"}</td>
-                  <td style={{ color: "#828c9b" }}>{m.category || "standard"}</td>
+                  <td style={{ color: "var(--dim)" }}>{m.city || "—"}</td>
+                  <td style={{ color: "var(--dim)" }}>{m.category || "standard"}</td>
                   <td><Badge status={m.dues_status || "unpaid"} /></td>
                   <td><Badge status={m.status} /></td>
                 </tr>
@@ -136,7 +136,7 @@ function AddMemberModal({ onClose, onCreated }) {
         ) : (
           <div>
             {error && <div className="kc-error" style={{ marginBottom: 12 }}>
-              <Icon name="settings" size={15} color="#d96c6c" /><span>{error}</span></div>}
+              <Icon name="settings" size={15} color="var(--color-danger)" /><span>{error}</span></div>}
             <Field label="ПIБ" value={f.full_name} onChange={(v) => setF({ ...f, full_name: v })} />
             <Field label="Email" value={f.email} onChange={(v) => setF({ ...f, email: v })} />
             <Field label="Телефон" value={f.phone} onChange={(v) => setF({ ...f, phone: v })} />

@@ -204,7 +204,7 @@ export default function FleetPage() {
       </div>
 
       {/* Tabs Menu */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button 
           onClick={() => setActiveTab("trips")} 
           style={{
@@ -217,7 +217,8 @@ export default function FleetPage() {
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            gap: 8
+            gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="truck" size={16} /> Рейси & Пасажирські Маніфести
@@ -234,7 +235,8 @@ export default function FleetPage() {
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            gap: 8
+            gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="map" size={16} /> GPS Маніфести & Кордони
@@ -251,7 +253,8 @@ export default function FleetPage() {
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            gap: 8
+            gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="card" size={16} /> Паливні Картки & Ліміти
@@ -268,7 +271,8 @@ export default function FleetPage() {
             cursor: "pointer",
             display: "flex",
             alignItems: "center",
-            gap: 8
+            gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="cpu" size={16} /> AI Диспетчерська (175+ Agents)
@@ -371,7 +375,7 @@ export default function FleetPage() {
         )}
 
         {activeTab === "borders" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: "var(--space-lg)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
             {/* Left Column: GPS manifests */}
             <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
               <h3 className="kc-card-cap" style={{ margin: 0 }}>Супутникові GPS Маніфести & Координати</h3>
@@ -430,7 +434,7 @@ export default function FleetPage() {
                     </div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--text-xs)", color: "var(--dim)" }}>
                       <span>Автомобілів у черзі: <strong>{border.queueCars}</strong></span>
-                      <span>Очікування: <strong style={{ color: border.status === "congested" ? "var(--color-danger)" : "var(--fg)" }}>{border.waitTime}</strong></span>
+                      <span>Очікування: <strong style={{ color: border.status === "congested" ? "var(--color-danger)" : "var(--text)" }}>{border.waitTime}</strong></span>
                     </div>
                   </div>
                 ))}
@@ -512,7 +516,7 @@ export default function FleetPage() {
         )}
 
         {activeTab === "agents" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "var(--space-lg)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
             {/* Live Agents Control Dashboard */}
             <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
               <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Dispatch Network</h3>

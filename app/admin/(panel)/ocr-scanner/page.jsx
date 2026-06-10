@@ -64,8 +64,8 @@ export default function OcrScannerPage() {
   };
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-xs)" }}>
         <div>
           <h2 className="kc-h2" style={{ margin: 0 }}>OCR Сканування Документів (AI OCR Scanner)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
@@ -74,52 +74,56 @@ export default function OcrScannerPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: "var(--space-lg)" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "var(--space-lg)" }}>
         {/* Scanner Panel */}
-        <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "2px dashed var(--border)" }}>
-          <div style={{ padding: "var(--space-xl)", textAlign: "center", background: "rgba(95,155,213,0.02)", borderRadius: 12 }}>
-            <Icon name="file-text" size={48} color="var(--dim)" />
-            <h3 style={{ margin: "var(--space-md) 0 var(--space-xs)" }}>Перетягніть скан паспорта сюди</h3>
+        <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", border: "2px dashed var(--border)", background: "var(--panel)" }}>
+          <div style={{ padding: "var(--space-xl) var(--space-md)", textAlign: "center", background: "var(--panel-2)", borderRadius: 12, border: "1px solid var(--border)" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: "var(--bg)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto var(--space-md)", color: "var(--color-primary)" }}>
+              <Icon name="file-text" size={32} />
+            </div>
+            <h3 style={{ margin: "0 0 var(--space-xs)", color: "var(--text)" }}>Перетягніть скан паспорта сюди</h3>
             <p style={{ color: "var(--dim)", fontSize: "var(--text-xs)", marginBottom: "var(--space-md)" }}>Підтримувані формати: PDF, PNG, JPG. Максимум 15MB.</p>
             <div style={{ display: "flex", justifyContent: "center", gap: "var(--space-sm)" }}>
               <button className="kc-btn kc-btn-primary" onClick={handleStartScan} disabled={isScanning}>
-                {isScanning ? "Сканування..." : "Завантажити файл"}
+                <Icon name="upload" size={16} /> {isScanning ? "Сканування..." : "Завантажити файл"}
               </button>
             </div>
           </div>
 
           {isScanning && (
-            <div style={{ padding: "var(--space-md)" }}>
+            <div style={{ padding: "var(--space-sm) var(--space-md)" }}>
               <ProgressBar progress={scanProgress} label="AI аналіз тексту та MRZ-зони..." color="var(--color-primary)" />
             </div>
           )}
 
           {parsedData && (
-            <div style={{ background: "var(--panel-2)", padding: "var(--space-md)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: 10 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 6 }}>
+            <div style={{ background: "var(--panel-2)", padding: "var(--space-md)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border)", paddingBottom: 8, flexWrap: "wrap", gap: 8 }}>
                 <strong style={{ color: "var(--color-success)" }}>Розпізнано успішно (Confidence: {parsedData.ocrConfidence})</strong>
-                <button className="kc-btn" style={{ minHeight: "auto", padding: "2px 8px", fontSize: "10px" }} onClick={() => alert("Дані імпортовано в лід")}>Імпортувати в Лід</button>
+                <button className="kc-btn kc-btn-primary" style={{ minHeight: "auto", padding: "4px 8px", fontSize: "11px" }} onClick={() => alert("Дані імпортовано в лід")}>
+                  Імпортувати
+                </button>
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, fontSize: "var(--text-xs)" }}>
-                <div><span style={{ color: "var(--dim)" }}>Ім&apos;я (First Name):</span> <strong>{parsedData.firstName}</strong></div>
-                <div><span style={{ color: "var(--dim)" }}>Прізвище (Last Name):</span> <strong>{parsedData.lastName}</strong></div>
-                <div><span style={{ color: "var(--dim)" }}>Номер паспорта:</span> <strong className="kc-mono">{parsedData.docNumber}</strong></div>
-                <div><span style={{ color: "var(--dim)" }}>Дійсний до:</span> <strong>{parsedData.expiryDate}</strong></div>
-                <div><span style={{ color: "var(--dim)" }}>Громадянство:</span> <strong>{parsedData.nationality}</strong></div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, fontSize: "var(--text-xs)", color: "var(--text)" }}>
+                <div><span style={{ color: "var(--dim)" }}>Ім&apos;я (First Name):</span> <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, marginTop: 2 }}>{parsedData.firstName}</div></div>
+                <div><span style={{ color: "var(--dim)" }}>Прізвище (Last Name):</span> <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, marginTop: 2 }}>{parsedData.lastName}</div></div>
+                <div><span style={{ color: "var(--dim)" }}>Номер паспорта:</span> <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, marginTop: 2, fontFamily: "var(--font-mono)" }}>{parsedData.docNumber}</div></div>
+                <div><span style={{ color: "var(--dim)" }}>Дійсний до:</span> <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, marginTop: 2 }}>{parsedData.expiryDate}</div></div>
+                <div><span style={{ color: "var(--dim)" }}>Громадянство:</span> <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, marginTop: 2 }}>{parsedData.nationality}</div></div>
               </div>
             </div>
           )}
         </div>
 
         {/* AI OCR logs */}
-        <div className="kc-card" style={{ background: "#06090e", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живі логи нейромережі OCR (AI OCR logs)</h3>
+        <div className="kc-card" style={{ background: "#0d1117", border: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid #30363d", paddingBottom: 8 }}>
+            <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живі логи нейромережі OCR</h3>
             <span className="kc-mono" style={{ fontSize: 10, color: "var(--dim)" }}>175 agents active...</span>
           </div>
 
           <div style={{ 
-            flex: 1, maxHeight: 280, overflowY: "auto", fontFamily: "var(--font-mono)", 
+            flex: 1, maxHeight: 380, overflowY: "auto", fontFamily: "var(--font-mono)", 
             fontSize: "var(--text-xs)", lineHeight: "1.6", color: "#c9d1d9",
             display: "flex", flexDirection: "column", gap: 8
           }}>
@@ -129,7 +133,7 @@ export default function OcrScannerPage() {
               if (log.type === "system") color = "#56d364";
               return (
                 <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
-                  <span style={{ color: "var(--dim)" }}>[{log.time}]</span> <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
+                  <span style={{ color: "#8b949e" }}>[{log.time}]</span> <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
                 </div>
               );
             })}

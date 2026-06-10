@@ -19,9 +19,9 @@ export default function MonitoringPage() {
       </div>
     )},
     { header: "Status", cell: (row) => {
-      let color = "success";
-      if (row.status === "degraded") color = "warning";
-      if (row.status === "down") color = "danger";
+      let color = "green";
+      if (row.status === "degraded") color = "brass";
+      if (row.status === "down") color = "red";
       return <Badge status={color} text={row.status.toUpperCase()} />;
     }},
     { header: "Uptime (30d)", cell: (row) => <span style={{ fontWeight: 600 }}>{row.uptime}</span> },

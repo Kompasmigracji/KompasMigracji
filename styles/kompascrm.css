@@ -19,6 +19,7 @@ body:has(.kc-root), .kc-root {
   --panel-2: #1c232e;
   --border: #2c3644;
   --text: #e6e8eb;
+  --fg: var(--text);
   --dim: #828c9b;
   --faint: #5a6470;
   
@@ -377,4 +378,60 @@ body:has(.kc-root[data-theme="light"]) { background: #f4f6f8 !important; }
   .kc-nav-item { padding: 12px var(--space-md); font-size: var(--text-md); }
   .kc-btn { min-height: 44px; }
   .kc-input, .kc-select { min-height: 44px; }
+}
+
+/* --- Reports Layout --- */
+.kc-reports-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+.kc-reports-sidebar {
+  position: sticky;
+  top: 80px;
+}
+@media (max-width: 768px) {
+  .kc-reports-layout {
+    grid-template-columns: 1fr;
+  }
+  .kc-reports-sidebar {
+    position: static;
+  }
+}
+
+/* --- Emails Layout --- */
+.kc-emails-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+.kc-emails-sidebar {
+  position: sticky;
+  top: 80px;
+}
+@media (max-width: 768px) {
+  .kc-emails-layout {
+    grid-template-columns: 1fr;
+  }
+  .kc-emails-sidebar {
+    position: static;
+  }
+}
+
+/* Emails Workspace Split */
+.kc-emails-split {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--space-lg);
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .kc-emails-split.kc-split-active .kc-emails-list {
+    display: none;
+  }
+  .kc-emails-split {
+    grid-template-columns: 1fr;
+  }
 }

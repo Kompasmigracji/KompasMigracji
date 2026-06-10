@@ -72,11 +72,11 @@ export default function AuditLogPage() {
     )},
     { header: "Timestamp", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.time}</span> },
     { header: "Severity", cell: (row) => {
-      let color = "info";
-      if (row.severity === "low") color = "default";
-      if (row.severity === "warning") color = "warning";
-      if (row.severity === "high") color = "primary";
-      if (row.severity === "critical") color = "danger";
+      let color = "dim";
+      if (row.severity === "low") color = "dim";
+      if (row.severity === "warning") color = "brass";
+      if (row.severity === "high") color = "blue";
+      if (row.severity === "critical") color = "red";
       return <Badge status={color} text={row.severity.toUpperCase()} />;
     }},
     { header: "", cell: () => (

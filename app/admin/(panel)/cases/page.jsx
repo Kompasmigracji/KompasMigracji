@@ -135,7 +135,7 @@ export default function CasesPage() {
       <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:16, gap: "var(--space-sm)", flexWrap: "wrap" }}>
         <div>
           <div style={{ fontWeight:700, fontSize:17 }}>Воронка Понаглення</div>
-          <div style={{ color:"#8a96a3", fontSize:12, marginTop:2 }}>
+          <div style={{ color:"var(--dim)", fontSize:12, marginTop:2 }}>
             {cases.length} активних справ
           </div>
         </div>
@@ -155,20 +155,20 @@ export default function CasesPage() {
       </div>
 
       {/* Канбан */}
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14, alignItems:"start" }}>
+      <div className="kc-grid kc-grid-3" style={{ gap: 14, alignItems: "start" }}>
         {STAGES.map((stage, si) => {
           const stageCases = byStage(stage.key);
           return (
             <div key={stage.key} style={{
-              background: stage.bg,
-              borderRadius:12, padding:14,
-              border:`1.5px solid ${stage.color}33`,
+              background: `color-mix(in srgb, ${stage.color} 4%, var(--panel))`,
+              borderRadius: "var(--radius-lg)", padding: 14,
+              border: `1px solid color-mix(in srgb, ${stage.color} 20%, var(--border))`,
             }}>
               {/* Заголовок колонки */}
               <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:12 }}>
                 <div>
                   <div style={{ fontWeight:700, fontSize:13, color: stage.color }}>{stage.label}</div>
-                  <div style={{ fontSize:11, color:"#8a96a3", marginTop:2 }}>{stage.desc}</div>
+                  <div style={{ fontSize:11, color:"var(--dim)", marginTop:2 }}>{stage.desc}</div>
                 </div>
                 <div style={{
                   background: stage.color, color:"#fff",
@@ -183,7 +183,7 @@ export default function CasesPage() {
               {/* Картки */}
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {stageCases.length === 0 && (
-                  <div style={{ textAlign:"center", padding:"20px 0", color:"#c0c8d0", fontSize:12 }}>
+                  <div style={{ textAlign:"center", padding:"20px 0", color:"var(--faint)", fontSize:12 }}>
                     Немає справ
                   </div>
                 )}
@@ -211,10 +211,10 @@ export default function CasesPage() {
 
                     {/* Деталi */}
                     {c.case_number && (
-                      <div style={{ fontSize:11, color:"#8a96a3" }}>№ {c.case_number}</div>
+                      <div style={{ fontSize:11, color:"var(--dim)" }}>№ {c.case_number}</div>
                     )}
                     {c.contact && (
-                      <div style={{ fontSize:11, color:"#5a6470" }}>{c.contact}</div>
+                      <div style={{ fontSize:11, color:"var(--faint)" }}>{c.contact}</div>
                     )}
 
                     {/* Документи (тiльки для analysis) */}
@@ -223,9 +223,9 @@ export default function CasesPage() {
                         <button
                           style={{
                             fontSize:10, padding:"2px 8px", borderRadius:8, cursor:"pointer",
-                            border:"1.5px solid " + (c.has_dodatek_1 ? "#7cbf8e" : "#e2e6ea"),
-                            background: c.has_dodatek_1 ? "#e8f5e9" : "transparent",
-                            color: c.has_dodatek_1 ? "#388e3c" : "#8a96a3",
+                            border:"1px solid " + (c.has_dodatek_1 ? "var(--color-success)" : "var(--border)"),
+                            background: c.has_dodatek_1 ? "color-mix(in srgb, var(--color-success) 12%, transparent)" : "transparent",
+                            color: c.has_dodatek_1 ? "var(--color-success)" : "var(--dim)",
                           }}
                           onClick={e => { e.stopPropagation(); toggleDoc(c,"has_dodatek_1"); }}
                         >
@@ -234,9 +234,9 @@ export default function CasesPage() {
                         <button
                           style={{
                             fontSize:10, padding:"2px 8px", borderRadius:8, cursor:"pointer",
-                            border:"1.5px solid " + (c.has_zus_cert ? "#7cbf8e" : "#e2e6ea"),
-                            background: c.has_zus_cert ? "#e8f5e9" : "transparent",
-                            color: c.has_zus_cert ? "#388e3c" : "#8a96a3",
+                            border:"1px solid " + (c.has_zus_cert ? "var(--color-success)" : "var(--border)"),
+                            background: c.has_zus_cert ? "color-mix(in srgb, var(--color-success) 12%, transparent)" : "transparent",
+                            color: c.has_zus_cert ? "var(--color-success)" : "var(--dim)",
                           }}
                           onClick={e => { e.stopPropagation(); toggleDoc(c,"has_zus_cert"); }}
                         >
@@ -281,9 +281,9 @@ export default function CasesPage() {
       {/* Бiчна панель деталей справи */}
       {mounted && detail && createPortal(
         <div style={{
-          position:"fixed", top:0, right:0, bottom:0, width:400,
-          background:"#fff", boxShadow:"-4px 0 24px rgba(0,0,0,0.12)",
-          overflowY:"auto", zIndex:150, padding:24,
+          position:"fixed", top:0, right:0, bottom:0, width:"100%", maxWidth:400,
+          background:"var(--panel)", borderLeft:"1px solid var(--border)",
+          boxShadow:"var(--shadow-lg)", overflowY:"auto", zIndex:150, padding:24,
         }}>
           <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:16 }}>
             <div style={{ fontWeight:700, fontSize:16 }}>{detail.case?.full_name}</div>
@@ -308,15 +308,15 @@ export default function CasesPage() {
                     : null],
                 ].map(([label, val]) => val ? (
                   <div key={label} style={{ fontSize:12 }}>
-                    <div style={{ color:"#8a96a3" }}>{label}</div>
+                    <div style={{ color:"var(--dim)" }}>{label}</div>
                     <div style={{ fontWeight:500 }}>{val}</div>
                   </div>
                 ) : null)}
               </div>
 
               {detail.case.notes && (
-                <div style={{ fontSize:13, color:"#5a6470", marginBottom:16,
-                  background:"#f8f9fa", borderRadius:8, padding:10 }}>
+                <div style={{ fontSize:13, color:"var(--faint)", marginBottom:16,
+                  background:"var(--panel-2)", borderRadius:8, padding:10 }}>
                   {detail.case.notes}
                 </div>
               )}
@@ -333,17 +333,17 @@ export default function CasesPage() {
           {/* Лог подiй */}
           <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Iсторiя подiй</div>
           {(detail.logs || []).length === 0 ? (
-            <div style={{ color:"#c0c8d0", fontSize:12 }}>Поки немає подiй</div>
+            <div style={{ color:"var(--faint)", fontSize:12 }}>Поки немає подiй</div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               {detail.logs.map(l => (
                 <div key={l.id} style={{
                   fontSize:12, padding:"8px 12px",
-                  background:"#f8f9fa", borderRadius:8,
-                  borderLeft:"3px solid #d99e54",
+                  background:"var(--panel-2)", borderRadius:8,
+                  borderLeft:"3px solid var(--color-primary)",
                 }}>
                   <div style={{ fontWeight:500 }}>{l.event}</div>
-                  <div style={{ color:"#8a96a3", marginTop:2 }}>
+                  <div style={{ color:"var(--dim)", marginTop:2 }}>
                     {new Date(l.created_at).toLocaleString("uk-UA")} · {l.actor}
                   </div>
                 </div>

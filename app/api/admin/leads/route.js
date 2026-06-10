@@ -74,3 +74,44 @@ export async function DELETE(req) {
   await q("UPDATE leads SET deleted_at = now() WHERE id = $1 AND deleted_at IS NULL", [b.id]);
   return NextResponse.json({ ok: true });
 }
+
+export async function POST(req) {
+  const auth = await requireAuth(["admin", "moderator"]);
+  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
+  let b;
+  try { b = await req.json(); } catch {
+    return NextResponse.json({ error: "Некоректний запит" }, { status: 400 });
+  }
+
+  const name = (b.name || "").trim();
+  const contact = (b.contact || "").trim();
+  const service = (b.service || "").trim();
+  const source = b.source || "site";
+  const status = b.status || "new";
+
+  if (!name || !contact) {
+    return NextResponse.json({ error: "Ім'я та контакт обов'язкові" }, { status: 400 });
+  }
+
+  // Insert into leads
+  const rows = await q(
+    `INSERT INTO leads (first_name, contact, source, service, status, created_at)
+     VALUES ($1, $2, $3, $4, $5, now())
+     RETURNING id, first_name AS name, contact, source, service, status, created_at`,
+    [name, contact, source, service, status]
+  );
+
+  // Mirror to kompas_leads
+  try {
+    await q(
+      `INSERT INTO kompas_leads (source, name, contact, status)
+       VALUES ($1, $2, $3, $4)`,
+      [source, name, contact, status]
+    );
+  } catch (e) {
+    console.error("Mirror to kompas_leads failed", e);
+  }
+
+  return NextResponse.json({ lead: rows[0] });
+}

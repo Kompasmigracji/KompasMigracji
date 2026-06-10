@@ -396,7 +396,7 @@ export default function Dashboard() {
       )}
 
       {/* Grid of active widgets */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "var(--space-lg)" }}>
+      <div className="kc-grid kc-grid-2" style={{ gap: "var(--space-lg)" }}>
         {layout.filter(item => item.visible).map((item) => {
           const info = WIDGETS_INFO[item.id];
           if (!info) return null;

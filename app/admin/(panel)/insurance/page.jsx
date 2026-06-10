@@ -103,29 +103,50 @@ export default function InsurancePage() {
       </div>
 
       {/* KPI Stats */}
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-sm)", flexWrap: "wrap" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Активне покриття</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>112</div>
+      <div className="kc-grid kc-grid-3" style={{ marginBottom: "var(--space-sm)" }}>
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(95,184,122,0.1)" }}>
+              <Icon name="shield" size={18} color="var(--color-success)" />
+            </div>
+            <Badge status="green" text="Success" />
+          </div>
+          <div className="kc-stat-val">112</div>
+          <div className="kc-stat-lbl">Активне покриття</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Закінчується дія</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>3</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(229,168,75,0.1)" }}>
+              <Icon name="clock" size={18} color="var(--color-warning)" />
+            </div>
+            <Badge status="brass" text="Warning" />
+          </div>
+          <div className="kc-stat-val">3</div>
+          <div className="kc-stat-lbl">Закінчується дія</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Партнери</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)" }}>PZU, LuxMed</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "var(--brass-bg)" }}>
+              <Icon name="users" size={18} color="var(--color-primary)" />
+            </div>
+            <Badge status="blue" text="ZUS" />
+          </div>
+          <div className="kc-stat-val">PZU, LuxMed</div>
+          <div className="kc-stat-lbl">Партнери</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button onClick={() => setActiveTab("policies")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "policies" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "policies" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="shield" size={16} /> Реєстр Полісів
         </button>
@@ -134,7 +155,8 @@ export default function InsurancePage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "zusChecklist" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "zusChecklist" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="check" size={16} /> Контроль ZUS
         </button>
@@ -143,7 +165,8 @@ export default function InsurancePage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "logs" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "logs" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}>
           <Icon name="cpu" size={16} /> AI ZUS Logs
         </button>
@@ -213,19 +236,21 @@ export default function InsurancePage() {
 
       {/* Policy Quote Modal */}
       {showQuoteModal && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
-        }}>
-          <div className="kc-card" style={{ maxWidth: "450px", width: "90%" }}>
-            <h3 style={{ margin: "0 0 var(--space-sm) 0" }}>Розрахунок медичної страховки</h3>
+        <div className="kc-modal-bg" onClick={() => setShowQuoteModal(false)}>
+          <div className="kc-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "450px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-sm)" }}>
+              <h3 className="kc-modal-title" style={{ margin: 0 }}>Розрахунок медичної страховки</h3>
+              <button onClick={() => setShowQuoteModal(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dim)" }}>
+                <Icon name="x" size={20} />
+              </button>
+            </div>
             <p style={{ fontSize: "var(--text-sm)", margin: "0 0 var(--space-md) 0", color: "var(--dim)" }}>
               Оформлення приватного полісу PZU Wojażer чи LuxMed для іноземців.
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "var(--space-md)" }}>
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>Ім'я клієнта</label>
+                <label className="kc-label">Ім'я клієнта</label>
                 <input 
                   type="text" 
                   placeholder="напр. Олена Ростова" 
@@ -237,9 +262,9 @@ export default function InsurancePage() {
               </div>
 
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>Пакет покриття</label>
+                <label className="kc-label">Пакет покриття</label>
                 <select 
-                  className="kc-input" 
+                  className="kc-select" 
                   style={{ width: "100%" }}
                   value={quoteData.package}
                   onChange={(e) => {
@@ -257,7 +282,7 @@ export default function InsurancePage() {
               </div>
 
               <div>
-                <label style={{ fontSize: "12px", fontWeight: 600, display: "block", marginBottom: "4px" }}>Розрахований внесок</label>
+                <label className="kc-label">Розрахований внесок</label>
                 <div style={{ fontSize: "18px", fontWeight: 700, color: "var(--color-success)" }}>
                   {quoteData.premium}
                 </div>
@@ -265,7 +290,7 @@ export default function InsurancePage() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-sm)" }}>
-              <button className="kc-btn kc-btn-secondary" onClick={() => setShowQuoteModal(false)}>Скасувати</button>
+              <button className="kc-btn" onClick={() => setShowQuoteModal(false)}>Скасувати</button>
               <button className="kc-btn kc-btn-primary" onClick={handleGenerateQuote} disabled={!quoteData.clientName}>
                 Оформити Поліс
               </button>

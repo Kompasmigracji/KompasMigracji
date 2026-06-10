@@ -217,7 +217,7 @@ export default function ReportsPage() {
   };
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "var(--space-lg)", alignItems: "start" }}>
+    <div className="kc-reports-layout">
       
       {toast && (
         <div style={{ position: "fixed", top: 80, right: 24, zIndex: 1000 }} className="kc-note">
@@ -226,7 +226,7 @@ export default function ReportsPage() {
       )}
 
       {/* Sidebar: Saved Reports list */}
-      <aside className="kc-card" style={{ padding: "var(--space-md)", position: "sticky", top: 80 }}>
+      <aside className="kc-card kc-reports-sidebar" style={{ padding: "var(--space-md)" }}>
         <button 
           className="kc-btn kc-btn-primary" 
           style={{ width: "100%", justifyContent: "center", marginBottom: "var(--space-md)" }}

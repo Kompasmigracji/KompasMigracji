@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — Email Marketing & Telegram Bot Funnel Dashboard */
 import React, { useState, useEffect } from "react";
-import { Icon, Avatar, Badge, DataTable, ProgressBar } from "@/components/admin/ui";
+import { Icon, Avatar, Badge, DataTable, ProgressBar, StatCard } from "@/components/admin/ui";
 
 export default function MarketingPage() {
   const [activeTab, setActiveTab] = useState("funnel");
@@ -121,22 +121,10 @@ export default function MarketingPage() {
             
             {/* KPI Stats */}
             <div className="kc-grid kc-grid-4">
-              <div className="kc-stat">
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase" }}>Всього лідів з бота</div>
-                <div style={{ fontSize: 32, fontWeight: 700, marginTop: 4 }}>1,489</div>
-              </div>
-              <div className="kc-stat">
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase" }}>Конверсія воронки</div>
-                <div style={{ fontSize: 32, fontWeight: 700, marginTop: 4, color: "var(--color-success)" }}>56.4%</div>
-              </div>
-              <div className="kc-stat">
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase" }}>Передано асистентам</div>
-                <div style={{ fontSize: 32, fontWeight: 700, marginTop: 4 }}>342</div>
-              </div>
-              <div className="kc-stat">
-                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase" }}>Середній час проходження</div>
-                <div style={{ fontSize: 32, fontWeight: 700, marginTop: 4, color: "var(--color-primary)" }}>1.4 хв</div>
-              </div>
+              <StatCard icon="users" value="1,489" label="Всього лідів з бота" trend={12.4} />
+              <StatCard icon="zap" value="56.4%" label="Конверсія воронки" trend={5.2} />
+              <StatCard icon="briefcase" value="342" label="Передано асистентам" />
+              <StatCard icon="clock" value="1.4 хв" label="Середній час проходження" />
             </div>
 
             {/* Funnel Drop-off Chart */}

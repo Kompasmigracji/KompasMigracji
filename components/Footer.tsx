@@ -68,7 +68,7 @@ export default function Footer() {
               onMouseEnter={e => { e.currentTarget.style.color = 'rgba(249,115,22,0.9)'; }}
               onMouseLeave={e => { e.currentTarget.style.color = 'rgba(249,115,22,0.45)'; }}
             >
-              iPhoenixGSM®
+              iPhoenix®
             </a>
             {' '}·{' '}<span style={{ letterSpacing: '0.02em' }}>Alex Khrysto</span>{' '}· © 2026
           </span>

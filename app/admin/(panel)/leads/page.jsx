@@ -29,6 +29,7 @@ export default function LeadsPage() {
   const [viewMode, setViewMode] = useState("kanban"); // "list" | "kanban"
   const [isLoading, setIsLoading] = useState(true);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const loadLeads = useCallback(async (statusFilter) => {
     setIsLoading(true);
@@ -154,7 +155,7 @@ export default function LeadsPage() {
               <Icon name="layers" size={16} />
             </button>
           </div>
-          <button className="kc-btn kc-btn-primary">
+          <button className="kc-btn kc-btn-primary" onClick={() => setModal(true)}>
             <Icon name="plus" size={16} /> Створити лід
           </button>
         </div>
@@ -185,12 +186,101 @@ export default function LeadsPage() {
         )
       )}
 
+      {modal && (
+        <AddLeadModal 
+          onClose={() => setModal(false)}
+          onCreated={() => { setModal(false); loadLeads(filter); }}
+        />
+      )}
+
       <ImportWizard 
         entityType="leads"
         isOpen={isImportOpen}
         onClose={() => setIsImportOpen(false)}
         onSuccess={() => loadLeads(filter)}
       />
+    </div>
+  );
+}
+
+function AddLeadModal({ onClose, onCreated }) {
+  const [f, setF] = useState({ name: "", contact: "", service: "", source: "site", status: "new" });
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const submit = async () => {
+    if (!f.name || !f.contact) { setError("Ім'я та контакт обов'язкові"); return; }
+    setSaving(true); setError("");
+    try {
+      const res = await fetch("/api/admin/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(f),
+      });
+      const data = await res.json();
+      setSaving(false);
+      if (!res.ok) { setError(data.error || "Помилка"); return; }
+      onCreated();
+    } catch (err) {
+      setSaving(false);
+      setError("Помилка підключення до сервера");
+    }
+  };
+
+  return (
+    <div className="kc-modal-bg" onClick={onClose}>
+      <div className="kc-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="kc-modal-title">Новий лід</div>
+
+        <div>
+          {error && <div className="kc-error" style={{ marginBottom: 12 }}>
+            <Icon name="settings" size={15} color="var(--color-danger)" /><span>{error}</span></div>}
+          
+          <div className="kc-field">
+            <label className="kc-label">Ім'я</label>
+            <input className="kc-input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
+          </div>
+          
+          <div className="kc-field">
+            <label className="kc-label">Контакт (Телефон/Email)</label>
+            <input className="kc-input" value={f.contact} onChange={(e) => setF({ ...f, contact: e.target.value })} />
+          </div>
+          
+          <div className="kc-field">
+            <label className="kc-label">Послуга</label>
+            <input className="kc-input" value={f.service} onChange={(e) => setF({ ...f, service: e.target.value })} placeholder="наприклад, Карту побиту" />
+          </div>
+
+          <div className="kc-field">
+            <label className="kc-label">Джерело</label>
+            <select className="kc-select" value={f.source} onChange={(e) => setF({ ...f, source: e.target.value })}>
+              <option value="site">Website</option>
+              <option value="bot">Telegram-бот</option>
+              <option value="facebook">Facebook</option>
+              <option value="instagram">Instagram</option>
+              <option value="other">Інше</option>
+            </select>
+          </div>
+
+          <div className="kc-field">
+            <label className="kc-label">Статус</label>
+            <select className="kc-select" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}>
+              <option value="new">Новий</option>
+              <option value="contacted">В контакті</option>
+              <option value="in_progress">В роботі</option>
+              <option value="closed">Успішно</option>
+              <option value="dropped">Відмова</option>
+            </select>
+          </div>
+
+          <div className="kc-row" style={{ justifyContent: "flex-end", gap: 8 }}>
+            <button className="kc-btn kc-btn-ghost" onClick={onClose}>Скасувати</button>
+            <button className="kc-btn kc-btn-primary" onClick={submit} disabled={saving}>
+              {saving ? "Створення…" : "Створити"}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

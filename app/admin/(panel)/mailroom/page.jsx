@@ -88,34 +88,52 @@ export default function MailroomPage() {
       </div>
 
       {/* KPI stats */}
-      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Unread Mail Alerts</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>
-            {letters.filter(l => l.status === "unread").length}
+      <div className="kc-grid kc-grid-3" style={{ marginBottom: "var(--space-lg)" }}>
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(229,168,75,0.1)" }}>
+              <Icon name="mail" size={18} color="var(--color-warning)" />
+            </div>
+            <Badge status="brass" text="Action" />
           </div>
+          <div className="kc-stat-val">{letters.filter(l => l.status === "unread").length}</div>
+          <div className="kc-stat-lbl">Unread Mail Alerts</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Connected Office Contracts</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>48</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "var(--brass-bg)" }}>
+              <Icon name="briefcase" size={18} color="var(--color-primary)" />
+            </div>
+            <Badge status="blue" text="Offices" />
+          </div>
+          <div className="kc-stat-val">48</div>
+          <div className="kc-stat-lbl">Connected Office Contracts</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Scans Dispatched (Month)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>241</div>
+
+        <div className="kc-stat">
+          <div className="kc-stat-top">
+            <div className="kc-stat-ico" style={{ background: "rgba(95,184,122,0.1)" }}>
+              <Icon name="check" size={18} color="var(--color-success)" />
+            </div>
+            <span style={{ fontSize: "var(--text-xs)", color: "var(--color-success)" }}>Good</span>
+          </div>
+          <div className="kc-stat-val">241</div>
+          <div className="kc-stat-lbl">Scans Dispatched (Month)</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: "var(--space-sm)", borderBottom: "1px solid var(--border)", marginBottom: "var(--space-lg)" }}>
+      <div style={{ display: "flex", gap: "var(--space-sm)", borderBottom: "1px solid var(--border)", marginBottom: "var(--space-lg)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button 
           onClick={() => setActiveTab("letters")}
-          style={{ padding: "8px 16px", background: "none", border: "none", borderBottom: activeTab === "letters" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "letters" ? "var(--color-primary)" : "var(--dim)", fontWeight: activeTab === "letters" ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+          style={{ padding: "8px 16px", background: "none", border: "none", borderBottom: activeTab === "letters" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "letters" ? "var(--color-primary)" : "var(--dim)", fontWeight: activeTab === "letters" ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}
         >
           <Icon name="mail" size={16} /> Mailbox Logs
         </button>
         <button 
           onClick={() => setActiveTab("companies")}
-          style={{ padding: "8px 16px", background: "none", border: "none", borderBottom: activeTab === "companies" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "companies" ? "var(--color-primary)" : "var(--dim)", fontWeight: activeTab === "companies" ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
+          style={{ padding: "8px 16px", background: "none", border: "none", borderBottom: activeTab === "companies" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "companies" ? "var(--color-primary)" : "var(--dim)", fontWeight: activeTab === "companies" ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}
         >
           <Icon name="briefcase" size={16} /> Virtual Office Subscriptions
         </button>
@@ -157,13 +175,15 @@ export default function MailroomPage() {
 
       {/* Notification Dispatch Modal */}
       {showNotifyModal && selectedLetter && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
-        }}>
-          <div className="kc-card" style={{ maxWidth: "450px", width: "90%" }}>
-            <h3 style={{ margin: "0 0 var(--space-sm) 0" }}>Dispatch Mail Alert</h3>
-            <p style={{ fontSize: "var(--text-sm)", margin: "0 0 var(--space-md) 0" }}>
+        <div className="kc-modal-bg" onClick={() => setShowNotifyModal(false)}>
+          <div className="kc-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: "450px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-sm)" }}>
+              <h3 className="kc-modal-title" style={{ margin: 0 }}>Dispatch Mail Alert</h3>
+              <button onClick={() => setShowNotifyModal(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dim)" }}>
+                <Icon name="x" size={20} />
+              </button>
+            </div>
+            <p style={{ fontSize: "var(--text-sm)", margin: "0 0 var(--space-md) 0", color: "var(--dim)" }}>
               Alert client <strong>{selectedLetter.client}</strong> about incoming letter from <strong>{selectedLetter.sender}</strong>:
             </p>
 
@@ -176,7 +196,7 @@ export default function MailroomPage() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "var(--space-sm)" }}>
-              <button className="kc-btn kc-btn-secondary" onClick={() => setShowNotifyModal(false)}>Cancel</button>
+              <button className="kc-btn" onClick={() => setShowNotifyModal(false)}>Cancel</button>
               <button className="kc-btn kc-btn-primary" onClick={() => {
                 alert("Notification successfully sent to client via Telegram and Email!");
                 const updated = letters.map(l => l.id === selectedLetter.id ? { ...l, status: "forwarded" } : l);

@@ -1928,7 +1928,7 @@ export default function OrakulPage() {
           </svg>
         </span>
         <div>
-          <div className="e-wm-txt">iPhoenixGSM®</div>
+          <div className="e-wm-txt">iPhoenix®</div>
           <div className="e-wm-copy">Design &amp; Dev</div>
         </div>
       </div>

@@ -81,7 +81,8 @@ export default function WorkPermitsPage() {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
+      {/* Header */}
+      <div className="kc-row" style={{ justifyContent: "space-between", marginBottom: "var(--space-lg)", gap: "var(--space-sm)", flexWrap: "wrap" }}>
         <div>
           <h2 className="kc-h2" style={{ margin: 0 }}>Work Permits & Legalizations</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
@@ -94,23 +95,23 @@ export default function WorkPermitsPage() {
       </div>
 
       {/* KPI Stats */}
-      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
+      <div className="kc-grid kc-grid-3" style={{ marginBottom: "var(--space-lg)" }}>
+        <div className="kc-card" style={{ borderTop: "3px solid var(--color-success)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Permits</div>
           <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>85</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
+        <div className="kc-card" style={{ borderTop: "3px solid var(--color-warning)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Expiring (&lt; 30 days)</div>
           <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>4</div>
         </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)" }}>
+        <div className="kc-card" style={{ borderTop: "3px solid var(--color-danger)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Expired Permits</div>
           <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>1</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: "var(--space-sm)", borderBottom: "1px solid var(--border)", marginBottom: "var(--space-lg)" }}>
+      <div style={{ display: "flex", gap: "var(--space-sm)", borderBottom: "1px solid var(--border)", marginBottom: "var(--space-lg)", flexWrap: "wrap" }}>
         <button 
           onClick={() => setActiveTab("permits")}
           style={{ padding: "8px 16px", background: "none", border: "none", borderBottom: activeTab === "permits" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "permits" ? "var(--color-primary)" : "var(--dim)", fontWeight: activeTab === "permits" ? 600 : 400, cursor: "pointer", display: "flex", alignItems: "center", gap: 8 }}
@@ -134,40 +135,39 @@ export default function WorkPermitsPage() {
 
       {activeTab === "submissions" && (
         <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1 }}>
-          <table className="kc-table" style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "var(--panel-2)", borderBottom: "1px solid var(--border)", textAlign: "left" }}>
-                <th style={{ padding: "12px" }}>Foreigner</th>
-                <th style={{ padding: "12px" }}>Employer & Type</th>
-                <th style={{ padding: "12px" }}>Urząd (PUP/Wojewoda)</th>
-                <th style={{ padding: "12px" }}>Submitted Date</th>
-                <th style={{ padding: "12px" }}>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {submissions.map((s) => (
-                <tr key={s.id} style={{ borderBottom: "1px solid var(--border)" }}>
-                  <td style={{ padding: "12px", fontWeight: 600 }}>{s.foreigner}</td>
-                  <td style={{ padding: "12px" }}>{s.employer} ({s.type})</td>
-                  <td style={{ padding: "12px" }}>{s.pup}</td>
-                  <td style={{ padding: "12px" }}>{s.submittedDate}</td>
-                  <td style={{ padding: "12px" }}>
-                    <Badge status={s.status === "submitted" ? "info" : "warning"} text={s.status.toUpperCase()} />
-                  </td>
+          <div className="kc-table-wrap">
+            <table className="kc-table" style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ background: "var(--panel-2)", borderBottom: "1px solid var(--border)", textAlign: "left" }}>
+                  <th style={{ padding: "12px" }}>Foreigner</th>
+                  <th style={{ padding: "12px" }}>Employer & Type</th>
+                  <th style={{ padding: "12px" }}>Urząd (PUP/Wojewoda)</th>
+                  <th style={{ padding: "12px" }}>Submitted Date</th>
+                  <th style={{ padding: "12px" }}>Status</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {submissions.map((s) => (
+                  <tr key={s.id} style={{ borderBottom: "1px solid var(--border)" }}>
+                    <td style={{ padding: "12px", fontWeight: 600 }}>{s.foreigner}</td>
+                    <td style={{ padding: "12px" }}>{s.employer} ({s.type})</td>
+                    <td style={{ padding: "12px" }}>{s.pup}</td>
+                    <td style={{ padding: "12px" }}>{s.submittedDate}</td>
+                    <td style={{ padding: "12px" }}>
+                      <Badge status={s.status === "submitted" ? "info" : "warning"} text={s.status.toUpperCase()} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Notification Modal */}
       {showNotifyModal && selectedPermit && (
-        <div style={{
-          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-          background: "rgba(0,0,0,0.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
-        }}>
-          <div className="kc-card" style={{ maxWidth: "450px", width: "90%" }}>
+        <div className="kc-modal-bg" onClick={() => setShowNotifyModal(false)}>
+          <div className="kc-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: "450px", width: "90%" }}>
             <h3 style={{ margin: "0 0 var(--space-sm) 0" }}>Send Expiry Alert</h3>
             <p style={{ fontSize: "var(--text-sm)", margin: "0 0 var(--space-md) 0" }}>
               Draft warning email to the employer <strong>{selectedPermit.employer}</strong> regarding <strong>{selectedPermit.foreigner}</strong>'s work permit:

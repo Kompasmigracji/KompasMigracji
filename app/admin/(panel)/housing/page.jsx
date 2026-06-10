@@ -186,14 +186,15 @@ export default function HousingPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button 
           onClick={() => setActiveTab("properties")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "properties" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "properties" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="home" size={16} /> Житлові Об&apos;єкти
@@ -204,7 +205,8 @@ export default function HousingPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "payments" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "payments" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="card" size={16} /> Транзакції оренди
@@ -215,7 +217,8 @@ export default function HousingPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "ai_allocator" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "ai_allocator" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="cpu" size={16} /> AI Розселення (175+ Agents)
@@ -335,7 +338,7 @@ export default function HousingPage() {
         )}
 
         {activeTab === "ai_allocator" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "var(--space-lg)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
             {/* AI Allocator Cockpit */}
             <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
               <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Housing Allocator</h3>

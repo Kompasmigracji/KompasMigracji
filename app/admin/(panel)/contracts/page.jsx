@@ -188,14 +188,15 @@ export default function ContractsPage() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
         <button 
           onClick={() => setActiveTab("all_docs")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "all_docs" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "all_docs" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="file-text" size={16} /> Усі документи
@@ -206,7 +207,8 @@ export default function ContractsPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "templates" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "templates" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="copy" size={16} /> Бланки & Шаблони
@@ -217,7 +219,8 @@ export default function ContractsPage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "ai_sign" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "ai_sign" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
+            flexShrink: 0
           }}
         >
           <Icon name="cpu" size={16} /> AI Валідація підписів (175+ Agents)
@@ -338,7 +341,7 @@ export default function ContractsPage() {
         )}
 
         {activeTab === "ai_sign" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "var(--space-lg)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
             <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
               <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Cryptographic Vault</h3>
               

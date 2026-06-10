@@ -1,7 +1,7 @@
-﻿# KompasCRM
+# KompasCRM
 
 > **© 2024–2026 DOMUS V Sp. z o.o. (Варшава).** Бренд «Kompas Migracji» — власність DOMUS V Sp. z o.o.  
-> CRM-система KompasCRM розроблена **iPhoenixGSM** (iphoenixgsm@gmail.com).
+> CRM-система KompasCRM розроблена **iPhoenix** (iphoenixgsm@gmail.com).
 
 Кастомная админ-CRM для kompasmigracji.com: дашборд с аналитикой, реестр
 участников профсоюза, личный кабинет каждого участника, лиды воронки,

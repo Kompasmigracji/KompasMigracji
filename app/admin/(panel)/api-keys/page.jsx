@@ -22,7 +22,7 @@ export default function ApiKeysPage() {
     { header: "Token Prefix", cell: (row) => <span style={{ fontFamily: "monospace", color: "var(--dim)" }}>{row.prefix}</span> },
     { header: "Created", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.created}</span> },
     { header: "Last Used", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.lastUsed}</span> },
-    { header: "Status", cell: (row) => <Badge status={row.status === "active" ? "success" : "danger"} text={row.status} /> },
+    { header: "Status", cell: (row) => <Badge status={row.status === "active" ? "green" : "red"} text={row.status} /> },
     { header: "", cell: () => <button className="kc-btn kc-btn-ghost"><Icon name="trash" size={16} /></button> }
   ];
 
@@ -30,10 +30,10 @@ export default function ApiKeysPage() {
     { header: "Endpoint URL", cell: (row) => <span style={{ fontFamily: "monospace", fontSize: "var(--text-sm)" }}>{row.url}</span> },
     { header: "Subscribed Events", cell: (row) => (
       <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-        {row.events.map(e => <Badge key={e} status="info" text={e} />)}
+        {row.events.map(e => <Badge key={e} status="blue" text={e} />)}
       </div>
     )},
-    { header: "Status", cell: (row) => <Badge status={row.status === "active" ? "success" : "danger"} text={row.status} /> },
+    { header: "Status", cell: (row) => <Badge status={row.status === "active" ? "green" : "red"} text={row.status} /> },
     { header: "Last Delivery", cell: (row) => <span style={{ color: row.lastDelivery === "Success" ? "var(--color-success)" : "var(--color-danger)" }}>{row.lastDelivery}</span> },
     { header: "", cell: () => <button className="kc-btn kc-btn-ghost"><Icon name="more-horizontal" size={16} /></button> }
   ];

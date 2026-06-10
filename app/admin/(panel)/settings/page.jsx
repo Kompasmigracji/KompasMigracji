@@ -1,7 +1,7 @@
 "use client";
 /* /admin/settings — налаштування CRM: команда, змiна пароля, безпека. */
 import React, { useEffect, useState } from "react";
-import { Icon, Spinner, Badge, EmptyState } from "@/components/admin/ui";
+import { Icon, Spinner, Badge, EmptyState, Avatar } from "@/components/admin/ui";
 import { ROLE_LABEL } from "@/lib/rbac";
 
 export default function SettingsPage() {
@@ -100,13 +100,11 @@ export default function SettingsPage() {
             <div>
               {team.map((u) => (
                 <div key={u.id} className="kc-row"
-                  style={{ padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
-                  <div className="kc-avatar" style={{ width: 30, height: 30 }}>
-                    {(u.full_name || "?").split(" ").map((p) => p[0]).slice(0, 2).join("")}
-                  </div>
+                  style={{ padding: "10px 0", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+                  <Avatar name={u.full_name} size={30} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 13.5, fontWeight: 500 }}>{u.full_name}</div>
-                    <div style={{ color: "#5a6470", fontSize: 12 }}>{u.email}</div>
+                    <div style={{ color: "var(--dim)", fontSize: 12 }}>{u.email}</div>
                   </div>
                   <Badge status={u.role === "admin" ? "brass" : "blue"}
                     text={ROLE_LABEL[u.role] || u.role} />
@@ -120,9 +118,12 @@ export default function SettingsPage() {
         <div className="kc-card">
           <div className="kc-card-cap">Змiна пароля</div>
           {me && (
-            <div style={{ marginBottom: 12 }}>
-              <span style={{ fontWeight: 600, fontSize: 14 }}>{me.name}</span>
-              <span style={{ color: "#828c9b", fontSize: 13 }}> · {me.email}</span>
+            <div style={{ marginBottom: 16, display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+              <Avatar name={me.name} size={32} />
+              <div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>{me.name}</div>
+                <div style={{ color: "var(--dim)", fontSize: 12 }}>{me.email}</div>
+              </div>
             </div>
           )}
           <div className="kc-field">

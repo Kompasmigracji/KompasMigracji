@@ -50,10 +50,10 @@ export default function CustomFieldsPage() {
 
   const columns = [
     { header: "Назва Поля", cell: (row) => <span style={{ fontWeight: 600 }}>{row.name}</span> },
-    { header: "Сутність (Таблиця)", cell: (row) => <Badge status="default" text={row.entity} /> },
+    { header: "Сутність (Таблиця)", cell: (row) => <Badge status="dim" text={row.entity} /> },
     { header: "Тип Даних", cell: (row) => <span style={{ fontFamily: "monospace" }}>{row.type}</span> },
-    { header: "Обов'язкове", cell: (row) => <Badge status={row.required === "Yes" ? "primary" : "dim"} text={row.required} /> },
-    { header: "Статус", cell: (row) => <Badge status={row.status === "active" ? "green" : "warning"} text={row.status.toUpperCase()} /> },
+    { header: "Обов'язкове", cell: (row) => <Badge status={row.required === "Yes" ? "blue" : "dim"} text={row.required} /> },
+    { header: "Статус", cell: (row) => <Badge status={row.status === "active" ? "green" : "brass"} text={row.status.toUpperCase()} /> },
     { header: "", cell: () => (
       <div style={{ display: "flex", gap: 4 }}>
         <button className="kc-btn kc-btn-ghost" style={{ padding: 4 }}><Icon name="edit" size={16} /></button>

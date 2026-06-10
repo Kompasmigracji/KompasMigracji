@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — Knowledge Base & Legal Wiki */
 import React, { useState, useEffect } from "react";
-import { Icon, Avatar, Badge, DataTable, SearchInput } from "@/components/admin/ui";
+import { Icon, Avatar, Badge, DataTable, SearchInput, StatCard } from "@/components/admin/ui";
 
 export default function KnowledgeBasePage() {
   const [articles] = useState([
@@ -47,32 +47,31 @@ export default function KnowledgeBasePage() {
   const columns = [
     { header: "Article Title", cell: (row) => (
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
-        <div style={{ width: 36, height: 36, borderRadius: 8, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 36, height: 36, borderRadius: 8, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <Icon name={row.category === "Legal Updates" ? "alert" : row.category === "Guides" ? "book-open" : "file-text"} size={16} color="var(--color-primary)" />
         </div>
         <div>
-          <div style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", color: "var(--text)" }}>
             {row.title}
             {row.urgent && <Badge status="red" text="URGENT READ" />}
           </div>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id} • {row.category}</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginTop: 2 }}>{row.id} • {row.category}</div>
         </div>
       </div>
     )},
     { header: "Author", cell: (row) => (
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <Avatar name={row.author.substring(0,2).toUpperCase()} size={24} />
-        <span style={{ fontSize: "var(--text-sm)" }}>{row.author}</span>
+        <Avatar name={row.author} size={24} />
       </div>
     )},
     { header: "Last Updated", cell: (row) => <span style={{ fontSize: "var(--text-sm)", color: "var(--dim)" }}>{row.date}</span> },
-    { header: "Views", cell: (row) => <span style={{ fontWeight: 600 }}>{row.views}</span> },
+    { header: "Views", cell: (row) => <span style={{ fontWeight: 600, color: "var(--text)" }}>{row.views}</span> },
     { header: "Status", cell: (row) => (
       <Badge status={row.status === "published" ? "green" : "dim"} text={row.status.toUpperCase()} />
     )},
-    { header: "", cell: (row) => (
+    { header: "", cell: () => (
       <div style={{ display: "flex", gap: 8 }}>
-        <button className="kc-btn kc-btn-ghost"><Icon name="edit" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost" style={{ padding: 6, minHeight: "auto" }}><Icon name="edit" size={16} /></button>
       </div>
     )}
   ];
@@ -86,7 +85,7 @@ export default function KnowledgeBasePage() {
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-xs)", flexShrink: 0 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-xs)", flexShrink: 0, flexWrap: "wrap", gap: "var(--space-md)" }}>
         <div>
           <h2 className="kc-h2" style={{ margin: 0 }}>База Знань & Wiki (Legal Center)</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
@@ -100,29 +99,20 @@ export default function KnowledgeBasePage() {
       </div>
 
       {/* KPI Stats */}
-      <div style={{ display: "flex", gap: "var(--space-lg)", marginBottom: "var(--space-sm)", flexShrink: 0, flexWrap: "wrap" }}>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Всього статей</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)" }}>128</div>
-        </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Популярний розділ</div>
-          <div style={{ fontSize: 18, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>Legal Updates</div>
-        </div>
-        <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-danger)", minWidth: 180 }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Непрочитані оновлення</div>
-          <div style={{ fontSize: 24, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-danger)" }}>2</div>
-        </div>
+      <div className="kc-grid kc-grid-3" style={{ marginBottom: "var(--space-sm)" }}>
+        <StatCard icon="file" value="128" label="Всього статей" sub="База знань" />
+        <StatCard icon="compass" value="Legal Updates" label="Популярний розділ" sub="База знань" />
+        <StatCard icon="alert" value="2" label="Непрочитані оновлення" sub="Необхідна дія" />
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)" }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto" }}>
         <button onClick={() => setActiveTab("articles")} 
           style={{
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "articles" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "articles" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap"
           }}>
           <Icon name="book-open" size={16} /> Статті Бази Знань
         </button>
@@ -131,7 +121,7 @@ export default function KnowledgeBasePage() {
             padding: "12px 16px", background: "none", border: "none",
             borderBottom: activeTab === "logs" ? "2px solid var(--color-primary)" : "2px solid transparent",
             color: activeTab === "logs" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8
+            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap"
           }}>
           <Icon name="cpu" size={16} /> AI Indexer Logs
         </button>
@@ -141,21 +131,23 @@ export default function KnowledgeBasePage() {
         {activeTab === "articles" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
             <SearchInput value={searchQuery} onChange={setSearchQuery} placeholder="Пошук статей за назвою, тегом чи ID..." />
-            <DataTable columns={columns} data={filteredArticles} />
+            <div className="kc-card" style={{ padding: 0, overflow: "hidden" }}>
+              <DataTable columns={columns} data={filteredArticles} />
+            </div>
           </div>
         )}
 
         {activeTab === "logs" && (
-          <div className="kc-card" style={{ background: "#06090e", color: "#c9d1d9", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
+          <div className="kc-card" style={{ background: "#0d1117", border: "1px solid var(--border)", color: "#c9d1d9", display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
             <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Живі логи авто-індексації бази знань</h3>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.6", display: "flex", flexDirection: "column", gap: 8, maxHeight: 300, overflowY: "auto" }}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.6", display: "flex", flexDirection: "column", gap: 8, maxHeight: 350, overflowY: "auto" }}>
               {wikiLogs.map((log, index) => {
                 let color = "#8b949e";
                 if (log.type === "coordinator") color = "#58a6ff";
                 if (log.type === "system") color = "#56d364";
                 return (
                   <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
-                    <span style={{ color: "var(--dim)" }}>[{log.time}]</span>{" "}
+                    <span style={{ color: "#8b949e" }}>[{log.time}]</span>{" "}
                     <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
                   </div>
                 );

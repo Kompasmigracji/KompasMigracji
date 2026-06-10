@@ -7,6 +7,7 @@ import { navFor, ROLE_LABEL } from "@/lib/rbac";
 import { Icon, Spinner, Avatar } from "./ui";
 import GlobalSearch from "./GlobalSearch";
 import NotificationCenter from "./NotificationCenter";
+import AgentConsole from "./AgentConsole";
 import enMsg from "@/messages/admin/en.json";
 import plMsg from "@/messages/admin/pl.json";
 import ukMsg from "@/messages/admin/uk.json";
@@ -25,6 +26,7 @@ export default function Shell({ children }) {
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/auth/me")
@@ -73,6 +75,9 @@ export default function Shell({ children }) {
   const current = nav.find((n) =>
     n.href === "/admin" ? pathname === "/admin" : pathname.startsWith(n.href)
   );
+
+  // Extract module name from pathname (e.g. /admin/booking -> booking)
+  const moduleName = pathname.split("/")[2] || "";
 
   const t = translations[lang] || translations.en;
 
@@ -186,6 +191,15 @@ export default function Shell({ children }) {
 
               <div style={{ width: 1, height: 24, background: 'var(--border)', margin: '0 8px' }} />
 
+              <button 
+                onClick={() => setIsConsoleOpen(!isConsoleOpen)} 
+                className={`kc-theme-btn ${isConsoleOpen ? 'kc-on' : ''}`}
+                title="AI Agent Console"
+                style={{ color: isConsoleOpen ? 'var(--color-primary)' : 'inherit', marginRight: 4 }}
+              >
+                <Icon name="cpu" size={16} />
+              </button>
+
               <button onClick={toggleTheme} className="kc-theme-btn" title={t.theme}>
                 <Icon name={theme === "dark" ? "sun" : "moon"} size={16} />
                 <span>{theme === "dark" ? t.light : t.dark}</span>
@@ -193,8 +207,13 @@ export default function Shell({ children }) {
             </div>
           </header>
           
-          <main className="kc-content kc-page-enter">
-            {children}
+          <main className="kc-content kc-page-enter" style={{ display: 'flex', gap: 'var(--space-lg)', position: 'relative', height: 'calc(100vh - 60px)', padding: 0, maxWidth: 'none' }}>
+            <div style={{ flex: 1, minWidth: 0, padding: 'var(--space-lg)', overflowY: 'auto', height: '100%' }}>
+              {children}
+            </div>
+            {isConsoleOpen && (
+              <AgentConsole module={moduleName} onClose={() => setIsConsoleOpen(false)} />
+            )}
           </main>
         </div>
       </div>

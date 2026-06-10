@@ -71,9 +71,9 @@ export default function RodoPage() {
       </div>
     )},
     { header: "Action Type", cell: (row) => {
-      let status = "info";
-      if (row.action_type === "request_deletion") status = "danger";
-      if (row.action_type === "consent_given") status = "success";
+      let status = "dim";
+      if (row.action_type === "request_deletion") status = "red";
+      if (row.action_type === "consent_given") status = "green";
       return <Badge status={status} text={row.action_type.toUpperCase().replace("_", " ")} />;
     }},
     { header: "IP Address", cell: (row) => <span style={{ fontFamily: "monospace", color: "var(--dim)" }}>{row.ip_address}</span> },

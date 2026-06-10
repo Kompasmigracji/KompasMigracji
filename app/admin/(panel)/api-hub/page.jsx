@@ -31,12 +31,12 @@ export default function ApiHubPage() {
       </div>
     )},
     { header: "Environment", cell: (row) => (
-      <Badge status={row.environment === "Production" ? "primary" : "warning"} text={row.environment} />
+      <Badge status={row.environment === "Production" ? "blue" : "brass"} text={row.environment} />
     )},
     { header: "Created", cell: (row) => <span style={{ fontSize: "var(--text-sm)" }}>{row.created}</span> },
     { header: "Last Used", cell: (row) => <span style={{ fontSize: "var(--text-sm)", color: "var(--dim)" }}>{row.lastUsed}</span> },
     { header: "Status", cell: (row) => (
-      <Badge status={row.status === "active" ? "success" : "danger"} text={row.status.toUpperCase()} />
+      <Badge status={row.status === "active" ? "green" : "red"} text={row.status.toUpperCase()} />
     )},
     { header: "Actions", cell: (row) => (
       <div style={{ display: "flex", gap: 8 }}>

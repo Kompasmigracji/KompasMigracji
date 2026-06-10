@@ -51,9 +51,9 @@ export default function DealsPage() {
     setMounted(true); 
     
     // Preload relational data for dropdowns
-    fetch("/api/admin/team").then(r => r.json()).then(d => setWorkers(d.team || []));
-    fetch("/api/admin/leads").then(r => r.json()).then(d => setLeads(d.leads || []));
-    fetch("/api/admin/members").then(r => r.json()).then(d => setMembers(d.members || []));
+    fetch("/api/admin/team").then(r => r.json()).then(d => setWorkers(d.team || [])).catch(() => {});
+    fetch("/api/admin/leads").then(r => r.json()).then(d => setLeads(d.leads || [])).catch(() => {});
+    fetch("/api/admin/members").then(r => r.json()).then(d => setMembers(d.members || [])).catch(() => {});
   }, []);
 
   const flash = (msg) => { 
@@ -303,7 +303,7 @@ export default function DealsPage() {
       {/* Detail panel */}
       {mounted && detail && createPortal(
         <div style={{
-          position: "fixed", top: 0, right: 0, bottom: 0, width: 440,
+          position: "fixed", top: 0, right: 0, bottom: 0, width: "100%", maxWidth: 440,
           background: "var(--panel)", borderLeft: "1px solid var(--border)",
           boxShadow: "var(--shadow-lg)", overflowY: "auto", zIndex: 150, padding: 24
         }}>
@@ -472,7 +472,7 @@ export default function DealsPage() {
         }}
           onClick={e => { if (e.target === e.currentTarget) setForm(null); }}
         >
-          <div className="kc-card" style={{ width: "100%", maxWidth: 500, maxH: "90vh", overflowY: "auto" }}>
+          <div className="kc-card" style={{ width: "100%", maxWidth: 500, maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 style={{ margin: 0, fontSize: "var(--text-lg)", fontWeight: 600 }}>Нова угода</h2>
               <button className="kc-btn kc-btn-ghost" onClick={() => setForm(null)}>✕</button>
