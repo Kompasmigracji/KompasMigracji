@@ -9,9 +9,9 @@
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| M1 | Navigation & Icons Setup | Register 21 modules in `lib/rbac.js` and add missing SVG paths in `components/admin/ui.jsx`. | None | IN_PROGRESS (Conv: 0377551b-4fc3-4312-905d-ff9cb9cbf50e) |
-| M2 | AI Agent Console Implementation | Implement `AgentConsole.jsx` and modify `Shell.jsx` to render the console context-aware. | M1 | IN_PROGRESS (Conv: 0377551b-4fc3-4312-905d-ff9cb9cbf50e) |
-| M3 | Code Quality & Build Verification | Perform full production builds, typechecks, and verify zero errors/lint issues. | M2 | PLANNED |
+| M1 | Navigation & Icons Setup | Register 21 modules in `lib/rbac.js` and add missing SVG paths in `components/admin/ui.jsx`. | None | DONE |
+| M2 | AI Agent Console Implementation | Implement `AgentConsole.jsx` and modify `Shell.jsx` to render the console context-aware. | M1 | DONE |
+| M3 | Code Quality & Build Verification | Perform full production builds, typechecks, and verify zero errors/lint issues. | M2 | DONE |
 
 ## Interface Contracts
 ### `AgentConsole` Component
