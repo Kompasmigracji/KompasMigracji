@@ -35,9 +35,10 @@ const styles = {
     zIndex: 9999, 
     width: 'min(370px, calc(100vw - 32px))', 
     height: 'min(540px, calc(100vh - 120px))', 
-    background: '#f8fafc', 
+    background: '#0f172a', 
     borderRadius: 18, 
-    boxShadow: '0 8px 40px rgba(0,0,0,0.18)', 
+    border: '1px solid rgba(249,115,22,0.25)',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.4)', 
     display: 'flex', 
     flexDirection: 'column' as const, 
     overflow: 'hidden', 
@@ -51,7 +52,7 @@ const styles = {
   status: { color: '#94a3b8', fontSize: 11, display: 'flex', alignItems: 'center', gap: 5 },
   statusDot: { width: 7, height: 7, borderRadius: '50%', background: '#22c55e', display: 'inline-block' },
   closeButton: { background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: '#64748b' },
-  messagesContainer: { flex: 1, overflowY: 'auto' as const, padding: '16px 14px 8px', scrollbarWidth: 'thin' as const, scrollbarColor: '#e2e8f0 transparent' as const },
+  messagesContainer: { flex: 1, overflowY: 'auto' as const, padding: '16px 14px 8px', scrollbarWidth: 'thin' as const, scrollbarColor: 'rgba(255,255,255,0.1) transparent' as const },
   bubble: (isUser: boolean) => ({ 
     display: 'flex', 
     justifyContent: isUser ? 'flex-end' : 'flex-start', 
@@ -61,30 +62,30 @@ const styles = {
     maxWidth: '78%', 
     padding: '10px 14px', 
     borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px', 
-    background: isUser ? 'linear-gradient(135deg, #f97316, #ea580c)' : '#fff', 
-    color: isUser ? '#fff' : '#1e293b', 
+    background: isUser ? 'linear-gradient(135deg, #f97316, #ea580c)' : 'rgba(255,255,255,0.05)', 
+    color: isUser ? '#fff' : '#f8fafc', 
     fontSize: 13, 
     lineHeight: 1.55, 
     whiteSpace: 'pre-wrap' as const, 
-    boxShadow: isUser ? 'none' : '0 1px 3px rgba(0,0,0,0.08)', 
-    border: isUser ? 'none' : '1px solid #e2e8f0'
+    boxShadow: isUser ? 'none' : '0 1px 3px rgba(0,0,0,0.2)', 
+    border: isUser ? 'none' : '1px solid rgba(255,255,255,0.05)'
   }),
-  inputArea: { padding: '10px 12px', background: '#fff', borderTop: '1px solid #e2e8f0', display: 'flex', gap: 8, alignItems: 'flex-end', flexShrink: 0 },
-  textarea: { flex: 1, border: '1px solid #e2e8f0', borderRadius: 12, padding: '9px 12px', fontSize: 13, lineHeight: 1.5, resize: 'none' as const, outline: 'none', fontFamily: 'inherit', background: '#f8fafc', color: '#1e293b', maxHeight: 90, overflowY: 'auto' as const },
+  inputArea: { padding: '10px 12px', background: '#0f172a', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: 8, alignItems: 'flex-end', flexShrink: 0 },
+  textarea: { flex: 1, border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, padding: '9px 12px', fontSize: 13, lineHeight: 1.5, resize: 'none' as const, outline: 'none', fontFamily: 'inherit', background: 'rgba(255,255,255,0.03)', color: '#f8fafc', maxHeight: 90, overflowY: 'auto' as const },
   sendButton: (disabled: boolean) => ({ 
     width: 38, 
     height: 38, 
     borderRadius: '50%', 
     border: 'none', 
     cursor: 'pointer', 
-    background: disabled ? '#e2e8f0' : 'linear-gradient(135deg, #f97316, #ea580c)', 
+    background: disabled ? 'rgba(255,255,255,0.1)' : 'linear-gradient(135deg, #f97316, #ea580c)', 
     display: 'flex', 
     alignItems: 'center', 
     justifyContent: 'center', 
     flexShrink: 0, 
     transition: 'background 0.15s'
   }),
-  footer: { textAlign: 'center' as const, fontSize: 10, color: '#94a3b8', padding: '4px 0 8px', background: '#fff' },
+  footer: { textAlign: 'center' as const, fontSize: 10, color: '#64748b', padding: '4px 0 8px', background: '#0f172a' },
   typingContainer: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 },
   typingDot: (delay: number) => ({ 
     width: 7, 
@@ -113,7 +114,7 @@ function TypingDots() {
   return (
     <div style={styles.typingContainer}>
       <div style={styles.avatar}>🧭</div>
-      <div style={{ padding: '10px 16px', background: '#fff', borderRadius: '18px 18px 18px 4px', border: '1px solid #e2e8f0', display: 'flex', gap: 5, alignItems: 'center' }}>
+      <div style={{ padding: '10px 16px', background: 'rgba(255,255,255,0.05)', borderRadius: '18px 18px 18px 4px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: 5, alignItems: 'center' }}>
         {[0, 1, 2].map(i => <span key={`dot-${i}`} style={styles.typingDot(i)} />)}
       </div>
     </div>
@@ -232,12 +233,12 @@ export default function ChatBot() {
                       key={chip}
                       onClick={() => { if (!loading) sendText(chip, messages); }}
                       style={{
-                        padding: '6px 12px', borderRadius: 20, border: '1.5px solid #e2e8f0',
-                        background: '#f8fafc', color: '#1e293b', fontSize: 12, cursor: 'pointer',
+                        padding: '6px 12px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.1)',
+                        background: 'rgba(255,255,255,0.05)', color: '#f8fafc', fontSize: 12, cursor: 'pointer',
                         fontFamily: 'inherit', transition: 'all 0.15s',
                       }}
-                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#f97316'; (e.currentTarget as HTMLButtonElement).style.background = '#fff7ed'; }}
-                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0'; (e.currentTarget as HTMLButtonElement).style.background = '#f8fafc'; }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = '#f97316'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(249,115,22,0.15)'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; }}
                     >
                       {chip}
                     </button>
