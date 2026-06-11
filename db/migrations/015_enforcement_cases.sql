@@ -1,7 +1,7 @@
 -- Створення таблиці виконавчих справ
 CREATE TABLE IF NOT EXISTS enforcement_cases (
     id SERIAL PRIMARY KEY,
-    lead_id INTEGER REFERENCES leads(id) ON DELETE SET NULL,
+    lead_id UUID REFERENCES leads(id) ON DELETE SET NULL,
     full_name VARCHAR(255) NOT NULL,
     contact VARCHAR(255),
     case_number VARCHAR(100), -- Sygnatura akt
