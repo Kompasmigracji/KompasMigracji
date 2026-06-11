@@ -2,6 +2,7 @@
 "use client";
 /* KompasCRM — Core UI Components Library */
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 /* ---------- Icons (Minimal SVG set) ---------- */
 const PATHS = {
@@ -192,18 +193,18 @@ export function EmptyState({ title = "Немає даних", description, icon 
 }
 
 /* ---------- Avatar ---------- */
-export function Avatar({ name = "?", role = "", size = 32, src = null }) {
+export function Avatar({ name = "?", role = "", size = 32, src = null, hideName = false }) {
   const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
-      <div className="kc-avatar" style={{ width: size, height: size, fontSize: size * 0.4 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', minWidth: 0, flex: 1 }}>
+      <div className="kc-avatar" style={{ width: size, height: size, fontSize: size * 0.4, flexShrink: 0 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {src ? <img src={src} alt={name} style={{ width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' }} /> : initials}
+        {src ? <Image src={src} alt={name} width={size} height={size} style={{ width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' }} unoptimized /> : initials}
       </div>
-      {(name !== "?" || role) && (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {name !== "?" && <span className="kc-user-name">{name}</span>}
-          {role && <span className="kc-user-role">{role}</span>}
+      {!hideName && (name !== "?" || role) && (
+        <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
+          {name !== "?" && <span className="kc-user-name" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{name}</span>}
+          {role && <span className="kc-user-role" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{role}</span>}
         </div>
       )}
     </div>

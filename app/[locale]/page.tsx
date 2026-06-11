@@ -1,29 +1,34 @@
+import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
-import SituationQuiz from '@/components/SituationQuiz';
-import PromoSection from '@/components/PromoSection';
-import Team from '@/components/Team';
-import Reviews from '@/components/Reviews';
-import ServicesGrid from '@/components/ServicesGrid';
-import HowItWorks from '@/components/HowItWorks';
-import FirstSteps from '@/components/FirstSteps';
-import Pricing from '@/components/Pricing';
-import GuaranteeSection from '@/components/GuaranteeSection';
-import FAQ from '@/components/FAQ';
-import Blog from '@/components/Blog';
-import ContactForm from '@/components/ContactForm';
-import Footer from '@/components/Footer';
-import CookieBanner from '@/components/CookieBanner';
-import ChatBot from '@/components/ChatBot';
-import KompasAI from '@/components/KompasAI';
-import PromoBanner from '@/components/PromoBanner';
-import StarField from '@/components/StarField';
-import SocialProof from '@/components/SocialProof';
-import WhatsAppFloat from '@/components/WhatsAppFloat';
-import ExitPopup from '@/components/ExitPopup';
-import MobileCTABar from '@/components/MobileCTABar';
 import ScrollProgress from '@/components/ScrollProgress';
-import ReturnVisitor from '@/components/ReturnVisitor';
+import StarField from '@/components/StarField';
+
+// Components below the fold (lazy loaded)
+const SituationQuiz = dynamic(() => import('@/components/SituationQuiz'));
+const PromoSection = dynamic(() => import('@/components/PromoSection'));
+const Team = dynamic(() => import('@/components/Team'));
+const Reviews = dynamic(() => import('@/components/Reviews'));
+const SocialProof = dynamic(() => import('@/components/SocialProof'));
+const ServicesGrid = dynamic(() => import('@/components/ServicesGrid'));
+const HowItWorks = dynamic(() => import('@/components/HowItWorks'));
+const FirstSteps = dynamic(() => import('@/components/FirstSteps'));
+const Pricing = dynamic(() => import('@/components/Pricing'));
+const GuaranteeSection = dynamic(() => import('@/components/GuaranteeSection'));
+const FAQ = dynamic(() => import('@/components/FAQ'));
+const Blog = dynamic(() => import('@/components/Blog'));
+const ContactForm = dynamic(() => import('@/components/ContactForm'));
+const Footer = dynamic(() => import('@/components/Footer'));
+
+// Widgets (lazy loaded, no SSR for some to avoid hydration issues and improve TTI)
+const ReturnVisitor = dynamic(() => import('@/components/ReturnVisitor'), { ssr: false });
+const CookieBanner = dynamic(() => import('@/components/CookieBanner'), { ssr: false });
+const ChatBot = dynamic(() => import('@/components/ChatBot'), { ssr: false });
+const KompasAI = dynamic(() => import('@/components/KompasAI'), { ssr: false });
+const PromoBanner = dynamic(() => import('@/components/PromoBanner'), { ssr: false });
+const WhatsAppFloat = dynamic(() => import('@/components/WhatsAppFloat'), { ssr: false });
+const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
+const MobileCTABar = dynamic(() => import('@/components/MobileCTABar'), { ssr: false });
 
 export default function HomePage() {
   return (

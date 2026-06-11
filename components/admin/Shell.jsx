@@ -202,11 +202,7 @@ export default function Shell({ children }) {
 
           <div className="kc-side-foot">
             <div className="kc-user">
-              <Avatar name={user?.name || "?"} />
-              <div style={{ flex: 1, minWidth: 0, marginLeft: 8 }}>
-                <div className="kc-user-name">{user?.name}</div>
-                <div className="kc-user-role">{ROLE_LABEL[user?.role] || user?.role}</div>
-              </div>
+              <Avatar name={user?.name || "?"} role={ROLE_LABEL[user?.role] || user?.role} />
               <div style={{ position: "relative" }}>
                 <button 
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} 
