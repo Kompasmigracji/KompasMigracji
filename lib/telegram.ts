@@ -3,14 +3,17 @@
 
 const BOT_API = "https://api.telegram.org/bot";
 
-function tok(): string {
-  const t = process.env.TELEGRAM_BOT_TOKEN;
-  if (!t) throw new Error("TELEGRAM_BOT_TOKEN not configured");
-  return t;
+function tok(token?: string): string {
+  if (token) return token;
+  const envToken = process.env.TELEGRAM_BOT_TOKEN;
+  const envTokens = process.env.TELEGRAM_BOT_TOKENS;
+  const fallback = envToken || (envTokens ? envTokens.split(',')[0] : undefined);
+  if (!fallback) throw new Error("TELEGRAM_BOT_TOKEN not configured");
+  return fallback.trim();
 }
 
-async function tgPost(method: string, payload: object): Promise<Record<string, unknown>> {
-  const res = await fetch(`${BOT_API}${tok()}/${method}`, {
+async function tgPost(method: string, payload: object, token?: string): Promise<Record<string, unknown>> {
+  const res = await fetch(`${BOT_API}${tok(token)}/${method}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -23,8 +26,9 @@ export function sendMessage(
   chatId: number | string,
   text: string,
   parseMode: "HTML" | "Markdown" | "MarkdownV2" = "HTML",
+  token?: string
 ) {
-  return tgPost("sendMessage", { chat_id: chatId, text, parse_mode: parseMode });
+  return tgPost("sendMessage", { chat_id: chatId, text, parse_mode: parseMode }, token);
 }
 
 /** Відправити повідомлення з inline-кнопками. */
@@ -32,27 +36,28 @@ export function sendInlineKeyboard(
   chatId: number | string,
   text: string,
   buttons: Array<Array<{ text: string; callback_data?: string; url?: string }>>,
+  token?: string
 ) {
   return tgPost("sendMessage", {
     chat_id: chatId,
     text,
     parse_mode: "HTML",
     reply_markup: { inline_keyboard: buttons },
-  });
+  }, token);
 }
 
 /** Відповісти на callback_query (прибирає «годинник» на кнопці). */
-export function answerCallback(callbackQueryId: string, text = "") {
+export function answerCallback(callbackQueryId: string, text = "", token?: string) {
   return tgPost("answerCallbackQuery", {
     callback_query_id: callbackQueryId,
     text,
-  });
+  }, token);
 }
 
 /** Зареєструвати вебхук у Telegram. Виклик один раз після деплою. */
-export function setWebhook(webhookUrl: string, secret?: string) {
+export function setWebhook(webhookUrl: string, secret?: string, token?: string) {
   return tgPost("setWebhook", {
     url: webhookUrl,
     ...(secret ? { secret_token: secret } : {}),
-  });
+  }, token);
 }

@@ -19,11 +19,23 @@ export async function GET(req: NextRequest) {
   }
 
   const host = (process.env.NEXT_PUBLIC_APP_URL ?? `https://${req.headers.get("host")}`).replace(/\/$/, "");
-  const webhookUrl = `${host}/api/bot/webhook`;
+
+  const envToken = process.env.TELEGRAM_BOT_TOKEN;
+  const envTokens = process.env.TELEGRAM_BOT_TOKENS;
+  const rawTokens = envTokens ? envTokens.split(',').map(t => t.trim()) : (envToken ? [envToken.trim()] : []);
+  
+  if (rawTokens.length === 0) {
+    return NextResponse.json({ error: "No Telegram tokens configured" }, { status: 500 });
+  }
 
   try {
-    const result = await setWebhook(webhookUrl, process.env.TELEGRAM_WEBHOOK_SECRET);
-    return NextResponse.json({ ok: true, webhookUrl, result });
+    const results = [];
+    for (const token of rawTokens) {
+      const webhookUrl = `${host}/api/bot/webhook?token=${encodeURIComponent(token)}`;
+      const res = await setWebhook(webhookUrl, process.env.TELEGRAM_WEBHOOK_SECRET, token);
+      results.push({ token: `${token.substring(0, 10)}...`, webhookUrl, result: res });
+    }
+    return NextResponse.json({ ok: true, registeredCount: results.length, results });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: msg }, { status: 500 });

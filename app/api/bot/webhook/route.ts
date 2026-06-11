@@ -139,6 +139,8 @@ async function getOrCreateLead(chatId: number, firstName: string | null, usernam
 }
 
 export async function POST(req: NextRequest) {
+  const token = req.nextUrl.searchParams.get("token") || undefined;
+
   if (process.env.TELEGRAM_WEBHOOK_SECRET) {
     const secret = req.headers.get("x-telegram-bot-api-secret-token");
     if (secret !== process.env.TELEGRAM_WEBHOOK_SECRET) {
@@ -165,7 +167,7 @@ export async function POST(req: NextRequest) {
 
   if (existingLead?.status === "pending_manual" && !isStartCommand) {
     if (upd.callback_query) {
-      await answerCallback(upd.callback_query.id, "Вже підключено до асистента");
+      await answerCallback(upd.callback_query.id, "Вже підключено до асистента", token);
     }
     return NextResponse.json({ ok: true });
   }
@@ -176,8 +178,8 @@ export async function POST(req: NextRequest) {
     const data = cb.data ?? "";
 
     if (data === "bot_start") {
-      await sendClarification(chatId);
-      await answerCallback(cb.id, "Оберіть мету");
+      await sendClarification(chatId, token);
+      await answerCallback(cb.id, "Оберіть мету", token);
     }
     else if (data.startsWith("funnel_qual_")) {
       const val = data.replace("funnel_qual_", "");
@@ -186,13 +188,14 @@ export async function POST(req: NextRequest) {
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [val, String(chatId)]
       );
-      await answerCallback(cb.id, `✅ ${QUAL_LABELS[val] || val}`);
+      await answerCallback(cb.id, `✅ ${QUAL_LABELS[val] || val}`, token);
 
       await sendInlineKeyboard(
         chatId,
         `📍 Дякуємо! Обрана категорія: <b>${QUAL_LABELS[val] || val}</b>.\n\n` +
         `Наступне запитання: <b>Оберіть країну призначення</b> для переїзду/легалізації:`,
-        STEP_2_BUTTONS
+        STEP_2_BUTTONS,
+        token
       );
     } 
     
@@ -203,13 +206,14 @@ export async function POST(req: NextRequest) {
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [COUNTRY_LABELS[val] || val, String(chatId)]
       );
-      await answerCallback(cb.id, `✅ ${COUNTRY_LABELS[val] || val}`);
+      await answerCallback(cb.id, `✅ ${COUNTRY_LABELS[val] || val}`, token);
 
       await sendInlineKeyboard(
         chatId,
         `📅 Країна: <b>${COUNTRY_LABELS[val] || val}</b>.\n\n` +
         `<b>Наскільки термінова ваша ситуація?</b> Оберіть часові рамки:`,
-        STEP_3_BUTTONS
+        STEP_3_BUTTONS,
+        token
       );
     } 
     
@@ -220,12 +224,13 @@ export async function POST(req: NextRequest) {
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [URGENCY_LABELS[val] || val, String(chatId)]
       );
-      await answerCallback(cb.id, `✅ Збережено`);
+      await answerCallback(cb.id, `✅ Збережено`, token);
 
       await sendInlineKeyboard(
         chatId,
         `💰 <b>Оберіть бажаний пакет послуг супроводу</b>:`,
-        STEP_4_BUTTONS
+        STEP_4_BUTTONS,
+        token
       );
     } 
     
@@ -236,9 +241,9 @@ export async function POST(req: NextRequest) {
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [SERVICE_LABELS[val] || val, String(chatId)]
       );
-      await answerCallback(cb.id, `✅ Воронку завершено!`);
+      await answerCallback(cb.id, `✅ Воронку завершено!`, token);
 
-      await sendCommunityInvitation(chatId);
+      await sendCommunityInvitation(chatId, token);
     } 
     
     else if (data === "action_call_human") {
@@ -258,17 +263,19 @@ export async function POST(req: NextRequest) {
         source: "bot_manual_request",
       });
 
-      await answerCallback(cb.id, "✅ Запит надіслано");
+      await answerCallback(cb.id, "✅ Запит надіслано", token);
       await sendMessage(
         chatId,
         `🔔 <b>Бот-асистента зупинено.</b>\n\n` +
         `Менеджер зв'яжеться з тобою напряму в чаті найближчим часом.\n` +
-        `Контактний телефон: <b>+48 729 271 848</b>`
+        `Контактний телефон: <b>+48 729 271 848</b>`,
+        "HTML",
+        token
       );
     } 
     
     else {
-      await answerCallback(cb.id);
+      await answerCallback(cb.id, "", token);
     }
     return NextResponse.json({ ok: true });
   }
@@ -290,7 +297,7 @@ export async function POST(req: NextRequest) {
       [String(chatId)]
     );
 
-    await sendGreeting(chatId, firstName || "вас");
+    await sendGreeting(chatId, firstName || "вас", token);
     return NextResponse.json({ ok: true });
   }
 
@@ -313,7 +320,8 @@ export async function POST(req: NextRequest) {
         [
           { text: "👤 Покликати асистента", callback_data: "action_call_human" }
         ]
-      ]
+      ],
+      token
     );
   }
 
