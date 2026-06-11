@@ -26,9 +26,10 @@ export default function WhatsAppFloat() {
       style={{
         position: "fixed",
         bottom: 96,
-        right: 24,
+        left: 24,
         zIndex: 9999,
         display: "flex",
+        flexDirection: "row-reverse",
         alignItems: "center",
         gap: 10,
       }}
@@ -91,7 +92,7 @@ export default function WhatsAppFloat() {
             50%      { box-shadow: 0 4px 32px rgba(37,211,102,0.7), 0 0 0 8px rgba(37,211,102,0.1); }
           }
           @keyframes tooltip-in {
-            from { opacity: 0; transform: translateX(10px); }
+            from { opacity: 0; transform: translateX(-10px); }
             to   { opacity: 1; transform: translateX(0); }
           }
         `}</style>
