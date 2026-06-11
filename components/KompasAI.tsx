@@ -21,7 +21,25 @@ export default function KompasAI() {
 
   useEffect(() => {
     const t = setTimeout(() => setShown(true), 5000 + Math.random() * 5000);
-    return () => clearTimeout(t);
+
+    const handleOpenChat = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      setShown(true);
+      setOpen(true);
+      const serviceName = customEvent.detail;
+      if (serviceName) {
+        setMessages([
+          { role: 'assistant', content: `Привіт! 👋 Я AI-асистент Kompas Migracji.\n\nБачу, вас цікавить послуга «${serviceName}». Які у вас є питання або чим я можу допомогти?` }
+        ]);
+      }
+    };
+    
+    window.addEventListener('OPEN_AI_CHAT', handleOpenChat);
+
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('OPEN_AI_CHAT', handleOpenChat);
+    };
   }, []);
 
   useEffect(() => {
