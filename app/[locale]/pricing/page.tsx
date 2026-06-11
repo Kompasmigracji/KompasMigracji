@@ -19,70 +19,70 @@ function useCategories(): Category[] {
     {
       id: 'notary', title: t('pcat_notary'), icon: '✍️',
       rows: [
-        { name: t('psvc_n1'),  price: '175',  amountGrosze: 17500,  oldPrice: '250' },
-        { name: t('psvc_n2'),  price: '245',  amountGrosze: 24500,  oldPrice: '350' },
-        { name: t('psvc_n3'),  price: '315',  amountGrosze: 31500,  oldPrice: '450' },
-        { name: t('psvc_n4'),  price: '315',  amountGrosze: 31500,  oldPrice: '450' },
-        { name: t('psvc_n5'),  price: '182',  amountGrosze: 18200,  oldPrice: '260' },
-        { name: t('psvc_n6'),  price: '266',  amountGrosze: 26600,  oldPrice: '380' },
-        { name: t('psvc_n7'),  price: '315',  amountGrosze: 31500,  oldPrice: '450' },
-        { name: t('psvc_n8'),  price: '504',  amountGrosze: 50400,  oldPrice: '720' },
-        { name: t('psvc_n9'),  price: '406',  amountGrosze: 40600,  oldPrice: '580' },
-        { name: t('psvc_n10'), price: '105',  amountGrosze: 10500,  oldPrice: '150' },
+        { name: t('psvc_n1'),  price: '250', amountGrosze: 25000 },
+        { name: t('psvc_n2'),  price: '350', amountGrosze: 35000 },
+        { name: t('psvc_n3'),  price: '450', amountGrosze: 45000 },
+        { name: t('psvc_n4'),  price: '450', amountGrosze: 45000 },
+        { name: t('psvc_n5'),  price: '260', amountGrosze: 26000 },
+        { name: t('psvc_n6'),  price: '380', amountGrosze: 38000 },
+        { name: t('psvc_n7'),  price: '450', amountGrosze: 45000 },
+        { name: t('psvc_n8'),  price: '720', amountGrosze: 72000 },
+        { name: t('psvc_n9'),  price: '580', amountGrosze: 58000 },
+        { name: t('psvc_n10'), price: '150', amountGrosze: 15000 },
       ],
     },
     {
       id: 'legalization', title: t('pcat_legalization'), icon: '🏠',
       rows: [
-        { name: t('psvc_l1'),  price: '665',   amountGrosze: 66500,  oldPrice: '950'  },
-        { name: t('psvc_l2'),  price: '980',   amountGrosze: 98000,  oldPrice: '1400' },
-        { name: t('psvc_l3'),  price: '560',   amountGrosze: 56000,  oldPrice: '800'  },
-        { name: t('psvc_l4'),  price: '1260',  amountGrosze: 126000, oldPrice: '1800' },
-        { name: t('psvc_l5'),  price: '1260',  amountGrosze: 126000, oldPrice: '1800' },
-        { name: t('psvc_l6'),  price: '1400',  amountGrosze: 140000, oldPrice: '2000' },
-        { name: t('psvc_l7'),  price: '1750',  amountGrosze: 175000, oldPrice: '2500' },
-        { name: t('psvc_l8'),  price: '2800',  amountGrosze: 280000, oldPrice: '4000' },
-        { name: t('psvc_l9'),  price: '210',   amountGrosze: 21000,  oldPrice: '300'  },
-        { name: t('psvc_l10'), price: '630',   amountGrosze: 63000,  oldPrice: '900'  },
-        { name: t('psvc_l11'), price: '630',   amountGrosze: 63000,  oldPrice: '900'  },
-        { name: t('psvc_l12'), price: '105',   amountGrosze: 10500,  oldPrice: '150'  },
-        { name: t('psvc_l13'), price: '315',   amountGrosze: 31500,  oldPrice: '450'  },
+        { name: t('psvc_l1'),  price: '950', amountGrosze: 95000  },
+        { name: t('psvc_l2'),  price: '1400', amountGrosze: 140000 },
+        { name: t('psvc_l3'),  price: '800', amountGrosze: 80000  },
+        { name: t('psvc_l4'),  price: '1800', amountGrosze: 180000 },
+        { name: t('psvc_l5'),  price: '1800', amountGrosze: 180000 },
+        { name: t('psvc_l6'),  price: '2000', amountGrosze: 200000 },
+        { name: t('psvc_l7'),  price: '2500', amountGrosze: 250000 },
+        { name: t('psvc_l8'),  price: '4000', amountGrosze: 400000 },
+        { name: t('psvc_l9'),  price: '300', amountGrosze: 30000  },
+        { name: t('psvc_l10'), price: '900', amountGrosze: 90000  },
+        { name: t('psvc_l11'), price: '900', amountGrosze: 90000  },
+        { name: t('psvc_l12'), price: '150', amountGrosze: 15000  },
+        { name: t('psvc_l13'), price: '450', amountGrosze: 45000  },
       ],
     },
     {
       id: 'marriage', title: t('pcat_marriage'), icon: '💍',
       rows: [
-        { name: t('psvc_m1'), price: '560',              amountGrosze: 56000,  oldPrice: '800' },
+        { name: t('psvc_m1'), price: '800', amountGrosze: 80000 },
         { name: t('psvc_m2'), price: '200–350',          amountGrosze: null },
-        { name: t('psvc_m3'), price: '1260',             amountGrosze: 126000, oldPrice: '1800' },
+        { name: t('psvc_m3'), price: '1800', amountGrosze: 180000 },
         { name: t('psvc_m4'), price: t('psvc_price_1_2h'), amountGrosze: null },
       ],
     },
     {
       id: 'translations', title: t('pcat_translations'), icon: '📄',
       rows: [
-        { name: t('psvc_t1'), price: '70',                     amountGrosze: 7000, oldPrice: '100' },
+        { name: t('psvc_t1'), price: '100', amountGrosze: 10000 },
         { name: t('psvc_t2'), price: t('psvc_price_until_eval'), amountGrosze: null },
-        { name: t('psvc_t3'), price: '18',                     amountGrosze: 1800, oldPrice: '25' },
-        { name: t('psvc_t4'), price: '25',                     amountGrosze: 2500, oldPrice: '35' },
+        { name: t('psvc_t3'), price: '25', amountGrosze: 2500 },
+        { name: t('psvc_t4'), price: '35', amountGrosze: 3500 },
       ],
     },
     {
       id: 'bureaucracy', title: t('pcat_bureaucracy'), icon: '📋',
       rows: [
-        { name: t('psvc_b1'), price: '560', amountGrosze: 56000, oldPrice: '800' },
-        { name: t('psvc_b2'), price: '315', amountGrosze: 31500, oldPrice: '450' },
-        { name: t('psvc_b3'), price: '105', amountGrosze: 10500, oldPrice: '150' },
-        { name: t('psvc_b4'), price: '105', amountGrosze: 10500, oldPrice: '150' },
-        { name: t('psvc_b5'), price: '105', amountGrosze: 10500, oldPrice: '150' },
-        { name: t('psvc_b6'), price: '105', amountGrosze: 10500, oldPrice: '150' },
+        { name: t('psvc_b1'), price: '800', amountGrosze: 80000 },
+        { name: t('psvc_b2'), price: '450', amountGrosze: 45000 },
+        { name: t('psvc_b3'), price: '150', amountGrosze: 15000 },
+        { name: t('psvc_b4'), price: '150', amountGrosze: 15000 },
+        { name: t('psvc_b5'), price: '150', amountGrosze: 15000 },
+        { name: t('psvc_b6'), price: '150', amountGrosze: 15000 },
       ],
     },
     {
       id: 'legal', title: t('pcat_legal'), icon: '⚖️',
       rows: [
         { name: t('psvc_leg1'), price: t('psvc_price_individual'), amountGrosze: null },
-        { name: t('psvc_leg2'), price: '1120',                     amountGrosze: 112000, oldPrice: '1600' },
+        { name: t('psvc_leg2'), price: '1600', amountGrosze: 160000 },
         { name: t('psvc_leg3'), price: t('psvc_price_legal_h'),    amountGrosze: null },
         { name: t('psvc_leg4'), price: t('psvc_price_1_2h'),       amountGrosze: null },
         { name: t('psvc_leg5'), price: t('psvc_price_1_2h'),       amountGrosze: null },
@@ -115,7 +115,7 @@ function ContactModal({ service, onClose }: { service: ServiceRow; onClose: () =
           <button onClick={onClose} style={{ position:'absolute', top:14, right:16, background:'none', border:'none', color:'#475569', fontSize:22, cursor:'pointer', lineHeight:1 }}>✕</button>
           <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.14em', color:ORANGE, textTransform:'uppercase', margin:'0 0 12px' }}>{t('pricing_modal_tag')}</p>
           <p style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px', lineHeight:1.4 }}>{service.name}</p>
-          <p style={{ fontSize:13, color:'#64748b', margin:'0 0 20px', lineHeight:1.6 }}>{t('pricing_modal_desc')}</p>
+          <p style={{ fontSize:13, color: 'var(--text-muted)', margin:'0 0 20px', lineHeight:1.6 }}>{t('pricing_modal_desc')}</p>
           <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
             <a href={`https://wa.me/48729271848?text=${waMsg}`} target="_blank" rel="noreferrer"
               style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(37,211,102,0.12)', border:'1px solid rgba(37,211,102,0.3)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
@@ -298,8 +298,8 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
   const isFree  = row.free === true;
 
   return (
-    <tr style={{ background:isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom:'1px solid #f1f5f9' }}>
-      <td style={{ padding:'14px 16px', fontSize:13, color:'#334155', lineHeight:1.5 }}>{row.name}</td>
+    <tr style={{ background:isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom:'1px solid var(--border)' }}>
+      <td style={{ padding:'14px 16px', fontSize:13, color: 'var(--text-main)', lineHeight:1.5 }}>{row.name}</td>
       <td style={{ padding:'10px 16px', textAlign:'right', whiteSpace:'nowrap' }}>
         {isFree ? (
           <span style={{ fontSize:14, fontWeight:700, color:'#059669' }}>{row.price}</span>
@@ -315,7 +315,7 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
             </div>
           </div>
         ) : (
-          <span style={{ fontSize:14, fontWeight:700, color:NAVY }}>
+          <span style={{ fontSize:14, fontWeight:700, color: 'var(--text-main)' }}>
             {(isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
           </span>
         )}
@@ -328,7 +328,7 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
             {t('pricing_btn_buy')}
           </button>
         ) : (
-          <button onClick={() => onContact(row)} style={{ padding:'6px 14px', borderRadius:8, border:'1.5px solid #e2e8f0', background:'transparent', color:'#64748b', fontWeight:600, fontSize:12, cursor:'pointer', whiteSpace:'nowrap', fontFamily:'inherit', transition:'all 0.15s' }} onMouseEnter={e => { e.currentTarget.style.borderColor=ORANGE; e.currentTarget.style.color=ORANGE; }} onMouseLeave={e => { e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.color='#64748b'; }}>
+          <button onClick={() => onContact(row)} style={{ padding:'6px 14px', borderRadius:8, border:'1.5px solid #e2e8f0', background:'transparent', color: 'var(--text-muted)', fontWeight:600, fontSize:12, cursor:'pointer', whiteSpace:'nowrap', fontFamily:'inherit', transition:'all 0.15s' }} onMouseEnter={e => { e.currentTarget.style.borderColor=ORANGE; e.currentTarget.style.color=ORANGE; }} onMouseLeave={e => { e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.color='#64748b'; }}>
             {t('pricing_btn_contact')}
           </button>
         )}
@@ -360,23 +360,18 @@ export default function PricingPage() {
             {t('pricing_hero_sub')}
           </p>
           <div style={{ position:'relative', display:'inline-block' }}>
-            <span style={{ position:'absolute', top:-14, left:'50%', transform:'translateX(-50%)', background:'linear-gradient(135deg, #f97316, #dc2626)', color:'#fff', fontSize:10, fontWeight:700, letterSpacing:'0.12em', padding:'3px 14px', borderRadius:999, whiteSpace:'nowrap', textTransform:'uppercase' }}>
-              {t('pricing_hero_promo')}
-            </span>
+            
             <div style={{ display:'inline-flex', alignItems:'center', gap:16, background:'rgba(249,115,22,0.12)', border:'1.5px solid rgba(249,115,22,0.35)', borderRadius:16, padding:'20px 28px 18px', fontFamily:"'Syne', sans-serif" }}>
               <div style={{ textAlign:'left' }}>
                 <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#94a3b8', margin:'0 0 6px' }}>{t('pricing_hero_product')}</p>
-                <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
-                  <span style={{ fontSize:16, fontWeight:700, color:'#475569', textDecoration:'line-through' }}>450 zł</span>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={ORANGE} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </div>
+                
                 <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
-                  <span style={{ fontSize:44, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>300</span>
+                  <span style={{ fontSize:44, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>450</span>
                   <span style={{ fontSize:22, fontWeight:800, color:ORANGE }}>zł</span>
-                  <span style={{ fontSize:12, color:'#64748b', marginLeft:4 }}>≈ 70 €</span>
+                  <span style={{ fontSize:12, color: 'var(--text-muted)', marginLeft:4 }}>≈ 105 €</span>
                 </div>
               </div>
-              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:30000, price:'300' })} style={{ padding:'12px 24px', borderRadius:10, border:'none', background:ORANGE, color:'#fff', fontWeight:700, fontSize:14, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'opacity 0.15s' }} onMouseEnter={e => { e.currentTarget.style.opacity='0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity='1'; }}>
+              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} style={{ padding:'12px 24px', borderRadius:10, border:'none', background:ORANGE, color:'#fff', fontWeight:700, fontSize:14, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'opacity 0.15s' }} onMouseEnter={e => { e.currentTarget.style.opacity='0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity='1'; }}>
                 {t('pricing_hero_order')}
               </button>
             </div>
@@ -389,19 +384,19 @@ export default function PricingPage() {
             <div key={cat.id} id={cat.id} style={{ marginBottom:48, scrollMarginTop: 80 }}>
               <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
                 <span style={{ fontSize:22 }}>{cat.icon}</span>
-                <h2 style={{ fontSize:'clamp(18px,3vw,24px)', fontWeight:800, color:NAVY, margin:0, fontFamily:"'Syne', sans-serif", letterSpacing:'-0.02em' }}>{cat.title}</h2>
+                <h2 style={{ fontSize:'clamp(18px,3vw,24px)', fontWeight:800, color: 'var(--text-main)', margin:0, fontFamily:"'Syne', sans-serif", letterSpacing:'-0.02em' }}>{cat.title}</h2>
                 {cat.free && (
                   <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20, background:'rgba(5,150,105,0.1)', color:'#059669', letterSpacing:'0.08em' }}>{t('pricing_in_blog')}</span>
                 )}
               </div>
-              <div style={{ borderRadius:14, overflow:'hidden', border:'1px solid #e2e8f0', boxShadow:'0 2px 12px rgba(0,0,0,0.04)' }}>
+              <div style={{ borderRadius:14, overflow:'hidden', border:'1px solid var(--border)', boxShadow:'0 2px 12px rgba(0,0,0,0.04)' }}>
                 <table style={{ width:'100%', borderCollapse:'collapse' }}>
                   <colgroup><col style={{ width:'55%' }}/><col style={{ width:'25%' }}/><col style={{ width:'20%' }}/></colgroup>
                   <thead>
-                    <tr style={{ background:'#f8fafc', borderBottom:'2px solid #e2e8f0' }}>
-                      <th style={{ padding:'10px 16px', textAlign:'left',  fontSize:11, fontWeight:700, color:'#64748b', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_service')}</th>
-                      <th style={{ padding:'10px 16px', textAlign:'right', fontSize:11, fontWeight:700, color:'#64748b', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_price')}</th>
-                      <th style={{ padding:'10px 8px',  textAlign:'right', fontSize:11, fontWeight:700, color:'#64748b', letterSpacing:'0.08em', textTransform:'uppercase' }}></th>
+                    <tr style={{ background: 'var(--bg-soft)', borderBottom:'2px solid var(--border)' }}>
+                      <th style={{ padding:'10px 16px', textAlign:'left',  fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_service')}</th>
+                      <th style={{ padding:'10px 16px', textAlign:'right', fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_price')}</th>
+                      <th style={{ padding:'10px 8px',  textAlign:'right', fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -433,7 +428,7 @@ export default function PricingPage() {
 
         {/* Company info */}
         <section style={{ borderTop:'1px solid #e2e8f0', padding:'32px 24px', textAlign:'center', background:'#fff' }}>
-          <p style={{ fontSize:13, fontWeight:700, color:'#64748b', margin:'0 0 6px', fontFamily:"'Syne', sans-serif" }}>DOMUS V Sp. z o.o.</p>
+          <p style={{ fontSize:13, fontWeight:700, color: 'var(--text-muted)', margin:'0 0 6px', fontFamily:"'Syne', sans-serif" }}>DOMUS V Sp. z o.o.</p>
           <p style={{ fontSize:12, color:'#94a3b8', margin:0, lineHeight:1.8 }}>
             NIP: 5223350030 · KRS: 0001198474<br />
             ul. Dzieci Warszawy 27c/49, 02-495 Warszawa<br />

@@ -4,48 +4,10 @@ import { useState, useEffect } from 'react';
 import P24PaymentSteps, { CartIcon, UserIcon, CardIcon, CheckCircleIcon } from '@/components/P24PaymentSteps';
 import PayModal, { PayService } from '@/components/PayModal';
 
-const PROMO_END = new Date('2026-06-06T23:59:59');
-
-function useCountdown(target: Date) {
-  const calc = () => {
-    const diff = target.getTime() - Date.now();
-    if (diff <= 0) return { d: 0, h: 0, m: 0, s: 0, expired: true };
-    return {
-      d: Math.floor(diff / 86400000),
-      h: Math.floor((diff % 86400000) / 3600000),
-      m: Math.floor((diff % 3600000) / 60000),
-      s: Math.floor((diff % 60000) / 1000),
-      expired: false,
-    };
-  };
-  const [time, setTime] = useState(calc);
-  useEffect(() => {
-    const id = setInterval(() => setTime(calc()), 1000);
-    return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return time;
-}
-
-function CountdownUnit({ value, label }: { value: number; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div
-        className="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-lg"
-        style={{ background: 'rgba(255,255,255,0.15)' }}
-      >
-        {String(value).padStart(2, '0')}
-      </div>
-      <span className="text-xs text-white/60 mt-1">{label}</span>
-    </div>
-  );
-}
-
 export default function Pricing() {
   const t = useTranslations();
   const [contactOpen, setContactOpen] = useState<string | null>(null);
   const [payService,  setPayService]  = useState<PayService | null>(null);
-  const countdown = useCountdown(PROMO_END);
 
   const cards: {
     label: string;
@@ -81,15 +43,14 @@ export default function Pricing() {
     },
     {
       label: t('pricing_hour_label'),
-      amount: '300',
-      oldAmount: '450',
+      amount: '450',
       currency: 'zł',
       badge: t('pricing_hour_badge'),
       desc: t('pricing_hour_desc'),
       features: [t('pricing_hour_f1'), t('pricing_hour_f2'), t('pricing_hour_f3')],
       cta: t('pricing_hour_order'),
       featured: false,
-      amountGrosze: 30000,
+      amountGrosze: 45000,
     },
   ];
 
@@ -101,25 +62,7 @@ export default function Pricing() {
           <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('pricing_title')}</h2>
         </div>
 
-        {/* Promo countdown banner */}
-        {!countdown.expired && (
-          <div
-            className="mb-10 rounded-2xl p-6 text-center glass-panel shadow-lg hover-lift transition-premium border border-white/10"
-            style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)' }}
-          >
-            <div className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-2">{t('pricing_promo_ends')}</div>
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <CountdownUnit value={countdown.d} label={t('pricing_promo_days')} />
-              <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.h} label={t('pricing_promo_hours')} />
-              <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.m} label={t('pricing_promo_min')} />
-              <span className="text-white/40 text-2xl font-light mb-4">:</span>
-              <CountdownUnit value={countdown.s} label={t('pricing_promo_sec')} />
-            </div>
-            <p className="text-white/70 text-sm">{t('pricing_promo_desc')}</p>
-          </div>
-        )}
+
 
         {/* Subscription plans banner */}
         <div className="mb-10 rounded-2xl border-2 border-primary/30 bg-primary/5 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4">

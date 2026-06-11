@@ -6,7 +6,6 @@ import StarField from '@/components/StarField';
 
 // Components below the fold (lazy loaded)
 const SituationQuiz = dynamic(() => import('@/components/SituationQuiz'));
-const PromoSection = dynamic(() => import('@/components/PromoSection'));
 const Team = dynamic(() => import('@/components/Team'));
 const Reviews = dynamic(() => import('@/components/Reviews'));
 const SocialProof = dynamic(() => import('@/components/SocialProof'));
@@ -25,7 +24,6 @@ const ReturnVisitor = dynamic(() => import('@/components/ReturnVisitor'), { ssr:
 const CookieBanner = dynamic(() => import('@/components/CookieBanner'), { ssr: false });
 const ChatBot = dynamic(() => import('@/components/ChatBot'), { ssr: false });
 const KompasAI = dynamic(() => import('@/components/KompasAI'), { ssr: false });
-const PromoBanner = dynamic(() => import('@/components/PromoBanner'), { ssr: false });
 const WhatsAppFloat = dynamic(() => import('@/components/WhatsAppFloat'), { ssr: false });
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
 const MobileCTABar = dynamic(() => import('@/components/MobileCTABar'), { ssr: false });
@@ -40,7 +38,6 @@ export default function HomePage() {
       <main>
         <Hero />
         <SituationQuiz />
-        <PromoSection />
         <Team />
         <Reviews />
         <SocialProof />
@@ -57,7 +54,6 @@ export default function HomePage() {
       <CookieBanner />
       <ChatBot />
       <KompasAI />
-      <PromoBanner />
       <WhatsAppFloat />
       <ExitPopup />
       <MobileCTABar />
