@@ -35,6 +35,7 @@ export default function EmailsPage() {
   useEffect(() => {
     loadEmails(currentFolder);
     loadAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentFolder]);
 
   const flash = (msg) => {

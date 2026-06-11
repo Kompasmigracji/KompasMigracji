@@ -295,6 +295,7 @@ export default function KartaPage(): React.JSX.Element {
 
   const changeLanguage = (newKey: LangKey): void => {
     const nextLocale = Object.keys(LOCALE_TO_LANG).find(key => LOCALE_TO_LANG[key] === newKey) || 'uk';
+    if (!pathname) return;
     const newPath = pathname.startsWith(`/${locale}`) ? pathname.replace(`/${locale}`, `/${nextLocale}`) : `/${nextLocale}${pathname}`;
     router.push(newPath);
   };

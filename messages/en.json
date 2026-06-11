@@ -277,5 +277,9 @@
   "pricing_hour_order": "Order for 300 zł →",
   "pay_secure": "Secure payment",
   "pay_ssl": "SSL 256-bit encryption · Przelewy24 sp. z o.o. · KNF licence",
-  "pricing_lbl_agree_link": "Terms"
+  "pricing_lbl_agree_link": "Terms",
+  "seo_default_title": "KompasMigracji — Legal Assistance for Migrants",
+  "seo_default_desc": "Legal, psychological, and practical assistance for migrants in Poland and the EU. Domus V.",
+  "seo_karta_title": "Getting a Residence Card (Karta Pobytu) in Poland — KompasMigracji",
+  "seo_karta_desc": "Professional assistance in obtaining a Residence Card (Karta Pobytu) in Poland. Full legal support."
 }

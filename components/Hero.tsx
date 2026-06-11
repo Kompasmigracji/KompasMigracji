@@ -12,7 +12,7 @@ function TrustBadges() {
         { label: 'RODO/GDPR', icon: '📋' },
         { label: '10+ років досвіду', icon: '🏆' },
       ].map((b, i) => (
-        <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-600">
+        <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 glass-badge hover-lift transition-premium rounded-lg text-xs font-semibold text-gray-700">
           <span>{b.icon}</span>
           <span>{b.label}</span>
         </span>
@@ -25,8 +25,9 @@ function PanicStrip() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="mt-8 rounded-xl border-2 border-red-200 bg-red-50/50 p-4">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
+    <div className="mt-8 rounded-xl border border-red-200/60 glass-panel relative overflow-hidden p-4 group">
+      <div className="absolute inset-0 bg-gradient-to-r from-red-50/80 to-transparent pointer-events-none" />
+      <div className="relative z-10 flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-3">
           <span className="text-2xl">🆘</span>
           <div>
@@ -37,7 +38,7 @@ function PanicStrip() {
         <div className="flex items-center gap-2">
           <a
             href="tel:+48729271848"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline hover-lift transition-premium"
             style={{ background: '#dc2626' }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -49,7 +50,7 @@ function PanicStrip() {
             href="https://wa.me/48729271848?text=ТЕРМІНОВО+—+потребую+негайної+допомоги+в+міграційній+справі"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline hover-lift transition-premium"
             style={{ background: '#25D366' }}
           >
             WhatsApp
@@ -66,7 +67,7 @@ export default function Hero() {
   return (
     <section
       className="hero-section relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fb 50%, #ffffff 100%)', paddingTop: 'calc(5rem + 80px)', paddingBottom: '96px' }}
+      style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0fdf4 100%)', paddingTop: 'calc(5rem + 80px)', paddingBottom: '96px' }}
     >
       <div
         className="absolute top-0 right-0 w-96 h-96 rounded-full pointer-events-none opacity-60"
@@ -78,7 +79,7 @@ export default function Hero() {
       />
       <div className="max-w-4xl mx-auto px-6 relative z-10">
         <div className="animate-slide-down">
-          <span className="inline-flex items-center gap-2 px-4 py-3 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-primary mb-10 shadow-sm">
+          <span className="inline-flex items-center gap-2 px-4 py-3 glass-badge rounded-lg text-xs font-semibold text-primary mb-10 shadow-sm hover-lift transition-premium">
             <span>✦</span>
             <span>{t('hero_badge')}</span>
           </span>
@@ -97,7 +98,7 @@ export default function Hero() {
         <div className="animate-slide-down-3 flex flex-wrap gap-4">
           <a
             href="#contact"
-            className="gradient-btn text-white font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 shadow-md hover:shadow-lg transition-shadow"
+            className="gradient-btn text-white font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 shadow-md hover-lift transition-premium"
           >
             {t('cta_consult')}
           </a>
@@ -105,13 +106,13 @@ export default function Hero() {
             href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
             target="_blank"
             rel="noreferrer"
-            className="bg-white border-2 border-gray-200 text-navy font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-primary hover:text-primary transition-colors"
+            className="glass-panel text-navy font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-primary hover:text-primary hover-lift transition-premium"
           >
             WhatsApp
           </a>
           <a
             href="viber://chat?number=48729271848"
-            className="bg-white border-2 border-purple-400 text-purple-700 font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-purple-600 hover:text-purple-900 transition-colors"
+            className="glass-panel border-purple-200 text-purple-700 font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-purple-500 hover:text-purple-900 hover-lift transition-premium"
           >
             Viber
           </a>

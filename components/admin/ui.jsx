@@ -197,6 +197,7 @@ export function Avatar({ name = "?", role = "", size = 32, src = null }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
       <div className="kc-avatar" style={{ width: size, height: size, fontSize: size * 0.4 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         {src ? <img src={src} alt={name} style={{ width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' }} /> : initials}
       </div>
       {(name !== "?" || role) && (

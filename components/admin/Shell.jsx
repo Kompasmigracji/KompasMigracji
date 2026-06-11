@@ -53,6 +53,7 @@ export default function Shell({ children }) {
         setOpenGroup(current.group);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, user]);
 
   const toggleTheme = () => {

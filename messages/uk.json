@@ -277,5 +277,9 @@
   "pricing_hour_order": "Замовити за 300 zł →",
   "pay_secure": "Безпечний платіж",
   "pay_ssl": "Шифрування SSL 256-bit · Przelewy24 sp. z o.o. · ліцензія KNF",
-  "pricing_lbl_agree_link": "Regulamin"
+  "pricing_lbl_agree_link": "Regulamin",
+  "seo_default_title": "KompasMigracji — Юридична допомога мігрантам",
+  "seo_default_desc": "Юридична, психологічна та практична допомога мігрантам у Польщі та ЄС. Domus V.",
+  "seo_karta_title": "Отримання Карти Побуту в Польщі — KompasMigracji",
+  "seo_karta_desc": "Професійна допомога в отриманні Карти Побуту (Karta Pobytu) в Польщі. Повний юридичний супровід."
 }

@@ -22,6 +22,7 @@ function useCountdown(target: Date) {
   useEffect(() => {
     const id = setInterval(() => setTime(calc()), 1000);
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return time;
 }
@@ -103,7 +104,7 @@ export default function Pricing() {
         {/* Promo countdown banner */}
         {!countdown.expired && (
           <div
-            className="mb-10 rounded-2xl p-6 text-center"
+            className="mb-10 rounded-2xl p-6 text-center glass-panel shadow-lg hover-lift transition-premium border border-white/10"
             style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)' }}
           >
             <div className="text-xs font-bold uppercase tracking-widest text-orange-400 mb-2">{t('pricing_promo_ends')}</div>
@@ -128,7 +129,7 @@ export default function Pricing() {
           </div>
           <a
             href="/plans"
-            className="shrink-0 px-6 py-3 rounded-xl text-sm font-bold text-white gradient-btn hover:opacity-90 transition-opacity no-underline"
+            className="shrink-0 px-6 py-3 rounded-xl text-sm font-bold text-white gradient-btn hover-lift transition-premium no-underline shadow-md"
           >
             {t('pricing_sub_cta')}
           </a>
@@ -139,7 +140,8 @@ export default function Pricing() {
           {cards.map((card, i) => (
             <div
               key={i}
-              className={`relative bg-white rounded-xl p-8 border-2 flex flex-col transition-all duration-300 ${card.featured ? 'border-primary shadow-xl scale-105' : 'border-gray-200 hover:border-primary hover:shadow-lg'}`}
+              className={`relative bg-white rounded-2xl p-8 flex flex-col transition-premium hover-lift ${card.featured ? 'border-[3px] border-transparent shadow-2xl scale-105' : 'border border-gray-200 shadow-md'} `}
+              style={card.featured ? { background: 'linear-gradient(white, white) padding-box, linear-gradient(135deg, #2563eb, #059669) border-box' } : {}}
             >
               {card.badge && (
                 <span className="absolute -top-4 right-5 text-white text-xs font-semibold px-4 py-1.5 rounded-full" style={{ background: card.oldAmount ? 'linear-gradient(135deg, #f97316, #dc2626)' : 'linear-gradient(135deg, #2563eb, #059669)' }}>
@@ -151,9 +153,9 @@ export default function Pricing() {
                 {card.oldAmount && (
                   <span className="text-base text-gray-400 line-through mr-2">{card.oldAmount} {card.currency}</span>
                 )}
-                <span className="font-serif font-light text-navy" style={{ fontSize: '38px' }}>
+                <span className="font-display font-bold text-navy" style={{ fontSize: '42px', letterSpacing: '-1px' }}>
                   {card.amount}
-                  {card.currency && <sup className="text-lg text-muted"> {card.currency}</sup>}
+                  {card.currency && <sup className="text-xl text-muted font-normal"> {card.currency}</sup>}
                 </span>
               </div>
               <p className="text-sm text-gray-500 leading-relaxed mb-6">{card.desc}</p>
@@ -169,7 +171,7 @@ export default function Pricing() {
               {card.amountGrosze ? (
                 <button
                   onClick={() => setPayService({ name: card.label, amountGrosze: card.amountGrosze!, oldPrice: card.oldAmount })}
-                  className={`text-center py-3 rounded-lg text-sm font-semibold transition-all cursor-pointer border-0 ${card.featured ? 'gradient-btn text-white hover:opacity-90' : 'bg-primary text-white hover:bg-secondary'}`}
+                  className={`text-center py-3.5 rounded-xl text-sm font-bold cursor-pointer border-0 hover-lift transition-premium shadow-sm ${card.featured ? 'gradient-btn text-white' : 'bg-primary text-white hover:bg-secondary'}`}
                 >
                   {card.cta}
                 </button>
