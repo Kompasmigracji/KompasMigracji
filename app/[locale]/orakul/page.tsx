@@ -375,12 +375,12 @@ const CSS = `
   white-space:pre-wrap;word-break:break-word;
 }
 .oc-bubble-bot{
-  background:#fff;color:#1e293b;
+  background:#fff;color:#1e293b!important;
   border:1px solid rgba(29,78,216,.09);border-bottom-left-radius:4px;
   box-shadow:0 1px 4px rgba(0,0,0,.04);
 }
 .oc-bubble-user{
-  background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff!important;
   border-bottom-right-radius:4px;
 }
 .oc-typing{display:flex;gap:4px;align-items:center;padding:.3rem .2rem}
@@ -397,7 +397,7 @@ const CSS = `
 }
 .oc-input{
   flex:1;background:#f1f5f9;border:1px solid rgba(29,78,216,.15);
-  border-radius:22px;padding:.55rem .95rem;color:#0f172a;
+  border-radius:22px;padding:.55rem .95rem;color:#0f172a!important;
   font-size:.84rem;font-family:inherit;letter-spacing:-.005em;outline:none;transition:border-color .15s,background .15s;
 }
 .oc-input:focus{border-color:rgba(29,78,216,.45);background:#ffffff;box-shadow:0 0 0 3px rgba(29,78,216,.08)}
