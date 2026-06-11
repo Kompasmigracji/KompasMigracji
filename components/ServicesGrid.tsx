@@ -51,9 +51,6 @@ export default function ServicesGrid() {
         </div>
       </div>
 
-      {pickerService && (
-        <ContactPicker service={pickerService} onClose={() => setPickerService(null)} />
-      )}
     </section>
   );
 }
