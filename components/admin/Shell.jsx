@@ -24,9 +24,11 @@ export default function Shell({ children }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState("");
+
   const pathname = usePathname();
   const router = useRouter();
-  const [isConsoleOpen, setIsConsoleOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/auth/me")
@@ -41,10 +43,17 @@ export default function Shell({ children }) {
     if (savedLang && translations[savedLang]) setLang(savedLang);
   }, []);
 
-  // Close mobile menu when route changes
+  // Close mobile menu and auto-expand group when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [pathname]);
+    if (user && pathname) {
+      const nav = navFor(user.role || "member");
+      const current = nav.find(n => n.href !== "/admin" && pathname.startsWith(n.href));
+      if (current?.group && current.group !== openGroup) {
+        setOpenGroup(current.group);
+      }
+    }
+  }, [pathname, user]);
 
   const toggleTheme = () => {
     const next = theme === "dark" ? "light" : "dark";
@@ -107,17 +116,87 @@ export default function Shell({ children }) {
 
           <nav className="kc-nav">
             <div className="kc-nav-cap">{t.mainMenu}</div>
-            {nav.map((n) => {
-              const on = n.href === "/admin"
-                ? pathname === "/admin"
-                : pathname.startsWith(n.href);
-              return (
-                <Link key={n.href} href={n.href} className={`kc-nav-item ${on ? "kc-on" : ""}`}>
-                  <Icon name={n.icon} size={18} />
-                  <span>{n.label}</span>
-                </Link>
-              );
-            })}
+            {(() => {
+              const groupedNav = nav.reduce((acc, item) => {
+                if (!item.group) {
+                  acc.unshift({ isGroup: false, ...item });
+                } else {
+                  let group = acc.find(g => g.isGroup && g.name === item.group);
+                  if (!group) {
+                    group = { isGroup: true, name: item.group, items: [] };
+                    acc.push(group);
+                  }
+                  group.items.push(item);
+                }
+                return acc;
+              }, []);
+
+              return groupedNav.map((groupOrItem) => {
+                if (!groupOrItem.isGroup) {
+                  const n = groupOrItem;
+                  const on = n.href === "/admin" ? pathname === "/admin" : pathname.startsWith(n.href);
+                  return (
+                    <Link key={n.href} href={n.href} className={`kc-nav-item ${on ? "kc-on" : ""}`}>
+                      <Icon name={n.icon} size={18} />
+                      <span>{n.label}</span>
+                    </Link>
+                  );
+                }
+
+                const isExpanded = openGroup === groupOrItem.name;
+                
+                return (
+                  <div key={groupOrItem.name} className="kc-nav-group" style={{ marginBottom: 4 }}>
+                    <button 
+                      onClick={() => setOpenGroup(isExpanded ? "" : groupOrItem.name)}
+                      className={`kc-nav-item ${isExpanded ? "kc-group-open" : ""}`}
+                      style={{ 
+                        background: isExpanded ? "var(--bg-hover)" : "transparent", 
+                        border: "none", 
+                        width: "100%", 
+                        cursor: "pointer", 
+                        color: isExpanded ? "var(--color-primary)" : "var(--dim)",
+                        justifyContent: "space-between",
+                        paddingRight: 12,
+                        fontWeight: isExpanded ? 600 : 500
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <Icon name={isExpanded ? "folder-minus" : "folder"} size={18} />
+                        <span>{groupOrItem.name}</span>
+                      </div>
+                      <Icon name="chevron-down" size={14} style={{ 
+                        transform: isExpanded ? "rotate(-180deg)" : "rotate(0deg)", 
+                        transition: "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)" 
+                      }} />
+                    </button>
+                    <div style={{
+                      height: isExpanded ? `${groupOrItem.items.length * 36 + 8}px` : "0",
+                      opacity: isExpanded ? 1 : 0,
+                      overflow: "hidden",
+                      transition: "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      marginTop: isExpanded ? 4 : 0,
+                      paddingLeft: 12,
+                      borderLeft: "2px solid var(--border)",
+                      marginLeft: 16
+                    }}>
+                      {groupOrItem.items.map(n => {
+                        const on = pathname.startsWith(n.href);
+                        return (
+                          <Link key={n.href} href={n.href} className={`kc-nav-item ${on ? "kc-on" : ""}`} style={{ minHeight: 34, paddingLeft: 10, fontSize: "12px", borderLeft: on ? "2px solid var(--color-primary)" : "none", color: on ? "var(--text)" : "var(--faint)" }}>
+                            <Icon name={n.icon} size={14} />
+                            <span>{n.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              });
+            })()}
           </nav>
 
           <div className="kc-side-foot">
