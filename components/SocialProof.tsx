@@ -128,7 +128,7 @@ function StatCard({
       {/* Label */}
       <div style={{
         fontSize: 12,
-        color: '#6b7f96',
+        color: 'var(--text-muted)',
         marginTop: 10,
         fontWeight: 500,
         letterSpacing: '0.01em',
@@ -164,16 +164,16 @@ export default function SocialProof() {
   ];
 
   return (
-    <section style={{ background: '#060c18', position: 'relative', overflow: 'hidden', padding: '96px 0' }}>
+    <section style={{ background: 'var(--bg-main)', position: 'relative', overflow: 'hidden', padding: '96px 0' }}>
       {/* Radial top glow */}
       <div aria-hidden style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,0.18) 0%, transparent 65%)',
+        background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(37,99,235,0.08) 0%, transparent 65%)',
       }} />
       {/* Bottom fade */}
       <div aria-hidden style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: 120, pointerEvents: 'none',
-        background: 'linear-gradient(to top, rgba(6,12,24,0.6) 0%, transparent 100%)',
+        background: 'linear-gradient(to top, var(--bg-main) 0%, transparent 100%)',
       }} />
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
@@ -188,7 +188,7 @@ export default function SocialProof() {
           <h2 style={{
             fontFamily: 'var(--font-serif)',
             fontWeight: 300,
-            color: '#e8edf5',
+            color: 'var(--text-main)',
             fontSize: 'clamp(28px, 4vw, 44px)',
             margin: 0,
             lineHeight: 1.2,
