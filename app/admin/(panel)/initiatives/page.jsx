@@ -4,11 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, Avatar } from "@/components/admin/ui";
 
 export default function InitiativesPage() {
-  const [initiatives] = useState([
-    { id: "init_1", name: "Student Housing Support", category: "Social Welfare", status: "active", budget: "$15,000", participants: 12, progress: 65, desc: "Providing emergency housing stipends for university students in need." },
-    { id: "init_2", name: "Free Legal Aid Clinic", category: "Pro Bono", status: "planning", budget: "$5,000", participants: 4, progress: 10, desc: "Weekly free consultation sessions for low-income migrant workers." },
-    { id: "init_3", name: "Winter Clothing Drive", category: "Charity", status: "completed", budget: "$2,000", participants: 25, progress: 100, desc: "Collected and distributed 500+ winter coats to shelters." }
-  ]);
+  const [initiatives] = useState([]);
 
   return (
     <div>

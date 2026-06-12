@@ -6,11 +6,7 @@ import { Icon, Badge, EmptyState, DataTable, Avatar } from "@/components/admin/u
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState("all");
 
-  const [orders] = useState([
-    { id: "ORD-2026-001", customer: "John Doe", email: "john@example.com", date: "May 14, 2026", total: 150.00, currency: "USD", paymentStatus: "paid", fulfillmentStatus: "fulfilled" },
-    { id: "ORD-2026-002", customer: "Jane Smith", email: "jane@company.com", date: "May 13, 2026", total: 499.00, currency: "USD", paymentStatus: "unpaid", fulfillmentStatus: "unfulfilled" },
-    { id: "ORD-2026-003", customer: "Global Corp", email: "billing@global.com", date: "May 10, 2026", total: 1200.00, currency: "USD", paymentStatus: "paid", fulfillmentStatus: "unfulfilled" }
-  ]);
+  const [orders] = useState([]);
 
   const filteredOrders = activeTab === "all" ? orders : orders.filter(o => o.fulfillmentStatus === activeTab);
 

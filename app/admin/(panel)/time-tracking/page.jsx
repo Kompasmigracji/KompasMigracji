@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function TimeTrackingPage() {
-  const [entries] = useState([
-    { id: "TE-01", task: "Drafting Appeal Letter", client: "TechCorp Sp. z.o.o.", project: "B2B Legal Support", time: "02:15:00", billable: true, amount: "€337.50", date: "Today" },
-    { id: "TE-02", task: "Client Consultation (Zoom)", client: "Ivan Petrov", project: "Karta Pobytu", time: "00:45:00", billable: true, amount: "€75.00", date: "Today" },
-    { id: "TE-03", task: "Internal Team Meeting", client: "—", project: "Internal", time: "01:00:00", billable: false, amount: "€0.00", date: "Today" },
-    { id: "TE-04", task: "Document Review", client: "Anna Schmidt", project: "Blue Card", time: "01:30:00", billable: true, amount: "€225.00", date: "Yesterday" }
-  ]);
+  const [entries] = useState([]);
 
   const columns = [
     { header: "Task Description", cell: (row) => (

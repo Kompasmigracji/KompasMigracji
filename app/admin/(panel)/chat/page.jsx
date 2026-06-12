@@ -6,13 +6,7 @@ import { Icon, Avatar, Badge } from "@/components/admin/ui";
 export default function TeamChatPage() {
   const [activeChannel, setActiveChannel] = useState("#sales-team");
   
-  const [messages] = useState([
-    { id: 1, sender: "Maria Garcia", time: "10:15 AM", content: "Hey team, did we get the new pricing for the VIP Relocation package?", avatar: "MG" },
-    { id: 2, sender: "Alex Jenkins", time: "10:18 AM", content: "Yes, I uploaded the new PDF to the Document Templates section.", avatar: "AJ" },
-    { id: 3, sender: "Oleg V.", time: "11:05 AM", content: "@Alex Jenkins Could you check the contract for Ivan Petrov? He's asking for a discount.", avatar: "OV", mentions: ["Alex Jenkins"] },
-    { id: 4, sender: "Alex Jenkins", time: "11:10 AM", content: "I'll review it now. Let's offer him 5% if he pays upfront.", avatar: "AJ" },
-    { id: 5, sender: "System", time: "11:30 AM", content: "🎉 Maria Garcia just closed a deal: Karta Pobytu (B2B) - €1,200", isSystem: true }
-  ]);
+  const [messages] = useState([]);
 
   const messagesEndRef = useRef(null);
 

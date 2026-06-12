@@ -8,12 +8,7 @@ export default function MobileAppPage() {
   const [activeMenuTab, setActiveMenuTab] = useState("branding");
 
   // AI Mobile App Sync Logs
-  const [mobileLogs, setMobileLogs] = useState([
-    { time: "14:35:10", type: "system", message: "President signed production build release tag: v2.1.2-mobile." },
-    { time: "14:32:00", type: "coordinator", message: "Mobile Coordinator [Agent-C15] validated offline index db schemas." },
-    { time: "14:28:15", type: "agent", message: "Asset Compiler Agent-004 generated responsive web manifestations and sizes." },
-    { time: "14:20:00", type: "system", message: "KompasCRM Mobile Sync Network online (175 automated agents handling device caches)." }
-  ]);
+  const [mobileLogs, setMobileLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

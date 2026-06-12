@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function IssuesPage() {
-  const [issues] = useState([
-    { id: "ISS-4012", title: "API Endpoint returns 500 on large payload", env: "Production", priority: "critical", status: "open", assignee: "Alex", created: "2 hours ago" },
-    { id: "ISS-4011", title: "Payment Gateway webhook delay", env: "Staging", priority: "high", status: "in-progress", assignee: "David O.", created: "4 hours ago" },
-    { id: "ISS-4010", title: "Typo in the onboarding email template", env: "Production", priority: "low", status: "open", assignee: "Unassigned", created: "1 day ago" },
-    { id: "ISS-4009", title: "Memory leak in background worker", env: "Production", priority: "high", status: "resolved", assignee: "Maria", created: "2 days ago" }
-  ]);
+  const [issues] = useState([]);
 
   const columns = [
     { header: "Issue", cell: (row) => (

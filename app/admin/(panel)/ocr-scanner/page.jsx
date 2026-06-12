@@ -9,12 +9,7 @@ export default function OcrScannerPage() {
   const [parsedData, setParsedData] = useState(null);
 
   // AI OCR logs
-  const [ocrLogs, setOcrLogs] = useState([
-    { time: "14:40:01", type: "system", message: "President approved OCR parsing model updates (Tesseract-ML)." },
-    { time: "14:38:15", type: "coordinator", message: "OCR Coordinator [Agent-C09] validated fields output alignment." },
-    { time: "14:35:10", type: "agent", message: "OCR Agent-142 matched MRZ checksum zone for document scan #4092." },
-    { time: "14:30:00", type: "system", message: "KompasCRM AI OCR Scanner initialized (175 background agents scanning image attachments)." }
-  ]);
+  const [ocrLogs, setOcrLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

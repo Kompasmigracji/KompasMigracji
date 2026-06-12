@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function EmailSequencesPage() {
-  const [sequences] = useState([
-    { id: "SEQ-01", name: "Welcome Flow - Karta Pobytu", target: "New Web Leads", activeEnrollees: 142, openRate: "68%", clickRate: "24%", status: "active" },
-    { id: "SEQ-02", name: "B2B Relocation Nurture", target: "Cold B2B Contacts", activeEnrollees: 380, openRate: "42%", clickRate: "8%", status: "active" },
-    { id: "SEQ-03", name: "TRC Renewal Reminder", target: "Past Clients (11mo)", activeEnrollees: 45, openRate: "85%", clickRate: "45%", status: "active" },
-    { id: "SEQ-04", name: "Discount Offer (No Reply)", target: "Lost Deals", activeEnrollees: 0, openRate: "—", clickRate: "—", status: "paused" }
-  ]);
+  const [sequences] = useState([]);
 
   const columns = [
     { header: "Sequence Name", cell: (row) => (

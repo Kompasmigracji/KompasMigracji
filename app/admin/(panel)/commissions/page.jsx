@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function CommissionsPage() {
-  const [commissions] = useState([
-    { id: "COM-05-26", rep: "Alex Jenkins", dealsClosed: 14, revenue: "€14,500", commissionRate: "10%", payout: "€1,450", status: "pending" },
-    { id: "COM-05-26", rep: "Maria Garcia", dealsClosed: 22, revenue: "€28,000", commissionRate: "12% (Tier 2)", payout: "€3,360", status: "approved" },
-    { id: "COM-05-26", rep: "David O.", dealsClosed: 8, revenue: "€6,200", commissionRate: "8%", payout: "€496", status: "paid" },
-    { id: "COM-05-26", rep: "Elena Rostova", dealsClosed: 35, revenue: "€42,000", commissionRate: "15% (Tier 3)", payout: "€6,300", status: "approved" }
-  ]);
+  const [commissions] = useState([]);
 
   const columns = [
     { header: "Sales Representative", cell: (row) => (

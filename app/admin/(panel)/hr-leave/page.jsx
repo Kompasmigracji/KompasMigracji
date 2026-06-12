@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function HRLeavePage() {
-  const [requests] = useState([
-    { id: "REQ-01", employee: "Maria Garcia", type: "Annual Leave", dates: "Jul 10 - Jul 24, 2026", days: 10, status: "pending", approvedBy: "—" },
-    { id: "REQ-02", employee: "Oleg V.", type: "Sick Leave", dates: "Jun 05 - Jun 07, 2026", days: 3, status: "approved", approvedBy: "Alex Jenkins" },
-    { id: "REQ-03", employee: "Anna Schmidt", type: "Unpaid Leave", dates: "Aug 01 - Aug 31, 2026", days: 22, status: "rejected", approvedBy: "Alex Jenkins" },
-    { id: "REQ-04", employee: "Alex Jenkins", type: "Business Trip", dates: "Jun 15 - Jun 18, 2026", days: 4, status: "approved", approvedBy: "System (Auto)" }
-  ]);
+  const [requests] = useState([]);
 
   const columns = [
     { header: "Employee", cell: (row) => (

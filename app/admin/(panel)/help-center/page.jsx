@@ -4,13 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function HelpCenterPage() {
-  const [articles] = useState([
-    { id: "HC-1", title: "Required Documents for TRC (Karta Pobytu)", category: "Visas & Residency", views: 1450, helpful: "98%", status: "published" },
-    { id: "HC-2", title: "How to Pay Your Invoice Online", category: "Billing & Payments", views: 820, helpful: "95%", status: "published" },
-    { id: "HC-3", title: "What is a B2B Contract in Poland?", category: "B2B Relocation", views: 412, helpful: "100%", status: "published" },
-    { id: "HC-4", title: "Can I travel outside Poland while waiting?", category: "Visas & Residency", views: 230, helpful: "80%", status: "draft" },
-    { id: "HC-5", title: "How to use the Client Portal App", category: "General Support", views: 0, helpful: "—", status: "archived" }
-  ]);
+  const [articles] = useState([]);
 
   const columns = [
     { header: "Article Title", cell: (row) => (

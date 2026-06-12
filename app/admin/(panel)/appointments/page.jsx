@@ -18,12 +18,7 @@ const STATUS_LABEL = {
 };
 
 export default function AppointmentsPage() {
-  const [appts, setAppts] = useState([
-    { id: "APT-101", client_name: "Elena Rostova", appointment_at: "2026-06-10T10:00:00.000Z", status: "pending", service: "Юридична консультація (TRC)", client_email: "elena@example.com", client_phone: "+48 501 229 110", notes: "Потрібна допомога з подачею документів на Карту Побиту по роботі.", meeting_link: "", reminder_sent: false },
-    { id: "APT-102", client_name: "TechCorp Ltd (HR Manager)", appointment_at: "2026-06-09T14:30:00.000Z", status: "confirmed", service: "B2B Релокація працівників", client_email: "hr@techcorp.com", client_phone: "+48 732 110 990", notes: "Обговорення релокації 15 розробників з України.", meeting_link: "https://meet.google.com/abc-defg-hij", reminder_sent: true },
-    { id: "APT-103", client_name: "Ivan Ivanov", appointment_at: "2026-06-08T09:00:00.000Z", status: "completed", service: "Консультація щодо візи", client_email: "ivan@example.com", client_phone: "+380 97 123 4567", notes: "Аналіз візової історії перед подачею на воєвудську візу.", meeting_link: "https://meet.google.com/xyz-uvwx-yza", reminder_sent: true },
-    { id: "APT-104", client_name: "Oksana Koval", appointment_at: "2026-05-20T11:00:00.000Z", status: "cancelled", service: "Первинна консультація", client_email: "oksana@example.com", client_phone: "+48 602 112 334", notes: "Клієнт передумав релокуватися.", meeting_link: "", reminder_sent: false }
-  ]);
+  const [appts, setAppts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState("upcoming");
   const [selectedAppt, setSelectedAppt] = useState(null);
@@ -33,12 +28,7 @@ export default function AppointmentsPage() {
   const [showRequestModal, setShowRequestModal] = useState(false);
 
   // AI Calendar Agent Logs (175 agents, 15 coordinators, 1 president)
-  const [apptLogs, setApptLogs] = useState([
-    { time: "14:22:04", type: "system", message: "President approved API credentials sync for MS Outlook & Google Calendar." },
-    { time: "14:19:15", type: "coordinator", message: "Schedule Coordinator [Agent-C02] flagged conflict for room 202 on June 10th." },
-    { time: "14:15:33", type: "agent", message: "Calendar Agent-042 dispatched automated Google Meet link to TechCorp Ltd." },
-    { time: "14:10:00", type: "system", message: "KompasCRM Scheduling Daemon started (175 agents checking manager availability)." }
-  ]);
+  const [apptLogs, setApptLogs] = useState([]);
 
   useEffect(() => {
     // Fetch live data if API endpoint responds, otherwise fallback to mock

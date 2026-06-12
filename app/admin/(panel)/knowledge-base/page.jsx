@@ -4,23 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Icon, Avatar, Badge, DataTable, SearchInput, StatCard } from "@/components/admin/ui";
 
 export default function KnowledgeBasePage() {
-  const [articles] = useState([
-    { id: "KB-01", title: "Karta Pobytu: Requirements 2026 Update", category: "Legal Updates", author: "Anna S.", date: "Today", views: 24, status: "published", urgent: true },
-    { id: "KB-02", title: "How to register a car for a foreigner", category: "Guides", author: "Oleg V.", date: "June 01, 2026", views: 142, status: "published", urgent: false },
-    { id: "KB-03", title: "Appeals (Odwołanie) Template", category: "Templates", author: "Maria G.", date: "May 15, 2026", views: 89, status: "published", urgent: false },
-    { id: "KB-04", title: "Blue Card Salary Minimums", category: "Legal Updates", author: "Anna S.", date: "Draft", views: 0, status: "draft", urgent: false }
-  ]);
+  const [articles] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("articles");
 
   // AI Knowledge Base logs
-  const [wikiLogs, setWikiLogs] = useState([
-    { time: "14:32:01", type: "system", message: "President signed structural updates validation parameters for legal SOP wiki." },
-    { time: "14:30:10", type: "coordinator", message: "Wiki Coordinator [Agent-C02] auto-indexed 4 new tags to Polish Immigration laws database." },
-    { time: "14:26:45", type: "agent", message: "Parser Agent-112 updated translation pointers for Karta Pobytu guide." },
-    { time: "14:20:00", type: "system", message: "KompasCRM Knowledge Base indexers active (175 automated agents monitoring wiki page versions)." }
-  ]);
+  const [wikiLogs, setWikiLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

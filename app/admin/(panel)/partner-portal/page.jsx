@@ -4,20 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function PartnerPortalPage() {
-  const [partners] = useState([
-    { id: "PTN-01", name: "Schengen Visa Broker LLC", contact: "Jan Kowalski", activeLeads: 12, balance: "2,400 PLN", status: "active" },
-    { id: "PTN-02", name: "Warsaw Legal Advisors", contact: "Piotr Nowak", activeLeads: 4, balance: "800 PLN", status: "active" },
-    { id: "PTN-03", name: "Kiev Relocation Agency", contact: "Olena Boyko", activeLeads: 45, balance: "9,000 PLN", status: "active" },
-    { id: "PTN-04", name: "Lodz Housing Corp", contact: "Tomasz Adamski", activeLeads: 0, balance: "0 PLN", status: "suspended" }
-  ]);
+  const [partners] = useState([]);
 
   // AI B2B logs
-  const [b2bLogs, setB2bLogs] = useState([
-    { time: "14:45:10", type: "system", message: "President authorized monthly B2B commission payout schedules." },
-    { time: "14:42:05", type: "coordinator", message: "Partner Coordinator [Agent-C12] verified lead attribution cookies for Schengen Visa Broker." },
-    { time: "14:38:00", type: "agent", message: "B2B Agent-074 synced 15 new lead profiles submitted by partner Kiev Relocation." },
-    { time: "14:30:00", type: "system", message: "KompasCRM B2B Channel Manager active (175 background agents checking affiliate referrals)." }
-  ]);
+  const [b2bLogs, setB2bLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

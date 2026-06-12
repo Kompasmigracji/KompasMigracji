@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function PlaybooksPage() {
-  const [playbooks] = useState([
-    { id: "PB-01", name: "Inbound B2B Lead (First Call)", target: "New B2B Deals", usage: 145, successRate: "42%", lastUpdated: "Yesterday" },
-    { id: "PB-02", name: "Objection Handling: 'Too Expensive'", target: "All Deals", usage: 380, successRate: "68%", lastUpdated: "Last week" },
-    { id: "PB-03", name: "TRC Renewal Upsell", target: "Existing Clients", usage: 92, successRate: "85%", lastUpdated: "May 10, 2026" },
-    { id: "PB-04", name: "Cold Calling: IT Companies", target: "Cold Leads", usage: 45, successRate: "12%", lastUpdated: "2 weeks ago" }
-  ]);
+  const [playbooks] = useState([]);
 
   const columns = [
     { header: "Playbook Name", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
 
 export default function LiveChatPage() {
-  const [conversations] = useState([
-    { id: "1", name: "Anna Smirnova", channel: "WhatsApp", time: "10:24 AM", message: "Hi, how much does the TRC cost?", unread: 2, active: true },
-    { id: "2", name: "Guest_4892", channel: "Website", time: "09:15 AM", message: "I need an urgent consultation.", unread: 0, active: false },
-    { id: "3", name: "TechCorp Ltd", channel: "Telegram", time: "Yesterday", message: "Thanks, we will sign the contract today.", unread: 0, active: false },
-    { id: "4", name: "Oleg V.", channel: "Instagram", time: "Yesterday", message: "Do you help with student visas?", unread: 0, active: false }
-  ]);
+  const [conversations] = useState([]);
 
   const [activeChat, setActiveChat] = useState(conversations[0]);
 

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ExpensesPage() {
-  const [expenses] = useState([
-    { id: "EXP-01", date: "June 05, 2026", category: "Marketing", description: "Facebook & Insta Ads", amount: "€3,500.00", status: "paid", branch: "HQ Warsaw" },
-    { id: "EXP-02", date: "June 01, 2026", category: "Rent", description: "Warsaw Office Lease", amount: "€2,200.00", status: "paid", branch: "HQ Warsaw" },
-    { id: "EXP-03", date: "June 10, 2026", category: "Software", description: "Google Workspace & CRM", amount: "€450.00", status: "pending", branch: "Global" },
-    { id: "EXP-04", date: "May 28, 2026", category: "Travel", description: "Client Meetings in Berlin", amount: "€840.50", status: "reimbursed", branch: "Krakow Branch" }
-  ]);
+  const [expenses] = useState([]);
 
   const columns = [
     { header: "Date", cell: (row) => <span style={{ fontSize: "var(--text-sm)" }}>{row.date}</span> },

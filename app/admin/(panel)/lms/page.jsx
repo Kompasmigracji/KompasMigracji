@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function LMSPage() {
-  const [courses] = useState([
-    { id: "CRS-01", title: "Sales Onboarding 101", category: "Onboarding", lessons: 12, enrolled: 8, completionRate: "94%", status: "published" },
-    { id: "CRS-02", title: "Advanced Immigration Law", category: "Legal", lessons: 24, enrolled: 3, completionRate: "45%", status: "published" },
-    { id: "CRS-03", title: "Using the CRM & Dialer", category: "Software", lessons: 5, enrolled: 15, completionRate: "100%", status: "published" },
-    { id: "CRS-04", title: "B2B Relocation Sales Script", category: "Sales", lessons: 3, enrolled: 0, completionRate: "0%", status: "draft" }
-  ]);
+  const [courses] = useState([]);
 
   const columns = [
     { header: "Course Title", cell: (row) => (

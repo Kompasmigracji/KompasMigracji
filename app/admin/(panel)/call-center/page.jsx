@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function CallCenterPage() {
-  const [calls] = useState([
-    { id: "CALL-01", contact: "Ivan Petrov", phone: "+48 555 123 456", direction: "Outbound", duration: "04:12", time: "Today, 10:45", status: "completed", agent: "Alex Jenkins", outcome: "Interested" },
-    { id: "CALL-02", contact: "Maria Garcia", phone: "+34 600 111 222", direction: "Inbound", duration: "12:30", time: "Today, 09:15", status: "completed", agent: "Oleg V.", outcome: "Appointment Booked" },
-    { id: "CALL-03", contact: "Unknown Caller", phone: "+48 777 888 999", direction: "Inbound", duration: "00:00", time: "Yesterday, 16:20", status: "missed", agent: "Unassigned", outcome: "—" },
-    { id: "CALL-04", contact: "TechCorp Sp. z.o.o.", phone: "+48 222 333 444", direction: "Outbound", duration: "01:15", time: "June 05, 2026", status: "voicemail", agent: "Alex Jenkins", outcome: "Left Message" }
-  ]);
+  const [calls] = useState([]);
 
   const [activeCall, setActiveCall] = useState(false);
   const [callTimer, setCallTimer] = useState("00:00");

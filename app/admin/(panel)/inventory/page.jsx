@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function InventoryPage() {
-  const [products] = useState([
-    { id: "PRD-001", name: "Premium Consultation (1 Hour)", type: "Service", stock: "Unlimited", price: "€150.00", status: "active", sales: 124 },
-    { id: "PRD-002", name: "Visa Application Package - Standard", type: "Digital", stock: "Unlimited", price: "€450.00", status: "active", sales: 89 },
-    { id: "PRD-003", name: "Branded Merch T-Shirt", type: "Physical", stock: 12, price: "€25.00", status: "low_stock", sales: 45 },
-    { id: "PRD-004", name: "Enterprise Retainer Plan (Monthly)", type: "Subscription", stock: "Unlimited", price: "€2,500.00", status: "draft", sales: 0 }
-  ]);
+  const [products] = useState([]);
 
   const columns = [
     { header: "Product Name", cell: (row) => (

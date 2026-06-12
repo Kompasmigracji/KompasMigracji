@@ -7,19 +7,10 @@ export default function MarketingPage() {
   const [activeTab, setActiveTab] = useState("funnel");
 
   // Mock campaigns
-  const [campaigns] = useState([
-    { id: "CMP-901", name: "July Law Changes Update", audience: "All Active Clients (4,210)", status: "sent", date: "June 01, 2026", openRate: "68%", clickRate: "12%" },
-    { id: "CMP-902", name: "Mortgage for Foreigners Promo", audience: "Clients with TRC > 1 year (850)", status: "sending", date: "Today", openRate: "—", clickRate: "—" },
-    { id: "CMP-903", name: "Referral Program Announcement", audience: "B2B Partners (120)", status: "draft", date: "—", openRate: "—", clickRate: "—" }
-  ]);
+  const [campaigns] = useState([]);
 
   // AI Marketing Dispatcher Logs
-  const [marketingLogs, setMarketingLogs] = useState([
-    { time: "17:15:10", type: "system", message: "President approved new Telegram funnel webhook security certificates." },
-    { time: "17:12:44", type: "coordinator", message: "Marketing Coordinator [Agent-C03] synced conversion analytics for June campaign." },
-    { time: "17:10:02", type: "agent", message: "Funnel Agent-028 tracked user step: 'step_3_urgency' on TgChat ID: 9928173." },
-    { time: "17:05:00", type: "system", message: "KompasCRM Marketing Automation system online (175 automated agents monitoring Telegram funnel)." }
-  ]);
+  const [marketingLogs, setMarketingLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

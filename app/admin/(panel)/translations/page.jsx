@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function TranslationsPage() {
-  const [translations] = useState([
-    { id: "TR-1042", document: "Birth Certificate (Свідоцтво про народження)", client: "Ivan Petrov", language: "UKR → POL", translator: "Anna K. (Sworn)", status: "in_progress", deadline: "Tomorrow, 12:00", cost: "120 PLN" },
-    { id: "TR-1043", document: "Marriage Certificate", client: "Maria Garcia", language: "ESP → POL", translator: "Piotr N. (Sworn)", status: "pending", deadline: "June 10, 2026", cost: "Pending Quote" },
-    { id: "TR-1044", document: "University Diploma", client: "Oleg V.", language: "RUS → POL", translator: "Anna K. (Sworn)", status: "completed", deadline: "Yesterday", cost: "150 PLN" },
-    { id: "TR-1045", document: "Police Clearance Certificate", client: "Rajesh Kumar", language: "ENG → POL", translator: "Michal S. (Sworn)", status: "awaiting_payment", deadline: "June 15, 2026", cost: "200 PLN" }
-  ]);
+  const [translations] = useState([]);
 
   const columns = [
     { header: "Document", cell: (row) => (

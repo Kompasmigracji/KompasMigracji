@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function FranchisePage() {
-  const [branches] = useState([
-    { id: "BR-01", city: "Warsaw (HQ)", manager: "Alex Jenkins", revenue: "€145,000", leads: 850, conversion: "24%", royalty: "—", status: "excellent" },
-    { id: "BR-02", city: "Krakow", manager: "Oleg V.", revenue: "€42,000", leads: 320, conversion: "18%", royalty: "€4,200", status: "good" },
-    { id: "BR-03", city: "Wroclaw", manager: "Anna S.", revenue: "€18,500", leads: 150, conversion: "12%", royalty: "€1,850", status: "needs_attention" },
-    { id: "BR-04", city: "Poznan", manager: "Tomasz M.", revenue: "€8,000", leads: 90, conversion: "8%", royalty: "€800", status: "critical" }
-  ]);
+  const [branches] = useState([]);
 
   const columns = [
     { header: "Branch City", cell: (row) => (

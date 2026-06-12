@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, StatCard, SearchInput } from "@/components/admin/ui";
 
 export default function AccountingPage() {
-  const [expenses, setExpenses] = useState([
-    { id: "EXP-901", category: "Office Rent", vendor: "WeWork Warsaw", amount: "€3,500.00", date: "June 01, 2026", status: "paid" },
-    { id: "EXP-902", category: "Payroll (May)", vendor: "Internal Staff (42)", amount: "€65,200.00", date: "June 10, 2026", status: "pending" },
-    { id: "EXP-903", category: "Taxes (ZUS)", vendor: "ZUS", amount: "€14,800.00", date: "June 15, 2026", status: "upcoming" },
-    { id: "EXP-904", category: "Software", vendor: "Google Workspace", amount: "€250.00", date: "Today", status: "paid" }
-  ]);
+  const [expenses, setExpenses] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Statuses");

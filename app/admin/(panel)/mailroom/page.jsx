@@ -8,18 +8,9 @@ export default function MailroomPage() {
   const [showNotifyModal, setShowNotifyModal] = useState(false);
   const [selectedLetter, setSelectedLetter] = useState(null);
 
-  const [letters, setLetters] = useState([
-    { id: "LTR-901", client: "TechCorp Sp. z o.o.", sender: "Mazowiecki Urząd Wojewódzki", type: "Zezwolenie Typ A (Decision)", received: "Today, 09:30", trackingNo: "EPO 8493021", status: "unread", file: "MUW_decision_BudMax.pdf" },
-    { id: "LTR-902", client: "Dmytro Kovalenko", sender: "Urząd Skarbowy Warszawa-Śródmieście", type: "Tax Statement (Wezwanie)", received: "Yesterday", trackingNo: "R 2049182", status: "scanned", file: "US_Wezwanie_Kovalenko.pdf" },
-    { id: "LTR-903", client: "Anna Schmidt", sender: "ZUS (Social Security)", type: "Annual Settlement", received: "June 02, 2026", trackingNo: "Standard", status: "forwarded", file: "ZUS_Declaration.pdf" },
-    { id: "LTR-904", client: "Kamil Nowak", sender: "Sąd Rejonowy dla m.st. Warszawy", type: "KRS Registry letter", received: "May 28, 2026", trackingNo: "EPO 7204911", status: "unread", file: "Court_KRS_Nowak.pdf" }
-  ]);
+  const [letters, setLetters] = useState([]);
 
-  const [companies] = useState([
-    { id: "VOB-01", name: "TechCorp Sp. z o.o.", package: "Premium Office", mailForwarding: "Email Scan + Weekly Physical Post", status: "active" },
-    { id: "VOB-02", name: "Global Delivery Group", package: "Standard Address", mailForwarding: "Monthly Physical Post", status: "active" },
-    { id: "VOB-03", name: "Ivan Petrov Freelance", package: "Basic Scan Only", mailForwarding: "Immediate Email Scan", status: "active" }
-  ]);
+  const [companies] = useState([]);
 
   const columns = [
     { header: "Letter ID", cell: (row) => <span style={{ fontFamily: "monospace", fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</span> },

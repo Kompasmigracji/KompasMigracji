@@ -9,63 +9,11 @@ export default function MessengersPage() {
   const [chatMessage, setChatMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [channels, setChannels] = useState([
-    { id: 1, name: "Telegram Bot", identifier: "@KompasMigracjiBot", status: "connected", msgCount: 342, lastSync: "Just now" },
-    { id: 2, name: "WhatsApp Business API", identifier: "+48 500 123 456", status: "connected", msgCount: 1205, lastSync: "1 min ago" },
-    { id: 3, name: "Viber Public Account", identifier: "Kompas Migracji", status: "disconnected", msgCount: 0, lastSync: "2 days ago" }
-  ]);
+  const [channels, setChannels] = useState([]);
 
-  const [chats, setChats] = useState([
-    {
-      id: 0,
-      client: "Dmytro Kovalenko",
-      channel: "telegram",
-      avatar: "DK",
-      unread: true,
-      lastMsg: "Добрий день! Які терміни отримання карти побиту по возз'єднанню сім'ї?",
-      time: "10:32 AM",
-      messages: [
-        { sender: "client", text: "Вітаю! Мене звуть Дмитро.", time: "10:30 AM" },
-        { sender: "bot", text: "Добрий день! Чим ми можемо допомогти вам сьогодні?", time: "10:31 AM" },
-        { sender: "client", text: "Які терміни отримання карти побиту по возз'єднанню сім'ї?", time: "10:32 AM" }
-      ]
-    },
-    {
-      id: 1,
-      client: "Anna Nowak",
-      channel: "whatsapp",
-      avatar: "AN",
-      unread: false,
-      lastMsg: "I sent the passport translation. Please verify.",
-      time: "09:15 AM",
-      messages: [
-        { sender: "client", text: "Hello, here is the translated document.", time: "09:12 AM" },
-        { sender: "agent", text: "Thank you Anna, let me check it right away.", time: "09:14 AM" },
-        { sender: "client", text: "I sent the passport translation. Please verify.", time: "09:15 AM" }
-      ]
-    },
-    {
-      id: 2,
-      client: "Ivan Petrov",
-      channel: "telegram",
-      avatar: "IP",
-      unread: false,
-      lastMsg: "Дякую за інформацію!",
-      time: "Yesterday",
-      messages: [
-        { sender: "client", text: "Коли буде готова децизія?", time: "May 20" },
-        { sender: "agent", text: "Ми очікуємо децизію в середині червня.", time: "May 20" },
-        { sender: "client", text: "Дякую за інформацію!", time: "Yesterday" }
-      ]
-    }
-  ]);
+  const [chats, setChats] = useState([]);
 
-  const [rules] = useState([
-    { id: 1, trigger: "First Incoming Message", action: "Send Welcome Auto-Reply", status: "active" },
-    { id: 2, trigger: "Out of Office Hours", action: "Send Offline Message", status: "active" },
-    { id: 3, trigger: "Keyword 'Price' or 'Cennik'", action: "Forward to Sales Team", status: "active" },
-    { id: 4, trigger: "Keyword 'Status' or 'Sprawa'", action: "Check status using RPA Bot", status: "inactive" }
-  ]);
+  const [rules] = useState([]);
 
   const activeChat = chats.find(c => c.id === selectedChatId) || chats[0];
 

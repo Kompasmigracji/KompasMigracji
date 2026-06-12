@@ -2,9 +2,7 @@
 import React, { useState } from "react";
 
 export default function WorkflowBuilder() {
-  const [nodes, setNodes] = useState([
-    { id: "1", type: "trigger", title: "When Lead Created", config: {} }
-  ]);
+  const [nodes, setNodes] = useState([]);
 
   const addNode = (type) => {
     setNodes([...nodes, { id: Date.now().toString(), type, title: `New ${type}`, config: {} }]);

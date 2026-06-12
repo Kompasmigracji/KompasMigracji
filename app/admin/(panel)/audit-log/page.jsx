@@ -4,21 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function AuditLogPage() {
-  const [logs] = useState([
-    { id: "LOG-091", user: "Oleh Melnyk", action: "Exported Data", resource: "All Active Clients (CSV)", ip: "192.168.1.45", location: "Warsaw, PL", time: "10 mins ago", severity: "high" },
-    { id: "LOG-092", user: "Andriy Boyko", action: "Updated Record", resource: "TechCorp Ltd (MRR changed to 2,500 PLN)", ip: "84.15.201.99", location: "Krakow, PL", time: "2 hours ago", severity: "info" },
-    { id: "LOG-093", user: "Unknown (Failed Login)", action: "Authentication Failed", resource: "Admin Portal", ip: "103.45.11.2", location: "Beijing, CN", time: "Yesterday", severity: "critical" },
-    { id: "LOG-094", user: "System (Auto)", action: "Workflow Triggered", resource: "Welcome Email Sequence", ip: "Server", location: "Frankfurt, DE", time: "Yesterday", severity: "low" },
-    { id: "LOG-095", user: "Elena Rostova", action: "Deleted File", resource: "Passport_Scan_Ivan.pdf", ip: "89.20.14.5", location: "Warsaw, PL", time: "May 25", severity: "warning" }
-  ]);
+  const [logs] = useState([]);
 
   // AI Security Agent Logs (175 agents, 15 coordinators, 1 president)
-  const [secLogs, setSecLogs] = useState([
-    { time: "14:28:11", type: "system", message: "President authorized automatic firewall IP blocklist synchronization." },
-    { time: "14:25:40", type: "coordinator", message: "Security Coordinator [Agent-C01] verified signature integrity for audit log database." },
-    { time: "14:22:15", type: "agent", message: "Security Agent-119 flagged suspicious login attempt from Beijing, CN." },
-    { time: "14:20:00", type: "system", message: "KompasCRM Audit Guard online (175 background agents scanning user access logs)." }
-  ]);
+  const [secLogs, setSecLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

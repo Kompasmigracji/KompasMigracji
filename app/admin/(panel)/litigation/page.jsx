@@ -8,25 +8,12 @@ export default function LitigationPage() {
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState("");
 
-  const [appeals] = useState([
-    { id: "APP-001", client: "Dmytro Kovalenko", type: "Appeal to Szef Urzędu", authority: "Mazowiecki Urząd Wojewódzki", deadline: "Today, 17:00", status: "draft", lawyer: "Oleg V." },
-    { id: "APP-002", client: "Kamil Nowak", type: "WSA Court Complaint", authority: "WSA w Warszawie", deadline: "June 15, 2026", status: "filed", lawyer: "Maria Garcia" },
-    { id: "APP-003", client: "Elena Rostova", type: "Urząd Reconsideration", authority: "Małopolski Urząd Wojewódzki", deadline: "June 20, 2026", status: "waiting", lawyer: "Alex Jenkins" },
-    { id: "APP-004", client: "Ivan Petrov", type: "Appeal to Szef Urzędu", authority: "Dolnośląski Urząd Wojewódzki", deadline: "Completed", status: "won", lawyer: "Oleg V." }
-  ]);
+  const [appeals] = useState([]);
 
-  const [hearings] = useState([
-    { id: "HRG-102", client: "Kamil Nowak", court: "WSA w Warszawie, Room 12", date: "June 18, 2026", time: "11:30 AM", status: "scheduled", lawyer: "Maria Garcia" },
-    { id: "HRG-101", client: "Anna Schmidt", court: "NSA w Warszawie, Room 4", date: "July 02, 2026", time: "09:00 AM", status: "scheduled", lawyer: "Alex Jenkins" }
-  ]);
+  const [hearings] = useState([]);
 
   // AI Litigation logs
-  const [litiLogs, setLitiLogs] = useState([
-    { time: "18:05:01", type: "system", message: "President signed administrative court complaint for client Kamil Nowak." },
-    { time: "18:02:14", type: "coordinator", message: "Litigation Coordinator [Agent-C12] scanned 4 newly received Urząd refusals." },
-    { time: "17:59:30", type: "agent", message: "Legal Parser Agent-015 compiled KPA art. 127 documentation pack." },
-    { time: "17:50:00", type: "system", message: "KompasCRM Legal Advisory Network active (175 automated agents monitoring court calendars)." }
-  ]);
+  const [litiLogs, setLitiLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

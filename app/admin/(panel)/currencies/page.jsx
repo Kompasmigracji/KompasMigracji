@@ -4,13 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function CurrenciesPage() {
-  const [currencies] = useState([
-    { code: "EUR", name: "Euro", symbol: "€", rate: "1.0000", isBase: true, status: "active", lastSync: "10 mins ago" },
-    { code: "PLN", name: "Polish Złoty", symbol: "zł", rate: "4.3150", isBase: false, status: "active", lastSync: "10 mins ago" },
-    { code: "USD", name: "US Dollar", symbol: "$", rate: "1.0820", isBase: false, status: "active", lastSync: "10 mins ago" },
-    { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴", rate: "43.2050", isBase: false, status: "active", lastSync: "10 mins ago" },
-    { code: "GBP", name: "British Pound", symbol: "£", rate: "0.8540", isBase: false, status: "inactive", lastSync: "Yesterday" }
-  ]);
+  const [currencies] = useState([]);
 
   const columns = [
     { header: "Currency", cell: (row) => (

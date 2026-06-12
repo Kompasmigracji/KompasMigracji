@@ -10,80 +10,10 @@ export default function ContractsPage() {
   const [showRequestModal, setShowRequestModal] = useState(false);
 
   // Mock Contracts/Documents Database
-  const [documents, setDocuments] = useState([
-    {
-      id: "DOC-26-001",
-      title: "Power of Attorney (Pełnomocnictwo)",
-      client: "Elena Rostova",
-      value: "—",
-      status: "signed",
-      sent: "May 25, 2026",
-      expires: "Never",
-      details: {
-        signerIP: "89.21.14.90",
-        signedAt: "2026-05-25 14:20:15",
-        phoneVerified: "+48 501 *** 892",
-        pdfHash: "sha256-a19c3e98b72e9d240c4a4e8d...",
-        securityLevel: "High (SMS Verified)"
-      }
-    },
-    {
-      id: "DOC-26-002",
-      title: "B2B Service Agreement",
-      client: "TechCorp Ltd",
-      value: "14,400 PLN / yr",
-      status: "viewed",
-      sent: "Yesterday",
-      expires: "Jun 15, 2026",
-      details: {
-        signerIP: "—",
-        signedAt: "—",
-        phoneVerified: "+48 732 *** 110",
-        pdfHash: "sha256-cf881e7d23d8c1149e...",
-        securityLevel: "Medium (Email Link)"
-      }
-    },
-    {
-      id: "DOC-26-003",
-      title: "Visa Processing Contract",
-      client: "Ivan Ivanov",
-      value: "350 PLN",
-      status: "sent",
-      sent: "Today",
-      expires: "Jun 10, 2026",
-      details: {
-        signerIP: "—",
-        signedAt: "—",
-        phoneVerified: "+380 97 *** 4421",
-        pdfHash: "sha256-992ee14a0df...",
-        securityLevel: "High (SMS Verified)"
-      }
-    },
-    {
-      id: "DOC-26-004",
-      title: "Employment Contract (Umowa o Pracę)",
-      client: "Oksana Koval",
-      value: "5,500 PLN / mo",
-      status: "declined",
-      sent: "May 20, 2026",
-      expires: "Expired",
-      details: {
-        signerIP: "—",
-        signedAt: "—",
-        phoneVerified: "+48 602 *** 491",
-        pdfHash: "—",
-        securityLevel: "High (SMS Verified)"
-      }
-    }
-  ]);
+  const [documents, setDocuments] = useState([]);
 
   // AI Document Verification Engine Logs (175 agents, 15 coordinators, 1 president)
-  const [docLogs, setDocLogs] = useState([
-    { time: "14:08:44", type: "system", message: "President approved new global e-sign templates for B2B contracts." },
-    { time: "14:05:20", type: "coordinator", message: "Document Coordinator [Agent-C07] validated signature hash for DOC-26-001." },
-    { time: "14:02:11", type: "agent", message: "Document Agent-092 generated secure SHA-256 checkkey for Visa Processing Contract." },
-    { time: "14:00:00", type: "system", message: "KompasCRM E-Signature Verification Node running (175 agents processing digital signatures)." }
-  ]);
+  const [docLogs, setDocLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

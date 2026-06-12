@@ -4,10 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, EmptyState } from "@/components/admin/ui";
 
 export default function SecureLinksPage() {
-  const [links, setLinks] = useState([
-    { id: "sl_1", name: "Passport Upload - John Doe", url: "https://KompasCRM.com/secure/abc123xyz", expires: "2026-05-15", status: "active", views: 0 },
-    { id: "sl_2", name: "Contract Signature Request", url: "https://KompasCRM.com/secure/def456uvw", expires: "2026-05-10", status: "expired", views: 1 }
-  ]);
+  const [links, setLinks] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
 
   return (

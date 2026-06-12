@@ -4,19 +4,9 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function GovIntegrationPage() {
-  const [portals] = useState([
-    { id: "GOV-01", name: "Praca.gov.pl", type: "Work Permits", status: "connected", lastSync: "10 mins ago", newDocs: 12 },
-    { id: "GOV-02", name: "PUE ZUS", type: "Social Security", status: "connected", lastSync: "1 hour ago", newDocs: 3 },
-    { id: "GOV-03", name: "inPOL (Mazowiecki Urząd)", type: "TRC Tracking", status: "error", lastSync: "Failed at 09:00", newDocs: 0 },
-    { id: "GOV-04", name: "CEIDG", type: "Business Registry", status: "disconnected", lastSync: "Never", newDocs: 0 }
-  ]);
+  const [portals] = useState([]);
 
-  const [logs] = useState([
-    { id: 1, portal: "Praca.gov.pl", action: "Fetched Work Permit (Oświadczenie)", client: "Ivan Petrov", status: "success", time: "10:15 AM", file: "permit_ivan_p.pdf" },
-    { id: 2, portal: "Praca.gov.pl", action: "Fetched Zezwolenie na Pracę (Typ A)", client: "Maria Garcia", status: "success", time: "10:18 AM", file: "zezwolenie_maria.pdf" },
-    { id: 3, portal: "inPOL", action: "Check TRC Status", client: "Oleg V.", status: "failed", time: "09:00 AM", error: "Invalid Credentials / 2FA Required" },
-    { id: 4, portal: "PUE ZUS", action: "Fetched ZUS ZUA Confirmation", client: "Anna Schmidt", status: "success", time: "Yesterday", file: "zus_zua_anna.xml" }
-  ]);
+  const [logs] = useState([]);
 
   const columns = [
     { header: "Portal Name", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function CMSPage() {
-  const [content] = useState([
-    { id: "P-101", title: "Top 10 Visa Interview Tips", type: "Blog Post", author: "Alex Jenkins", status: "published", views: 4200, date: "May 20, 2026" },
-    { id: "P-102", title: "Immigration Policy Updates 2026", type: "Blog Post", author: "Maria Garcia", status: "draft", views: 0, date: "Just now" },
-    { id: "P-103", title: "Services Overview", type: "Landing Page", author: "System", status: "published", views: 12450, date: "Jan 15, 2026" },
-    { id: "P-104", title: "Success Stories - TechCorp", type: "Case Study", author: "Alex Jenkins", status: "scheduled", views: 0, date: "May 30, 2026" }
-  ]);
+  const [content] = useState([]);
 
   const columns = [
     { header: "Title", cell: (row) => (

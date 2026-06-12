@@ -12,62 +12,7 @@ export default function AcademyPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
   // Mock Courses Data
-  const [courses, setCourses] = useState([
-    {
-      id: "CRS-01",
-      title: "Sales Onboarding 101",
-      category: "Sales",
-      enrolled: 12,
-      completed: 8,
-      avgScore: "94%",
-      status: "active",
-      lessons: [
-        { name: "Introduction to KompasCRM Pipelines", type: "video", duration: "10 min" },
-        { name: "B2B Sales Relocation Pitch Rules", type: "document", duration: "PDF (5 pages)" },
-        { name: "Objection Handling: Pricing and Timelines", type: "video", duration: "15 min" },
-        { name: "Final Qualification Test", type: "quiz", duration: "10 Qs" }
-      ]
-    },
-    {
-      id: "CRS-02",
-      title: "TRC Legal Framework 2026",
-      category: "Legal & Compliance",
-      enrolled: 45,
-      completed: 45,
-      avgScore: "88%",
-      status: "active",
-      lessons: [
-        { name: "Karta Pobytu (TRC) Requirements Overview", type: "video", duration: "25 min" },
-        { name: "Blue Card & EU Work Permit Laws", type: "document", duration: "PDF (12 pages)" },
-        { name: "Urząd (Gov Office) Booking Automation rules", type: "video", duration: "12 min" },
-        { name: "Compliance Quiz: Polish Migration Law", type: "quiz", duration: "5 Qs" }
-      ]
-    },
-    {
-      id: "CRS-03",
-      title: "How to use KompasCRM",
-      category: "Tools",
-      enrolled: 156,
-      completed: 150,
-      avgScore: "99%",
-      status: "active",
-      lessons: [
-        { name: "Navigating Sidebar and Shell", type: "video", duration: "5 min" },
-        { name: "Automations and visual node triggers", type: "video", duration: "15 min" },
-        { name: "E-signatures and PDF Cryptographic checks", type: "document", duration: "PDF (3 pages)" }
-      ]
-    },
-    {
-      id: "CRS-04",
-      title: "Advanced Negotiation Tactics",
-      category: "Sales",
-      enrolled: 0,
-      completed: 0,
-      avgScore: "—",
-      status: "draft",
-      lessons: []
-    }
-  ]);
+  const [courses, setCourses] = useState([]);
 
   // Quiz Questions Data
   const quizQuestions = [
@@ -86,12 +31,7 @@ export default function AcademyPage() {
   ];
 
   // AI Academy Tutor Logs (175 agents, 15 coordinators, 1 president)
-  const [academyLogs, setAcademyLogs] = useState([
-    { time: "14:18:22", type: "system", message: "President approved digital certificate issuing rules for compliance tests." },
-    { time: "14:15:10", type: "coordinator", message: "Academy Coordinator [Agent-C03] reviewed final quiz submissions for TRC Legal Framework." },
-    { time: "14:11:59", type: "agent", message: "Onboarding Agent-088 registered new staff completion event for Sales 101." },
-    { time: "14:10:00", type: "system", message: "KompasCRM LMS Tutor Network online (175 automated agents grading tests)." }
-  ]);
+  const [academyLogs, setAcademyLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

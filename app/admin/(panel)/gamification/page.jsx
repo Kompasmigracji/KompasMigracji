@@ -4,23 +4,12 @@ import React, { useState, useEffect } from "react";
 import { Icon, Avatar, Badge, ProgressBar } from "@/components/admin/ui";
 
 export default function GamificationPage() {
-  const [leaderboard] = useState([
-    { id: 1, name: "Alex Jenkins", role: "Senior Sales", points: 14500, deals: 24, revenue: "€42,000", trend: "up", avatar: "AJ" },
-    { id: 2, name: "Maria Garcia", role: "Sales Exec", points: 12200, deals: 18, revenue: "€31,500", trend: "up", avatar: "MG" },
-    { id: 3, name: "You (Admin)", role: "Director", points: 9800, deals: 12, revenue: "€18,000", trend: "same", avatar: "A" },
-    { id: 4, name: "Oleg V.", role: "Junior Sales", points: 6400, deals: 8, revenue: "€9,200", trend: "down", avatar: "OV" },
-    { id: 5, name: "Anna S.", role: "Consultant", points: 4100, deals: 5, revenue: "€4,500", trend: "down", avatar: "AS" }
-  ]);
+  const [leaderboard] = useState([]);
 
   const [activeTab, setActiveTab] = useState("leaderboard");
 
   // AI Gamification logs
-  const [gameLogs, setGameLogs] = useState([
-    { time: "14:28:10", type: "system", message: "President authorized 'Rainmaker of the Month' badge issue parameters." },
-    { time: "14:26:01", type: "coordinator", message: "Gamification Coordinator [Agent-C09] validated points recalculation queue." },
-    { time: "14:22:45", type: "agent", message: "XP Agent-012 awarded +500 XP to Alex Jenkins for closing deal DEAL-889." },
-    { time: "14:20:00", type: "system", message: "KompasCRM Gamification Verification network online (175 automated agents monitoring achievements)." }
-  ]);
+  const [gameLogs, setGameLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

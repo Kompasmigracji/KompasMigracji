@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function WorkflowsPage() {
-  const [workflows] = useState([
-    { id: "WF-101", name: "Welcome Email Sequence", trigger: "New Lead Created", actions: "Send 3 Emails", enrolled: 1205, status: "active", lastRun: "10 mins ago" },
-    { id: "WF-102", name: "TRC Decision Alert (SMS)", trigger: "Case Status = 'Approved'", actions: "Send SMS + Notify Agent", enrolled: 45, status: "active", lastRun: "2 hours ago" },
-    { id: "WF-103", name: "Dead Lead Re-engagement", trigger: "No Activity > 30 Days", actions: "Send Discount Email", enrolled: 412, status: "active", lastRun: "Yesterday" },
-    { id: "WF-104", name: "Invoice Reminder", trigger: "Invoice Overdue", actions: "Send Email + Slack Alert", enrolled: 0, status: "draft", lastRun: "Never" }
-  ]);
+  const [workflows] = useState([]);
 
   const columns = [
     { header: "Workflow Name", cell: (row) => (

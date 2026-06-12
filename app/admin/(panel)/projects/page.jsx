@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function ProjectsPage() {
-  const [projects] = useState([
-    { id: "PRJ-01", name: "Krakow Office Opening", category: "Operations", lead: "Alex Jenkins", progress: 85, status: "in_progress", due: "Jun 30, 2026" },
-    { id: "PRJ-02", name: "Summer Marketing Campaign", category: "Marketing", lead: "Elena Rostova", progress: 40, status: "at_risk", due: "Jul 15, 2026" },
-    { id: "PRJ-03", name: "New Visa Application Portal", category: "IT / Tech", lead: "David O.", progress: 100, status: "completed", due: "May 25, 2026" },
-    { id: "PRJ-04", name: "ISO 9001 Certification", category: "Legal & Compliance", lead: "Maria Garcia", progress: 10, status: "planning", due: "Dec 01, 2026" }
-  ]);
+  const [projects] = useState([]);
 
   const columns = [
     { header: "Project Name", cell: (row) => (

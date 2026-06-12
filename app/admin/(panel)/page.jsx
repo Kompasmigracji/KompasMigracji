@@ -48,12 +48,7 @@ export default function Dashboard() {
   const [reports, setReports] = useState([]);
 
   // AI Dispatcher Logs (Simulated Coordinator feed)
-  const [dashboardLogs, setDashboardLogs] = useState([
-    { time: "16:48:01", type: "system", message: "President signed executive order for Automated Client Sync." },
-    { time: "16:45:10", type: "coordinator", message: "Omni Coordinator [Agent-C01] verified state pipelines for 12,000+ members." },
-    { time: "16:42:33", type: "agent", message: "Logistics Agent-074 optimized route matrices for cross-border transit dispatch." },
-    { time: "16:40:00", type: "system", message: "KompasCRM Primus Core Network Online (175 automated agents active)." }
-  ]);
+  const [dashboardLogs, setDashboardLogs] = useState([]);
 
   useEffect(() => {
     // Load layouts and reports

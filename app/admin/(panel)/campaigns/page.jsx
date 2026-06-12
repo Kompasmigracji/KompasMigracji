@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function CampaignsPage() {
-  const [campaigns] = useState([
-    { id: "CAMP-5501", name: "New TRC Rules 2026", audience: "All Active Clients (1,240)", sent: "Today, 09:00", openRate: "42.5%", clickRate: "12.1%", status: "sent" },
-    { id: "CAMP-5502", name: "B2B Legal Services Discount", audience: "Company Owners (450)", sent: "May 25, 2026", openRate: "55.2%", clickRate: "8.4%", status: "sent" },
-    { id: "CAMP-5503", name: "Referral Program Launch", audience: "Gold Tier Members (85)", sent: "—", openRate: "—", clickRate: "—", status: "draft" },
-    { id: "CAMP-5504", name: "Summer Visa Promo", audience: "Lost Leads (3,400)", sent: "Scheduled for Jun 10", openRate: "—", clickRate: "—", status: "scheduled" }
-  ]);
+  const [campaigns] = useState([]);
 
   const columns = [
     { header: "Campaign Name", cell: (row) => (

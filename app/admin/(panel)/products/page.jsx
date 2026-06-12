@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ProductsPage() {
-  const [products] = useState([
-    { id: "SKU-V01", name: "Karta Pobytu (TRC) Full Support", category: "Visas & Legal", price: "€450", sales: 124, status: "active", revenue: "€55,800" },
-    { id: "SKU-B01", name: "B2B Company Registration (Sp. z o.o.)", category: "Business", price: "€1,200", sales: 45, status: "active", revenue: "€54,000" },
-    { id: "SKU-L01", name: "PESEL & Meldunek Package", category: "Basic Services", price: "€50", sales: 312, status: "active", revenue: "€15,600" },
-    { id: "SKU-E01", name: "Premium Express Processing", category: "Add-ons", price: "€150", sales: 0, status: "draft", revenue: "€0" }
-  ]);
+  const [products] = useState([]);
 
   const columns = [
     { header: "Service / Product", cell: (row) => (

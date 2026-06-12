@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function DocBuilderPage() {
-  const [templates] = useState([
-    { id: "TPL-01", name: "Power of Attorney (Pełnomocnictwo)", category: "Legal Forms", generated: 1245, lastUpdated: "May 20, 2026", status: "active" },
-    { id: "TPL-02", name: "B2C Service Contract (Umowa Zlecenia)", category: "Contracts", generated: 830, lastUpdated: "June 01, 2026", status: "active" },
-    { id: "TPL-03", name: "B2B Legal Retainer Agreement", category: "Contracts", generated: 142, lastUpdated: "Yesterday", status: "draft" },
-    { id: "TPL-04", name: "Urząd Application Form (Wniosek)", category: "Government", generated: 3500, lastUpdated: "Jan 10, 2026", status: "active" }
-  ]);
+  const [templates] = useState([]);
 
   const [variables] = useState([
     "{{client.first_name}}", "{{client.last_name}}", "{{client.passport}}", "{{client.pesel}}", "{{client.address}}",

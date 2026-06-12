@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function BookingPage() {
-  const [appointments] = useState([
-    { id: "APT-201", client: "Ivan Petrov", purpose: "Sign Power of Attorney", time: "10:00 AM", duration: "30 min", lawyer: "Maria Garcia", room: "Room 1 (Warsaw)", status: "completed" },
-    { id: "APT-202", client: "Anna Schmidt", purpose: "Original Documents Handover", time: "11:30 AM", duration: "15 min", lawyer: "Alex Jenkins", room: "Room 2 (Warsaw)", status: "in_office" },
-    { id: "APT-203", client: "Rajesh Kumar", purpose: "TRC Initial Consultation", time: "14:00 PM", duration: "60 min", lawyer: "Oleg V.", room: "Room 1 (Warsaw)", status: "upcoming" },
-    { id: "APT-204", client: "TechCorp HR", purpose: "B2B Contract Signing", time: "16:30 PM", duration: "45 min", lawyer: "Maria Garcia", room: "VIP Lounge", status: "canceled" }
-  ]);
+  const [appointments] = useState([]);
 
   const columns = [
     { header: "Time", cell: (row) => (

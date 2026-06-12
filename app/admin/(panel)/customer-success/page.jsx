@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function CustomerSuccessPage() {
-  const [accounts] = useState([
-    { id: "ACC-01", name: "TechCorp Ltd", mrr: "€2,500", healthScore: 92, lastTouch: "Today", risk: "low", csm: "Alex Jenkins" },
-    { id: "ACC-02", name: "BudMax Sp. z o.o.", mrr: "€850", healthScore: 75, lastTouch: "12 days ago", risk: "medium", csm: "Maria Garcia" },
-    { id: "ACC-03", name: "Global Logistics", mrr: "€4,200", healthScore: 41, lastTouch: "21 days ago", risk: "high", csm: "Elena Rostova" },
-    { id: "ACC-04", name: "EcoFoods B2B", mrr: "€1,100", healthScore: 88, lastTouch: "Yesterday", risk: "low", csm: "Alex Jenkins" }
-  ]);
+  const [accounts] = useState([]);
 
   const columns = [
     { header: "Account / Company", cell: (row) => (

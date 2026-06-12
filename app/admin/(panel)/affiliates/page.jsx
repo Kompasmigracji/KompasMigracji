@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function AffiliatesPage() {
-  const [affiliates] = useState([
-    { id: "AFF-01", name: "LifeInPoland Blog", code: "POLAND2026", type: "Promo Code", clicks: 1250, conversions: 42, revenue: "€18,500", payout: "€1,850", status: "active" },
-    { id: "AFF-02", name: "RelocateUA Telegram", code: "RELOCATE_UA", type: "Ref Link", clicks: 840, conversions: 12, revenue: "€5,400", payout: "€540", status: "active" },
-    { id: "AFF-03", name: "VisaHelp YouTube", code: "VISAHELP10", type: "Promo Code", clicks: 320, conversions: 2, revenue: "€900", payout: "€90", status: "active" },
-    { id: "AFF-04", name: "Sp.z.o.o Guide", code: "BIZ_SETUP", type: "Ref Link", clicks: 45, conversions: 0, revenue: "€0", payout: "€0", status: "inactive" }
-  ]);
+  const [affiliates] = useState([]);
 
   const columns = [
     { header: "Affiliate / Influencer", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function SubscriptionsPage() {
-  const [subscriptions] = useState([
-    { id: "SUB-801", client: "TechCorp Sp. z.o.o.", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "active", nextBilling: "June 15, 2026", since: "Jan 2025" },
-    { id: "SUB-802", client: "Global IT Group", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "active", nextBilling: "July 01, 2026", since: "Mar 2026" },
-    { id: "SUB-803", client: "Ivan Petrov (Freelancer)", plan: "Personal Concierge", amount: "€150 / mo", status: "past_due", nextBilling: "Failed on Jun 01", since: "May 2026" },
-    { id: "SUB-804", client: "DevStudio Warsaw", plan: "B2B Legal Retainer", amount: "€1,200 / mo", status: "canceled", nextBilling: "—", since: "Oct 2025" }
-  ]);
+  const [subscriptions] = useState([]);
 
   const columns = [
     { header: "Client / Company", cell: (row) => (

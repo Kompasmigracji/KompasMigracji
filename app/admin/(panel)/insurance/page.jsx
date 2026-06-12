@@ -8,25 +8,12 @@ export default function InsurancePage() {
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [quoteData, setQuoteData] = useState({ clientName: "", package: "Standard", premium: "120 PLN/mo" });
 
-  const [policies] = useState([
-    { id: "POL-701", client: "Dmytro Kovalenko", type: "ZUS (Державне)", policyNo: "PESEL 920102...", premium: "450 PLN/mo", expires: "Безстроково (ZUS ZUA)", status: "active", verifiedDocs: "ZUS ZUA + RCA (Травень)" },
-    { id: "POL-702", client: "Kamil Nowak", type: "Приватне (PZU Wojażer)", policyNo: "PZU-8930219", premium: "150 PLN/mo", expires: "June 25, 2026", status: "expiring", verifiedDocs: "Поліс PDF" },
-    { id: "POL-703", client: "Anna Schmidt", type: "Приватне (LuxMed)", policyNo: "LUX-1029481", premium: "180 PLN/mo", expires: "Dec 31, 2026", status: "active", verifiedDocs: "Сертифікат покриття" },
-    { id: "POL-704", client: "Oleksandr Lysenko", type: "Приватне (PZU Wojażer)", policyNo: "PZU-7204910", premium: "120 PLN/mo", expires: "May 15, 2026", status: "expired", verifiedDocs: "Прострочений поліс" }
-  ]);
+  const [policies] = useState([]);
 
-  const [checklist] = useState([
-    { id: "CHK-01", client: "Ivan Petrov", registered: "ZUS ZUA подано", monthlyReport: "ZUS RCA відсутній", actionRequired: "Запитати підтвердження оплати" },
-    { id: "CHK-02", client: "Elena Rostova", registered: "ZUS ZUA подано", monthlyReport: "ZUS RCA подано", actionRequired: "Немає (Відповідність вимогам)" }
-  ]);
+  const [checklist] = useState([]);
 
   // AI Insurance logs
-  const [insuLogs, setInsuLogs] = useState([
-    { time: "18:25:01", type: "system", message: "President approved ZUS RCA declaration verification rule." },
-    { time: "18:22:10", type: "coordinator", message: "ZUS Coordinator [Agent-C05] cross-checked PESEL registries for 45 active members." },
-    { time: "18:19:44", type: "agent", message: "Insurance Agent-039 generated LuxMed custom coverage quote." },
-    { time: "18:15:00", type: "system", message: "KompasCRM ZUS Compliance network online (175 automated agents active)." }
-  ]);
+  const [insuLogs, setInsuLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

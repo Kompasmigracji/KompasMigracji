@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function PartnersPage() {
-  const [partners] = useState([
-    { id: "PRT-01", name: "Rent-PL Real Estate", type: "Real Estate", contact: "Piotr N.", referredLeads: 45, dealsWon: 12, revGenerated: "€14,400", commRate: "10%", unpaidComm: "€240", status: "active" },
-    { id: "PRT-02", name: "Warsaw IT University", type: "Education", contact: "Anna S.", referredLeads: 120, dealsWon: 40, revGenerated: "€24,000", commRate: "5%", unpaidComm: "€0", status: "active" },
-    { id: "PRT-03", name: "HR Relocate Agency", type: "Recruitment", contact: "John D.", referredLeads: 18, dealsWon: 5, revGenerated: "€6,000", commRate: "15%", unpaidComm: "€450", status: "active" },
-    { id: "PRT-04", name: "Freelancer Mark", type: "Individual", contact: "Mark T.", referredLeads: 2, dealsWon: 0, revGenerated: "€0", commRate: "10%", unpaidComm: "€0", status: "inactive" }
-  ]);
+  const [partners] = useState([]);
 
   const columns = [
     { header: "Partner Name", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, Avatar } from "@/components/admin/ui";
 
 export default function LeadRoutingPage() {
-  const [rules] = useState([
-    { id: "R-01", name: "High-Value B2B Leads", condition: "Budget > €5000 AND Type = B2B", assignTo: ["Alex Jenkins", "You (Admin)"], method: "Round Robin", status: "active", priority: 1 },
-    { id: "R-02", name: "Polish Speakers", condition: "Language = PL", assignTo: ["Maria Garcia"], method: "Direct Assign", status: "active", priority: 2 },
-    { id: "R-03", name: "General Leads (Website)", condition: "Source = Website Form", assignTo: ["Oleg V.", "Anna S.", "Alex Jenkins"], method: "Round Robin (Load Balanced)", status: "active", priority: 3 },
-    { id: "R-04", name: "Night Shift Auto-Responder", condition: "Time = 18:00 - 09:00", assignTo: ["AI Copilot Bot"], method: "Direct Assign", status: "paused", priority: 4 }
-  ]);
+  const [rules] = useState([]);
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>

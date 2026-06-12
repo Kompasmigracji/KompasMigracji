@@ -4,25 +4,11 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
 
 export default function TeamChatPage() {
-  const [channels] = useState([
-    { id: "C-1", name: "general", unread: 0, active: false },
-    { id: "C-2", name: "sales-team", unread: 3, active: true },
-    { id: "C-3", name: "legal-updates", unread: 0, active: false },
-    { id: "C-4", name: "marketing", unread: 12, active: false }
-  ]);
+  const [channels] = useState([]);
 
-  const [dms] = useState([
-    { id: "U-1", name: "Alex Jenkins", status: "online", unread: 0 },
-    { id: "U-2", name: "Maria Garcia", status: "offline", unread: 1 },
-    { id: "U-3", name: "Oleg V.", status: "online", unread: 0 }
-  ]);
+  const [dms] = useState([]);
 
-  const [messages] = useState([
-    { id: "M-1", user: "Maria Garcia", time: "10:15 AM", text: "Hey team, did we get the approval for TechCorp?", avatar: "MG" },
-    { id: "M-2", user: "Alex Jenkins", time: "10:18 AM", text: "Yes! They just signed the contract via DocuSign.", avatar: "AJ" },
-    { id: "M-3", user: "Maria Garcia", time: "10:20 AM", text: "Awesome! I'll update the CRM record.", avatar: "MG" },
-    { id: "M-4", user: "System Copilot", time: "10:21 AM", text: "🤖 Record Updated: Deal 'TechCorp B2B Relocation' moved to WON.", isSystem: true }
-  ]);
+  const [messages] = useState([]);
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>

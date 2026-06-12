@@ -8,17 +8,9 @@ export default function WorkPermitsPage() {
   const [showNotifyModal, setShowNotifyModal] = useState(false);
   const [selectedPermit, setSelectedPermit] = useState(null);
 
-  const [permits, setPermits] = useState([
-    { id: "WRK-001", foreigner: "Dmytro Kovalenko", employer: "BudMax Sp. z o.o.", type: "Oświadczenie", registered: "Jan 15, 2025", expires: "Jan 14, 2027", daysLeft: 220, status: "active", specialist: "Oleg V." },
-    { id: "WRK-002", foreigner: "Ivan Petrov", employer: "LogisTrans Sp. z o.o.", type: "Zezwolenie Typ A", registered: "Mar 10, 2024", expires: "Mar 09, 2027", daysLeft: 274, status: "active", specialist: "Maria Garcia" },
-    { id: "WRK-003", foreigner: "Anna Schmidt", employer: "KompIT Sp. z o.o.", type: "Zezwolenie Typ A", registered: "Jul 01, 2023", expires: "Jun 30, 2026", daysLeft: 22, status: "expiring", specialist: "Alex Jenkins" },
-    { id: "WRK-004", foreigner: "Oleksandr Lysenko", employer: "BudMax Sp. z o.o.", type: "Oświadczenie", registered: "May 20, 2024", expires: "May 19, 2026", daysLeft: -20, status: "expired", specialist: "Oleg V." }
-  ]);
+  const [permits, setPermits] = useState([]);
 
-  const [submissions] = useState([
-    { id: "SUB-801", foreigner: "Vasyl Shvets", employer: "UberPartner Sp. z o.o.", type: "Oświadczenie", pup: "PUP Warszawa", submittedDate: "Yesterday", status: "submitted" },
-    { id: "SUB-802", foreigner: "Olena Kravets", employer: "Horeca Group", type: "Zezwolenie Typ A", pup: "MUW Warszawa", submittedDate: "Jun 01, 2026", status: "processing" }
-  ]);
+  const [submissions] = useState([]);
 
   const columns = [
     { header: "ID", cell: (row) => <span style={{ fontFamily: "monospace", fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.id}</span> },

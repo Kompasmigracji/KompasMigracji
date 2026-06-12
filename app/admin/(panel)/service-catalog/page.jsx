@@ -4,13 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ServiceCatalogPage() {
-  const [services] = useState([
-    { id: "SRV-01", name: "TRC (Karta Pobytu) - Full Package", category: "B2C Visas", price: "€450", cost: "€150", margin: "66%", type: "Fixed Price", status: "active" },
-    { id: "SRV-02", name: "Business Harbour Setup", category: "B2B Relocation", price: "€1,200", cost: "€400", margin: "66%", type: "Fixed Price", status: "active" },
-    { id: "SRV-03", name: "Legal Consultation (Hourly)", category: "Consulting", price: "€150/hr", cost: "€80/hr", margin: "46%", type: "Hourly", status: "active" },
-    { id: "SRV-04", name: "Company Registration (Sp. z.o.o.)", category: "Corporate", price: "€800", cost: "€250", margin: "68%", type: "Fixed Price", status: "active" },
-    { id: "SRV-05", name: "PESEL UKR Expedited", category: "B2C Visas", price: "€50", cost: "€10", margin: "80%", type: "Fixed Price", status: "archived" }
-  ]);
+  const [services] = useState([]);
 
   const columns = [
     { header: "Service Name", cell: (row) => (

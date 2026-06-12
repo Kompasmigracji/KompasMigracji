@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ESignaturesPage() {
-  const [documents] = useState([
-    { id: "SIG-01", name: "B2B Relocation Contract", client: "TechCorp Sp. z.o.o.", sentDate: "Today, 10:45", status: "signed", type: "Contract", owner: "Alex Jenkins" },
-    { id: "SIG-02", name: "Pełnomocnictwo (Power of Attorney)", client: "Ivan Petrov", sentDate: "Yesterday, 14:20", status: "pending", type: "Legal Form", owner: "Maria Garcia" },
-    { id: "SIG-03", name: "NDA - Non-Disclosure Agreement", client: "Global IT Group", sentDate: "June 05, 2026", status: "signed", type: "Legal Form", owner: "Alex Jenkins" },
-    { id: "SIG-04", name: "Service Agreement - Blue Card", client: "Anna Schmidt", sentDate: "June 01, 2026", status: "expired", type: "Contract", owner: "Oleg V." }
-  ]);
+  const [documents] = useState([]);
 
   const columns = [
     { header: "Document Name", cell: (row) => (

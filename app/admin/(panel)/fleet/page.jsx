@@ -9,89 +9,16 @@ export default function FleetPage() {
   const [selectedTrip, setSelectedTrip] = useState(null);
   
   // Mock Passengers Data for Manifests
-  const [trips, setTrips] = useState([
-    {
-      id: "TRP-2026-42",
-      route: "Kyiv ➔ Warsaw",
-      driver: "Oleh Melnyk",
-      vehicle: "Mercedes Sprinter (KA 1234)",
-      status: "en_route",
-      border: "Krakivets",
-      passengers: [
-        { name: "Ivan Petrenko", passport: "AA123456", visaStatus: "valid", destination: "Warsaw", status: "boarded" },
-        { name: "Maria Kovalenko", passport: "AB987654", visaStatus: "valid", destination: "Warsaw", status: "boarded" },
-        { name: "Oleksandr Shevchenko", passport: "AC556677", visaStatus: "visa_free", destination: "Lublin", status: "boarded" },
-        { name: "Olga Boyko", passport: "AD889900", visaStatus: "valid", destination: "Warsaw", status: "boarded" },
-        { name: "Dmytro Hrytsenko", passport: "AE112233", visaStatus: "valid", destination: "Warsaw", status: "boarded" }
-      ],
-      gps: { lat: "50.4501", lng: "30.5234", speed: "85 km/h", eta: "4h 20m" }
-    },
-    {
-      id: "TRP-2026-43",
-      route: "Lviv ➔ Krakow",
-      driver: "Andriy Boyko",
-      vehicle: "VW Crafter (BC 4321)",
-      status: "at_border",
-      border: "Shehyni",
-      passengers: [
-        { name: "Yulia Bondar", passport: "BA887766", visaStatus: "residence_card", destination: "Krakow", status: "checking" },
-        { name: "Artem Morozov", passport: "BB554433", visaStatus: "valid", destination: "Krakow", status: "checking" },
-        { name: "Natalia Kravets", passport: "BC221100", visaStatus: "visa_free", destination: "Katowice", status: "checking" }
-      ],
-      gps: { lat: "49.8419", lng: "24.0315", speed: "0 km/h (Queue)", eta: "1h 15m (border delay)" }
-    },
-    {
-      id: "TRP-2026-44",
-      route: "Warsaw ➔ Kyiv",
-      driver: "Serhiy Tkach",
-      vehicle: "Mercedes Sprinter (KA 5566)",
-      status: "completed",
-      border: "Dorohusk",
-      passengers: [
-        { name: "Viktor Melnyk", passport: "CA111222", visaStatus: "valid", destination: "Kyiv", status: "arrived" },
-        { name: "Tetiana Polishchuk", passport: "CB333444", visaStatus: "valid", destination: "Kyiv", status: "arrived" }
-      ],
-      gps: { lat: "50.4501", lng: "30.5234", speed: "0 km/h", eta: "Completed" }
-    },
-    {
-      id: "TRP-2026-45",
-      route: "Odesa ➔ Poznan",
-      driver: "Vasyl Lymar",
-      vehicle: "Renault Master (BH 9901)",
-      status: "scheduled",
-      border: "Krakivets",
-      passengers: [
-        { name: "Roman Sydorenko", passport: "DA444555", visaStatus: "valid", destination: "Poznan", status: "registered" },
-        { name: "Svitlana Moroz", passport: "DB666777", visaStatus: "visa_free", destination: "Wroclaw", status: "registered" }
-      ],
-      gps: { lat: "46.4825", lng: "30.7233", speed: "Scheduled", eta: "Starts at 18:00" }
-    }
-  ]);
+  const [trips, setTrips] = useState([]);
 
   // Fuel Cards State
-  const [fuelCards, setFuelCards] = useState([
-    { id: "FC-ORLEN-01", provider: "Orlen Flota", assignedTo: "Oleh Melnyk", balance: 650, limit: 2000, status: "active" },
-    { id: "FC-SHELL-02", provider: "Shell Card", assignedTo: "Andriy Boyko", balance: 1420, limit: 3000, status: "active" },
-    { id: "FC-BP-03", provider: "BP Plus", assignedTo: "Serhiy Tkach", balance: 250, limit: 2500, status: "active" },
-    { id: "FC-DKV-04", provider: "DKV Card", assignedTo: "Vasyl Lymar", balance: 0, limit: 4000, status: "suspended" }
-  ]);
+  const [fuelCards, setFuelCards] = useState([]);
 
   // Border Points & Current Queues (Mock live data)
-  const [borders] = useState([
-    { name: "Krakivets - Korczowa", queueCars: 45, waitTime: "1.5 hours", status: "clear" },
-    { name: "Shehyni - Medyka", queueCars: 120, waitTime: "3.5 hours", status: "congested" },
-    { name: "Rava-Ruska - Hrebenne", queueCars: 30, waitTime: "1 hour", status: "clear" },
-    { name: "Dorohusk - Jahodyn", queueCars: 95, waitTime: "2.8 hours", status: "moderate" }
-  ]);
+  const [borders] = useState([]);
 
   // AI Dispatch Agents Logs (Real-time simulation: 175 agents + 15 coordinators + 1 president)
-  const [agentLogs, setAgentLogs] = useState([
-    { time: "13:30:04", type: "system", message: "President approved fuel budget allocations for Q2 2026." },
-    { time: "13:28:15", type: "coordinator", message: "Lead Coordinator [Agent-C04] reassigned VW Crafter to route Lviv-Krakow." },
-    { time: "13:25:40", type: "agent", message: "Dispatch Agent-087 verified passport validation for passenger Ivan Petrenko." },
-    { time: "13:22:11", type: "agent", message: "Dispatch Agent-142 pulled live border wait time for Krakivets (1.5 hours)." },
-    { time: "13:20:00", type: "system", message: "KompasCRM AI Operations network fully online (175 dispatch agents, 15 regional coordinators active)." }
-  ]);
+  const [agentLogs, setAgentLogs] = useState([]);
 
   useEffect(() => {
     // Simulate active background operations from the 175 dispatch agents, coordinators, and the president

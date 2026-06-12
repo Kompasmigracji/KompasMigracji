@@ -15,18 +15,7 @@ export default function FinancePage() {
   };
 
   // Mock `kompas_commissions_earned`
-  const [commissions, setCommissions] = useState([
-    { id: "COM-001", agentName: "Alex Mercer", dealId: "D-1023", amount: 1250, status: "paid", date: "2026-06-01" },
-    { id: "COM-002", agentName: "Sarah Connor", dealId: "D-1024", amount: 3400, status: "pending", date: "2026-06-05" },
-    { id: "COM-003", agentName: "John Doe", dealId: "D-1025", amount: 800, status: "pending", date: "2026-06-07" },
-    { id: "COM-004", agentName: "Alex Mercer", dealId: "D-1026", amount: 2100, status: "paid", date: "2026-06-08" },
-  ]);
-
-  // Mock `kompas_expenses`
-  const [expenses, setExpenses] = useState([
-    { id: "EXP-001", category: "Software", description: "AWS Hosting", amount: 450, date: "2026-06-01", createdBy: "Admin" },
-    { id: "EXP-002", category: "Office", description: "Coworking Space", amount: 1200, date: "2026-06-03", createdBy: "Admin" }
-  ]);
+  const [commissions, setCommissions] = useState([]);
 
   // Expense form state
   const [expenseForm, setExpenseForm] = useState({ category: "Software", description: "", amount: "" });

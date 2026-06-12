@@ -6,16 +6,9 @@ import { Icon, Badge, EmptyState, DataTable } from "@/components/admin/ui";
 export default function ApiKeysPage() {
   const [activeTab, setActiveTab] = useState("keys"); // keys, webhooks
 
-  const [keys] = useState([
-    { id: "key_1", name: "Zapier Integration", prefix: "pk_live_...", created: "May 10, 2026", lastUsed: "2 mins ago", status: "active" },
-    { id: "key_2", name: "Website Lead Form", prefix: "pk_test_...", created: "May 12, 2026", lastUsed: "1 day ago", status: "active" },
-    { id: "key_3", name: "Old Mobile App", prefix: "pk_live_...", created: "Jan 15, 2025", lastUsed: "Never", status: "revoked" }
-  ]);
+  const [keys] = useState([]);
 
-  const [webhooks] = useState([
-    { id: "wh_1", url: "https://hooks.slack.com/services/T0000/B000", events: ["lead.created", "payment.succeeded"], status: "active", lastDelivery: "Success" },
-    { id: "wh_2", url: "https://api.custom-erp.com/webhook", events: ["order.fulfilled"], status: "failing", lastDelivery: "Error 500" }
-  ]);
+  const [webhooks] = useState([]);
 
   const keyColumns = [
     { header: "Name", cell: (row) => <span style={{ fontWeight: 600 }}>{row.name}</span> },

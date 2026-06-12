@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function SocialMediaPage() {
-  const [posts] = useState([
-    { id: "SOC-201", content: "Top 5 Mistakes when applying for a Polish Visa! 🚫...", platform: "Instagram", status: "published", likes: 1240, comments: 84, date: "Today, 10:00" },
-    { id: "SOC-202", content: "We are hiring Visa Specialists in Warsaw! Join...", platform: "LinkedIn", status: "published", likes: 312, comments: 14, date: "Yesterday" },
-    { id: "SOC-203", content: "Do you need a Karta Pobytu? Read our new guide...", platform: "Facebook", status: "scheduled", likes: 0, comments: 0, date: "Tomorrow, 14:00" },
-    { id: "SOC-204", content: "Customer Success Story: How Ivan moved his IT team...", platform: "Twitter", status: "draft", likes: 0, comments: 0, date: "TBD" }
-  ]);
+  const [posts] = useState([]);
 
   const columns = [
     { header: "Post Content", cell: (row) => (

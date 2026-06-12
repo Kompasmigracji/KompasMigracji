@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function MonitoringPage() {
-  const [services] = useState([
-    { id: "SRV-01", name: "Main API (Vercel)", uptime: "99.99%", latency: "42ms", status: "operational", lastChecked: "Just now" },
-    { id: "SRV-02", name: "Database (PostgreSQL)", uptime: "100%", latency: "12ms", status: "operational", lastChecked: "Just now" },
-    { id: "SRV-03", name: "Background Workers", uptime: "98.5%", latency: "N/A", status: "degraded", lastChecked: "2 mins ago" },
-    { id: "SRV-04", name: "Payment Webhooks (Stripe)", uptime: "100%", latency: "145ms", status: "operational", lastChecked: "5 mins ago" }
-  ]);
+  const [services] = useState([]);
 
   const columns = [
     { header: "Service", cell: (row) => (

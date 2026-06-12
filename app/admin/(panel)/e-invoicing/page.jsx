@@ -4,23 +4,13 @@ import React, { useState, useEffect } from "react";
 import { Icon, Badge, DataTable, SearchInput, StatCard } from "@/components/admin/ui";
 
 export default function EInvoicingPage() {
-  const [invoices] = useState([
-    { id: "INV-2026-06-12", client: "TechCorp Sp. z.o.o.", amount: "€1,200.00", tax: "23% VAT", ksefStatus: "Accepted by KSeF", ksefId: "73291882...A1B2", date: "Today, 10:15", paymentStatus: "Paid" },
-    { id: "INV-2026-06-13", client: "Ivan Petrov", amount: "€300.00", tax: "Exempt (ZW)", ksefStatus: "Processing...", ksefId: "Pending", date: "Today, 11:30", paymentStatus: "Unpaid" },
-    { id: "INV-2026-06-14", client: "Rent-PL Real Estate", amount: "€240.00", tax: "23% VAT", ksefStatus: "Error / Rejected", ksefId: "—", date: "Yesterday", paymentStatus: "Unpaid" },
-    { id: "INV-2026-05-89", client: "Global IT Group", amount: "€1,200.00", tax: "23% VAT", ksefStatus: "Accepted by KSeF", ksefId: "89912003...C4D5", date: "May 31, 2026", paymentStatus: "Paid" }
-  ]);
+  const [invoices] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("invoices");
 
   // AI E-Invoicing logs
-  const [invoiceLogs, setInvoiceLogs] = useState([
-    { time: "14:30:15", type: "system", message: "President key verified on Ministry of Finance sandbox portal." },
-    { time: "14:28:44", type: "coordinator", message: "Invoicing Coordinator [Agent-C04] batched 12 signed invoices to production gate." },
-    { time: "14:25:12", type: "agent", message: "XML Validator Agent-039 generated FA-2 schema structure for INV-2026-06-13." },
-    { time: "14:20:00", type: "system", message: "KompasCRM KSeF Dispatcher Network online (175 automated agents active)." }
-  ]);
+  const [invoiceLogs, setInvoiceLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

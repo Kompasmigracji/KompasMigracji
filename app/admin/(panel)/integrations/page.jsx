@@ -4,20 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Icon, Badge } from "@/components/admin/ui";
 
 export default function IntegrationsPage() {
-  const [integrations, setIntegrations] = useState([
-    { id: "stripe", name: "Stripe Payment Gateway", desc: "Accept international card payments and automate invoice statuses.", status: "connected", logo: "card" },
-    { id: "telegram", name: "Telegram Business Bot", desc: "Receive lead notifications and reply directly via messengers.", status: "connected", logo: "message-square" },
-    { id: "twilio", name: "Twilio SMS & Phone", desc: "Send automated text reminders to tenants and visa applicants.", status: "configured", logo: "phone" },
-    { id: "outlook", name: "Microsoft Outlook Sync", desc: "Synchronize company emails and schedules with managers.", status: "available", logo: "mail" }
-  ]);
+  const [integrations, setIntegrations] = useState([]);
 
   // AI Integrations logs
-  const [apiLogs, setApiLogs] = useState([
-    { time: "14:32:01", type: "system", message: "President authorized API token renewal for Stripe Gateway." },
-    { time: "14:30:15", type: "coordinator", message: "Integration Coordinator [Agent-C05] updated webhook listening endpoint." },
-    { time: "14:28:11", type: "agent", message: "API Agent-008 synced 42 incoming Telegram chat threads." },
-    { time: "14:25:00", type: "system", message: "KompasCRM API Integrator active (175 background agents checking connected webhooks)." }
-  ]);
+  const [apiLogs, setApiLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

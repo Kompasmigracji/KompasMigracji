@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function ReviewsPage() {
-  const [reviews] = useState([
-    { id: "REV-901", customer: "Elena Rostova", rating: 5, platform: "Google Maps", text: "Amazing service! Got my visa in just 2 weeks.", status: "replied", date: "Today" },
-    { id: "REV-902", customer: "Ivan Ivanov", rating: 1, platform: "Trustpilot", text: "Terrible communication. Nobody answered my calls.", status: "needs_attention", date: "Yesterday" },
-    { id: "REV-903", customer: "TechCorp Ltd", rating: 4, platform: "Facebook", text: "Good B2B service, but a bit pricey.", status: "new", date: "May 25" },
-    { id: "REV-904", customer: "Maria G.", rating: 5, platform: "Google Maps", text: "Best agency in Warsaw! Highly recommend.", status: "replied", date: "May 20" }
-  ]);
+  const [reviews] = useState([]);
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }).map((_, i) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function CallsPage() {
-  const [calls] = useState([
-    { id: "CALL-711", client: "Elena Rostova", type: "inbound", duration: "12m 45s", agent: "Maria Garcia", date: "Today, 10:15", status: "completed" },
-    { id: "CALL-712", client: "Ivan Ivanov", type: "outbound", duration: "0m 45s", agent: "Alex Jenkins", date: "Today, 09:30", status: "voicemail" },
-    { id: "CALL-713", client: "+48 555 123 456", type: "inbound", duration: "0m 00s", agent: "Unanswered", date: "Yesterday, 16:45", status: "missed" },
-    { id: "CALL-714", client: "TechCorp Ltd", type: "outbound", duration: "45m 12s", agent: "David O.", date: "May 25", status: "completed" }
-  ]);
+  const [calls] = useState([]);
 
   const columns = [
     { header: "Client / Number", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, Avatar, DataTable } from "@/components/admin/ui";
 
 export default function TicketsPage() {
-  const [tickets] = useState([
-    { id: "T-1042", subject: "Payment gateway timeout on checkout", requester: "Sarah Jenkins", channel: "Email", priority: "High", status: "open", sla: "2h 15m left", agent: "Alex" },
-    { id: "T-1041", subject: "How to upgrade my subscription?", requester: "TechCorp Inc.", channel: "Live Chat", priority: "Normal", status: "pending", sla: "Paused", agent: "Maria" },
-    { id: "T-1040", subject: "Feature request: Custom reports", requester: "David O.", channel: "Portal", priority: "Low", status: "resolved", sla: "Met", agent: "Alex" },
-    { id: "T-1039", subject: "Critical: Database connection refused", requester: "Acme Logistics", channel: "Phone", priority: "Urgent", status: "open", sla: "OVERDUE by 10m", agent: "Unassigned" }
-  ]);
+  const [tickets] = useState([]);
 
   const columns = [
     { header: "ID", cell: (row) => <span style={{ fontWeight: 600, color: "var(--dim)" }}>{row.id}</span> },

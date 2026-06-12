@@ -4,18 +4,9 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function LeaderboardPage() {
-  const [agents] = useState([
-    { rank: 1, name: "Maria Garcia", role: "Senior Sales", points: 8450, dealsWon: 24, callsMade: 342, trend: "up" },
-    { rank: 2, name: "Alex Jenkins", role: "Account Executive", points: 7200, dealsWon: 18, callsMade: 410, trend: "down" },
-    { rank: 3, name: "Oleg V.", role: "Sales Rep", points: 5120, dealsWon: 12, callsMade: 280, trend: "up" },
-    { rank: 4, name: "Anna Schmidt", role: "Junior Sales", points: 3400, dealsWon: 8, callsMade: 520, trend: "up" }
-  ]);
+  const [agents] = useState([]);
 
-  const [achievements] = useState([
-    { id: 1, agent: "Maria Garcia", badge: "Deal Closer", desc: "Closed 5 deals in one day", time: "2 hours ago", icon: "zap", color: "var(--color-warning)" },
-    { id: 2, agent: "Alex Jenkins", badge: "Phone Master", desc: "Made 100 calls this week", time: "Yesterday", icon: "phone", color: "var(--color-primary)" },
-    { id: 3, name: "Oleg V.", badge: "Fast Responder", desc: "Replied to 10 leads in < 5 mins", time: "2 days ago", icon: "clock", color: "var(--color-success)" }
-  ]);
+  const [achievements] = useState([]);
 
   const columns = [
     { header: "Rank", cell: (row) => (

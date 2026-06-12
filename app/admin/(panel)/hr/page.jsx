@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function HRPage() {
-  const [employees] = useState([
-    { id: "EMP-041", name: "Dmitry K.", role: "Junior Sales", status: "onboarding", progress: 65, joinDate: "June 05, 2026", nextTask: "Sign NDA" },
-    { id: "EMP-042", name: "Olena M.", role: "Legal Assistant", status: "onboarding", progress: 20, joinDate: "Yesterday", nextTask: "Read KB: TRC Basics" },
-    { id: "EMP-012", name: "Maria Garcia", role: "Senior Lawyer", status: "active", progress: 100, joinDate: "Jan 10, 2024", nextTask: "—" },
-    { id: "EMP-015", name: "Alex Jenkins", role: "Manager", status: "on_leave", progress: 100, joinDate: "Mar 22, 2024", nextTask: "Returns June 15" }
-  ]);
+  const [employees] = useState([]);
 
   const columns = [
     { header: "Employee", cell: (row) => (

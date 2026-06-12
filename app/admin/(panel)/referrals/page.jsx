@@ -16,12 +16,7 @@ export default function ReferralsPage() {
   const [activeTab, setActiveTab] = useState("referrals");
 
   // AI Referrals Dispatcher Logs
-  const [refLogs, setRefLogs] = useState([
-    { time: "14:25:01", type: "system", message: "President authorized automatic payouts threshold limit to 500 PLN." },
-    { time: "14:22:15", type: "coordinator", message: "Referrals Coordinator [Agent-C07] audited 3 new successful conversions." },
-    { time: "14:19:40", type: "agent", message: "Referral Agent-142 detected cookie session match for user click on code: PARTNER77." },
-    { time: "14:15:00", type: "system", message: "KompasCRM Referral Tracking Network online (175 automated agents active)." }
-  ]);
+  const [refLogs, setRefLogs] = useState([]);
 
   const siteUrl = typeof window !== "undefined"
     ? window.location.origin

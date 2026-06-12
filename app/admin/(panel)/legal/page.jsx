@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function LegalCasesPage() {
-  const [cases] = useState([
-    { id: "CASE-2026-401", client: "Ivan Ivanov", type: "Karta Pobytu (Work)", urzad: "Warsaw", stage: "Documents Submitted", deadline: "Jul 15, 2026", status: "in-progress" },
-    { id: "CASE-2026-402", client: "Elena Rostova", type: "National Visa D", urzad: "Consulate", stage: "Approved", deadline: "Completed", status: "success" },
-    { id: "CASE-2026-403", client: "TechCorp Ltd", type: "B2B Work Permits (x10)", urzad: "Krakow", stage: "Awaiting Employer Signatures", deadline: "Jun 10, 2026", status: "blocked" },
-    { id: "CASE-2026-404", client: "Dmytro Boyko", type: "Karta Polaka", urzad: "Lublin", stage: "Interview Scheduled", deadline: "Jun 18, 2026", status: "in-progress" }
-  ]);
+  const [cases] = useState([]);
 
   const columns = [
     { header: "Case ID", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function FormsPage() {
-  const [forms] = useState([
-    { id: "FRM-501", name: "Visa Application Questionnaire", type: "Client Intake", responses: 1240, conversion: "68%", status: "active", created: "Jan 10, 2026" },
-    { id: "FRM-502", name: "Customer Satisfaction Survey (NPS)", type: "Survey", responses: 312, conversion: "45%", status: "active", created: "Mar 05, 2026" },
-    { id: "FRM-503", name: "Partner Registration Form", type: "B2B Lead Gen", responses: 45, conversion: "12%", status: "active", created: "May 20, 2026" },
-    { id: "FRM-504", name: "Old Job Application Form", type: "Recruitment", responses: 890, conversion: "85%", status: "archived", created: "Aug 15, 2025" }
-  ]);
+  const [forms] = useState([]);
 
   const columns = [
     { header: "Form Name", cell: (row) => (

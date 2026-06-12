@@ -4,18 +4,9 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ClientPortalPage() {
-  const [portals] = useState([
-    { id: "CP-901", client: "Ivan Petrov", type: "B2C", status: "active", lastLogin: "10 mins ago", unreadDocs: 2, caseStatus: "Awaiting Urząd" },
-    { id: "CP-902", client: "TechCorp Sp. z.o.o.", type: "B2B", status: "active", lastLogin: "Yesterday", unreadDocs: 0, caseStatus: "Monthly Retainer" },
-    { id: "CP-903", client: "Anna Schmidt", type: "B2C", status: "invited", lastLogin: "Never", unreadDocs: 0, caseStatus: "Documents Prep" },
-    { id: "CP-904", client: "Rajesh Kumar", type: "B2C", status: "locked", lastLogin: "June 01, 2026", unreadDocs: 0, caseStatus: "Case Closed" }
-  ]);
+  const [portals] = useState([]);
 
-  const [logs] = useState([
-    { id: 1, client: "Ivan Petrov", action: "Uploaded Document", detail: "passport_scan.pdf", time: "10:15 AM", icon: "upload-cloud", color: "var(--color-primary)" },
-    { id: 2, client: "TechCorp Sp. z.o.o.", action: "Downloaded Invoice", detail: "INV-2026-05.pdf", time: "Yesterday, 14:30", icon: "download", color: "var(--color-success)" },
-    { id: 3, client: "System", action: "Magic Link Sent", detail: "to anna.s@mail.com", time: "2 days ago", icon: "mail", color: "var(--dim)" }
-  ]);
+  const [logs] = useState([]);
 
   const columns = [
     { header: "Client", cell: (row) => (

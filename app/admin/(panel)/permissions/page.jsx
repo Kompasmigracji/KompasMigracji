@@ -4,22 +4,9 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function PermissionsPage() {
-  const [roles] = useState([
-    { id: "RL-1", name: "Administrator", users: 2, level: "Full Access", status: "active", isSystem: true },
-    { id: "RL-2", name: "Sales Manager", users: 14, level: "Sales & Leads", status: "active", isSystem: true },
-    { id: "RL-3", name: "Lawyer / Consultant", users: 8, level: "Cases & Docs", status: "active", isSystem: false },
-    { id: "RL-4", name: "Junior Support", users: 5, level: "Restricted", status: "active", isSystem: false },
-    { id: "RL-5", name: "External Partner", users: 42, level: "Portal Only", status: "active", isSystem: false }
-  ]);
+  const [roles] = useState([]);
 
-  const [permissionsMatrix] = useState([
-    { resource: "Leads & Contacts", view: true, create: true, edit: true, delete: false },
-    { resource: "Deals & Pipelines", view: true, create: true, edit: true, delete: false },
-    { resource: "Financials & Invoices", view: false, create: false, edit: false, delete: false },
-    { resource: "Data Room & Docs", view: true, create: false, edit: false, delete: false },
-    { resource: "Audit Log", view: false, create: false, edit: false, delete: false },
-    { resource: "Settings", view: false, create: false, edit: false, delete: false }
-  ]);
+  const [permissionsMatrix] = useState([]);
 
   const columns = [
     { header: "Role Name", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function DocumentsPage() {
-  const [documents] = useState([
-    { id: "DOC-2041", name: "Service Agreement - TechCorp", recipient: "Sarah Jenkins", type: "Contract", status: "signed", date: "May 10, 2026", owner: "Alex" },
-    { id: "DOC-2042", name: "NDA - Freelancer", recipient: "David O.", type: "NDA", status: "viewed", date: "May 12, 2026", owner: "Maria" },
-    { id: "DOC-2043", name: "Partnership Proposal 2026", recipient: "Acme Logistics", type: "Proposal", status: "sent", date: "May 14, 2026", owner: "Alex" },
-    { id: "DOC-2044", name: "Vendor Contract Draft", recipient: "Unassigned", type: "Contract", status: "draft", date: "Just now", owner: "Maria" }
-  ]);
+  const [documents] = useState([]);
 
   const columns = [
     { header: "Document", cell: (row) => (

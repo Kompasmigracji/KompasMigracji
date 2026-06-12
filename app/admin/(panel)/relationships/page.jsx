@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function RelationshipsPage() {
-  const [connections] = useState([
-    { id: "REL-1", source: "Ivan Petrov", target: "Maria Petrova", type: "Spouse", direction: "Mutual", context: "Family TRC Application" },
-    { id: "REL-2", source: "TechCorp Sp. z.o.o.", target: "Alex Jenkins", type: "Account Manager", direction: "One-Way", context: "B2B Sales" },
-    { id: "REL-3", source: "Oleg Volkov", target: "Ivan Petrov", type: "Referred By", direction: "Target to Source", context: "Loyalty Program" },
-    { id: "REL-4", source: "Global IT Group", target: "DevStudio LLC", type: "Parent Company", direction: "Source to Target", context: "Corporate Structure" }
-  ]);
+  const [connections] = useState([]);
 
   const columns = [
     { header: "Entity A", cell: (row) => (

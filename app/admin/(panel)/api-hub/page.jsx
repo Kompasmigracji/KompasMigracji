@@ -4,19 +4,9 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function ApiHubPage() {
-  const [keys] = useState([
-    { id: "key_prod_9x8...2v1", name: "Zapier Integration (Leads)", environment: "Production", created: "Jan 10, 2026", lastUsed: "2 mins ago", status: "active" },
-    { id: "key_prod_4m5...7b8", name: "Main Website Landing Page", environment: "Production", created: "Mar 15, 2026", lastUsed: "1 hour ago", status: "active" },
-    { id: "key_test_1a2...3c4", name: "Make.com Testing", environment: "Sandbox", created: "Yesterday", lastUsed: "Never", status: "active" },
-    { id: "key_prod_old...9z0", name: "Old Facebook Ads Script", environment: "Production", created: "Nov 20, 2025", lastUsed: "May 01, 2026", status: "revoked" }
-  ]);
+  const [keys] = useState([]);
 
-  const [logs] = useState([
-    { id: 1, method: "POST", endpoint: "/v1/leads", status: 201, time: "10:15:32 AM", source: "Website Landing", latency: "124ms" },
-    { id: 2, method: "GET", endpoint: "/v1/clients/search?q=Ivan", status: 200, time: "10:12:05 AM", source: "Zapier Integration", latency: "85ms" },
-    { id: 3, method: "POST", endpoint: "/v1/documents/upload", status: 401, time: "09:45:11 AM", source: "Make.com Testing", latency: "12ms", error: "Invalid API Key" },
-    { id: 4, method: "GET", endpoint: "/v1/cases/status", status: 200, time: "Yesterday", source: "Zapier Integration", latency: "110ms" }
-  ]);
+  const [logs] = useState([]);
 
   const columns = [
     { header: "API Key Name", cell: (row) => (

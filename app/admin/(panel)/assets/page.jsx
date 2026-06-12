@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function AssetsPage() {
-  const [assets] = useState([
-    { tag: "AST-4012", name: "MacBook Pro M3 14\"", category: "Laptops", assignee: "Alex Jenkins", status: "deployed", condition: "Excellent", purchaseDate: "May 10, 2026" },
-    { tag: "AST-4011", name: "iPhone 15 Pro", category: "Phones", assignee: "Maria Garcia", status: "deployed", condition: "Good", purchaseDate: "Mar 15, 2026" },
-    { tag: "AST-4010", name: "Dell UltraSharp 27\"", category: "Monitors", assignee: "Unassigned", status: "ready_to_deploy", condition: "New", purchaseDate: "Jun 01, 2026" },
-    { tag: "AST-4009", name: "Lenovo ThinkPad T14", category: "Laptops", assignee: "Unassigned", status: "in_repair", condition: "Broken Screen", purchaseDate: "Jan 12, 2025" }
-  ]);
+  const [assets] = useState([]);
 
   const columns = [
     { header: "Asset Name", cell: (row) => (

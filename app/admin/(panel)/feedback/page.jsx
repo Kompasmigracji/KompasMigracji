@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function FeedbackPage() {
-  const [reviews] = useState([
-    { id: "REV-01", client: "Ivan Petrov", score: 10, comment: "Maria was amazing! Got my TRC in 3 months.", type: "Promoter", date: "Today, 14:30", action: "Google Maps link sent" },
-    { id: "REV-02", client: "Anna Schmidt", score: 8, comment: "Good service, but communication could be faster.", type: "Passive", date: "Yesterday", action: "Thank you email sent" },
-    { id: "REV-03", client: "Oleg V.", score: 3, comment: "My document was lost by the translator. Very disappointed.", type: "Detractor", date: "June 05, 2026", action: "Manager escalated" },
-    { id: "REV-04", client: "TechCorp Sp. z.o.o.", score: 10, comment: "Best legal partner for B2B relocation.", type: "Promoter", date: "June 01, 2026", action: "LinkedIn recommendation requested" }
-  ]);
+  const [reviews] = useState([]);
 
   const columns = [
     { header: "Client", cell: (row) => (

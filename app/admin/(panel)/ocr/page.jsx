@@ -4,13 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function OCRPage() {
-  const [documents] = useState([
-    { id: "DOC-901", type: "Passport (UA)", client: "Ivan Ivanov", date: "10 mins ago", confidence: "98%", status: "processed" },
-    { id: "DOC-902", type: "KRS Extract (PL)", client: "TechCorp Ltd", date: "1 hour ago", confidence: "92%", status: "processed" },
-    { id: "DOC-903", type: "ZUS Certificate", client: "Elena Rostova", date: "3 hours ago", confidence: "64%", status: "needs_review" },
-    { id: "DOC-904", type: "ID Card (BY)", client: "Oleg V.", date: "Yesterday", confidence: "—", status: "processing" },
-    { id: "DOC-905", type: "Bank Statement", client: "Anna Smirnova", date: "Yesterday", confidence: "12%", status: "failed" }
-  ]);
+  const [documents] = useState([]);
 
   const columns = [
     { header: "Document Type", cell: (row) => (

@@ -4,11 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function DataImportPage() {
-  const [history] = useState([
-    { id: "IMP-01", file: "hubspot_contacts_export.csv", entity: "Contacts", rows: 1450, success: 1448, failed: 2, date: "10 mins ago", type: "Import" },
-    { id: "EXP-02", file: "full_crm_backup_2026.zip", entity: "All Data", rows: 8402, success: 8402, failed: 0, date: "Yesterday", type: "Export" },
-    { id: "IMP-03", file: "pipedrive_deals.xlsx", entity: "Deals", rows: 320, success: 320, failed: 0, date: "May 15, 2026", type: "Import" }
-  ]);
+  const [history] = useState([]);
 
   const columns = [
     { header: "Operation / File", cell: (row) => (

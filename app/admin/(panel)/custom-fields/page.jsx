@@ -4,21 +4,11 @@ import React, { useState, useEffect } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function CustomFieldsPage() {
-  const [fields, setFields] = useState([
-    { id: "fld_1", name: "PESEL Number", entity: "Members", type: "Text (11 chars)", status: "active", required: "Yes" },
-    { id: "fld_2", name: "Passport Expiry Date", entity: "Leads", type: "Date", status: "active", required: "Yes" },
-    { id: "fld_3", name: "Relocation City Preference", entity: "Leads", type: "Dropdown (Warsaw/Krakow/Lodz)", status: "active", required: "No" },
-    { id: "fld_4", name: "ZUS Registry Code", entity: "Members", type: "Number", status: "draft", required: "No" }
-  ]);
+  const [fields, setFields] = useState([]);
   const [showAddFieldModal, setShowAddFieldModal] = useState(false);
 
   // AI Schema logs
-  const [schemaLogs, setSchemaLogs] = useState([
-    { time: "14:35:10", type: "system", message: "President approved database schema migration script for custom attributes." },
-    { time: "14:32:05", type: "coordinator", message: "Schema Coordinator [Agent-C14] validated foreign key indexing logic." },
-    { time: "14:30:00", type: "agent", message: "Schema Agent-053 checked column conflicts for Leads table." },
-    { time: "14:28:00", type: "system", message: "KompasCRM Schema Engine active (175 background agents tracking custom migrations)." }
-  ]);
+  const [schemaLogs, setSchemaLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

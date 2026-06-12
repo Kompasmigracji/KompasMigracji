@@ -7,12 +7,7 @@ export default function TimesheetsPage() {
   const [timer, setTimer] = useState("00:45:12");
   const [isActive, setIsActive] = useState(true);
 
-  const [entries] = useState([
-    { id: "TS-01", description: "Drafting B2B Contract", client: "TechCorp Ltd", user: "Maria Garcia", duration: "2h 15m", billable: true, date: "Today" },
-    { id: "TS-02", description: "Consultation (Video Call)", client: "Elena Rostova", user: "Alex Jenkins", duration: "0h 45m", billable: true, date: "Today" },
-    { id: "TS-03", description: "Internal Meeting (Marketing)", client: "—", user: "Alex Jenkins", duration: "1h 00m", billable: false, date: "Yesterday" },
-    { id: "TS-04", description: "Visa Application Review", client: "Ivan Ivanov", user: "Maria Garcia", duration: "3h 30m", billable: true, date: "May 25" }
-  ]);
+  const [entries] = useState([]);
 
   const columns = [
     { header: "Description", cell: (row) => (

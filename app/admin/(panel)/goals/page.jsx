@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function GoalsPage() {
-  const [goals] = useState([
-    { id: "G-01", title: "Q3 Corporate Revenue Target", owner: "Company Wide", type: "Revenue", target: "€100,000", current: "€42,500", progress: 42.5, status: "on-track", deadline: "Sep 30, 2026" },
-    { id: "G-02", title: "June TRC Applications", owner: "Maria Garcia", type: "Deals Closed", target: "50 deals", current: "42 deals", progress: 84, status: "on-track", deadline: "Jun 30, 2026" },
-    { id: "G-03", title: "New B2B Lead Generation", owner: "Marketing Team", type: "Leads Created", target: "200 leads", current: "45 leads", progress: 22.5, status: "at-risk", deadline: "Jun 30, 2026" },
-    { id: "G-04", title: "Reduce Average Resolution Time", owner: "Legal Team", type: "Time Metric", target: "< 14 days", current: "18 days", progress: 0, status: "behind", deadline: "Dec 31, 2026" }
-  ]);
+  const [goals] = useState([]);
 
   const columns = [
     { header: "Goal / Objective", cell: (row) => (

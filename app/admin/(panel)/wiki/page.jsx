@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function WikiPage() {
-  const [documents] = useState([
-    { id: "DOC-801", title: "Standard Operating Procedure: Karta Pobytu 2026", category: "Legal SOPs", author: "Maria Garcia", views: 1420, lastUpdated: "Today", status: "published" },
-    { id: "DOC-802", title: "Employee Onboarding Guide", category: "HR", author: "Alex Jenkins", views: 840, lastUpdated: "May 15", status: "published" },
-    { id: "DOC-803", title: "Sales Scripts & Rebuttal Handlers", category: "Sales", author: "David O.", views: 320, lastUpdated: "May 10", status: "needs_update" },
-    { id: "DOC-804", title: "Draft: Q3 Marketing Strategy", category: "Marketing", author: "Elena Rostova", views: 12, lastUpdated: "Yesterday", status: "draft" }
-  ]);
+  const [documents] = useState([]);
 
   const columns = [
     { header: "Document Title", cell: (row) => (

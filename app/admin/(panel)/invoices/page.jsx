@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function InvoicesPage() {
-  const [invoices] = useState([
-    { id: "INV-2026-142", client: "TechCorp Logistics", amount: "€4,500.00", date: "May 25, 2026", due: "Jun 01, 2026", status: "paid" },
-    { id: "INV-2026-143", client: "Elena Rostova", amount: "€850.00", date: "Jun 02, 2026", due: "Jun 09, 2026", status: "pending" },
-    { id: "INV-2026-144", client: "Global Solutions Inc", amount: "€12,000.00", date: "May 10, 2026", due: "May 24, 2026", status: "overdue" },
-    { id: "INV-2026-145", client: "Alexey Volkov", amount: "€450.00", date: "Jun 05, 2026", due: "Jun 12, 2026", status: "draft" }
-  ]);
+  const [invoices] = useState([]);
 
   const columns = [
     { header: "Invoice Number", cell: (row) => (

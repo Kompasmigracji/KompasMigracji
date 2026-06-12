@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function SLAManagementPage() {
-  const [slas] = useState([
-    { id: "SLA-01", client: "TechCorp Sp. z.o.o.", service: "B2B Relocation (5 staff)", target: "Document Submission", deadline: "Today, 17:00", timeRemaining: "06:14:22", status: "at-risk", owner: "Alex Jenkins" },
-    { id: "SLA-02", client: "Ivan Petrov", service: "Karta Pobytu", target: "Initial Consultation", deadline: "Tomorrow", timeRemaining: "28:00:00", status: "on-track", owner: "Maria Garcia" },
-    { id: "SLA-03", client: "Anna Schmidt", service: "Blue Card", target: "Appeal Filing", deadline: "June 12, 2026", timeRemaining: "4 Days", status: "on-track", owner: "Oleg V." },
-    { id: "SLA-04", client: "Global IT Group", service: "Company Registration", target: "Notary Appointment", deadline: "Yesterday", timeRemaining: "-18:22:10", status: "breached", owner: "Alex Jenkins" }
-  ]);
+  const [slas] = useState([]);
 
   const columns = [
     { header: "Client / Case", cell: (row) => (

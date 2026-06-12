@@ -4,11 +4,7 @@ import React, { useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
 
 export default function CopilotPage() {
-  const [messages] = useState([
-    { id: 1, role: "assistant", text: "Hi! I'm Kompas AI. I can analyze your sales, draft emails to clients, or find specific legal cases. How can I help you today?", time: "10:00 AM" },
-    { id: 2, role: "user", text: "Summarize the last 5 interactions with TechCorp Ltd.", time: "10:05 AM" },
-    { id: 3, role: "assistant", text: "Sure! Here is a summary of TechCorp Ltd:\n\n1. **Yesterday**: Sent B2B Contract via DocuSign.\n2. **3 days ago**: 45-min Zoom call regarding franchise rules.\n3. **1 week ago**: They paid Invoice #4092 (€2,500).\n4. **2 weeks ago**: Opened 3 support tickets (all resolved).\n\n**AI Suggestion**: Since they just signed the contract, it's a good time to offer our VIP Onboarding package.", time: "10:05 AM" }
-  ]);
+  const [messages] = useState([]);
 
   const prompts = [
     "Draft an email to Elena",

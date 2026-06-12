@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function DataRoomPage() {
-  const [links] = useState([
-    { id: "LNK-91", name: "B2B Registration Package", client: "TechCorp Ltd", views: 14, lastView: "10 mins ago", expires: "Jun 15, 2026", status: "active" },
-    { id: "LNK-92", name: "Financial Audit 2025", client: "BudMax Sp. z o.o.", views: 4, lastView: "Yesterday", expires: "Never", status: "active" },
-    { id: "LNK-93", name: "Passports & Visas (Confidential)", client: "Elena Rostova", views: 2, lastView: "May 25", expires: "May 30, 2026", status: "expired" },
-    { id: "LNK-94", name: "Franchise Agreement Draft", client: "Ivan Ivanov", views: 0, lastView: "—", expires: "Jul 01, 2026", status: "draft" }
-  ]);
+  const [links] = useState([]);
 
   const columns = [
     { header: "Document / Folder Name", cell: (row) => (

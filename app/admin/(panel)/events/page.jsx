@@ -4,17 +4,9 @@ import React, { useState } from "react";
 import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
 
 export default function EventsPage() {
-  const [events] = useState([
-    { id: "EVT-01", name: "Blue Card & Relocation 2026", date: "June 15, 2026 • 18:00", type: "Webinar", rsvps: 245, attendees: "-", status: "upcoming", conversion: "—" },
-    { id: "EVT-02", name: "Offline: Legal Meetup Krakow", date: "May 28, 2026 • 19:00", type: "Offline", rsvps: 50, attendees: 42, status: "completed", conversion: "14%" },
-    { id: "EVT-03", name: "Karta Pobytu Basics (UA)", date: "May 10, 2026 • 17:00", type: "Webinar", rsvps: 800, attendees: 320, status: "completed", conversion: "22%" }
-  ]);
+  const [events] = useState([]);
 
-  const [attendees] = useState([
-    { id: 1, name: "Ivan Petrov", email: "ivan.p@example.com", status: "Registered", ticket: "Free", followUp: "Pending" },
-    { id: 2, name: "Maria Garcia", email: "m.garcia@tech.es", status: "Attended", ticket: "VIP", followUp: "Contacted" },
-    { id: 3, name: "Oleg V.", email: "oleg99@mail.ua", status: "No-Show", ticket: "Free", followUp: "Emailed" }
-  ]);
+  const [attendees] = useState([]);
 
   const columnsEvents = [
     { header: "Event Name", cell: (row) => (

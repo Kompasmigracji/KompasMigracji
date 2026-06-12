@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable } from "@/components/admin/ui";
 
 export default function LocalizationPage() {
-  const [keys] = useState([
-    { id: "msg_welcome", category: "Email Templates", en: "Welcome to KompasCRM!", ua: "Ласкаво просимо до KompasCRM!", pl: "Witamy w KompasCRM!", status: "translated", progress: 100 },
-    { id: "btn_submit_docs", category: "Client Portal", en: "Submit Documents", ua: "Відправити Документи", pl: "Wyślij Dokumenty", status: "translated", progress: 100 },
-    { id: "err_payment_failed", category: "Checkout", en: "Payment failed. Try again.", ua: "—", pl: "—", status: "missing", progress: 33 },
-    { id: "trc_policy_update", category: "Legal Docs", en: "TRC policy has been updated.", ua: "Правила TRC оновлено.", pl: "Polityka TRC zaktualizowana.", status: "review_needed", progress: 100 }
-  ]);
+  const [keys] = useState([]);
 
   const columns = [
     { header: "Translation Key", cell: (row) => (

@@ -10,78 +10,13 @@ export default function HousingPage() {
   const [showBookingModal, setShowBookingModal] = useState(false);
 
   // Mock Properties Data
-  const [properties, setProperties] = useState([
-    {
-      id: "PROP-01",
-      address: "ul. Wolska 45, Warsaw",
-      type: "Dormitory",
-      capacity: 45,
-      occupied: 42,
-      rent: "250 PLN / bed / mo",
-      status: "near_capacity",
-      tenants: [
-        { name: "Mykola Lysenko", room: "102A", rentStatus: "paid", checkedIn: "2026-01-15", contractEnds: "2026-07-15" },
-        { name: "Olena Kravchenko", room: "104B", rentStatus: "paid", checkedIn: "2026-02-10", contractEnds: "2026-08-10" },
-        { name: "Serhiy Chumak", room: "105A", rentStatus: "unpaid", checkedIn: "2026-03-01", contractEnds: "2026-09-01" },
-        { name: "Anna Petrenko", room: "108C", rentStatus: "paid", checkedIn: "2026-04-12", contractEnds: "2026-10-12" }
-      ]
-    },
-    {
-      id: "PROP-02",
-      address: "ul. Dluga 12, Krakow",
-      type: "Apartment",
-      capacity: 4,
-      occupied: 4,
-      rent: "1,800 PLN / mo",
-      status: "full",
-      tenants: [
-        { name: "Dmytro Sahaydachny", room: "Flat 4", rentStatus: "paid", checkedIn: "2025-11-01", contractEnds: "2026-11-01" },
-        { name: "Iryna Sahaydachna", room: "Flat 4", rentStatus: "paid", checkedIn: "2025-11-01", contractEnds: "2026-11-01" },
-        { name: "Vladyslav Sahaydachny", room: "Flat 4", rentStatus: "paid", checkedIn: "2025-11-01", contractEnds: "2026-11-01" },
-        { name: "Kateryna Sahaydachna", room: "Flat 4", rentStatus: "paid", checkedIn: "2025-11-01", contractEnds: "2026-11-01" }
-      ]
-    },
-    {
-      id: "PROP-03",
-      address: "ul. Piotrkowska 88, Lodz",
-      type: "Dormitory",
-      capacity: 60,
-      occupied: 15,
-      rent: "220 PLN / bed / mo",
-      status: "available",
-      tenants: [
-        { name: "Roman Hrytsenko", room: "201", rentStatus: "paid", checkedIn: "2026-05-01", contractEnds: "2026-11-01" },
-        { name: "Svitlana Hrytsenko", room: "201", rentStatus: "paid", checkedIn: "2026-05-01", contractEnds: "2026-11-01" }
-      ]
-    },
-    {
-      id: "PROP-04",
-      address: "ul. Zlota 9, Warsaw",
-      type: "Apartment",
-      capacity: 2,
-      occupied: 0,
-      rent: "2,500 PLN / mo",
-      status: "vacant",
-      tenants: []
-    }
-  ]);
+  const [properties, setProperties] = useState([]);
 
   // Rent Transactions History
-  const [transactions, setTransactions] = useState([
-    { id: "TX-R-401", tenant: "Mykola Lysenko", property: "ul. Wolska 45, Warsaw", amount: "250 PLN", date: "June 05, 2026", method: "Przelewy24", status: "cleared" },
-    { id: "TX-R-402", tenant: "Olena Kravchenko", property: "ul. Wolska 45, Warsaw", amount: "250 PLN", date: "June 04, 2026", method: "Cash", status: "cleared" },
-    { id: "TX-R-403", tenant: "Dmytro Sahaydachny", property: "ul. Dluga 12, Krakow", amount: "1,800 PLN", date: "June 01, 2026", method: "Bank Transfer", status: "cleared" },
-    { id: "TX-R-404", tenant: "Serhiy Chumak", property: "ul. Wolska 45, Warsaw", amount: "250 PLN", date: "Today", method: "Przelewy24", status: "failed" }
-  ]);
+  const [transactions, setTransactions] = useState([]);
 
   // AI Placement Engine Live Agent Logs (175 agents, 15 coordinators, 1 president)
-  const [placementLogs, setPlacementLogs] = useState([
-    { time: "13:50:01", type: "system", message: "President approved new leasing parameters for Lodz dormitory property." },
-    { time: "13:48:12", type: "coordinator", message: "Accommodation Coordinator [Agent-C11] re-routed 8 incoming workers to Wolska 45 dormitory." },
-    { time: "13:45:30", type: "agent", message: "Placement Agent-033 allocated bed room 104B for Olena Kravchenko." },
-    { time: "13:42:19", type: "agent", message: "Placement Agent-141 checked database occupancy and flagged 50 vacant beds across Poland." },
-    { time: "13:40:00", type: "system", message: "KompasCRM AI Placement Engine online (175 matching agents scanning incoming leads)." }
-  ]);
+  const [placementLogs, setPlacementLogs] = useState([]);
 
   useEffect(() => {
     const messages = [

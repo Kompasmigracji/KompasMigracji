@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function RecruitmentPage() {
-  const [candidates] = useState([
-    { id: "C-901", name: "Ihor Petrenko", role: "Forklift Operator", company: "Logex Warehouse", stage: "Interview", date: "Today", score: "85%" },
-    { id: "C-902", name: "Oksana Koval", role: "Packer / Sorter", company: "Amazon Fulfillment", stage: "Hired", date: "Yesterday", score: "92%" },
-    { id: "C-903", name: "Andriy Shevchuk", role: "CNC Operator", company: "MetalWorks Sp. z o.o.", stage: "Screening", date: "2 days ago", score: "78%" },
-    { id: "C-904", name: "Dmytro Boyko", role: "Construction Worker", company: "BuildBud", stage: "Offer Sent", date: "May 25", score: "95%" }
-  ]);
+  const [candidates] = useState([]);
 
   const columns = [
     { header: "Candidate", cell: (row) => (

@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function LeadFinderPage() {
-  const [leads] = useState([
-    { id: "LDF-001", name: "Janusz Kowalski", title: "HR Director", company: "Zabka Polska", industry: "Retail", email: "j.kowal@zabka.pl", phone: "+48 500***", status: "unlocked" },
-    { id: "LDF-002", name: "Michał Nowak", title: "CEO", company: "BudMax Sp. z o.o.", industry: "Construction", email: "m.nowak@budmax...", phone: "Unlock", status: "locked" },
-    { id: "LDF-003", name: "Anna Lewandowska", title: "Recruitment Lead", company: "Amazon Fulfillment", industry: "Logistics", email: "anna.l@amazon.pl", phone: "+48 601***", status: "unlocked" },
-    { id: "LDF-004", name: "Piotr Zieliński", title: "Factory Manager", company: "LG Energy Solution", industry: "Manufacturing", email: "piotr.z@lg...", phone: "Unlock", status: "locked" }
-  ]);
+  const [leads] = useState([]);
 
   const columns = [
     { header: "Contact", cell: (row) => (
@@ -75,15 +70,15 @@ export default function LeadFinderPage() {
       <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Credits Remaining</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>942</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>0</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Leads Added to CRM</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>156</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>0</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Bounce Rate (Emails)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>1.2%</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>0.0%</div>
         </div>
       </div>
 
