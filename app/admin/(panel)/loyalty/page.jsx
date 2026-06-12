@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function LoyaltyPage() {
-  const [members] = useState([
-    { id: "LOY-881", customer: "Elena Rostova", points: 1250, tier: "Gold", referrals: 4, recentActivity: "Referred: Ivan Ivanov", status: "active" },
-    { id: "LOY-882", customer: "Andriy Boyko", points: 450, tier: "Silver", referrals: 1, recentActivity: "Purchased: Karta Pobytu", status: "active" },
-    { id: "LOY-883", customer: "Maria Garcia", points: 3000, tier: "Platinum", referrals: 12, recentActivity: "Redeemed: 15% Discount", status: "active" },
-    { id: "LOY-884", customer: "Dmytro Tkachenko", points: 0, tier: "Bronze", referrals: 0, recentActivity: "Joined Program", status: "inactive" }
-  ]);
+  const [members] = useState([]);
 
   const columns = [
     { header: "Customer", cell: (row) => (
@@ -67,15 +62,15 @@ export default function LoyaltyPage() {
       <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Total Points Issued</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>245,500</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>0</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Successful Referrals</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>842</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>0</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
           <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Revenue from Referrals</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>€45,200</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>€0</div>
         </div>
       </div>
 
