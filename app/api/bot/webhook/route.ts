@@ -104,17 +104,17 @@ const SERVICE_LABELS: Record<string, string> = {
 async function getOrCreateLead(chatId: number, firstName: string | null, username: string | null): Promise<string> {
   // Ensure the funnel_step column exists
   try {
-    await q(`ALTER TABLE kompas_leads ADD COLUMN IF NOT EXISTS funnel_step TEXT`);
+    await q(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS funnel_step TEXT`);
   } catch {}
 
   const existing = await one(
-    `SELECT id, status FROM kompas_leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+    `SELECT id, status FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
     [String(chatId)]
   ) as { id: string; status: string } | null;
 
   if (existing) {
     await q(
-      `UPDATE kompas_leads
+      `UPDATE leads
           SET first_name = COALESCE($2, first_name),
               username   = COALESCE($3, username)
         WHERE chat_id = $1 AND deleted_at IS NULL`,
@@ -124,7 +124,7 @@ async function getOrCreateLead(chatId: number, firstName: string | null, usernam
   }
 
   const row = await one(
-    `INSERT INTO kompas_leads (chat_id, source, first_name, username, status, funnel_step)
+    `INSERT INTO leads (chat_id, source, first_name, username, status, funnel_step)
      VALUES ($1, 'bot', $2, $3, 'new', 'step_1_qual')
      RETURNING id`,
     [String(chatId), firstName, username]
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
   if (!chatId) return NextResponse.json({ ok: true });
 
   const existingLead = await one(
-    `SELECT status, funnel_step FROM kompas_leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+    `SELECT status, funnel_step FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
     [String(chatId)]
   ) as { status: string; funnel_step: string } | null;
 
@@ -184,7 +184,7 @@ export async function POST(req: NextRequest) {
     else if (data.startsWith("funnel_qual_")) {
       const val = data.replace("funnel_qual_", "");
       await q(
-        `UPDATE kompas_leads SET qualification = $1, funnel_step = 'step_2_country'
+        `UPDATE leads SET qualification = $1, funnel_step = 'step_2_country'
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [val, String(chatId)]
       );
@@ -202,7 +202,7 @@ export async function POST(req: NextRequest) {
     else if (data.startsWith("funnel_country_")) {
       const val = data.replace("funnel_country_", "");
       await q(
-        `UPDATE kompas_leads SET country = $1, funnel_step = 'step_3_urgency'
+        `UPDATE leads SET country = $1, funnel_step = 'step_3_urgency'
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [COUNTRY_LABELS[val] || val, String(chatId)]
       );
@@ -220,7 +220,7 @@ export async function POST(req: NextRequest) {
     else if (data.startsWith("funnel_urg_")) {
       const val = data.replace("funnel_urg_", "");
       await q(
-        `UPDATE kompas_leads SET urgency = $1, funnel_step = 'step_4_service'
+        `UPDATE leads SET urgency = $1, funnel_step = 'step_4_service'
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [URGENCY_LABELS[val] || val, String(chatId)]
       );
@@ -237,7 +237,7 @@ export async function POST(req: NextRequest) {
     else if (data.startsWith("funnel_srv_")) {
       const val = data.replace("funnel_srv_", "");
       await q(
-        `UPDATE kompas_leads SET service = $1, funnel_step = 'completed'
+        `UPDATE leads SET service = $1, funnel_step = 'completed'
           WHERE chat_id = $2 AND deleted_at IS NULL`,
         [SERVICE_LABELS[val] || val, String(chatId)]
       );
@@ -248,12 +248,12 @@ export async function POST(req: NextRequest) {
     
     else if (data === "action_call_human") {
       await q(
-        `UPDATE kompas_leads SET status = 'pending_manual', funnel_step = 'manual'
+        `UPDATE leads SET status = 'pending_manual', funnel_step = 'manual'
           WHERE chat_id = $1 AND deleted_at IS NULL`,
         [String(chatId)]
       );
       const lead = await one(
-        `SELECT first_name, username, phone FROM kompas_leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+        `SELECT first_name, username, phone FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
         [String(chatId)]
       ) as { first_name?: string; username?: string; phone?: string } | null;
 
@@ -292,7 +292,7 @@ export async function POST(req: NextRequest) {
   if (isStartCommand) {
     await getOrCreateLead(chatId, firstName, username);
     await q(
-      `UPDATE kompas_leads SET status = 'new', funnel_step = 'step_1_qual'
+      `UPDATE leads SET status = 'new', funnel_step = 'step_1_qual'
         WHERE chat_id = $1 AND deleted_at IS NULL`,
       [String(chatId)]
     );
@@ -304,7 +304,7 @@ export async function POST(req: NextRequest) {
   if (text) {
     await getOrCreateLead(chatId, firstName, username);
     await q(
-      `UPDATE kompas_leads SET situation = $1
+      `UPDATE leads SET situation = $1
         WHERE chat_id = $2 AND deleted_at IS NULL`,
       [text, String(chatId)]
     );
