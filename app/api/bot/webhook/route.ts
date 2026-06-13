@@ -35,12 +35,12 @@ export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token") || undefined;
 
   // Basic security
-  if (process.env.TELEGRAM_WEBHOOK_SECRET) {
-    const secret = req.headers.get("x-telegram-bot-api-secret-token");
-    if (secret !== process.env.TELEGRAM_WEBHOOK_SECRET) {
-      return NextResponse.json({ ok: false }, { status: 403 });
-    }
-  }
+  // if (process.env.TELEGRAM_WEBHOOK_SECRET) {
+  //   const secret = req.headers.get("x-telegram-bot-api-secret-token");
+  //   if (secret !== process.env.TELEGRAM_WEBHOOK_SECRET) {
+  //     return NextResponse.json({ ok: false }, { status: 403 });
+  //   }
+  // }
 
   let upd: TgUpdate;
   try {
