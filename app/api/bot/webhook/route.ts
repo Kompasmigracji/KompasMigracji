@@ -45,10 +45,11 @@ export async function POST(req: NextRequest) {
 
   let upd: TgUpdate;
   try {
-    upd = await req.json() as TgUpdate;
-  } catch {
-    return NextResponse.json({ ok: true });
-  }
+    try {
+      upd = await req.json() as TgUpdate;
+    } catch {
+      return NextResponse.json({ ok: true });
+    }
 
   const chatId = upd.callback_query?.message?.chat?.id ?? upd.callback_query?.from?.id ?? upd.message?.chat?.id;
   if (!chatId) return NextResponse.json({ ok: true });
@@ -171,8 +172,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-  } catch (err) {
+  } catch (err: any) {
     console.error("[webhook] AI error", err);
+  }
+
+  } catch (globalErr: any) {
+    console.error("[webhook] Global error", globalErr);
+    try {
+      await q(`INSERT INTO leads (chat_id, source, first_name, username, status, message) VALUES ('error', 'bot', 'error', 'error', 'new', $1)`, [globalErr.stack || String(globalErr)]);
+    } catch (e) {}
   }
 
   return NextResponse.json({ ok: true });
