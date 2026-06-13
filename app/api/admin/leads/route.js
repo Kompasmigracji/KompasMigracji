@@ -26,7 +26,7 @@ export async function GET(req) {
        END AS source,
        COALESCE(first_name, '') AS name,
        COALESCE(contact, '')    AS contact,
-       COALESCE(situation, '')  AS message,
+       COALESCE(message, situation, '') AS message,
        COALESCE(status, 'new')  AS status,
        country,
        service,
