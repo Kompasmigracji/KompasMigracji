@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
     const history = Array.isArray(lead.history) ? lead.history : [];
 
     // Intercept specific commands
-    if (text === "/start") {
+    if (text.startsWith("/start")) {
       await sendLanguagePanel(chatId, firstName, token);
       history.push({ role: 'assistant', content: '[LANGUAGE_PANEL_SENT]' });
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
