@@ -140,7 +140,7 @@ export default function LeadDetailPage() {
                   if (!confirm("Ви впевнені, що хочете видалити цього ліда?")) return;
                   try {
                     const res = await fetch("/api/admin/leads", {
-                      method: "PUT",
+                      method: "DELETE",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ id: lead.id })
                     });
