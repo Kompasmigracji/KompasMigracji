@@ -115,9 +115,9 @@ export async function POST(req) {
   
   // Create timeline note
   try {
-    const activityBody = \`Джерело: \${source}\\nПослуга: \${service || 'не вказано'}\`;
+    const activityBody = `Джерело: ${source}\nПослуга: ${service || 'не вказано'}`;
     await q(
-      \`INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'system', 'Лід створено вручну', $2)\`,
+      `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'system', 'Лід створено вручну', $2)`,
       [rows[0].id, activityBody]
     );
   } catch(e) {
