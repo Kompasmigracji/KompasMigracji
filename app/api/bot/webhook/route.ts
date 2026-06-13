@@ -123,6 +123,15 @@ async function getOrCreateLead(chatId: number, firstName: string | null, usernam
     return existing.id;
   }
 
+  const existingCrmLead = await one(`SELECT id FROM kompas_leads WHERE chat_id = $1 LIMIT 1`, [String(chatId)]);
+  if (!existingCrmLead) {
+    await q(
+      `INSERT INTO kompas_leads (chat_id, source, name, contact, status)
+       VALUES ($1, 'bot', $2, $3, 'new')`,
+      [String(chatId), firstName || 'TG Користувач', username ? `@${username}` : String(chatId)]
+    );
+  }
+
   const row = await one(
     `INSERT INTO leads (chat_id, source, first_name, username, status, funnel_step)
      VALUES ($1, 'bot', $2, $3, 'new', 'step_1_qual')
@@ -157,16 +166,19 @@ async function syncLeadToCRM(chatId: string) {
     const contact = lead.username ? `@${lead.username}` : lead.phone || chatId;
     const name = lead.first_name || 'TG Користувач';
 
+    let crmStatus = lead.status;
+    if (crmStatus === 'pending_manual') crmStatus = 'in_progress';
+
     const existingCrm = await one(`SELECT id FROM kompas_leads WHERE chat_id = $1 LIMIT 1`, [chatId]);
     if (existingCrm) {
       await q(
         `UPDATE kompas_leads SET name = $2, contact = $3, message = $4, status = $5 WHERE chat_id = $1`, 
-        [chatId, name, contact, message, lead.status]
+        [chatId, name, contact, message, crmStatus]
       );
     } else {
       await q(
         `INSERT INTO kompas_leads (chat_id, source, name, contact, message, status) VALUES ($1, 'bot', $2, $3, $4, $5)`,
-        [chatId, name, contact, message, lead.status]
+        [chatId, name, contact, message, crmStatus]
       );
     }
   } catch (err) {
