@@ -87,7 +87,12 @@ export async function POST(req: NextRequest) {
            VALUES ($1, 'bot', $2, $3, 'new')`,
           [String(chatId), firstName, username ? `@${username}` : String(chatId)]
         );
-      } catch {}
+        if (process.env.ADMIN_TELEGRAM_CHAT_ID) {
+          await notifyAdmin(`🆕 Новий лід з Telegram!\nІм'я: ${firstName}\nUsername: ${username ? '@' + username : 'немає'}`, token);
+        }
+      } catch (e) {
+        console.error("Error creating new lead:", e);
+      }
     } else {
       await q(
         `UPDATE leads SET first_name = COALESCE($2, first_name), username = COALESCE($3, username) WHERE id = $1`,
