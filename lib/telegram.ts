@@ -61,3 +61,13 @@ export function setWebhook(webhookUrl: string, secret?: string, token?: string) 
     ...(secret ? { secret_token: secret } : {}),
   }, token);
 }
+
+/** Надіслати сповіщення адміністратору (власнику) */
+export function notifyAdmin(text: string, token?: string) {
+  const adminChatId = process.env.ADMIN_TELEGRAM_CHAT_ID;
+  if (!adminChatId) {
+    console.warn("ADMIN_TELEGRAM_CHAT_ID is not set. Skipping admin notification.");
+    return Promise.resolve({ ok: false, description: "No admin chat ID" });
+  }
+  return sendMessage(adminChatId, text, "HTML", token);
+}
