@@ -185,6 +185,14 @@ export async function POST(req: NextRequest) {
           [finalContact, situation, String(chatId)]
         );
         
+        // Add to timeline
+        try {
+          await q(
+            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Анкета від Оракула', $2)`,
+            [lead.id, situation]
+          );
+        } catch (e) { console.error("Error adding timeline activity:", e); }
+        
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Кандидат)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
       }
 
@@ -209,6 +217,14 @@ export async function POST(req: NextRequest) {
           `UPDATE leads SET contact = $1, message = $2, email = $3, status = 'in_progress' WHERE chat_id = $4`,
           [finalContact, situation, (d?.email as string) || null, String(chatId)]
         );
+        
+        // Add to timeline
+        try {
+          await q(
+            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Анкета від Оракула', $2)`,
+            [lead.id, situation]
+          );
+        } catch (e) { console.error("Error adding timeline activity:", e); }
 
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
       }
