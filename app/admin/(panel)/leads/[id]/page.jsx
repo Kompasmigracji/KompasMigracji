@@ -133,6 +133,30 @@ export default function LeadDetailPage() {
               <button className="kc-btn" style={{ justifyContent: "flex-start" }}>
                 <Icon name="users" size={16} /> Призначити агента
               </button>
+              <button 
+                className="kc-btn kc-btn-danger" 
+                style={{ justifyContent: "flex-start", marginTop: "var(--space-md)" }}
+                onClick={async () => {
+                  if (!confirm("Ви впевнені, що хочете видалити цього ліда?")) return;
+                  try {
+                    const res = await fetch("/api/admin/leads", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ id: lead.id })
+                    });
+                    if (res.ok) {
+                      router.push("/admin/leads");
+                    } else {
+                      alert("Не вдалося видалити ліда");
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    alert("Помилка видалення");
+                  }
+                }}
+              >
+                <Icon name="trash" size={16} /> Видалити лід
+              </button>
             </div>
           </div>
         </div>
