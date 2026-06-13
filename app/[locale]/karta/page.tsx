@@ -307,7 +307,7 @@ export default function KartaPage(): React.JSX.Element {
       ru: 'Хочу заказать Пакет Ускорения — Карта побыту',
       en: 'I want to order the Acceleration Package — Residence Card',
     };
-    if (supabase) { try { await supabase.from('leads').insert({ service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'karta', lang }); } catch {} }
+    if (supabase) { try { await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Анонім (Клік)', contact: 'WhatsApp', service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'site' }) }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
   };
 

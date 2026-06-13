@@ -148,11 +148,16 @@ export default function ChatBot() {
       if (match) {
         try {
           const lead = JSON.parse(match[1]);
-          if (supabase && lead.name && lead.phone) {
-            await supabase.from('leads').insert({
-              first_name: lead.name,
-              contact: lead.phone,
-              situation: 'Заявка через AI-чат',
+          if (lead.name && lead.phone) {
+            await fetch('/api/lead', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: lead.name,
+                contact: lead.phone,
+                situation: 'Заявка через AI-чат',
+                source: 'bot',
+              }),
             });
           }
         } catch (err) {

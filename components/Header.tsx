@@ -145,6 +145,13 @@ export default function Header() {
           <div style={{ width: 1, height: 20, background: '#e5e7eb', flexShrink: 0, margin: '0 4px' }} />
 
           <Link
+            href="/ai"
+            className="px-3.5 py-1.5 text-sm font-bold text-white no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', boxShadow: '0 2px 12px -2px rgba(249,115,22,.4)' }}
+          >
+            {t('nav_ai_assistant')}
+          </Link>
+          <Link
             href="/portal"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
@@ -221,6 +228,14 @@ export default function Header() {
           ))}
           <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
             {t('nav_pricelist')}
+          </Link>
+          <Link
+            href="/ai"
+            onClick={() => setMobileOpen(false)}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white text-center no-underline mt-1"
+            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', boxShadow: '0 2px 12px -2px rgba(249,115,22,.4)' }}
+          >
+            {t('nav_ai_assistant')}
           </Link>
           <Link
             href="/portal"

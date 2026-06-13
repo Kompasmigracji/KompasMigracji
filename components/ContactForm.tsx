@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { supabase } from '@/lib/supabase';
+
 
 const URGENCY_OPTIONS = [
   { value: 'normal', label: 'Звичайний', desc: 'Відповімо протягом 24 год', color: '#2563eb' },
@@ -25,16 +25,20 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const situationWithUrgency = `[${urgency.toUpperCase()}] ${message.trim()}`;
-    if (supabase) {
-      try {
-        await supabase.from('leads').insert({
-          first_name: name.trim(),
+    try {
+      await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
           contact: phone.trim(),
           situation: situationWithUrgency,
           service,
           source: 'site',
-        });
-      } catch {}
+        }),
+      });
+    } catch (e) {
+      console.error(e);
     }
     const text =
       `Kompas Migracji — Новий запит [${urgency.toUpperCase()}]\nІм’я: ${name}\nТелефон: ${phone}\nПослуга: ${service}\nПовідомлення: ${message}`;
