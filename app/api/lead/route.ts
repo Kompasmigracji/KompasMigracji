@@ -49,6 +49,17 @@ export async function POST(req: NextRequest) {
 
     if (row) {
       await createTaskFromLead({ name: firstName, contact, source });
+      
+      if (crmMessage) {
+        try {
+          await one(
+            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Заявка з сайту', $2)`,
+            [row.id, crmMessage]
+          );
+        } catch (e) {
+          console.error("Error creating timeline activity:", e);
+        }
+      }
     }
 
     return NextResponse.json({ ok: true });

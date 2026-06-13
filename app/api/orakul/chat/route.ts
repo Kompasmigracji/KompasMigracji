@@ -11,18 +11,25 @@ async function saveLead(
   service: string, situation: string, email: string,
 ) {
   try {
-    await one(
+    const row = await one(
       `INSERT INTO leads (first_name, contact, source, service, situation, email, status, created_at)
        VALUES ($1, $2, 'orakul', $3, $4, $5, 'new', NOW())
-       ON CONFLICT DO NOTHING`,
+       ON CONFLICT DO NOTHING RETURNING id`,
       [firstName, contact, service, situation, email || null],
-    );
+    ) as { id: string } | null;
     const crmMsg = [service, situation].filter(Boolean).join('\n') || null;
     await one(
       `INSERT INTO kompas_leads (source, name, contact, email, message, status)
        VALUES ('other', $1, $2, $3, $4, 'new')`,
       [firstName, contact, email || null, crmMsg],
     );
+
+    if (row && crmMsg) {
+      await one(
+        `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Анкета від Оракула (Web)', $2)`,
+        [row.id, crmMsg]
+      );
+    }
   } catch (err) {
     console.error('[orakul/chat] saveLead:', err);
   }

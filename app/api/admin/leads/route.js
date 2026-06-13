@@ -112,6 +112,17 @@ export async function POST(req) {
   } catch (e) {
     console.error("Mirror to kompas_leads failed", e);
   }
+  
+  // Create timeline note
+  try {
+    const activityBody = \`Джерело: \${source}\\nПослуга: \${service || 'не вказано'}\`;
+    await q(
+      \`INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'system', 'Лід створено вручну', $2)\`,
+      [rows[0].id, activityBody]
+    );
+  } catch(e) {
+    console.error("Timeline activity failed", e);
+  }
 
   return NextResponse.json({ lead: rows[0] });
 }
