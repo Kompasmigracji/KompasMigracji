@@ -74,18 +74,19 @@ export async function POST(req: NextRequest) {
     ) as { id: string; history: any } | null;
 
     if (!lead) {
+      const userContact = username ? `@${username}` : String(chatId);
       lead = await one(
-        `INSERT INTO leads (chat_id, source, first_name, username, status, history)
-         VALUES ($1, 'bot', $2, $3, 'new', '[]'::jsonb)
+        `INSERT INTO leads (chat_id, source, first_name, username, contact, status, history)
+         VALUES ($1, 'bot', $2, $3, $4, 'new', '[]'::jsonb)
          RETURNING id, history`,
-        [String(chatId), firstName, username]
+        [String(chatId), firstName, username, userContact]
       ) as { id: string; history: any };
 
       try {
         await q(
           `INSERT INTO kompas_leads (chat_id, source, name, contact, status)
            VALUES ($1, 'bot', $2, $3, 'new')`,
-          [String(chatId), firstName, username ? `@${username}` : String(chatId)]
+          [String(chatId), firstName, userContact]
         );
         if (process.env.ADMIN_TELEGRAM_CHAT_ID) {
           await notifyAdmin(`🆕 Новий лід з Telegram!\nІм'я: ${firstName}\nUsername: ${username ? '@' + username : 'немає'}`, token);
@@ -94,9 +95,10 @@ export async function POST(req: NextRequest) {
         console.error("Error creating new lead:", e);
       }
     } else {
+      const userContact = username ? `@${username}` : String(chatId);
       await q(
-        `UPDATE leads SET first_name = COALESCE($2, first_name), username = COALESCE($3, username) WHERE id = $1`,
-        [lead.id, firstName, username]
+        `UPDATE leads SET first_name = COALESCE($2, first_name), username = COALESCE($3, username), contact = COALESCE(contact, $4) WHERE id = $1`,
+        [lead.id, firstName, username, userContact]
       );
     }
 
@@ -178,6 +180,10 @@ export async function POST(req: NextRequest) {
           `UPDATE kompas_leads SET contact = $1, message = $2, status = 'in_progress' WHERE chat_id = $3`,
           [finalContact, situation, String(chatId)]
         );
+        await q(
+          `UPDATE leads SET contact = $1, message = $2, status = 'in_progress' WHERE chat_id = $3`,
+          [finalContact, situation, String(chatId)]
+        );
         
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Кандидат)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
       }
@@ -197,6 +203,10 @@ export async function POST(req: NextRequest) {
 
         await q(
           `UPDATE kompas_leads SET contact = $1, message = $2, email = $3, status = 'in_progress' WHERE chat_id = $4`,
+          [finalContact, situation, (d?.email as string) || null, String(chatId)]
+        );
+        await q(
+          `UPDATE leads SET contact = $1, message = $2, email = $3, status = 'in_progress' WHERE chat_id = $4`,
           [finalContact, situation, (d?.email as string) || null, String(chatId)]
         );
 
