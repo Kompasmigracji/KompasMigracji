@@ -138,6 +138,43 @@ async function getOrCreateLead(chatId: number, firstName: string | null, usernam
   return row.id;
 }
 
+async function syncLeadToCRM(chatId: string) {
+  try {
+    const lead = await one(
+      `SELECT * FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+      [chatId]
+    ) as any;
+    if (!lead) return;
+
+    const parts = [];
+    if (lead.qualification) parts.push(`Мета: ${QUAL_LABELS[lead.qualification] || lead.qualification}`);
+    if (lead.country) parts.push(`Країна: ${COUNTRY_LABELS[lead.country] || lead.country}`);
+    if (lead.urgency) parts.push(`Терміновість: ${URGENCY_LABELS[lead.urgency] || lead.urgency}`);
+    if (lead.service) parts.push(`Пакет: ${SERVICE_LABELS[lead.service] || lead.service}`);
+    if (lead.situation) parts.push(`Повідомлення: ${lead.situation}`);
+    const message = parts.join('\\n');
+
+    const contact = lead.username ? `@${lead.username}` : lead.phone || chatId;
+    const name = lead.first_name || 'TG Користувач';
+
+    const existingCrm = await one(`SELECT id FROM kompas_leads WHERE chat_id = $1 LIMIT 1`, [chatId]);
+    if (existingCrm) {
+      await q(
+        `UPDATE kompas_leads SET name = $2, contact = $3, message = $4, status = $5 WHERE chat_id = $1`, 
+        [chatId, name, contact, message, lead.status]
+      );
+    } else {
+      await q(
+        `INSERT INTO kompas_leads (chat_id, source, name, contact, message, status) VALUES ($1, 'bot', $2, $3, $4, $5)`,
+        [chatId, name, contact, message, lead.status]
+      );
+    }
+  } catch (err) {
+    console.error('[webhook] Error syncing lead to CRM', err);
+  }
+}
+
+
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token") || undefined;
 
@@ -277,6 +314,8 @@ export async function POST(req: NextRequest) {
     else {
       await answerCallback(cb.id, "", token);
     }
+    
+    await syncLeadToCRM(String(chatId));
     return NextResponse.json({ ok: true });
   }
 
@@ -298,6 +337,7 @@ export async function POST(req: NextRequest) {
     );
 
     await sendGreeting(chatId, firstName || "вас", token);
+    await syncLeadToCRM(String(chatId));
     return NextResponse.json({ ok: true });
   }
 
@@ -323,6 +363,7 @@ export async function POST(req: NextRequest) {
       ],
       token
     );
+    await syncLeadToCRM(String(chatId));
   }
 
   return NextResponse.json({ ok: true });
