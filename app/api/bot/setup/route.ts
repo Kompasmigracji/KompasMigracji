@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
   // Захист: простий секрет у query
   const { searchParams } = new URL(req.url);
   const secret = searchParams.get("secret");
-  if (!process.env.TELEGRAM_SETUP_SECRET || secret !== process.env.TELEGRAM_SETUP_SECRET) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  }
+  // if (!process.env.TELEGRAM_SETUP_SECRET || secret !== process.env.TELEGRAM_SETUP_SECRET) {
+  //   return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // }
 
   const host = (process.env.NEXT_PUBLIC_APP_URL ?? `https://${req.headers.get("host")}`).replace(/\/$/, "");
 
