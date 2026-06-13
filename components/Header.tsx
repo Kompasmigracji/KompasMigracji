@@ -138,7 +138,11 @@ export default function Header() {
           {[['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
-          <Link href="/pricing" className="px-3 py-2 text-sm font-semibold text-primary hover:bg-orange-50 rounded-lg transition-colors no-underline">
+          <Link
+            href="/pricing"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
+          >
             {t('nav_pricelist')}
           </Link>
 
@@ -146,8 +150,8 @@ export default function Header() {
 
           <Link
             href="/ai"
-            className="px-3.5 py-1.5 text-sm font-bold text-white no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', boxShadow: '0 2px 12px -2px rgba(249,115,22,.4)' }}
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             {t('nav_ai_assistant')}
           </Link>
@@ -226,14 +230,19 @@ export default function Header() {
           {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}</a>
           ))}
-          <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm font-semibold text-primary no-underline">
+          <Link
+            href="/pricing"
+            onClick={() => setMobileOpen(false)}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
+          >
             {t('nav_pricelist')}
           </Link>
           <Link
             href="/ai"
             onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white text-center no-underline mt-1"
-            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', boxShadow: '0 2px 12px -2px rgba(249,115,22,.4)' }}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             {t('nav_ai_assistant')}
           </Link>
