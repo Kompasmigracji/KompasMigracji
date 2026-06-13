@@ -7,9 +7,8 @@ import { sendMessage } from "@/lib/telegram";
 import Anthropic from "@anthropic-ai/sdk";
 import { ORAKUL_SYSTEM_PROMPT } from "@/lib/orakul-prompt";
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 interface TgUser { id: number; username?: string; first_name?: string }
+
 interface TgChat { id: number }
 interface TgMessage { chat: TgChat; from?: TgUser; text?: string }
 interface TgCallbackQuery {
@@ -106,6 +105,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     const aiMessages = history.map((m: any) => ({
       role: m.role as 'user' | 'assistant',
       content: m.content
