@@ -174,6 +174,9 @@ export async function POST(req: NextRequest) {
 
   } catch (err: any) {
     console.error("[webhook] AI error", err);
+    try {
+      await q(`INSERT INTO leads (chat_id, source, first_name, username, status, message) VALUES ('error', 'bot', 'error', 'error', 'new', $1)`, ['AI ERROR: ' + (err.stack || String(err))]);
+    } catch (e) {}
   }
 
   } catch (globalErr: any) {
