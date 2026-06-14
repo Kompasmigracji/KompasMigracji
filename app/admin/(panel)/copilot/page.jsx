@@ -217,7 +217,7 @@ export default function CopilotPage() {
         {/* Chat History */}
         <div className="chat-scroll" style={{ flex: 1, padding: "var(--space-2xl) var(--space-lg)", overflowY: "auto", display: "flex", flexDirection: "column", gap: "var(--space-xl)", maxWidth: 850, margin: "0 auto", width: "100%" }}>
           {messages.map((msg, index) => (
-            <div key={msg.id} className="msg-enter" style={{ display: "flex", gap: "var(--space-lg)", flexDirection: msg.role === "user" ? "row-reverse" : "row", animationDelay: \`\${index * 0.15}s\` }}>
+            <div key={msg.id} className="msg-enter" style={{ display: "flex", gap: "var(--space-lg)", flexDirection: msg.role === "user" ? "row-reverse" : "row", animationDelay: `${index * 0.15}s` }}>
               {msg.role === "assistant" ? (
                 <div className="ai-icon-container" style={{ width: 40, height: 40, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <Icon name="zap" size={20} color="white" />
@@ -260,7 +260,7 @@ export default function CopilotPage() {
               ))}
             </div>
 
-            <div className={\`input-wrapper \${inputFocused ? 'focused' : ''}\`}>
+            <div className={`input-wrapper ${inputFocused ? 'focused' : ''}`}>
               <button className="kc-btn kc-btn-ghost" style={{ padding: 8, borderRadius: "50%", color: "var(--dim)" }}>
                 <Icon name="paperclip" size={20} />
               </button>
