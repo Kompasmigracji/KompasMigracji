@@ -359,7 +359,7 @@ const CSS = `
   background:#f8fafc;
 }
 .oc-msg{display:flex;gap:.45rem;align-items:flex-end}
-.oc-msg-bot{justify-content:flex-start}
+.oc-msg-assistant{justify-content:flex-start}
 .oc-msg-user{justify-content:flex-end}
 .oc-avatar{
   width:26px;height:26px;border-radius:50%;flex-shrink:0;
@@ -374,7 +374,7 @@ const CSS = `
   letter-spacing:-.005em;
   white-space:pre-wrap;word-break:break-word;
 }
-.oc-bubble-bot{
+.oc-bubble-assistant{
   background:#fff;color:#1e293b!important;
   border:1px solid rgba(29,78,216,.09);border-bottom-left-radius:4px;
   box-shadow:0 1px 4px rgba(0,0,0,.04);
@@ -1968,7 +1968,7 @@ export default function OrakulPage() {
               </div>
             ))}
             {chatLoading && (
-              <div className="oc-msg oc-msg-bot">
+              <div className="oc-msg oc-msg-assistant">
                 <div className="oc-avatar" style={{background:'none',border:'none',padding:0}}>
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="11" fill="url(#mi-bg)"/>
@@ -1976,7 +1976,7 @@ export default function OrakulPage() {
                     <text x="12" y="15.5" textAnchor="middle" fontFamily="'Arial Black',sans-serif" fontWeight="900" fontSize="5.8" fill="url(#mi-txt)" letterSpacing="-0.3">EWU</text>
                   </svg>
                 </div>
-                <div className="oc-bubble oc-bubble-bot">
+                <div className="oc-bubble oc-bubble-assistant">
                   <div className="oc-typing">
                     <div className="oc-dot"/><div className="oc-dot"/><div className="oc-dot"/>
                   </div>
