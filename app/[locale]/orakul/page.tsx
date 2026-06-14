@@ -1071,6 +1071,9 @@ export default function OrakulPage() {
                 .trim();
               setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: clean }]);
             }
+            if (d.error) {
+              setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: `⚠️ Помилка: ${d.error}` }]);
+            }
             if (d.lead_saved) setLeadSaved(true);
           } catch { /* skip */ }
         }

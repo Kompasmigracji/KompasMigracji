@@ -1,10 +1,7 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
 import { one } from '@/lib/db';
 import { ORAKUL_SYSTEM_PROMPT } from '@/lib/orakul-prompt';
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 async function saveLead(
   firstName: string, contact: string,
@@ -45,7 +42,7 @@ function extractJson(text: string, after: string): Record<string, unknown> | nul
 }
 
 export async function POST(req: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (!process.env.GEMINI_API_KEY) {
     return NextResponse.json({ error: 'AI not configured' }, { status: 503 });
   }
 
@@ -61,25 +58,27 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const resp = await anthropic.messages.create({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 600,
-          system: ORAKUL_SYSTEM_PROMPT,
-          messages: messages.map((m) => ({
-            role: m.role as 'user' | 'assistant',
-            content: m.content,
-          })),
-          stream: true,
+        const { GoogleGenAI } = await import('@google/genai');
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+        const aiMessages = messages.map((m) => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }],
+        }));
+
+        const respStream = await ai.models.generateContentStream({
+          model: 'gemini-2.5-flash',
+          contents: aiMessages,
+          config: {
+            systemInstruction: ORAKUL_SYSTEM_PROMPT,
+          }
         });
 
-        for await (const event of resp) {
-          if (
-            event.type === 'content_block_delta' &&
-            event.delta.type === 'text_delta'
-          ) {
-            fullText += event.delta.text;
+        for await (const chunk of respStream) {
+          if (chunk.text) {
+            fullText += chunk.text;
             controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`),
+              encoder.encode(`data: ${JSON.stringify({ text: chunk.text })}\n\n`),
             );
           }
         }

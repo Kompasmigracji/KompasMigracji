@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
 import { sendMessage, notifyAdmin, answerCallback } from "@/lib/telegram";
 import { sendLanguagePanel, sendMainMenu } from "@/lib/orakul-bot";
-import Anthropic from "@anthropic-ai/sdk";
 import { ORAKUL_SYSTEM_PROMPT } from "@/lib/orakul-prompt";
 
 interface TgUser { id: number; username?: string; first_name?: string }
@@ -131,26 +130,29 @@ export async function POST(req: NextRequest) {
 
     history.push({ role: 'user', content: text });
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error('[webhook] ANTHROPIC_API_KEY missing');
+    if (!process.env.GEMINI_API_KEY) {
+      console.error('[webhook] GEMINI_API_KEY missing');
       return NextResponse.json({ ok: true });
     }
 
     try {
-      const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+      const { GoogleGenAI } = await import('@google/genai');
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      
       const aiMessages = history.map((m: any) => ({
-        role: m.role as 'user' | 'assistant',
-        content: m.content
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }]
       })).slice(-20);
 
-      const resp = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 600,
-        system: ORAKUL_SYSTEM_PROMPT,
-        messages: aiMessages,
+      const resp = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: aiMessages,
+        config: {
+          systemInstruction: ORAKUL_SYSTEM_PROMPT,
+        }
       });
 
-      const aiText = resp.content.filter((c: any) => c.type === 'text').map((c: any) => c.text).join('\n');
+      const aiText = resp.text || '';
       history.push({ role: 'assistant', content: aiText });
 
       const [visibleText] = aiText.split(/\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]/);
