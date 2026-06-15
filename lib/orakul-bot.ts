@@ -4,12 +4,19 @@ export async function sendLanguagePanel(chatId: number, name: string, token?: st
   const text = `👋 Вітаємо, ${name}! Оберіть зручну для вас мову / Choose your language:`;
   const buttons = [
     [
+      { text: "🇵🇱 Polski", callback_data: "lang_pl" }
+    ],
+    [
       { text: "🇺🇦 Українська", callback_data: "lang_ua" },
       { text: "🇷🇺 Русский", callback_data: "lang_ru" }
     ],
     [
-      { text: "🇵🇱 Polski", callback_data: "lang_pl" },
-      { text: "🇬🇧 English", callback_data: "lang_en" }
+      { text: "🇬🇧 English", callback_data: "lang_en" },
+      { text: "🇩🇪 Deutsch", callback_data: "lang_de" }
+    ],
+    [
+      { text: "🇪🇸 Español", callback_data: "lang_es" },
+      { text: "🇵🇹 Português", callback_data: "lang_pt" }
     ]
   ];
   await sendInlineKeyboard(chatId, text, buttons, token);
@@ -40,6 +47,24 @@ export async function sendMainMenu(chatId: number, lang: string, token?: string)
     btnStudy = "📚 Study";
     btnLegal = "⚖️ Legalization";
     btnHuman = "👤 Call manager";
+  } else if (lang === 'lang_de') {
+    text = `Wie können wir Ihnen helfen?`;
+    btnWork = "🏢 Arbeit";
+    btnStudy = "📚 Studium";
+    btnLegal = "⚖️ Legalisierung";
+    btnHuman = "👤 Manager rufen";
+  } else if (lang === 'lang_es') {
+    text = `¿Cómo podemos ayudarte?`;
+    btnWork = "🏢 Trabajo";
+    btnStudy = "📚 Estudios";
+    btnLegal = "⚖️ Legalización";
+    btnHuman = "👤 Llamar al gerente";
+  } else if (lang === 'lang_pt') {
+    text = `Como podemos ajudá-lo?`;
+    btnWork = "🏢 Trabalho";
+    btnStudy = "📚 Estudos";
+    btnLegal = "⚖️ Legalização";
+    btnHuman = "👤 Chamar gerente";
   }
 
   const buttons = [
