@@ -1,0 +1,5 @@
+artifacts/videos/audio/*-raw.mp3
+artifacts/videos/audio/*-voice.mp3
+artifacts/videos/audio/*-orchestral.mp3
+artifacts/videos/*-silent.webm
+artifacts/videos/orchestral-bed.mp3
