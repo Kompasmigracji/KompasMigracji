@@ -7,9 +7,10 @@ on:
     branches: [main]
 
 env:
-  # Dummy values so Next.js build doesn't crash when Supabase env vars are missing
+  # Dummy values so Next.js build doesn't crash when env vars are missing
   NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
   NEXT_PUBLIC_SUPABASE_ANON_KEY: "placeholder-anon-key"
+  JWT_SECRET: "ci-placeholder-jwt-secret"
 
 jobs:
   ci:
@@ -23,8 +24,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
