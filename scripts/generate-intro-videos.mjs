@@ -48,6 +48,7 @@ async function recordVideo({ name, html, title }) {
 
   const page = await context.newPage();
   await page.goto(fileUrl, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(1500); // fonts & initial animations
 
   const durationMs = await page.evaluate(() => window.VIDEO_DONE_MS || 77000);
   console.log(`   Duration: ${(durationMs / 1000).toFixed(1)}s`);

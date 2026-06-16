@@ -2,117 +2,204 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>KompasCRM — Цифрове серце Профспілки</title>
+  <title>KompasCRM — Official Presentation</title>
   <link rel="stylesheet" href="slide-base.css" />
 </head>
 <body>
-  <div class="deck" id="deck" data-total-ms="102000">
-    <div class="bg-velvet"></div>
-    <div class="spotlight"></div>
-    <div class="spotlight-2"></div>
-    <div class="vignette"></div>
-    <div class="gold-frame"></div>
+  <div class="deck" id="deck" data-total-ms="112000">
+    <div class="bg-mesh"></div>
+    <canvas id="bokeh"></canvas>
     <canvas id="particles"></canvas>
+    <div class="light-leak"></div>
+    <div class="spotlight"></div>
+    <div class="vignette"></div>
+    <div class="gold-frame">
+      <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+    </div>
+    <div class="scanline"></div>
     <div class="grain"></div>
     <div class="curtain-left"></div>
     <div class="curtain-right"></div>
 
-    <!-- 1. Opening -->
-    <section class="slide slide-opening active" data-ms="9000">
+    <div class="broadcast-ui">
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <img class="top-logo" src="brand-logo.svg" alt="" />
+          <div class="top-brand"><strong>KompasCRM</strong> · Enterprise Film</div>
+        </div>
+        <div class="top-live"><span class="live-dot"></span> Presentation</div>
+      </div>
+      <div class="lower-third">
+        <div class="lt-accent"></div>
+        <div class="lt-body">
+          <div class="lt-chapter">Now Playing</div>
+          <div class="lt-title" id="chapter-title">Цифрове Серце Профспілки</div>
+        </div>
+      </div>
+      <div class="scene-badge" id="scene-num">SCENE 01 — 09</div>
+    </div>
+
+    <!-- SCENE 01 -->
+    <section class="slide active" data-ms="11000" data-chapter="KompasCRM · Enterprise">
       <div class="content">
-        <div class="trophy reveal">⚙️</div>
-        <div class="oscar-label reveal">Enterprise Excellence Award · 2026</div>
-        <div class="harvard-stripe reveal">Harvard Business Systems Standard</div>
+        <div class="award-icon reveal">
+          <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="28" stroke="url(#cg)" stroke-width="2"/><path d="M32 12v20M22 32h20M32 32l-8 14M32 32l8 14" stroke="url(#cg)" stroke-width="2" stroke-linecap="round"/><defs><linearGradient id="cg" x1="4" y1="4" x2="60" y2="60"><stop stop-color="#f5e6a8"/><stop offset="1" stop-color="#d4af37"/></linearGradient></defs></svg>
+        </div>
+        <div class="eyebrow reveal">Enterprise Excellence · MMXXVI</div>
+        <div class="prestige-badge reveal">
+          <svg viewBox="0 0 16 16"><path d="M8 1l2 5h5l-4 3 1.5 5L8 11l-4.5 3L5 9 1 6h5z"/></svg>
+          Harvard Business Systems Standard
+        </div>
         <h1 class="epic reveal"><span class="gold">KompasCRM</span></h1>
-        <p class="subtitle-epic reveal">Цифрове серце Профспілки Емігрантів в Європі — 70+ модулів, AI-агенти, повна автоматизація солідарності</p>
+        <p class="subtitle-epic reveal">Цифрове серце Профспілки Емігрантів в Європі — 70+ модулів, AI-оркестрація, повна автоматизація</p>
         <div class="ornament reveal">◆ ◆ ◆</div>
       </div>
     </section>
 
-    <!-- 2. Union backbone -->
-    <section class="slide" data-ms="9000">
+    <!-- SCENE 02 -->
+    <section class="slide" data-ms="10000" data-chapter="Архітектура Сили">
       <div class="content">
-        <div class="oscar-label reveal">Архітектура Сили</div>
+        <div class="eyebrow reveal">Системна Архітектура</div>
         <h2 class="epic reveal">CRM для <span class="gold">мільйонів</span> емігрантів</h2>
         <div class="stat-row reveal">
-          <div class="stat-item"><div class="stat-num">70+</div><div class="stat-label">Модулів</div></div>
-          <div class="stat-item"><div class="stat-num">121</div><div class="stat-label">Admin Routes</div></div>
-          <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Ролей RBAC</div></div>
+          <div class="stat-item"><div class="stat-num" data-count="70" data-suffix="+">0</div><div class="stat-label">Модулів</div></div>
+          <div class="stat-item"><div class="stat-num" data-count="121">0</div><div class="stat-label">Admin Routes</div></div>
+          <div class="stat-item"><div class="stat-num" data-count="5">0</div><div class="stat-label">Ролей RBAC</div></div>
         </div>
-        <p class="quote-epic reveal">Кожен член профспілки — у системі. Кожна справа — під контролем.</p>
+        <div class="quote-block reveal" style="margin-top:40px;text-align:center;border-left:none;border-top:2px solid var(--gold);padding-top:24px">
+          <p style="text-align:center">Кожен член профспілки — у системі. Кожна справа — під контролем.</p>
+        </div>
       </div>
     </section>
 
-    <!-- 3. Members -->
-    <section class="slide left-align" data-ms="9000">
+    <!-- SCENE 03 -->
+    <section class="slide left-align" data-ms="11000" data-chapter="Учасники Профспілки">
       <div class="content">
-        <div class="harvard-stripe reveal">Категорія: Управління Членством</div>
+        <div class="prestige-badge reveal">Категорія · Управління Членством</div>
         <h2 class="epic reveal">Учасники <span class="highlight-crimson">Профспілки</span></h2>
         <div class="grid-3 reveal">
-          <div class="card-epic"><div class="icon">👥</div><h3>Реєстр Членів</h3><p>Повний профіль, RODO-згода, онбординг-автоматизація</p></div>
-          <div class="card-epic"><div class="icon">🎯</div><h3>Ліди & Продажі</h3><p>Telegram, сайт, Facebook — єдина воронка</p></div>
-          <div class="card-epic"><div class="icon">🏆</div><h3>Лояльність</h3><p>Програма винагород за активність у профспілці</p></div>
-          <div class="card-epic"><div class="icon">🔑</div><h3>Портал Клієнтів</h3><p>Self-service для кожного емігранта</p></div>
-          <div class="card-epic"><div class="icon">💼</div><h3>Угоди & Deals</h3><p>Pipeline від першого контакту до членства</p></div>
-          <div class="card-epic"><div class="icon">📖</div><h3>Скрипти Продажів</h3><p>Playbooks для менеджерів профспілки</p></div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <h3>Реєстр Членів</h3><p>Профіль, RODO-згода, автоматичний онбординг</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h3>Ліди & Продажі</h3><p>Telegram, сайт, соцмережі — єдина воронка</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 15l-3-3h6l-3 3z"/><path d="M12 3l9 5v8l-9 5-9-5V8l9-5z"/></svg></div>
+            <h3>Лояльність</h3><p>Програма винагород за активність</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+            <h3>Портал Клієнтів</h3><p>Self-service для кожного емігранта</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
+            <h3>Угоди & Deals</h3><p>Pipeline від контакту до членства</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></div>
+            <h3>Скрипти Продажів</h3><p>Playbooks для менеджерів</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 4. Legal shield -->
-    <section class="slide left-align" data-ms="9000">
+    <!-- SCENE 04 -->
+    <section class="slide left-align" data-ms="11000" data-chapter="Юридичний Щит">
       <div class="content">
-        <div class="oscar-label reveal">Нагорода · Юридичний Щит</div>
-        <h2 class="epic reveal">Справи & <span class="gold">Захист Прав</span></h2>
+        <div class="eyebrow reveal">Нагорода · Захист Прав</div>
+        <h2 class="epic reveal">Справи & <span class="gold">Юридичний Щит</span></h2>
         <div class="grid-3 reveal">
-          <div class="card-epic"><div class="icon">📁</div><h3>Справи Клієнтів</h3><p>Case management, SLA-дедлайни, статуси</p></div>
-          <div class="card-epic"><div class="icon">⚖️</div><h3>Оскарження & Суди</h3><p>Litigation — від скарги до перемоги</p></div>
-          <div class="card-epic"><div class="icon">✍️</div><h3>Е-Підписи</h3><p>Договори, шаблони, конструктор документів</p></div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
+            <h3>Справи Клієнтів</h3><p>Case management, SLA-дедлайни</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 9h18"/></svg></div>
+            <h3>Оскарження & Суди</h3><p>Litigation — від скарги до перемоги</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></div>
+            <h3>Е-Підписи</h3><p>Договори, шаблони, doc builder</p>
+          </div>
         </div>
-        <ul class="list-epic reveal">
+        <ul class="list-pro reveal">
           <li>Дозволи на роботу — повний workflow</li>
           <li>Виконавчі справи — контроль до результату</li>
         </ul>
       </div>
     </section>
 
-    <!-- 5. Communication -->
-    <section class="slide" data-ms="9000">
+    <!-- SCENE 05 -->
+    <section class="slide" data-ms="11000" data-chapter="Omnichannel Комунікація">
       <div class="content">
-        <div class="oscar-label reveal">Голос Профспілки</div>
+        <div class="eyebrow reveal">Голос Профспілки</div>
         <h2 class="epic reveal">Omnichannel <span class="gold">Єдність</span></h2>
         <div class="grid-3 reveal">
-          <div class="card-epic"><div class="icon">📧</div><h3>Email & Sequences</h3><p>IMAP, автоматичні листи членам</p></div>
-          <div class="card-epic"><div class="icon">💬</div><h3>Omni-Чат</h3><p>WhatsApp, Viber, месенджери — одне вікно</p></div>
-          <div class="card-epic"><div class="icon">📲</div><h3>Telegram Розсилки</h3><p>Масові повідомлення профспілки</p></div>
-          <div class="card-epic"><div class="icon">📞</div><h3>VoIP Колл-центр</h3><p>Гаряча лінія для емігрантів</p></div>
-          <div class="card-epic"><div class="icon">📣</div><h3>Маркетинг</h3><p>Кампанії залучення нових членів</p></div>
-          <div class="card-epic"><div class="icon">📋</div><h3>Форми & Опитування</h3><p>Збір зворотного зв'язку</p></div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg></div>
+            <h3>Email & Sequences</h3><p>IMAP, автоматичні листи членам</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+            <h3>Omni-Чат</h3><p>WhatsApp, Viber, месенджери</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
+            <h3>Telegram Розсилки</h3><p>Масові повідомлення профспілки</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+            <h3>VoIP Колл-центр</h3><p>Гаряча лінія для емігрантів</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+            <h3>Маркетинг</h3><p>Кампанії залучення нових членів</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+            <h3>Форми & Опитування</h3><p>Збір зворотного зв'язку</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 6. AI Primus -->
-    <section class="slide" data-ms="9000">
+    <!-- SCENE 06 -->
+    <section class="slide" data-ms="11000" data-chapter="AI Primus">
       <div class="content">
-        <div class="harvard-stripe reveal">Номінація · Найкраща AI-Система</div>
-        <h2 class="epic reveal">AI <span class="gold">Primus</span> — Оркестрація Агентів</h2>
+        <div class="prestige-badge reveal">Номінація · Найкраща AI-Система</div>
+        <h2 class="epic reveal">AI <span class="gold">Primus</span></h2>
         <div class="grid-2 reveal">
-          <div class="card-epic"><div class="icon">👑</div><h3>God Agent</h3><p>Grand Architect Oleksandr Khrystodul — глобальні політики, dispatch завдань, стратегічне командування</p></div>
-          <div class="card-epic"><div class="icon">⚡</div><h3>Primus Coordinator</h3><p>Маршрутизація AI-агентів, heartbeat кожні 5 хв, email-алерти</p></div>
-          <div class="card-epic"><div class="icon">🧠</div><h3>ШІ Копілот</h3><p>Асистент для юристів, менеджерів, продажів профспілки</p></div>
-          <div class="card-epic"><div class="icon">🔬</div><h3>OCR & RPA</h3><p>Сканування документів, інтеграція з держпорталами ЄС</p></div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+            <h3>God Agent</h3><p>Grand Architect Oleksandr Khrystodul — глобальні політики, стратегічне командування</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <h3>Primus Coordinator</h3><p>Маршрутизація AI-агентів, heartbeat моніторинг, email-алерти</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2"/></svg></div>
+            <h3>ШІ Копілот</h3><p>Асистент для юристів, менеджерів, продажів</p>
+          </div>
+          <div class="card-pro">
+            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <h3>OCR & RPA</h3><p>Сканування документів, інтеграція з держпорталами ЄС</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 7. Tech stack -->
-    <section class="slide" data-ms="9000">
+    <!-- SCENE 07 -->
+    <section class="slide" data-ms="11000" data-chapter="Tech Stack">
       <div class="content">
-        <div class="oscar-label reveal">Технологічний стек · Harvard Grade</div>
+        <div class="eyebrow reveal">Harvard Grade Engineering</div>
         <h2 class="epic reveal">Інженерна <span class="gold">Досконалість</span></h2>
-        <div class="grid-4 reveal" style="gap:14px">
-          <span class="tech-tag">Next.js 14</span>
+        <div class="tech-grid reveal">
+          <span class="tech-tag">Next.js 14 App Router</span>
           <span class="tech-tag">React 18 + SWR</span>
           <span class="tech-tag">PostgreSQL</span>
           <span class="tech-tag">Supabase</span>
@@ -121,52 +208,63 @@
           <span class="tech-tag">Google GenAI</span>
           <span class="tech-tag">SendGrid</span>
           <span class="tech-tag">IMAP Flow</span>
-          <span class="tech-tag">Tailwind 4</span>
-          <span class="tech-tag">Glassmorphism</span>
+          <span class="tech-tag">Tailwind CSS 4</span>
+          <span class="tech-tag">Glassmorphism UI</span>
           <span class="tech-tag">Vercel Cron</span>
         </div>
-        <p class="subtitle-epic reveal" style="margin-top:36px">AgentConsole · RBAC · Audit Log · RODO Control · 121+ admin routes</p>
+        <p class="subtitle-epic reveal" style="margin-top:36px;font-size:22px;font-style:normal;letter-spacing:0.08em">
+          AgentConsole · RBAC · Audit Log · RODO Control · 121+ admin routes
+        </p>
       </div>
     </section>
 
-    <!-- 8. Developer -->
-    <section class="slide left-align" data-ms="10000">
+    <!-- SCENE 08 -->
+    <section class="slide left-align" data-ms="12000" data-chapter="Творець · iPhoenix®">
       <div class="content">
-        <div class="oscar-label reveal">Lifetime Achievement · iPhoenix®</div>
+        <div class="eyebrow reveal">Lifetime Achievement · iPhoenix®</div>
         <h2 class="epic reveal">Творець <span class="gold">KompasCRM</span></h2>
-        <div class="dev-spotlight reveal">
-          <div class="dev-avatar">AK</div>
+        <div class="dev-panel reveal">
+          <div class="dev-portrait">
+            <div class="dev-portrait-ring"></div>AK
+          </div>
           <div class="dev-info">
             <h3>Олександр Христодул</h3>
             <div class="role">Lead Developer & Grand Architect · iPhoenix®</div>
-            <div class="email">iphoenixgsm@gmail.com</div>
-            <p class="subtitle-epic" style="margin-top:16px;font-size:22px;text-align:left;font-style:normal">
-              70+ модулів. RBAC. AI-оркестрація. API. UI/UX у стилі Гарвардської досконалості. 
-              Кожен рядок коду — внесок у силу Профспілки Емігрантів в Європі.
+            <div class="contact">iphoenixgsm@gmail.com</div>
+            <p class="subtitle-epic" style="margin-top:14px;font-size:20px;font-style:normal;text-align:left;color:rgba(245,240,230,0.65)">
+              70+ модулів. RBAC. AI-оркестрація. API. UI/UX. Кожен рядок — внесок у силу Профспілки Емігрантів в Європі.
             </p>
+            <div class="dev-tags">
+              <span class="dev-tag">70+ Modules</span>
+              <span class="dev-tag">RBAC</span>
+              <span class="dev-tag">AI Primus</span>
+              <span class="dev-tag">Full-Stack</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 9. Finale -->
-    <section class="slide finale" data-ms="10000">
+    <!-- SCENE 09 -->
+    <section class="slide finale" data-ms="12000" data-chapter="KompasCRM · Finale">
       <div class="content">
-        <div class="trophy reveal">🏆</div>
-        <div class="oscar-label reveal">KompasCRM · Enterprise Solution</div>
-        <h1 class="epic reveal"><span class="gold">Цифрове Серце</span></h1>
-        <h2 class="epic reveal" style="font-size:42px"><span class="crimson">Профспілки Емігрантів в Європі</span></h2>
+        <img class="brand-hero reveal" src="brand-logo.svg" alt="" />
+        <div class="eyebrow reveal">Finale</div>
+        <h1 class="epic reveal"><span class="gold">KompasCRM</span></h1>
+        <h2 class="epic reveal" style="font-size:38px"><span class="crimson">Цифрове Серце Профспілки Емігрантів</span></h2>
         <div class="ornament reveal">★ ★ ★</div>
         <p class="subtitle-epic reveal">/admin · Designed by iPhoenix® · © DOMUS V Sp. z o.o.</p>
-        <p class="quote-epic reveal" style="font-size:28px">Veritas · Solidarność · Innovatio</p>
+        <p class="subtitle-epic reveal" style="font-size:18px;margin-top:16px;font-style:normal;letter-spacing:0.2em">
+          Veritas · Solidarność · Innovatio
+        </p>
       </div>
     </section>
 
     <div class="footer-bar">
-      <span>KompasCRM — Цифрове серце Профспілки</span>
+      <span>KompasCRM — Enterprise Presentation Film</span>
       <span id="slide-counter">1 / 9</span>
     </div>
-    <div class="progress" id="progress" style="width:0%"></div>
+    <div class="progress-track"><div class="progress" id="progress" style="width:0%"></div></div>
   </div>
   <script src="slide-engine.js"></script>
 </body>
