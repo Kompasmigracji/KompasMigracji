@@ -39,7 +39,8 @@ function cleanEnv(s: string | undefined): string {
 }
 
 const jwtSecret = cleanEnv(process.env.JWT_SECRET);
-if (!jwtSecret && process.env.NODE_ENV === "production") {
+const isBuildPhase = process.env.NEXT_PHASE === "phase-production-build";
+if (!jwtSecret && process.env.NODE_ENV === "production" && !isBuildPhase) {
   throw new Error("JWT_SECRET env var is not configured");
 }
 const SECRET = new TextEncoder().encode(jwtSecret || "dev-secret-change-me-in-production");
