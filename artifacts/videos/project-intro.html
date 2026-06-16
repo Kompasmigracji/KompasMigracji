@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kompas Migracji — Ознайомчий відеоролик</title>
+  <link rel="stylesheet" href="slide-base.css" />
+  <style>
+    .slide-duration { --dur: 7000ms; }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck" data-total-ms="77000">
+    <div class="bg-gradient"></div>
+    <div class="stars"></div>
+
+    <!-- Slide 1: Title -->
+    <section class="slide active" data-ms="8000">
+      <div class="content">
+        <div class="logo-row">
+          <div class="logo-mark">🧭</div>
+          <span class="badge">DOMUS V Sp. z o.o. · Варшава</span>
+        </div>
+        <h1><span class="accent">Kompas Migracji</span></h1>
+        <p class="subtitle">Повноцінна цифрова платформа юридичних послуг для мігрантів у Польщі та Європейському Союзі</p>
+      </div>
+    </section>
+
+    <!-- Slide 2: Mission -->
+    <section class="slide" data-ms="7000">
+      <div class="content">
+        <span class="badge">Місія</span>
+        <h2>Юридичний компас для кожного мігранта</h2>
+        <p class="subtitle">Допомагаємо з легалізацією, картою побуту, громадянством, судовими спорами та терміновими ситуаціями — від 18 zł до 2 900 zł</p>
+        <ul class="list-items">
+          <li>Карта побуту та прискорення оформлення</li>
+          <li>Оскарження рішень уженду та судові справи</li>
+          <li>Консультації 24/7 через AI, WhatsApp, Viber</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 3: Multilingual -->
+    <section class="slide" data-ms="7000">
+      <div class="content">
+        <span class="badge">Мультимовність</span>
+        <h2>4 мови — один сервіс</h2>
+        <div class="grid-4">
+          <div class="card"><div class="icon">🇺🇦</div><h3>Українська</h3><p>/uk/</p></div>
+          <div class="card"><div class="icon">🇵🇱</div><h3>Польська</h3><p>/pl/</p></div>
+          <div class="card"><div class="icon">🇬🇧</div><h3>Англійська</h3><p>/en/</p></div>
+          <div class="card"><div class="icon">🇷🇺</div><h3>Російська</h3><p>/ru/</p></div>
+        </div>
+        <p class="subtitle" style="margin-top:28px">next-intl 3 — повна інтернаціоналізація UI та контенту</p>
+      </div>
+    </section>
+
+    <!-- Slide 4: AI -->
+    <section class="slide" data-ms="7000">
+      <div class="content">
+        <span class="badge">Штучний інтелект</span>
+        <h2>AI-чатбот <span class="highlight">Claude 3.5 Haiku</span></h2>
+        <div class="grid-2">
+          <div class="card">
+            <div class="icon">🤖</div>
+            <h3>Розумні відповіді</h3>
+            <p>Консультує з міграції, документів, легалізації — українською, польською, англійською та російською</p>
+          </div>
+          <div class="card">
+            <div class="icon">📥</div>
+            <h3>Автозахоплення лідів</h3>
+            <p>Автоматично зберігає ім'я та телефон клієнта у Supabase при виявленні в діалозі</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Features -->
+    <section class="slide" data-ms="7000">
+      <div class="content">
+        <span class="badge">Функціонал сайту</span>
+        <h2>Що вміє платформа</h2>
+        <div class="grid-3">
+          <div class="card"><div class="icon">💳</div><h3>Оплата Przelewy24</h3><p>SHA-384, миттєве підтвердження через webhook</p></div>
+          <div class="card"><div class="icon">📱</div><h3>Telegram-бот Orakul</h3><p>AI-інтеграція для консультацій та лідів</p></div>
+          <div class="card"><div class="icon">📊</div><h3>Аналітика Vercel</h3><p>Analytics + Speed Insights у реальному часі</p></div>
+          <div class="card"><div class="icon">🛡️</div><h3>RODO / GDPR</h3><p>Cookie consent, політика конфіденційності</p></div>
+          <div class="card"><div class="icon">🌙</div><h3>Dark / Light тема</h3><p>CSS custom properties, localStorage</p></div>
+          <div class="card"><div class="icon">⚡</div><h3>Primus AI Agents</h3><p>Оркестрація автоматизованих агентів</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Pages -->
+    <section class="slide" data-ms="7000">
+      <div class="content">
+        <span class="badge">Сторінки</span>
+        <h2>Структура веб-додатку</h2>
+        <ul class="list-items">
+          <li>Головна — Hero, послуги, відгуки, FAQ, контакт</li>
+          <li>/karta — прискорення карти побуту</li>
+          <li>/pricing — повний каталог послуг і цін</li>
+          <li>/orakul — Telegram AI-бот Orakul</li>
+          <li>/admin — KompasCRM панель керування</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Slide 7: Tech Stack -->
+    <section class="slide" data-ms="9000">
+      <div class="content">
+        <span class="badge">Технології</span>
+        <h2>Повний стек розробки</h2>
+        <div class="grid-4" style="gap:16px">
+          <span class="tech-tag">Next.js 14</span>
+          <span class="tech-tag">TypeScript 5.7</span>
+          <span class="tech-tag">React 18</span>
+          <span class="tech-tag">Tailwind CSS 4</span>
+          <span class="tech-tag">next-intl 3</span>
+          <span class="tech-tag">Supabase PG</span>
+          <span class="tech-tag">Anthropic SDK</span>
+          <span class="tech-tag">Przelewy24</span>
+          <span class="tech-tag">Vercel Deploy</span>
+          <span class="tech-tag">SendGrid</span>
+          <span class="tech-tag">Playwright</span>
+          <span class="tech-tag">pnpm</span>
+        </div>
+        <p class="subtitle" style="margin-top:32px">App Router · API Routes · Middleware i18n · SWR · bcryptjs · jose JWT · otpauth 2FA</p>
+      </div>
+    </section>
+
+    <!-- Slide 8: Developer -->
+    <section class="slide" data-ms="9000">
+      <div class="content">
+        <span class="badge">Розробник</span>
+        <h2>Створено <span class="accent">iPhoenix®</span></h2>
+        <div class="dev-card">
+          <div class="dev-avatar">AK</div>
+          <div class="dev-info">
+            <h3>Олександр Христодул</h3>
+            <div class="role">Grand Architect · Full-Stack Developer · iPhoenix®</div>
+            <div class="email">📧 iphoenixgsm@gmail.com</div>
+            <p class="subtitle" style="margin-top:16px;font-size:20px">Архітектура платформи, KompasCRM, AI-оркестрація Primus, Telegram-бот Orakul</p>
+          </div>
+        </div>
+        <p class="subtitle" style="margin-top:24px">Співавтори Telegram-бота: <span class="highlight">Олександр Дідковський</span> (vip.didkovsky5@gmail.com)</p>
+      </div>
+    </section>
+
+    <!-- Slide 9: Closing -->
+    <section class="slide" data-ms="8000">
+      <div class="content" style="text-align:center;align-items:center">
+        <div class="logo-mark" style="margin:0 auto 32px;width:100px;height:100px;font-size:48px">🧭</div>
+        <h1 style="font-size:72px"><span class="accent">kompasmigracji.com</span></h1>
+        <p class="subtitle" style="margin:0 auto">© 2024–2026 DOMUS V Sp. z o.o. · Kompas Migracji · KompasCRM by iPhoenix®</p>
+        <p class="subtitle" style="margin:20px auto 0;font-size:24px">📞 +48 729 271 848 · WhatsApp · Viber</p>
+      </div>
+    </section>
+
+    <div class="footer-bar">
+      <span>Kompas Migracji — Ознайомчий відеоролик</span>
+      <span id="slide-counter">1 / 9</span>
+    </div>
+    <div class="progress" id="progress" style="width:0%"></div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const progress = document.getElementById('progress');
+    const counter = document.getElementById('slide-counter');
+    let idx = 0;
+    let elapsed = 0;
+
+    function showSlide(i) {
+      slides.forEach((s, j) => s.classList.toggle('active', j === i));
+      counter.textContent = `${i + 1} / ${slides.length}`;
+    }
+
+    function tick() {
+      const dur = +slides[idx].dataset.ms || 7000;
+      elapsed += 100;
+      const total = slides.reduce((a, s) => a + (+s.dataset.ms || 7000), 0);
+      const before = slides.slice(0, idx).reduce((a, s) => a + (+s.dataset.ms || 7000), 0);
+      progress.style.width = `${((before + elapsed) / total) * 100}%`;
+
+      if (elapsed >= dur) {
+        elapsed = 0;
+        idx++;
+        if (idx >= slides.length) idx = slides.length - 1;
+        else showSlide(idx);
+      }
+    }
+
+    showSlide(0);
+    setInterval(tick, 100);
+    window.VIDEO_DONE_MS = +document.getElementById('deck').dataset.totalMs || 77000;
+  </script>
+</body>
+</html>
