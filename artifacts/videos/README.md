@@ -1,41 +1,30 @@
-# Intro Videos — Kompas Migracji & KompasCRM
+# Intro Videos — WOW Edition v5
+
+## Що нового
+
+- **WOW-прем'єра** — aurora borealis, neural network, flash transitions, shockwave
+- **Олександр Василишин** — Founder, окремий слайд + duo з архітектором
+- **Kompas AI** — наш власний ШІ (замість Claude Haiku), голографічне ядро
+- Епічна озвучка + оркестр + 1080p та 4K
 
 ## Файли
 
 | Файл | Опис |
 |------|------|
-| `kompas-migracji-intro.mp4` | 1080p + озвучка + оркестр (~104 с) |
-| `kompascrm-intro.mp4` | 1080p + озвучка + оркестр (~112 с) |
-| `kompas-migracji-intro-4k.mp4` | **4K UHD** + озвучка + оркестр |
-| `kompascrm-intro-4k.mp4` | **4K UHD** + озвучка + оркестр |
+| `kompas-migracji-intro.mp4` | 1080p · ~113 с · WOW |
+| `kompas-migracji-intro-4k.mp4` | 4K UHD · WOW |
+| `kompascrm-intro.mp4` | 1080p CRM · WOW |
+| `kompascrm-intro-4k.mp4` | 4K CRM · WOW |
 
-## Генерація
-
-```bash
-# Озвучка + музика (edge-tts + ffmpeg)
-pnpm video:narration
-
-# 1080p відео з аудіо
-pnpm video:intro
-
-# 4K відео з аудіо
-pnpm video:intro:4k
-```
-
-## Озвучка
-
-- Голос: **uk-UA-OstapNeural** (Microsoft Edge TTS)
-- Сценарій: `narration.json`
-- Епічний темп: rate +12%, pitch -3Hz
-
-## Музика
-
-- Синтезований оркестровий pad (ffmpeg: струни + реверб + echo)
-- Фонова гучність: 20%, голос: 100%
-
-## Залежності
+## Команди
 
 ```bash
-pip3 install edge-tts
-npx playwright install chromium
+pnpm video:narration     # озвучка + музика
+pnpm video:intro         # 1080p
+pnpm video:intro:4k      # 4K
 ```
+
+## Команда на екрані
+
+- **Олександр Василишин** — Founder · Засновник · 10+ років · 1200+ справ
+- **Олександр Христодул** — Grand Architect · iPhoenix® · Kompas AI · KompasCRM

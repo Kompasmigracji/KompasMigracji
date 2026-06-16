@@ -1,0 +1,220 @@
+/* ═══ WOW LAYER v4 — unprecedented cinematic effects ═══ */
+
+.letterbox-top, .letterbox-bottom {
+  position: absolute; left: 0; right: 0; height: 72px; z-index: 26;
+  background: #000; pointer-events: none;
+}
+.letterbox-top { top: 0; animation: letterboxIn 1.2s var(--ease-out-expo) 0.5s both; }
+.letterbox-bottom { bottom: 0; animation: letterboxIn 1.2s var(--ease-out-expo) 0.5s both; }
+@keyframes letterboxIn { from { height: 0; } to { height: 72px; } }
+
+#aurora, #neural-net {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+}
+
+.wow-flash {
+  position: absolute; inset: 0; z-index: 50; background: #fff;
+  opacity: 0; pointer-events: none;
+}
+.wow-flash.burst { animation: wowFlash 0.7s ease-out; }
+@keyframes wowFlash {
+  0% { opacity: 0; }
+  15% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+.shockwave {
+  position: absolute; top: 50%; left: 50%; width: 40px; height: 40px;
+  margin: -20px 0 0 -20px; border-radius: 50%;
+  border: 2px solid rgba(212,175,55,0.6); z-index: 12; pointer-events: none;
+  opacity: 0;
+}
+.shockwave.fire { animation: shockwave 1.2s ease-out; }
+@keyframes shockwave {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(80); opacity: 0; }
+}
+
+/* Holographic text */
+.hologram {
+  position: relative;
+  background: linear-gradient(135deg, #00f5ff 0%, #d4af37 25%, #ff6b9d 50%, #00f5ff 75%, #d4af37 100%);
+  background-size: 400% 400%;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  animation: holoShift 4s ease infinite, holoGlitch 6s infinite;
+  filter: drop-shadow(0 0 30px rgba(0,245,255,0.3));
+}
+@keyframes holoShift {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes holoGlitch {
+  0%,92%,100% { transform: translate(0); text-shadow: none; }
+  93% { transform: translate(-3px, 1px); }
+  94% { transform: translate(3px, -1px); }
+  95% { transform: translate(-2px, 0); }
+}
+
+/* Kompas AI Core */
+.ai-core-wrap {
+  position: relative; width: 280px; height: 280px; margin: 0 auto 36px;
+}
+.ai-core {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(0,245,255,0.25), rgba(212,175,55,0.15) 40%, rgba(165,28,48,0.2) 70%, transparent);
+  border: 2px solid rgba(0,245,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  animation: corePulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 60px rgba(0,245,255,0.2), inset 0 0 40px rgba(212,175,55,0.1);
+}
+.ai-core-text {
+  font-family: 'DM Sans', sans-serif; font-size: 28px; font-weight: 800;
+  letter-spacing: 0.15em; color: #00f5ff;
+  text-shadow: 0 0 20px rgba(0,245,255,0.8);
+}
+.ai-ring {
+  position: absolute; inset: -20px; border-radius: 50%;
+  border: 1px solid rgba(0,245,255,0.2);
+  animation: ringSpin 8s linear infinite;
+}
+.ai-ring:nth-child(2) { inset: -40px; animation-duration: 12s; animation-direction: reverse; border-color: rgba(212,175,55,0.15); }
+.ai-ring:nth-child(3) { inset: -60px; animation-duration: 16s; border-color: rgba(255,107,157,0.1); }
+@keyframes corePulse {
+  0%,100% { transform: scale(1); box-shadow: 0 0 60px rgba(0,245,255,0.2); }
+  50% { transform: scale(1.04); box-shadow: 0 0 100px rgba(0,245,255,0.4); }
+}
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+
+.ai-features {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px;
+}
+.ai-feat {
+  text-align: center; padding: 20px 12px;
+  background: linear-gradient(180deg, rgba(0,245,255,0.06), transparent);
+  border: 1px solid rgba(0,245,255,0.15);
+  border-radius: 2px;
+}
+.ai-feat .num {
+  font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900;
+  color: #00f5ff; line-height: 1;
+}
+.ai-feat .lbl {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(245,240,230,0.5); margin-top: 8px;
+}
+
+/* Founder duo */
+.founders-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 32px;
+}
+.founder-card {
+  padding: 36px 32px; text-align: left; position: relative; overflow: hidden;
+  background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(0,0,0,0.5));
+  border: 1px solid rgba(212,175,55,0.15);
+}
+.founder-card.founder-primary {
+  border-color: rgba(212,175,55,0.35);
+  background: linear-gradient(145deg, rgba(165,28,48,0.12), rgba(0,0,0,0.5));
+}
+.founder-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold));
+}
+.founder-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+}
+.founder-portrait {
+  width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 900;
+  border: 2px solid var(--gold);
+}
+.founder-primary .founder-portrait {
+  background: linear-gradient(145deg, var(--crimson), #5c0c18);
+  box-shadow: 0 0 40px rgba(165,28,48,0.4);
+}
+.founder-card:not(.founder-primary) .founder-portrait {
+  background: linear-gradient(145deg, #1a3a6b, #0d2040);
+  box-shadow: 0 0 40px rgba(0,245,255,0.2);
+  border-color: #00f5ff;
+}
+.founder-card h3 {
+  font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 800;
+  color: var(--gold-light); margin-bottom: 6px;
+}
+.founder-card .founder-role {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic;
+  color: var(--crimson-light); margin-bottom: 12px;
+}
+.founder-card p {
+  font-size: 15px; color: rgba(245,240,230,0.6); line-height: 1.55;
+}
+.founder-stats {
+  display: flex; gap: 20px; margin-top: 16px; padding-top: 16px;
+  border-top: 1px solid rgba(212,175,55,0.1);
+}
+.founder-stat strong {
+  display: block; font-family: 'Playfair Display', serif;
+  font-size: 24px; color: var(--gold);
+}
+.founder-stat span {
+  font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(245,240,230,0.4);
+}
+
+/* WOW intro */
+.slide-wow .mega-wow {
+  font-family: 'Playfair Display', serif;
+  font-size: 120px; font-weight: 900; line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+.slide-wow .mega-wow .line2 {
+  font-size: 64px; display: block; margin-top: 12px;
+}
+.wow-tagline {
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+  letter-spacing: 0.6em; text-transform: uppercase;
+  color: rgba(0,245,255,0.7); margin-top: 32px;
+  animation: wowPulse 2s ease-in-out infinite;
+}
+@keyframes wowPulse {
+  0%,100% { opacity: 0.5; letter-spacing: 0.6em; }
+  50% { opacity: 1; letter-spacing: 0.65em; }
+}
+
+/* 3D card tilt illusion */
+.card-pro, .founder-card, .ai-feat {
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+.slide.active .card-pro:hover { transform: translateY(-4px) rotateX(2deg); }
+
+/* Prismatic border on active slide */
+.slide.active .content::after {
+  content: ''; position: absolute; inset: -20px; z-index: -1; border-radius: 4px;
+  background: linear-gradient(135deg, rgba(0,245,255,0.05), rgba(212,175,55,0.05), rgba(255,107,157,0.05));
+  animation: prismBorder 4s linear infinite;
+  opacity: 0.6;
+}
+@keyframes prismBorder {
+  0%,100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(30deg); }
+}
+
+.slide[data-transition="zoom"] { transform: scale(1.08); }
+.slide[data-transition="zoom"].active { transform: scale(1); }
+
+.kompas-ai-label {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 24px; margin-bottom: 24px;
+  background: linear-gradient(90deg, rgba(0,245,255,0.1), rgba(212,175,55,0.1));
+  border: 1px solid rgba(0,245,255,0.3);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.35em; text-transform: uppercase; color: #00f5ff;
+}
+.kompas-ai-label::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: #00f5ff; box-shadow: 0 0 12px #00f5ff;
+  animation: liveBlink 1s ease-in-out infinite;
+}

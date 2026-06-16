@@ -2,17 +2,24 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
-  <title>Kompas Migracji — Official Presentation</title>
+  <title>Kompas Migracji — WOW Presentation</title>
   <link rel="stylesheet" href="slide-base.css" />
+  <link rel="stylesheet" href="slide-wow.css" />
 </head>
 <body>
-  <div class="deck" id="deck" data-total-ms="104000">
+  <div class="deck" id="deck" data-total-ms="113000">
     <div class="bg-mesh"></div>
+    <canvas id="aurora"></canvas>
+    <canvas id="neural-net"></canvas>
     <canvas id="bokeh"></canvas>
     <canvas id="particles"></canvas>
     <div class="light-leak"></div>
     <div class="spotlight"></div>
     <div class="vignette"></div>
+    <div class="letterbox-top"></div>
+    <div class="letterbox-bottom"></div>
+    <div class="wow-flash" id="wow-flash"></div>
+    <div class="shockwave" id="shockwave"></div>
     <div class="gold-frame">
       <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
       <div class="corner corner-bl"></div><div class="corner corner-br"></div>
@@ -22,206 +29,189 @@
     <div class="curtain-left"></div>
     <div class="curtain-right"></div>
 
-    <!-- Broadcast chrome -->
     <div class="broadcast-ui">
       <div class="top-bar">
         <div class="top-bar-left">
           <img class="top-logo" src="brand-logo.svg" alt="" />
-          <div class="top-brand"><strong>Kompas Migracji</strong> · Official Film</div>
+          <div class="top-brand"><strong>Kompas Migracji</strong> · WOW Film</div>
         </div>
-        <div class="top-live"><span class="live-dot"></span> Presentation</div>
+        <div class="top-live"><span class="live-dot"></span> World Premiere</div>
       </div>
       <div class="lower-third">
         <div class="lt-accent"></div>
         <div class="lt-body">
           <div class="lt-chapter">Now Playing</div>
-          <div class="lt-title" id="chapter-title">Профспілка Емігрантів в Європі</div>
+          <div class="lt-title" id="chapter-title">Світова Прем'єра</div>
         </div>
       </div>
-      <div class="scene-badge" id="scene-num">SCENE 01 — 08</div>
+      <div class="scene-badge" id="scene-num">SCENE 01 — 10</div>
     </div>
 
-    <!-- SCENE 01 -->
-    <section class="slide active" data-ms="11000" data-chapter="Профспілка Емігрантів в Європі">
+    <!-- SCENE 01 WOW -->
+    <section class="slide slide-wow active" data-ms="12000" data-chapter="Світова Прем'єра">
+      <div class="content">
+        <div class="wow-tagline reveal">Ви ще не бачили такого</div>
+        <h1 class="mega-wow reveal">
+          <span class="hologram">МАЙБУТНЄ</span>
+          <span class="line2 gold">вже тут</span>
+        </h1>
+        <div class="ornament reveal">◆ ◆ ◆</div>
+        <p class="subtitle-epic reveal">Профспілка Емігрантів в Європі · Kompas AI · KompasCRM · Новий стандарт</p>
+      </div>
+    </section>
+
+    <!-- SCENE 02 -->
+    <section class="slide" data-ms="11000" data-chapter="Профспілка Емігрантів в Європі">
       <div class="content">
         <div class="award-icon reveal">
           <svg viewBox="0 0 64 64" fill="none"><path d="M32 4L38 22H58L42 34L48 54L32 42L16 54L22 34L6 22H26L32 4Z" fill="url(#ag)" stroke="#d4af37" stroke-width="1"/><defs><linearGradient id="ag" x1="6" y1="4" x2="58" y2="54"><stop stop-color="#f5e6a8"/><stop offset="1" stop-color="#d4af37"/></linearGradient></defs></svg>
         </div>
         <div class="eyebrow reveal">Official Presentation · MMXXVI</div>
-        <div class="prestige-badge reveal">
-          <svg viewBox="0 0 16 16"><path d="M8 1l2 5h5l-4 3 1.5 5L8 11l-4.5 3L5 9 1 6h5z"/></svg>
-          Harvard Standard · European Excellence
-        </div>
         <h1 class="epic reveal">Профспілка<br/><span class="gold">Емігрантів</span><br/><span class="crimson">в Європі</span></h1>
-        <div class="ornament reveal">◆ ◆ ◆</div>
-        <p class="subtitle-epic reveal">Міжнародна соціально-правова платформа, що об'єднує мільйони людей, які будують нове життя на європейській землі</p>
+        <p class="subtitle-epic reveal">Міжнародна соціально-правова платформа солідарності для мільйонів людей у ЄС</p>
       </div>
     </section>
 
-    <!-- SCENE 02 -->
-    <section class="slide" data-ms="10000" data-chapter="Kompas Migracji — Офіційний Бренд">
+    <!-- SCENE 03 Brand -->
+    <section class="slide" data-ms="10000" data-chapter="Kompas Migracji">
       <div class="content">
-        <img class="brand-hero reveal" src="brand-logo.svg" alt="Kompas" />
-        <div class="eyebrow reveal">Офіційний Бренд</div>
+        <img class="brand-hero reveal" src="brand-logo.svg" alt="" />
         <h1 class="epic sm reveal"><span class="gold">Kompas Migracji</span></h1>
-        <p class="subtitle-epic reveal">Юридичний та соціальний компас кожного емігранта · DOMUS V Sp. z o.o., Варшава, Польща</p>
+        <p class="subtitle-epic reveal">DOMUS V Sp. z o.o. · Варшава · Юридичний компас кожного емігранта</p>
         <div class="stat-row reveal">
-          <div class="stat-item"><div class="stat-num" data-count="4">0</div><div class="stat-label">Мови Європи</div></div>
-          <div class="stat-item"><div class="stat-num" data-count="27">0</div><div class="stat-label">Країн ЄС</div></div>
-          <div class="stat-item"><div class="stat-num" data-prefix="" data-count="24" data-suffix="/7">0</div><div class="stat-label">Захист Прав</div></div>
+          <div class="stat-item"><div class="stat-num" data-count="4">0</div><div class="stat-label">Мови</div></div>
+          <div class="stat-item"><div class="stat-num" data-count="1200" data-suffix="+">0</div><div class="stat-label">Справ</div></div>
+          <div class="stat-item"><div class="stat-num" data-prefix="" data-count="24" data-suffix="/7">0</div><div class="stat-label">На зв'язку</div></div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 03 -->
-    <section class="slide left-align" data-ms="11000" data-chapter="Місія · Голос Емігрантів">
+    <!-- SCENE 04 FOUNDER -->
+    <section class="slide left-align" data-ms="12000" data-chapter="Founder · Олександр Василишин">
+      <div class="content">
+        <div class="prestige-badge reveal">Founder · Засновник</div>
+        <h2 class="epic reveal">Олександр <span class="gold">Василишин</span></h2>
+        <div class="founder-card founder-primary reveal" style="max-width:900px">
+          <div class="founder-badge">Засновник · Міграційний юрист</div>
+          <div class="founder-portrait">ОВ</div>
+          <h3>Олександр Василишин</h3>
+          <div class="founder-role">Founder & Lead Migration Strategist</div>
+          <p>10 років у міграційному праві Польщі. Особисто веде кожну консультацію та завжди бере трубку. Засновник Kompas Migracji — єдиного вікна для вирішення всіх бюрократичних завдань українців в ЄС.</p>
+          <div class="founder-stats">
+            <div class="founder-stat"><strong>10+</strong><span>років досвіду</span></div>
+            <div class="founder-stat"><strong>1200+</strong><span>справ закрито</span></div>
+            <div class="founder-stat"><strong>24/7</strong><span>на зв'язку</span></div>
+          </div>
+        </div>
+        <div class="quote-block reveal">
+          <p>Ставлю на кон свою репутацію. Якщо щось не так — телефонуйте. Завжди відповім.</p>
+          <cite>Олександр Василишин · Founder</cite>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCENE 05 Mission -->
+    <section class="slide left-align" data-ms="11000" data-chapter="Місія · Solidarność">
       <div class="content">
         <div class="eyebrow reveal">Місія Профспілки</div>
-        <h2 class="epic reveal">Ми — <span class="highlight">голос емігрантів</span> в Європі</h2>
-        <p class="subtitle-epic reveal">Не юридична фірма. Це профспілка, що стоїть на сторожі прав, гідності та майбутнього кожної сім'ї мігранта.</p>
+        <h2 class="epic reveal">Голос <span class="highlight">емігрантів</span> в Європі</h2>
         <ul class="list-pro reveal">
-          <li>Об'єднуємо емігрантів у спільноту взаємодопомоги та солідарності</li>
-          <li>Захищаємо від несправедливості роботодавців та державних органів</li>
-          <li>Будуємо соціально-правовий щит для родин у Європейському Союзі</li>
-          <li>Супроводжуємо від першого дня перебування до громадянства</li>
+          <li>Спільнота взаємодопомоги та профспілкова солідарність</li>
+          <li>Захист від несправедливості роботодавців та органів влади</li>
+          <li>Соціально-правовий щит для родин у Європейському Союзі</li>
+          <li>Супровід від першого дня до громадянства</li>
         </ul>
-        <div class="quote-block reveal">
-          <p>Разом ми сильніші, ніж кожен зокрема</p>
-          <cite>Solidarność · Kompas Migracji</cite>
-        </div>
       </div>
     </section>
 
-    <!-- SCENE 04 -->
-    <section class="slide" data-ms="10000" data-chapter="Європа · Єдність · Сила">
+    <!-- SCENE 06 Europe -->
+    <section class="slide" data-ms="10000" data-chapter="Європа · Єдність">
       <div class="content">
-        <div class="eyebrow reveal">Географія Впливу</div>
         <h2 class="epic reveal">Європа. <span class="gold">Єдність.</span> Сила.</h2>
         <div class="flags-pro reveal">
           <div class="flag-item">🇺🇦</div><div class="flag-item">🇵🇱</div>
           <div class="flag-item">🇩🇪</div><div class="flag-item">🇪🇺</div><div class="flag-item">🇬🇧</div>
         </div>
         <div class="grid-3 reveal">
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <h3>Правовий Щит</h3><p>Карта побуту, дозволи, оскарження — повний цикл юридичного захисту</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-            <h3>Solidarność</h3><p>Профспілкова солідарність за найвищими європейськими стандартами</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 9h18M6 6h2M6 18h2M16 6h2M16 18h2"/></svg></div>
-            <h3>Юридична Гідність</h3><p>Суди, скарги, виконавчі справи — без страху та самотності</p>
-          </div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Правовий Щит</h3><p>Повний цикл юридичного захисту</p></div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><h3>Solidarność</h3><p>Європейські стандарти солідарності</p></div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 9h18"/></svg></div><h3>Гідність</h3><p>Суди без страху та самотності</p></div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 05 -->
+    <!-- SCENE 07 Pillars -->
     <section class="slide left-align" data-ms="11000" data-chapter="Стовпи Захисту">
       <div class="content">
-        <div class="prestige-badge reveal">Категорія · Захист Прав</div>
-        <h2 class="epic reveal">Стовпи профспілкового захисту</h2>
+        <h2 class="epic reveal">Стовпи <span class="gold">захисту</span></h2>
         <div class="grid-2 reveal">
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-            <h3>Легалізація & Карта Побуту</h3><p>Прискорення, пакет документів, супровід у ужонд — від 18 zł</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div>
-            <h3>Суди & Оскарження</h3><p>Бездіяльність уженду, депортація, термінові кризові ситуації</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg></div>
-            <h3>Трудові Спори</h3><p>Невиплачена зарплата, незаконне звільнення — захист працівника</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-            <h3>Сімейне Право</h3><p>Шлюб, аліменти, спадок — мирне та справедливе вирішення</p>
-          </div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><h3>Карта Побуту</h3><p>Легалізація, прискорення, супровід</p></div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg></div><h3>Суди</h3><p>Оскарження, депортація, кризи</p></div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div><h3>Трудові спори</h3><p>Захист працівника</p></div>
+          <div class="card-pro"><div class="card-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><h3>Сімейне право</h3><p>Мирне вирішення</p></div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 06 -->
-    <section class="slide" data-ms="11000" data-chapter="Технології Майбутнього">
+    <!-- SCENE 08 KOMPAS AI -->
+    <section class="slide" data-ms="12000" data-chapter="Kompas AI · Наш ШІ">
       <div class="content">
-        <div class="eyebrow reveal">Інновація Року</div>
-        <h2 class="epic reveal">Технології <span class="gold">майбутнього</span></h2>
-        <div class="grid-3 reveal">
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
-            <h3>AI Claude 3.5</h3><p>Розумний чатбот — консультації 24/7 чотирма мовами Європи</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-            <h3>Telegram Orakul</h3><p>AI-бот профспілки — миттєвий зв'язок з кожним членом</p>
-          </div>
-          <div class="card-pro">
-            <div class="card-icon"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></div>
-            <h3>Przelewy24</h3><p>Безпечна оплата внесків та послуг — SHA-384, миттєве підтвердження</p>
-          </div>
+        <div class="kompas-ai-label reveal">Наш власний штучний інтелект</div>
+        <div class="ai-core-wrap reveal">
+          <div class="ai-ring"></div><div class="ai-ring"></div><div class="ai-ring"></div>
+          <div class="ai-core"><span class="ai-core-text">KOMPAS AI</span></div>
         </div>
-        <div class="tech-grid reveal">
-          <span class="tech-tag">Next.js 14</span><span class="tech-tag">TypeScript 5.7</span>
-          <span class="tech-tag">React 18</span><span class="tech-tag">Tailwind CSS 4</span>
-          <span class="tech-tag">Supabase</span><span class="tech-tag">Anthropic AI</span>
-          <span class="tech-tag">Vercel</span><span class="tech-tag">RODO/GDPR</span>
+        <h2 class="epic reveal"><span class="hologram">Kompas AI</span></h2>
+        <p class="subtitle-epic reveal">Власний ШІ профспілки — не сторонній сервіс. Розуміє міграцію, говорить 4 мовами, захоплює ліди 24/7</p>
+        <div class="ai-features reveal">
+          <div class="ai-feat"><div class="num">24/7</div><div class="lbl">Онлайн</div></div>
+          <div class="ai-feat"><div class="num">4</div><div class="lbl">Мови</div></div>
+          <div class="ai-feat"><div class="num">AI</div><div class="lbl">Copilot</div></div>
+          <div class="ai-feat"><div class="num">∞</div><div class="lbl">Ліди</div></div>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 07 -->
-    <section class="slide left-align" data-ms="12000" data-chapter="Архітектор · iPhoenix®">
+    <!-- SCENE 09 Duo: Founder vision + Architect -->
+    <section class="slide left-align" data-ms="12000" data-chapter="Команда · Visionaries">
       <div class="content">
-        <div class="eyebrow reveal">Lifetime Achievement Award</div>
-        <h2 class="epic reveal">Архітектор цифрової <span class="gold">Профспілки</span></h2>
-        <div class="dev-panel reveal">
-          <div class="dev-portrait">
-            <div class="dev-portrait-ring"></div>AK
+        <div class="eyebrow reveal">Команда Майбутнього</div>
+        <h2 class="epic reveal">Два <span class="gold">архітектори</span> сили</h2>
+        <div class="founders-grid reveal">
+          <div class="founder-card founder-primary">
+            <div class="founder-badge">Founder</div>
+            <div class="founder-portrait">ОВ</div>
+            <h3>Олександр Василишин</h3>
+            <div class="founder-role">Засновник · Стратегія & Право</div>
+            <p>Візія, довіра, 1200+ перемог. Особисто веде кожну справу.</p>
           </div>
-          <div class="dev-info">
+          <div class="founder-card">
+            <div class="founder-badge">Grand Architect · iPhoenix®</div>
+            <div class="founder-portrait" style="border-color:#00f5ff;color:#00f5ff">AK</div>
             <h3>Олександр Христодул</h3>
-            <div class="role">Grand Architect · iPhoenix® · Full-Stack Visionary</div>
-            <div class="contact">iphoenixgsm@gmail.com</div>
-            <p class="subtitle-epic" style="margin-top:14px;font-size:20px;font-style:normal;text-align:left;color:rgba(245,240,230,0.65)">
-              Від ідеї до реалізації: платформа профспілки, KompasCRM, AI-оркестрація Primus, Telegram Orakul — 
-              інженерна досконалість Гарвардського рівня.
-            </p>
-            <div class="dev-tags">
-              <span class="dev-tag">Architecture</span>
-              <span class="dev-tag">KompasCRM</span>
-              <span class="dev-tag">AI Primus</span>
-              <span class="dev-tag">Orakul Bot</span>
-            </div>
+            <div class="founder-role" style="color:#00f5ff">Kompas AI · KompasCRM · Primus</div>
+            <p>Цифрова платформа, ШІ, CRM — інженерна досконалість світового рівня.</p>
           </div>
-        </div>
-        <div class="quote-block reveal">
-          <p>Код, написаний для людей — не для алгоритмів</p>
-          <cite>iPhoenix® · Alex Khrysto</cite>
         </div>
       </div>
     </section>
 
-    <!-- SCENE 08 -->
-    <section class="slide finale" data-ms="12000" data-chapter="Kompas Migracji · Finale">
+    <!-- SCENE 10 Finale -->
+    <section class="slide finale" data-ms="12000" data-chapter="Finale · WOW">
       <div class="content">
-        <img class="brand-hero reveal" src="brand-logo.svg" alt="" />
-        <div class="eyebrow reveal">Finale</div>
-        <h1 class="epic reveal"><span class="gold">Kompas Migracji</span></h1>
-        <h2 class="epic reveal" style="font-size:40px"><span class="crimson">Профспілка Емігрантів в Європі</span></h2>
+        <h1 class="mega-wow reveal" style="font-size:88px">
+          <span class="hologram">KOMPAS</span>
+        </h1>
+        <h2 class="epic reveal"><span class="gold">Migracji</span> · <span class="crimson">Профспілка Європи</span></h2>
         <div class="ornament reveal">★ ★ ★</div>
-        <p class="subtitle-epic reveal">kompasmigracji.com · +48 729 271 848</p>
-        <p class="subtitle-epic reveal" style="font-size:18px;margin-top:16px;font-style:normal;letter-spacing:0.15em">
-          © DOMUS V Sp. z o.o. · Designed by iPhoenix® · Veritas · Solidarność · Europa
-        </p>
+        <p class="subtitle-epic reveal">kompasmigracji.com · Kompas AI · +48 729 271 848</p>
+        <p class="wow-tagline reveal">Ви щойно побачили майбутнє</p>
       </div>
     </section>
 
     <div class="footer-bar">
-      <span>Kompas Migracji — Official Presentation Film</span>
-      <span id="slide-counter">1 / 8</span>
+      <span>Kompas Migracji — WOW World Premiere</span>
+      <span id="slide-counter">1 / 10</span>
     </div>
     <div class="progress-track"><div class="progress" id="progress" style="width:0%"></div></div>
   </div>
