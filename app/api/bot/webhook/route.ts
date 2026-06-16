@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2024-2026
+ * Authors: 
+ * - Oleksandr Khrystodul (iphoenixgsm@gmail.com)
+ * - Oleksandr Didkowski (vip.didkovsky5@gmail.com)
+ * 
+ * Telegram Bot Webhook & AI Logic.
+ * This module cannot be copied or used without explicit permission from the authors.
+ */
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 

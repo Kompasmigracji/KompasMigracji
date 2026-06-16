@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2024-2026
+ * Authors: 
+ * - Oleksandr Khrystodul (iphoenixgsm@gmail.com)
+ * - Oleksandr Didkowski (vip.didkovsky5@gmail.com)
+ * 
+ * This module is part of the Telegram Bot development and cannot be copied 
+ * or used without explicit permission from the authors.
+ */
 import { sendInlineKeyboard, sendMessage } from "./telegram";
 
 export async function sendLanguagePanel(chatId: number, name: string, token?: string) {

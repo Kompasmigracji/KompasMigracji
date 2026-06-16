@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2024-2026
+ * Authors: 
+ * - Oleksandr Khrystodul (iphoenixgsm@gmail.com)
+ * - Oleksandr Didkowski (vip.didkovsky5@gmail.com)
+ * 
+ * Orakul AI System Prompt.
+ * This module cannot be copied or used without explicit permission from the authors.
+ */
 export const ORAKUL_SYSTEM_PROMPT = `⟁ ОРАКУЛ — Надінтелект рекрутингу · EWU (European Welding Union)
 
 ═══════════════════════════════════════════════════════════
