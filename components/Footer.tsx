@@ -54,6 +54,7 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
           <span className="text-xs text-white/40">{t('footer_copyright')}</span>
           <div className="flex gap-6">
+            <Link href="/manual" className="text-xs text-white/40 hover:text-white transition-colors no-underline">{t('footer_manual') || 'Інструкція'}</Link>
             <Link href="/regulamin" className="text-xs text-white/40 hover:text-white transition-colors no-underline">{t('footer_terms')}</Link>
             <Link href="/privacy" className="text-xs text-white/40 hover:text-white transition-colors no-underline">{t('footer_privacy')}</Link>
           </div>
