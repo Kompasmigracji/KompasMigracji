@@ -11,7 +11,9 @@
     "test:unit": "jest --passWithNoTests",
     "test:e2e": "playwright test",
     "seed:agents": "npx tsx scripts/seed-agents.ts",
-    "video:intro": "node scripts/generate-intro-videos.mjs"
+    "video:intro": "node scripts/generate-intro-videos.mjs",
+    "video:intro:4k": "node scripts/generate-intro-videos.mjs --4k",
+    "video:narration": "python3 scripts/generate-narration.py"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
