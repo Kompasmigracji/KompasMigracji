@@ -178,6 +178,13 @@ export default function Header() {
             Оракул
           </Link>
           <Link
+            href="/videos"
+            className="px-3.5 py-1.5 text-sm font-bold text-white no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #d4af37, #f59e0b)', boxShadow: '0 2px 12px -2px rgba(212,175,55,.4)' }}
+          >
+            {t('nav_videos')}
+          </Link>
+          <Link
             href="/admin"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
             style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
@@ -276,6 +283,14 @@ export default function Header() {
             style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
           >
             Оракул — AI для зварювальників
+          </Link>
+          <Link
+            href="/videos"
+            onClick={() => setMobileOpen(false)}
+            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white no-underline mt-1 text-center"
+            style={{ background: 'linear-gradient(135deg, #d4af37, #f59e0b)', boxShadow: '0 2px 12px -2px rgba(212,175,55,.4)' }}
+          >
+            {t('nav_videos')}
           </Link>
           <Link
             href="/admin"

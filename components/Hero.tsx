@@ -1,6 +1,7 @@
 'use client';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { Link } from '@/lib/navigation';
 
 function TrustBadges() {
   return (
@@ -102,6 +103,13 @@ export default function Hero() {
           >
             {t('cta_consult')}
           </a>
+          <Link
+            href="/videos"
+            className="font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover-lift transition-premium border border-amber-400/40 text-amber-700 bg-amber-50/80 hover:bg-amber-100"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            {t('videos_home_cta')}
+          </Link>
           <a
             href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
             target="_blank"

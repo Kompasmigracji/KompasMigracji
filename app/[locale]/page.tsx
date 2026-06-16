@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ScrollProgress from '@/components/ScrollProgress';
 import StarField from '@/components/StarField';
+import VideosShowcase from '@/components/VideosShowcase';
 
 // Components below the fold (lazy loaded)
 const SituationQuiz = dynamic(() => import('@/components/SituationQuiz'));
@@ -37,6 +38,7 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
+        <VideosShowcase />
         <SituationQuiz />
         <Team />
         <Reviews />
