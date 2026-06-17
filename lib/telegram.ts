@@ -26,9 +26,14 @@ export function sendMessage(
   chatId: number | string,
   text: string,
   parseMode: "HTML" | "Markdown" | "MarkdownV2" = "HTML",
-  token?: string
+  token?: string,
+  replyMarkup?: object
 ) {
-  return tgPost("sendMessage", { chat_id: chatId, text, parse_mode: parseMode }, token);
+  const payload: any = { chat_id: chatId, text, parse_mode: parseMode };
+  if (replyMarkup) {
+    payload.reply_markup = replyMarkup;
+  }
+  return tgPost("sendMessage", payload, token);
 }
 
 /** Відправити повідомлення з inline-кнопками. */

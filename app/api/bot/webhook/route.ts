@@ -167,7 +167,13 @@ export async function POST(req: NextRequest) {
       const [visibleText] = aiText.split(/\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]/);
       
       if (visibleText.trim()) {
-        await sendMessage(chatId, visibleText.trim(), "HTML", token);
+        const isFinished = aiText.includes('[КАНДИДАТ_ГОТОВИЙ]') || aiText.includes('[РОБОТОДАВЕЦЬ_ГОТОВИЙ]');
+        const replyMarkup = isFinished ? undefined : {
+          inline_keyboard: [
+            [{ text: "🏁 Завершити опитування та зв'язатися з менеджером", callback_data: "action_call_human" }]
+          ]
+        };
+        await sendMessage(chatId, visibleText.trim(), "HTML", token, replyMarkup);
       }
 
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
