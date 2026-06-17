@@ -1,0 +1,167 @@
+/* ═══ WOW v6 INFINITY — hyper-cinematic layer ═══ */
+
+#starfield, #lightning, #data-rain {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+}
+
+.infinity-orb {
+  position: absolute; top: 50%; left: 50%; width: 600px; height: 600px;
+  margin: -300px 0 0 -300px; z-index: 1; pointer-events: none; opacity: 0.35;
+  background: radial-gradient(circle, rgba(0,245,255,0.08) 0%, transparent 55%);
+  animation: infinitySpin 20s linear infinite;
+}
+.infinity-orb::before, .infinity-orb::after {
+  content: '∞'; position: absolute; font-size: 200px; font-weight: 900;
+  font-family: 'Playfair Display', serif; color: rgba(212,175,55,0.06);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.infinity-orb::after {
+  font-size: 280px; color: rgba(0,245,255,0.04);
+  animation: infinityPulse 3s ease-in-out infinite;
+}
+@keyframes infinitySpin { to { transform: rotate(360deg); } }
+@keyframes infinityPulse {
+  0%,100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.speed-lines {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden;
+  opacity: 0; transition: opacity 0.3s;
+}
+.speed-lines.active { opacity: 1; }
+.speed-line {
+  position: absolute; height: 2px; width: 200%;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+  animation: speedStreak 0.6s linear infinite;
+}
+@keyframes speedStreak {
+  from { transform: translateX(-50%) scaleX(0.3); opacity: 0; }
+  30% { opacity: 1; }
+  to { transform: translateX(50%) scaleX(1.5); opacity: 0; }
+}
+
+.lens-flare {
+  position: absolute; width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  top: 15%; right: 20%; z-index: 4; pointer-events: none;
+  animation: flareDrift 8s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+@keyframes flareDrift {
+  0%,100% { transform: translate(0,0) scale(1); opacity: 0.4; }
+  50% { transform: translate(-40px, 30px) scale(1.2); opacity: 0.7; }
+}
+
+.chromatic {
+  position: relative;
+}
+.chromatic::before, .chromatic::after {
+  content: attr(data-text);
+  position: absolute; inset: 0;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.slide.active .chromatic-burst {
+  animation: chromaBurst 0.5s ease-out;
+}
+@keyframes chromaBurst {
+  0% { text-shadow: -4px 0 #ff0040, 4px 0 #00f5ff; filter: blur(2px); }
+  100% { text-shadow: none; filter: none; }
+}
+
+/* Faster reveals v6 */
+.slide.active .reveal {
+  animation: revealInfinity 0.55s var(--ease-out-expo) both !important;
+}
+.slide.active .reveal:nth-child(1) { animation-delay: 0.05s !important; }
+.slide.active .reveal:nth-child(2) { animation-delay: 0.12s !important; }
+.slide.active .reveal:nth-child(3) { animation-delay: 0.19s !important; }
+.slide.active .reveal:nth-child(4) { animation-delay: 0.26s !important; }
+.slide.active .reveal:nth-child(5) { animation-delay: 0.33s !important; }
+.slide.active .reveal:nth-child(6) { animation-delay: 0.40s !important; }
+@keyframes revealInfinity {
+  from { opacity: 0; transform: translateY(48px) scale(0.92); filter: blur(12px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+/* Hyper hologram v6 */
+.hologram {
+  animation: holoShift 2s ease infinite, holoGlitch 3s infinite, holoPulse 1.5s ease-in-out infinite !important;
+  filter: drop-shadow(0 0 40px rgba(0,245,255,0.5)) drop-shadow(0 0 80px rgba(212,175,55,0.3)) !important;
+}
+@keyframes holoPulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Supernova finale */
+.supernova {
+  position: absolute; inset: 0; z-index: 8; pointer-events: none;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(212,175,55,0.4) 20%, transparent 60%);
+  opacity: 0; transform: scale(0);
+}
+.supernova.burst { animation: supernova 1.8s ease-out; }
+@keyframes supernova {
+  0% { opacity: 0; transform: scale(0); }
+  20% { opacity: 1; transform: scale(1.5); }
+  100% { opacity: 0; transform: scale(4); }
+}
+
+.pulse-ring {
+  position: absolute; top: 50%; left: 50%; width: 100px; height: 100px;
+  margin: -50px 0 0 -50px; border-radius: 50%;
+  border: 2px solid rgba(0,245,255,0.5); z-index: 11; pointer-events: none;
+  opacity: 0;
+}
+.pulse-ring.fire { animation: pulseRing 1s ease-out; }
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(12); opacity: 0; }
+}
+
+.cyber-grid {
+  position: absolute; bottom: 72px; left: 0; right: 0; height: 200px; z-index: 1;
+  background:
+    linear-gradient(transparent 0%, rgba(0,245,255,0.03) 100%),
+    repeating-linear-gradient(90deg, rgba(0,245,255,0.06) 0 1px, transparent 1px 60px),
+    repeating-linear-gradient(0deg, rgba(0,245,255,0.04) 0 1px, transparent 1px 40px);
+  transform: perspective(400px) rotateX(60deg);
+  transform-origin: bottom center;
+  opacity: 0.5;
+  animation: gridScroll 4s linear infinite;
+}
+@keyframes gridScroll {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 0 0, 0 0, 0 40px; }
+}
+
+.infinity-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 20px; margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(165,28,48,0.3), rgba(0,245,255,0.15));
+  border: 1px solid rgba(212,175,55,0.5);
+  font-size: 11px; font-weight: 800; letter-spacing: 0.4em;
+  text-transform: uppercase; color: var(--gold-light);
+  box-shadow: 0 0 30px rgba(212,175,55,0.2);
+  animation: badgeGlow 2s ease-in-out infinite;
+}
+@keyframes badgeGlow {
+  0%,100% { box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+  50% { box-shadow: 0 0 50px rgba(0,245,255,0.4); }
+}
+
+.wow-flash.burst { animation: wowFlashV6 0.45s ease-out !important; }
+@keyframes wowFlashV6 {
+  0% { opacity: 0; }
+  8% { opacity: 1; background: linear-gradient(135deg, #fff, #00f5ff, #d4af37); }
+  100% { opacity: 0; }
+}
+
+.shockwave.fire { animation: shockwaveV6 0.8s ease-out !important; }
+@keyframes shockwaveV6 {
+  0% { transform: scale(1); opacity: 1; border-width: 4px; border-color: #00f5ff; }
+  100% { transform: scale(100); opacity: 0; border-width: 1px; }
+}
+
+.slide-wow .mega-wow { font-size: 132px !important; }
