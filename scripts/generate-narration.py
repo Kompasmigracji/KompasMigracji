@@ -32,16 +32,16 @@ async def tts_segment(text, out_path, voice, rate, pitch):
 
 
 def make_orchestral_bed(duration_sec, out_path):
-    """Synthesise cinematic orchestral pad with ffmpeg."""
+    """Synthesise fast cinematic orchestral pad with ffmpeg."""
     d = int(duration_sec) + 2
-    fade_out = max(1, d - 5)
+    fade_out = max(1, d - 3)
     filt = (
-        "[1:a]volume=0.14[a1];[2:a]volume=0.10[a2];[3:a]volume=0.08[a3];"
-        "[4:a]volume=0.06[a4];[5:a]volume=0.05[a5];[0:a]volume=0.8[bn];"
+        "[1:a]volume=0.18[a1];[2:a]volume=0.14[a2];[3:a]volume=0.12[a3];"
+        "[4:a]volume=0.10[a4];[5:a]volume=0.08[a5];[0:a]volume=0.7[bn];"
         "[bn][a1][a2][a3][a4][a5]amix=inputs=6:duration=first,"
-        "lowpass=f=900,highpass=f=45,"
-        "aecho=0.8:0.7:800:0.3,"
-        f"afade=t=in:st=0:d=4,afade=t=out:st={fade_out}:d=5"
+        "lowpass=f=1200,highpass=f=55,"
+        "aecho=0.6:0.5:400:0.25,"
+        f"afade=t=in:st=0:d=2,afade=t=out:st={fade_out}:d=3"
     )
     run([
         "ffmpeg", "-y",
