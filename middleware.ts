@@ -123,8 +123,23 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ── Admin pages + admin API: JWT protection ───────────────────────────────
-  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+  // ── Strip locale prefix from architect routes: /uk/architect → /architect ──
+  const localeArchitectMatch = pathname.match(/^\/(uk|pl|en|ru)(\/architect.*)$/);
+  if (localeArchitectMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localeArchitectMatch[2];
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ── Architect pages: skip intl middleware ────────────────────────────────
+  if (pathname.startsWith("/architect")) {
+    // Architect pages must be protected. We will let the JWT check handle it,
+    // so we don't return next() here, but we let it fall through to the auth check below.
+    // Actually, wait, if we fall through to auth check, we need to add /architect to the auth check!
+  }
+
+  // ── Admin & Architect pages + admin API: JWT protection ─────────────────────
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin") || pathname.startsWith("/architect")) {
     // Login page, setup page and auth endpoints are public
     if (
       pathname === "/admin/login" ||
@@ -154,6 +169,13 @@ export async function middleware(req: NextRequest) {
       const url = req.nextUrl.clone();
       url.pathname = "/admin/login";
       url.searchParams.set("next", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Architect requires admin role
+    if (pathname.startsWith("/architect") && payload.role !== "admin") {
+      const url = req.nextUrl.clone();
+      url.pathname = "/admin";
       return NextResponse.redirect(url);
     }
 
