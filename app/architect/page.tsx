@@ -2,6 +2,7 @@
 import React from 'react';
 import { GlassCard } from '@/components/lifeos/GlassCard';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { ArchitectCharts } from '@/components/lifeos/ArchitectCharts';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,27 @@ export default async function ArchitectDashboard() {
   let soulResonance = 0;
   let fateStatus = 'Balanced';
   let fateRecommendation = 'System is alive.';
+
+  // Mock historical data for charts
+  let revenueData = [
+    { name: 'Mon', amount: 120 },
+    { name: 'Tue', amount: 300 },
+    { name: 'Wed', amount: 250 },
+    { name: 'Thu', amount: 450 },
+    { name: 'Fri', amount: 380 },
+    { name: 'Sat', amount: 600 },
+    { name: 'Sun', amount: 0 } // Will be updated with today's real revenue
+  ];
+
+  let energyData = [
+    { name: 'Mon', resonance: 40 },
+    { name: 'Tue', resonance: 60 },
+    { name: 'Wed', resonance: 55 },
+    { name: 'Thu', resonance: 85 },
+    { name: 'Fri', resonance: 75 },
+    { name: 'Sat', resonance: 95 },
+    { name: 'Sun', resonance: 0 } // Will be updated with today's real resonance
+  ];
 
   if (supabase) {
     try {
@@ -62,6 +84,11 @@ export default async function ArchitectDashboard() {
         recentTxCount = txs.length;
         totalRevenue = txs.reduce((acc, curr) => acc + (curr.amount || 0), 0);
       }
+
+      // Inject real real-time data into the end of our charts
+      revenueData[revenueData.length - 1].amount = totalRevenue;
+      energyData[energyData.length - 1].resonance = Math.floor(soulResonance * 100);
+
     } catch (e) {
       console.error("Dashboard error:", e);
     }
@@ -73,9 +100,18 @@ export default async function ArchitectDashboard() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <header className="mb-10">
-        <h2 className="text-3xl font-light text-white tracking-wide">Command / <span className="font-bold text-cyan-400">The Matrix</span></h2>
-        <p className="text-slate-400 mt-2">Central Nervous System of LifeOS. Monitoring Fate, Soul, and Financial parameters.</p>
+      <header className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 className="text-3xl font-light text-white tracking-wide">Command / <span className="font-bold text-cyan-400">The Matrix</span></h2>
+          <p className="text-slate-400 mt-2">Central Nervous System of LifeOS. Monitoring Fate, Soul, and Financial parameters.</p>
+        </div>
+        <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 px-4 py-2 rounded-full shadow-lg">
+          <span className="flex h-2.5 w-2.5 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest">Sys-Link Active</span>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -87,11 +123,11 @@ export default async function ArchitectDashboard() {
                 <span className={m.is_active ? "text-slate-200 font-medium" : "text-slate-500"}>{m.name}</span>
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-slate-500">{m.load}</span>
-                  <span className={\`px-2 py-1 text-[10px] uppercase tracking-wider rounded border \${
+                  <span className={`px-2 py-1 text-[10px] uppercase tracking-wider rounded border ${
                     m.is_active 
                       ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' 
                       : 'bg-slate-800/50 text-slate-500 border-slate-700/50'
-                  }\`}>
+                  }`}>
                     {m.status}
                   </span>
                 </div>
@@ -105,14 +141,14 @@ export default async function ArchitectDashboard() {
           <div className="space-y-5">
             <div>
               <div className="text-xs text-slate-500 uppercase tracking-widest mb-1">Fate Status</div>
-              <div className={\`text-lg \${fateStatus.includes('Overload') ? 'text-rose-400' : 'text-emerald-400'}\`}>
+              <div className={`text-lg ${fateStatus.includes('Overload') ? 'text-rose-400' : 'text-emerald-400'}`}>
                 {fateStatus}
               </div>
             </div>
             <div>
               <div className="text-xs text-slate-500 uppercase tracking-widest mb-1">Soul Resonance</div>
               <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-1">
-                <div className="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-1000" style={{ width: \`\${Math.max(10, soulResonance * 100)}%\` }}></div>
+                <div className="h-full bg-gradient-to-r from-purple-500 to-cyan-400 transition-all duration-1000" style={{ width: `${Math.max(10, soulResonance * 100)}%` }}></div>
               </div>
               <div className="text-[10px] text-slate-400 text-right">{soulVibe}</div>
             </div>
@@ -125,10 +161,10 @@ export default async function ArchitectDashboard() {
 
         {/* ALEX-DIGITAL / Engine Output */}
         <GlassCard title="Fate Recommendation">
-          <div className="text-sm italic text-slate-300 border-l-2 border-cyan-500/50 pl-4 py-2 leading-relaxed">
+          <div className="text-sm italic text-slate-300 border-l-2 border-cyan-500/50 pl-4 py-2 leading-relaxed h-[100px] overflow-y-auto custom-scrollbar">
             "{fateRecommendation}"
           </div>
-          <div className="mt-6 flex gap-2">
+          <div className="mt-4 flex gap-2">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
               <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
               ALEX-DIGITAL Online
@@ -136,6 +172,9 @@ export default async function ArchitectDashboard() {
           </div>
         </GlassCard>
       </div>
+
+      {/* Dynamic Recharts Component */}
+      <ArchitectCharts revenueData={revenueData} energyData={energyData} />
       
       {/* System Events Feed */}
       <GlassCard title="Autonomous Event Feed" className="mt-8">
@@ -151,13 +190,13 @@ export default async function ArchitectDashboard() {
                   </svg>
                 </div>
                 
-                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-white/5 bg-slate-900/50 backdrop-blur-sm transition-all hover:bg-slate-800/50 hover:border-white/10">
+                <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-white/5 bg-slate-900/50 backdrop-blur-sm transition-all hover:bg-slate-800/50 hover:border-white/10 group-hover:shadow-[0_0_20px_rgba(6,182,212,0.05)]">
                   <div className="flex items-center justify-between mb-1">
-                    <span className={\`text-xs font-bold uppercase tracking-wider \${
+                    <span className={`text-xs font-bold uppercase tracking-wider ${
                       log.level === 'error' ? 'text-rose-400' :
                       log.level === 'warn' ? 'text-amber-400' :
                       'text-cyan-500'
-                    }\`}>{log.source}</span>
+                    }`}>{log.source}</span>
                     <time className="text-xs text-slate-500 font-mono">{log.created_at ? formatTime(log.created_at) : 'Just now'}</time>
                   </div>
                   <div className="text-sm text-slate-300">
