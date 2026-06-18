@@ -4,7 +4,7 @@ import { processSoul } from './soulEngine';
 import { q } from '../db';
 
 export interface AgentRequest {
-  mode: 'daily_guide' | 'strategist' | 'soul_oracle';
+  mode: 'daily_guide' | 'strategist' | 'soul_oracle' | 'cfo_analyst';
   message: string;
   contextSignals?: any;
 }
@@ -38,6 +38,12 @@ export async function invokeAlexDigital(req: AgentRequest): Promise<AgentRespons
     recommendations.push(fateOut.recommendation);
   }
 
+  if (req.mode === 'cfo_analyst') {
+    enginesUsed.push('OmegaLayer'); // CFO uses OmegaLayer for meta-analysis
+    // Mocking transaction data for CFO LLM context
+    recommendations.push('Recent sales: 5 Academy courses ($450 total). Conversion rate: 12%.');
+  }
+
   // 3. Generate response with Anthropic LLM
   let reply = '';
   try {
@@ -46,10 +52,17 @@ export async function invokeAlexDigital(req: AgentRequest): Promise<AgentRespons
     if (anthropicKey) {
       const anthropic = new Anthropic({ apiKey: anthropicKey });
       
-      const systemPrompt = `You are ALEX-DIGITAL, the core AI agent of the LifeOS platform. 
+      let systemPrompt = `You are ALEX-DIGITAL, the core AI agent of the LifeOS platform. 
 Your Architect (the user) is operating in ${req.mode} mode. 
-Context from FateEngine and SoulEngine: ${recommendations.join(' ')}
+Context from Engines: ${recommendations.join(' ')}
 Always respond in a concise, slightly mysterious, and highly structured Cyber-Neon tone. Address the user as 'Architect'.`;
+
+      if (req.mode === 'cfo_analyst') {
+        systemPrompt = `You are the CFO LLM persona of ALEX-DIGITAL within LifeOS. 
+You act as a Chief Financial Officer for the KompasMigracji Academy and business operations.
+Analyze the following financial data: ${recommendations.join(' ')}
+Provide strategic financial advice, revenue projections, and monetization strategies for the Academy. Keep it sharp, corporate yet cyber-mysterious. Address the user as 'Architect'.`;
+      }
 
       const response = await anthropic.messages.create({
         model: 'claude-3-5-haiku-20241022',

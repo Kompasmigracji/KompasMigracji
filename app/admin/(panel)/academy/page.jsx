@@ -11,8 +11,29 @@ export default function AcademyPage() {
   const [quizScore, setQuizScore] = useState(null);
   const [selectedAnswers, setSelectedAnswers] = useState({});
 
-  // Mock Courses Data
-  const [courses, setCourses] = useState([]);
+  // Mock Courses Data with Pricing & Enrollment
+  const [courses, setCourses] = useState([
+    { id: 'CRS-001', title: 'Основи польського права (TRC)', category: 'Legal', enrolled: 0, completed: 0, avgScore: '-', price: 149.00, isPurchased: false, lessons: [
+      { name: 'Вступ до легалізації', type: 'video', duration: '15:00' },
+      { name: 'Процедура TRC', type: 'document', duration: '10 pages' }
+    ] },
+    { id: 'CRS-002', title: 'Blue Card для IT спеціалістів', category: 'Premium Legal', enrolled: 0, completed: 0, avgScore: '-', price: 299.00, isPurchased: false, lessons: [
+      { name: 'Вимоги до Blue Card', type: 'video', duration: '20:00' },
+      { name: 'Тест на відповідність', type: 'quiz', duration: '15 mins' }
+    ] },
+    { id: 'CRS-003', title: 'Soft Skills in Poland', category: 'HR', enrolled: 8, completed: 5, avgScore: '93%', price: 49.00, isPurchased: true, lessons: [] }
+  ]);
+
+  const handlePurchase = (courseId) => {
+    // Simulate transaction processing
+    const course = courses.find(c => c.id === courseId);
+    if (confirm(`Підтвердіть покупку курсу: ${course.title} за $${course.price}? (Simulated)`)) {
+      setCourses(prev => prev.map(c => c.id === courseId ? { ...c, isPurchased: true, enrolled: c.enrolled + 1 } : c));
+      alert(`Курс ${course.title} успішно придбано! Транзакція збережена (Mock).`);
+      
+      // In production: await fetch('/api/checkout', { body: { courseId } })
+    }
+  };
 
   // Quiz Questions Data
   const quizQuestions = [
@@ -187,11 +208,9 @@ export default function AcademyPage() {
               <table className="kc-table">
                 <thead>
                   <tr>
-                    <th>ID Курсу</th>
                     <th>Назва курсу</th>
                     <th>Категорія</th>
-                    <th>Всього студентів</th>
-                    <th>Прогрес проходження</th>
+                    <th>Ціна</th>
                     <th>Сер. Бал</th>
                     <th style={{ textAlign: "right" }}>Дії</th>
                   </tr>
@@ -199,39 +218,27 @@ export default function AcademyPage() {
                 <tbody>
                   {filteredCourses.map((row) => (
                     <tr key={row.id}>
-                      <td style={{ fontWeight: 600 }}>{row.id}</td>
                       <td>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <Icon name="play-circle" size={16} color="var(--dim)" />
                           <span style={{ fontWeight: 500 }}>{row.title}</span>
+                          {row.isPurchased && <Badge status="green" text="Purchased" />}
                         </div>
                       </td>
                       <td><Badge status="info" text={row.category} /></td>
-                      <td>{row.enrolled} staff</td>
-                      <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, width: 120 }}>
-                          <div style={{ flex: 1, background: "var(--panel-2)", height: 6, borderRadius: 3, overflow: "hidden" }}>
-                            <div style={{ 
-                              width: row.enrolled > 0 ? `${(row.completed / row.enrolled) * 100}%` : "0%", 
-                              height: "100%", background: "var(--color-success)" 
-                            }}></div>
-                          </div>
-                          <span style={{ fontSize: "var(--text-xs)", fontWeight: 600 }}>
-                            {row.enrolled > 0 ? Math.round((row.completed / row.enrolled) * 100) : 0}%
-                          </span>
-                        </div>
-                      </td>
+                      <td><strong style={{ color: "var(--color-success)" }}>${row.price}</strong></td>
                       <td><strong style={{ color: "var(--color-primary)" }}>{row.avgScore}</strong></td>
                       <td style={{ textAlign: "right" }}>
-                        <div style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}>
-                          <button 
-                            className="kc-btn kc-btn-ghost" 
-                            style={{ padding: 6, minHeight: "auto" }}
-                            title="Переглянути список лекцій"
-                            onClick={() => setSelectedCourse(row)}
-                          >
-                            <Icon name="book-open" size={16} />
-                          </button>
+                        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                          {!row.isPurchased ? (
+                            <button className="kc-btn kc-btn-primary" style={{ padding: "4px 12px" }} onClick={() => handlePurchase(row.id)}>
+                              Придбати
+                            </button>
+                          ) : (
+                            <button className="kc-btn kc-btn-ghost" style={{ padding: 6 }} title="Переглянути курс" onClick={() => setSelectedCourse(row)}>
+                              <Icon name="book-open" size={16} />
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>

@@ -31,6 +31,7 @@ export default function ArchitectLayout({ children }: { children: React.ReactNod
             <NavItem href="/architect" icon="⚡" label="System State" />
             <NavItem href="/architect/modules" icon="🧩" label="Modules" />
             <NavItem href="/architect/ai" icon="🧠" label="ALEX-DIGITAL" />
+            <NavItem href="/architect/finance" icon="🏦" label="CFO LLM" />
             <NavItem href="/architect/logs" icon="📜" label="Logs & Events" />
             <NavItem href="/architect/settings" icon="⚙️" label="Configuration" />
           </nav>
