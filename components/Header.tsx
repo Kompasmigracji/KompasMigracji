@@ -140,7 +140,7 @@ export default function Header() {
           ))}
           <Link
             href="/pricing"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             {t('nav_pricelist')}
@@ -150,14 +150,14 @@ export default function Header() {
 
           <Link
             href="/ai"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             {t('nav_ai_assistant')}
           </Link>
           <Link
             href="/portal"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
             title="Portal klienta — sprawdź status swojej sprawy"
           >
@@ -165,28 +165,28 @@ export default function Header() {
           </Link>
           <Link
             href="/plans"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn rounded-full transition-all hover:opacity-90 hover:scale-105 no-underline"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn rounded-full transition-all hover:opacity-90 hover:scale-105 no-underline whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             Plany
           </Link>
           <Link
             href="/orakul"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
           >
             Оракул
           </Link>
           <Link
             href="/videos"
-            className="px-3.5 py-1.5 text-sm font-bold text-white no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
-            style={{ background: 'linear-gradient(135deg, #d4af37, #f59e0b)', boxShadow: '0 2px 12px -2px rgba(212,175,55,.4)' }}
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
+            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
             {t('nav_videos')}
           </Link>
           <Link
             href="/admin"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105"
+            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
           >
             KompasCRM
