@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
@@ -73,10 +74,10 @@ export default function AIAssistantIntake() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
-      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-gray-100" style={{ height: 'calc(100vh - 120px)', minHeight: '600px', maxHeight: '900px' }}>
+      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-gray-100 h-[calc(100vh-120px)] min-h-[600px] max-h-[900px]">
         
         {/* Left sidebar - Branding & Instructions */}
-        <div className="hidden lg:flex flex-col w-1/3 p-10 relative overflow-hidden" style={{ backgroundColor: '#0f172a' }}>
+        <div className="hidden lg:flex flex-col w-1/3 p-10 relative overflow-hidden bg-[#0f172a]">
           <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] to-blue-900 opacity-90 z-0"></div>
           <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none z-0 text-white">
             <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
@@ -87,7 +88,7 @@ export default function AIAssistantIntake() {
           <div className="relative z-10 flex flex-col h-full text-white">
             <div className="flex items-center gap-3 mb-12">
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1">
-                <img src="/logo.svg" alt="Kompas Migracji" className="w-8 h-8" />
+                <Image src="/logo.svg" alt="Kompas Migracji" width={32} height={32} className="w-8 h-8" />
               </div>
               <div>
                 <h2 className="text-xl font-bold tracking-tight m-0 text-white">Kompas Migracji</h2>
@@ -123,8 +124,8 @@ export default function AIAssistantIntake() {
             <div className="mt-8 pt-8 border-t border-white/10">
               <div className="flex items-center gap-4">
                 <div className="flex -space-x-3">
-                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-200 overflow-hidden"><img src="/team/user1.jpg" alt="" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display='none'}} /></div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-300 overflow-hidden"><img src="/team/user2.jpg" alt="" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display='none'}} /></div>
+                  <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-200 overflow-hidden"><Image src="/team/user1.jpg" alt="" fill className="object-cover" /></div>
+                  <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-300 overflow-hidden"><Image src="/team/user2.jpg" alt="" fill className="object-cover" /></div>
                   <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-xs font-bold text-white">+3k</div>
                 </div>
                 <div className="text-xs text-gray-300">
@@ -148,7 +149,7 @@ export default function AIAssistantIntake() {
               <div>
                 <h3 className="font-bold text-[#0f172a] text-sm lg:text-base m-0">Kompas AI Асистент</h3>
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   На зв'язку
                 </div>
               </div>
@@ -163,7 +164,7 @@ export default function AIAssistantIntake() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6" style={{ scrollBehavior: 'smooth' }}>
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 scroll-smooth">
             {messages.map((msg, i) => {
               const isUser = msg.role === 'user';
               return (
@@ -191,9 +192,9 @@ export default function AIAssistantIntake() {
                   🧭
                 </div>
                 <div className="bg-gray-50 border border-gray-100 px-5 py-4 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full" style={{ animation: 'bounce 1s infinite', animationDelay: '0ms' }}></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full" style={{ animation: 'bounce 1s infinite', animationDelay: '150ms' }}></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full" style={{ animation: 'bounce 1s infinite', animationDelay: '300ms' }}></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
                 </div>
               </div>
             )}

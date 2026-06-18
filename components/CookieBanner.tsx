@@ -11,9 +11,9 @@ function Toggle({ on, onChange }: { on: boolean; onChange: ((v: boolean) => void
     <button
       onClick={() => onChange?.(!on)}
       disabled={!onChange}
-      style={{ width: 40, height: 22, borderRadius: 11, background: on ? ORANGE : 'rgba(255,255,255,0.15)', border: 'none', cursor: onChange ? 'pointer' : 'default', position: 'relative', transition: 'background 0.25s', flexShrink: 0 }}
+      className={`relative w-10 h-[22px] rounded-full shrink-0 transition-colors duration-250 ${onChange ? 'cursor-pointer' : 'cursor-default'} ${on ? 'bg-orange-500' : 'bg-white/15 border-none'}`}
     >
-      <span style={{ position: 'absolute', top: 3, left: on ? 21 : 3, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left 0.25s', boxShadow: '0 1px 4px rgba(0,0,0,0.3)' }} />
+      <span className={`absolute top-[3px] w-4 h-4 rounded-full bg-white transition-all duration-250 shadow-md ${on ? 'left-[21px]' : 'left-[3px]'}`} />
     </button>
   );
 }
@@ -33,43 +33,43 @@ export default function CookieBanner() {
   const card   = dark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
 
   return (
-    <div style={{ position: 'fixed', bottom: 16, left: 0, right: 0, display: 'flex', justifyContent: 'center', padding: '0 16px', zIndex: 9995, pointerEvents: 'none' }}>
-      <div style={{ maxWidth: 480, width: '100%', margin: '0 auto', background: bg, border: `1px solid ${border}`, borderRadius: 16, padding: '20px 20px 18px', boxShadow: dark ? '0 8px 40px rgba(0,0,0,0.6)' : '0 8px 32px rgba(0,0,0,0.12)', fontFamily: "'Syne', sans-serif", backdropFilter: dark ? 'blur(12px)' : 'none', pointerEvents: 'all' }}>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 10 }}>
-          <span style={{ fontSize: 20, lineHeight: 1 }}>🍪</span>
+    <div className="fixed bottom-4 left-0 right-0 flex justify-center px-4 z-[9995] pointer-events-none">
+      <div className={`max-w-[480px] w-full mx-auto rounded-2xl p-5 pb-[18px] pointer-events-auto shadow-2xl backdrop-blur-md ${dark ? 'bg-[#0a1224]/97 border border-white/10' : 'bg-white border border-gray-200'}`}>
+        <div className="flex gap-2.5 items-start mb-2.5">
+          <span className="text-[20px] leading-none">🍪</span>
           <div>
-            <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: text, lineHeight: 1.3 }}>Ми використовуємо файли cookie</p>
-            <p style={{ margin: '5px 0 0', fontSize: 12, color: muted, lineHeight: 1.6 }}>
+            <p className={`m-0 font-bold text-sm leading-tight ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Ми використовуємо файли cookie</p>
+            <p className={`mt-1 text-xs leading-relaxed ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>
               Необхідні cookies завжди активні. Аналітичні допомагають покращувати сервіс.{' '}
-              <Link href="/privacy" style={{ color: ORANGE, textDecoration: 'none' }}>Політика конфіденційності</Link>
+              <Link href="/privacy" className="text-orange-500 no-underline hover:underline">Політика конфіденційності</Link>
             </p>
           </div>
         </div>
 
         {open && (
-          <div style={{ margin: '12px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: card, borderRadius: 10, padding: '10px 14px', border: `1px solid ${border}` }}>
+          <div className="my-3 flex flex-col gap-2">
+            <div className={`flex items-center justify-between rounded-xl p-2.5 px-3.5 border ${dark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
               <div>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>Необхідні</p>
-                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>Мова, тема, сесія — завжди активні</p>
+                <p className={`m-0 text-[13px] font-semibold ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Необхідні</p>
+                <p className={`mt-0.5 text-[11px] ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Мова, тема, сесія — завжди активні</p>
               </div>
               <Toggle on={true} onChange={null} />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: card, borderRadius: 10, padding: '10px 14px', border: `1px solid ${border}` }}>
+            <div className={`flex items-center justify-between rounded-xl p-2.5 px-3.5 border ${dark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
               <div>
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: text }}>Аналітичні</p>
-                <p style={{ margin: '2px 0 0', fontSize: 11, color: muted }}>Vercel Analytics — статистика відвідувань</p>
+                <p className={`m-0 text-[13px] font-semibold ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Аналітичні</p>
+                <p className={`mt-0.5 text-[11px] ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Vercel Analytics — статистика відвідувань</p>
               </div>
               <Toggle on={analyticsOn} onChange={setAnalyticsOn} />
             </div>
           </div>
         )}
 
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
-          <button onClick={acceptAll} style={{ flex: 1, minWidth: 120, padding: '10px 16px', borderRadius: 10, border: 'none', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>Прийняти всі</button>
-          <button onClick={() => setOpen(o => !o)} style={{ padding: '10px 14px', borderRadius: 10, border: `1px solid ${border}`, background: 'transparent', color: muted, fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>{open ? 'Сховати' : 'Налаштувати'}</button>
-          {open && <button onClick={() => saveCustom({ analytics: analyticsOn })} style={{ padding: '10px 14px', borderRadius: 10, border: `1px solid ${border}`, background: 'transparent', color: text, fontWeight: 600, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>Зберегти</button>}
-          <button onClick={rejectAll} style={{ padding: '10px 14px', borderRadius: 10, border: 'none', background: 'transparent', color: muted, fontWeight: 500, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit' }}>Відхилити</button>
+        <div className="flex gap-2 flex-wrap mt-3.5">
+          <button onClick={acceptAll} className="flex-1 min-w-[120px] px-4 py-2.5 rounded-xl border-none bg-orange-500 text-white font-bold text-[13px] cursor-pointer">Прийняти всі</button>
+          <button onClick={() => setOpen(o => !o)} className={`px-3.5 py-2.5 rounded-xl border bg-transparent font-semibold text-[13px] cursor-pointer ${dark ? 'border-white/10 text-[#7a8ba8]' : 'border-gray-200 text-gray-500'}`}>{open ? 'Сховати' : 'Налаштувати'}</button>
+          {open && <button onClick={() => saveCustom({ analytics: analyticsOn })} className={`px-3.5 py-2.5 rounded-xl border bg-transparent font-semibold text-[13px] cursor-pointer ${dark ? 'border-white/10 text-[#dde4f0]' : 'border-gray-200 text-[#1a1a2e]'}`}>Зберегти</button>}
+          <button onClick={rejectAll} className={`px-3.5 py-2.5 rounded-xl border-none bg-transparent font-medium text-[12px] cursor-pointer ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Відхилити</button>
         </div>
       </div>
     </div>
