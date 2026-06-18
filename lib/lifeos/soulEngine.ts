@@ -1,9 +1,11 @@
 // lib/lifeos/soulEngine.ts
-import { q } from '../db';
+import { generateObject } from 'ai';
+import { openai } from '@ai-sdk/openai';
+import { z } from 'zod';
 
 export interface SoulInput {
-  journalEntries: string[];
-  spiritualProfile: any;
+  recentLogs: string;
+  recentTransactions: any[];
 }
 
 export interface SoulOutput {
@@ -13,16 +15,40 @@ export interface SoulOutput {
 }
 
 export async function processSoul(input: SoulInput): Promise<SoulOutput> {
-  // Simulate SoulEngine logic
-  // In a real implementation, this would process natural language to extract sentiments
+  const { recentLogs, recentTransactions } = input;
+  const txCount = recentTransactions?.length || 0;
   
-  const hasEntries = input.journalEntries.length > 0;
-  
-  return {
-    vibe: hasEntries ? 'Contemplative' : 'Dormant',
-    insights: hasEntries 
-      ? ['A recurring theme of creation and architecture is present.', 'Energy is stabilizing after recent shifts.']
-      : ['No recent insights recorded. A moment of silence might be needed.'],
-    resonance: hasEntries ? 0.85 : 0.4
-  };
+  if (!recentLogs && txCount === 0) {
+    return {
+      vibe: 'Dormant',
+      insights: ['No recent activity detected. The system is resting.'],
+      resonance: 0.1
+    };
+  }
+
+  try {
+    const { object } = await generateObject({
+      model: openai('gpt-4o-mini'),
+      schema: z.object({
+        vibe: z.string().describe('A single word describing the emotional/energetic state of the system.'),
+        insights: z.array(z.string()).describe('List of 1-3 philosophical or energetic insights about the recent logs.'),
+        resonance: z.number().min(0).max(1).describe('A score from 0.0 to 1.0 indicating how aligned and active the system feels.')
+      }),
+      prompt: `You are the SoulEngine, the subconscious spiritual layer of the LifeOS system. 
+Analyze the recent system activity and summarize its 'vibe' and 'resonance'.
+Recent Logs:
+${recentLogs || 'None'}
+
+Recent Transactions Count: ${txCount}`
+    });
+
+    return object;
+  } catch (error) {
+    console.error('SoulEngine Error:', error);
+    return {
+      vibe: 'Disrupted',
+      insights: ['The connection to the subconscious was interrupted.'],
+      resonance: 0.2
+    };
+  }
 }
