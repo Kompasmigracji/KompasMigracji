@@ -30,8 +30,8 @@ export async function GET() {
     );
 
     return NextResponse.json({ logs });
-  } catch (err: any) {
-    console.error("[api/admin/rodo] Error fetching RODO logs:", err.message);
+  } catch (err: unknown) {
+    console.error("[api/admin/rodo] Error fetching RODO logs:", err instanceof Error ? err.message : err);
     return NextResponse.json({ error: "Failed to load audit logs" }, { status: 500 });
   }
 }
@@ -59,8 +59,8 @@ export async function POST(req: NextRequest) {
     await purgeUserData(userId, ip, userAgent);
 
     return NextResponse.json({ ok: true, message: `User ID ${userId} has been purged successfully.` });
-  } catch (err: any) {
-    console.error("[api/admin/rodo] Error executing user purge:", err.message);
-    return NextResponse.json({ error: err.message || "Failed to purge user records" }, { status: 500 });
+  } catch (err: unknown) {
+    console.error("[api/admin/rodo] Error executing user purge:", err instanceof Error ? err.message : err);
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Failed to purge user records" }, { status: 500 });
   }
 }
