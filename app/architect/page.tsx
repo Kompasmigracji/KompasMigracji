@@ -23,7 +23,7 @@ export default async function ArchitectDashboard() {
   let fateRecommendation = 'System is alive.';
 
   // Mock historical data for charts
-  let revenueData = [
+  const revenueData = [
     { name: 'Mon', amount: 120 },
     { name: 'Tue', amount: 300 },
     { name: 'Wed', amount: 250 },
@@ -33,7 +33,7 @@ export default async function ArchitectDashboard() {
     { name: 'Sun', amount: 0 } // Will be updated with today's real revenue
   ];
 
-  let energyData = [
+  const energyData = [
     { name: 'Mon', resonance: 40 },
     { name: 'Tue', resonance: 60 },
     { name: 'Wed', resonance: 55 },

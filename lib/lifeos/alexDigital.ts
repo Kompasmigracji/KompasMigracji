@@ -2,6 +2,7 @@
 import { processFate } from './fateEngine';
 import { processSoul } from './soulEngine';
 import { q } from '../db';
+import Anthropic from '@anthropic-ai/sdk';
 
 export interface AgentRequest {
   mode: 'daily_guide' | 'strategist' | 'soul_oracle' | 'cfo_analyst';
@@ -17,7 +18,7 @@ export interface AgentResponse {
 
 export async function invokeAlexDigital(req: AgentRequest): Promise<AgentResponse> {
   const enginesUsed: string[] = [];
-  let recommendations: string[] = [];
+  const recommendations: string[] = [];
   
   // 1. Log the incoming message
   await q(
@@ -47,7 +48,6 @@ export async function invokeAlexDigital(req: AgentRequest): Promise<AgentRespons
   // 3. Generate response with Anthropic LLM
   let reply = '';
   try {
-    const { default: Anthropic } = require('@anthropic-ai/sdk');
     const anthropicKey = process.env.ANTHROPIC_API_KEY;
     if (anthropicKey) {
       const anthropic = new Anthropic({ apiKey: anthropicKey });
