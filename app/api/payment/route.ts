@@ -64,86 +64,60 @@ export async function POST(req: NextRequest) {
 
   const leadSource = String(source || 'pricing');
 
-  /* ── Мок-режим: P24 не налаштований ─────────────────────────────── */
-  if (isMockMode()) {
-    const sessionId = `km-${randomUUID()}`;
-    let appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://kompasmigracji.com').replace(/\/$/, '');
-    if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
-      appUrl = `https://${appUrl}`;
+  /* ── Try Stripe Payment Checkout ──────────────────────────────────── */
+  try {
+    const { stripe } = await import("@/lib/stripe");
+    if (!stripe) {
+      // Мок-режим: Stripe не налаштований
+      const sessionId = `km-${randomUUID()}`;
+      let appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://kompasmigracji.com').replace(/\/$/, '');
+      if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
+        appUrl = `https://${appUrl}`;
+      }
+
+      await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
+
+      const qs = new URLSearchParams({
+        amount: String(amount),
+        desc:   String(description),
+        cur:    'PLN',
+      }).toString();
+      return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${sessionId}?${qs}` });
     }
 
-    /* Зберігаємо лід щоб mock-confirm міг оновити статус */
+    const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const siteUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
+
+    // Зберігаємо лід і для реального Stripe
     await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
 
-    const qs = new URLSearchParams({
-      amount: String(amount),
-      desc:   String(description),
-      cur:    'PLN',
-    }).toString();
-    return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${sessionId}?${qs}` });
-  }
-
-  /* ── Реальний P24 ────────────────────────────────────────────────── */
-  const merchantId = parseInt(process.env.P24_MERCHANT_ID ?? '', 10);
-  const crc        = process.env.P24_CRC!;
-  const apiKey     = process.env.P24_API_KEY!;
-  const sandbox    = process.env.P24_SANDBOX === 'true';
-  const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
-
-  const BASE = sandbox
-    ? 'https://sandbox.przelewy24.pl'
-    : 'https://secure.przelewy24.pl';
-
-  const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-
-  /* Зберігаємо лід і для реального P24 */
-  await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
-
-  const sign = crypto
-    .createHash('sha384')
-    .update(`${sessionId}|${merchantId}|${amount}|PLN|${crc}`)
-    .digest('hex');
-
-  const clientName = [firstName, lastName].filter(Boolean).map(String).join(' ').trim() || undefined;
-
-  const payload = {
-    merchantId,
-    posId:       merchantId,
-    sessionId,
-    amount,
-    currency:    'PLN',
-    description,
-    email,
-    client:      clientName,
-    phone:       phone ? String(phone) : undefined,
-    country:     'PL',
-    language:    lang === 'pl' ? 'pl' : 'uk',
-    urlReturn:   `${siteUrl}/payment/success`,
-    urlStatus:   `${siteUrl}/api/payment-notify`,
-    timeLimit:   15,
-    encoding:    'UTF-8',
-    sign,
-  };
-
-  try {
-    const r = await fetch(`${BASE}/api/v1/transaction/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${Buffer.from(`${merchantId}:${apiKey}`).toString('base64')}`,
-      },
-      body: JSON.stringify(payload),
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card", "p24", "blik"],
+      line_items: [
+        {
+          price_data: {
+            currency: "pln",
+            product_data: {
+              name: String(description),
+            },
+            unit_amount: Number(amount), // amount is already in grosze
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: `${siteUrl}/payment/success`,
+      cancel_url: `${siteUrl}/pricing`,
+      customer_email: String(email),
+      client_reference_id: sessionId,
+      metadata: {
+        sessionId,
+        source: leadSource,
+      }
     });
 
-    const data = await r.json();
-
-    if (!r.ok || !data?.data?.token) {
-      console.error('P24 register error:', data);
-      return NextResponse.json({ error: data?.error || 'Помилка платіжного шлюзу' }, { status: 502 });
-    }
-
-    return NextResponse.json({ redirectUrl: `${BASE}/trnRequest/${data.data.token}` });
-  } catch (err) {
+    return NextResponse.json({ redirectUrl: session.url });
+  } catch (err: any) {
     console.error('Payment handler error:', err);
     return NextResponse.json({ error: 'Внутрішня помилка сервера' }, { status: 500 });
   }

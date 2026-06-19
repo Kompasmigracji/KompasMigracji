@@ -89,37 +89,55 @@ export async function POST(req: NextRequest) {
     sendEmail(email, "Witamy w Kompas Migracji!", welcomeEmailHtml(name), "welcome").catch(() => {});
   }
 
-  // Try P24 payment
-  const P24_MERCHANT = process.env.P24_MERCHANT_ID;
-  const isMock = !P24_MERCHANT || process.env.P24_SANDBOX === "mock";
-
-  if (isMock) {
-    const params = new URLSearchParams({
-      session: sessionId,
-      amount: String(Math.round(Number(plan.price_pln) * 100)),
-      desc: encodeURIComponent(`Subskrypcja ${plan.name} - Kompas Migracji`),
-      email,
-      name,
-    });
-    return NextResponse.json({
-      redirectUrl: `${SITE}/payment/mock/${sessionId}?${params}`,
-      sessionId,
-    });
-  }
-
-  // Real P24 registration
+  // Try Stripe Payment Checkout
   try {
-    const { registerTransaction } = await import("@/lib/przelewy24");
-    const result = await registerTransaction({
-      sessionId,
-      amount: Math.round(Number(plan.price_pln) * 100),
-      description: `Subskrypcja ${plan.name} - Kompas Migracji`,
-      email,
-      urlReturn: `${SITE}/payment-success?session=${sessionId}&type=subscription`,
-      urlStatus: `${SITE}/api/payment-notify`,
+    const { stripe } = await import("@/lib/stripe");
+    if (!stripe) {
+      // Fallback to mock if Stripe is not configured
+      const params = new URLSearchParams({
+        session: sessionId,
+        amount: String(Math.round(Number(plan.price_pln) * 100)),
+        desc: encodeURIComponent(`Subskrypcja ${plan.name} - Kompas Migracji`),
+        email,
+        name,
+      });
+      return NextResponse.json({
+        redirectUrl: `${SITE}/payment/mock/${sessionId}?${params}`,
+        sessionId,
+      });
+    }
+
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card", "p24", "blik"],
+      line_items: [
+        {
+          price_data: {
+            currency: "pln",
+            product_data: {
+              name: `Subskrypcja ${plan.name} - Kompas Migracji`,
+              description: "Dostęp do panelu klienta i usług.",
+            },
+            unit_amount: Math.round(Number(plan.price_pln) * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment", // Use 'subscription' if we were using Stripe Billing, but for now just one-time payment as per existing logic
+      success_url: `${SITE}/payment-success?session=${sessionId}&type=subscription`,
+      cancel_url: `${SITE}/plans`,
+      customer_email: email,
+      client_reference_id: sessionId,
+      metadata: {
+        sessionId,
+        plan: plan.name,
+        type: "subscription"
+      }
     });
-    return NextResponse.json({ redirectUrl: result.paymentUrl, sessionId });
+
+    return NextResponse.json({ redirectUrl: session.url, sessionId });
   } catch (err: any) {
+    console.error("[subscribe] Stripe checkout error:", err.message);
     return NextResponse.json({ error: err.message }, { status: 502 });
   }
 }
