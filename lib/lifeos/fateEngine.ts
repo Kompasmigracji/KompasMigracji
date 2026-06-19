@@ -31,7 +31,7 @@ export async function processFate(input: FateInput): Promise<FateOutput> {
       model: openai('gpt-4o-mini'),
       schema: z.object({
         status: z.string().describe('A 1-2 word status of the system (e.g. "Balanced", "Accelerating", "Overloaded").'),
-        probabilities: z.record(z.number().min(0).max(1)).describe('A map of 2-3 likely future events and their probability (0.0-1.0). e.g. {"burnout": 0.2, "growth": 0.8}'),
+        probabilities: z.record(z.string(), z.number().min(0).max(1)).describe('A map of 2-3 likely future events and their probability (0.0-1.0). e.g. {"burnout": 0.2, "growth": 0.8}'),
         recommendation: z.string().describe('A 1-2 sentence recommendation on what the Architect should focus on next based on the recent system load.')
       }),
       prompt: `You are the FateEngine, the probability and logic forecasting layer of LifeOS. 

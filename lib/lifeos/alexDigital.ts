@@ -29,13 +29,13 @@ export async function invokeAlexDigital(req: AgentRequest): Promise<AgentRespons
   // 2. Process based on mode
   if (req.mode === 'soul_oracle' || req.message.toLowerCase().includes('soul')) {
     enginesUsed.push('SoulEngine');
-    const soulOut = await processSoul({ journalEntries: [req.message], spiritualProfile: {} });
+    const soulOut = await processSoul({ recentLogs: req.message, recentTransactions: [] });
     recommendations.push(...soulOut.insights);
   }
 
   if (req.mode === 'daily_guide' || req.mode === 'strategist') {
     enginesUsed.push('FateEngine');
-    const fateOut = await processFate({ focusAreas: ['architecture'], activeTasksCount: 3, recentEvents: [] });
+    const fateOut = await processFate({ recentLogs: req.message, recentTransactions: [] });
     recommendations.push(fateOut.recommendation);
   }
 
@@ -71,7 +71,12 @@ Provide strategic financial advice, revenue projections, and monetization strate
         messages: [{ role: 'user', content: req.message }]
       });
       
-      reply = response.content[0].text;
+      const block = response.content[0];
+      if (block.type === 'text') {
+        reply = block.text;
+      } else {
+        reply = '[SYSTEM] Non-text response received.';
+      }
     } else {
       reply = `[SYSTEM MESSAGE] Neural link disabled. ANTHROPIC_API_KEY not found in environment. ${
         enginesUsed.includes('FateEngine') ? 'Fate paths are clear. ' : ''
