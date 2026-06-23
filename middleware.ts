@@ -55,7 +55,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // ── Request Logging ─────────────────────────────────────────────────────────
-  // console.log(`[${new Date().toISOString()}] ${req.method} ${pathname}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${pathname}`);
 
   // ── CSRF Protection for mutations ───────────────────────────────────────────
   if (req.method !== "GET" && req.method !== "OPTIONS" && req.method !== "HEAD") {
