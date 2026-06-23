@@ -111,7 +111,37 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const geminiMessages = messages.map((m) => ({
+    const useLocalLlm = process.env.USE_LOCAL_LLM === 'true';
+    const localUrl = process.env.LOCAL_LLM_URL || 'http://127.0.0.1:1234/v1';
+    const localModel = process.env.LOCAL_LLM_MODEL || 'local-model';
+
+    if (useLocalLlm) {
+      const openAiMessages = [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages.map((m: any) => ({ role: m.role, content: m.content }))
+      ];
+
+      const response = await fetch(`${localUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer local' },
+        body: JSON.stringify({
+          model: localModel,
+          messages: openAiMessages,
+          max_tokens: 600,
+        })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        return NextResponse.json({ error: text }, { status: 502 });
+      }
+
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content || '';
+      return NextResponse.json({ content });
+    }
+
+    const geminiMessages = messages.map((m: any) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }]
     }));

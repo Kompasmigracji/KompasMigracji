@@ -58,28 +58,68 @@ export async function POST(req: NextRequest) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        const { GoogleGenAI } = await import('@google/genai');
-        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const useLocalLlm = process.env.USE_LOCAL_LLM === 'true';
+        const localUrl = process.env.LOCAL_LLM_URL || 'http://127.0.0.1:1234/v1';
+        const localModel = process.env.LOCAL_LLM_MODEL || 'local-model';
 
-        const aiMessages = messages.map((m) => ({
-          role: m.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: m.content }],
-        }));
+        if (useLocalLlm) {
+          const openAiMessages = [
+            { role: 'system', content: ORAKUL_SYSTEM_PROMPT },
+            ...messages.map((m: any) => ({ role: m.role, content: m.content }))
+          ];
 
-        const respStream = await ai.models.generateContentStream({
-          model: 'gemini-2.5-flash',
-          contents: aiMessages,
-          config: {
-            systemInstruction: ORAKUL_SYSTEM_PROMPT,
+          const response = await fetch(`${localUrl}/chat/completions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer local' },
+            body: JSON.stringify({
+              model: localModel,
+              messages: openAiMessages,
+              stream: true,
+              max_tokens: 800,
+            })
+          });
+
+          if (!response.ok) throw new Error(await response.text());
+
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          if (reader) {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              const chunkText = decoder.decode(value);
+              const lines = chunkText.split('\n');
+              for (const line of lines) {
+                if (line.startsWith('data: ') && line.trim() !== 'data: [DONE]') {
+                  try {
+                    const data = JSON.parse(line.slice(6));
+                    const content = data.choices?.[0]?.delta?.content;
+                    if (content) {
+                      fullText += content;
+                      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: content })}\n\n`));
+                    }
+                  } catch (e) {}
+                }
+              }
+            }
           }
-        });
-
-        for await (const chunk of respStream) {
-          if (chunk.text) {
-            fullText += chunk.text;
-            controller.enqueue(
-              encoder.encode(`data: ${JSON.stringify({ text: chunk.text })}\n\n`),
-            );
+        } else {
+          const { GoogleGenAI } = await import('@google/genai');
+          const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+          const aiMessages = messages.map((m: any) => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }],
+          }));
+          const respStream = await ai.models.generateContentStream({
+            model: 'gemini-2.5-flash',
+            contents: aiMessages,
+            config: { systemInstruction: ORAKUL_SYSTEM_PROMPT }
+          });
+          for await (const chunk of respStream) {
+            if (chunk.text) {
+              fullText += chunk.text;
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: chunk.text })}\n\n`));
+            }
           }
         }
 
