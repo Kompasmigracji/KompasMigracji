@@ -48,7 +48,7 @@ export function ArchitectCharts({ revenueData, energyData }: ChartProps) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.4} />
               <XAxis dataKey="name" stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} />
-              <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(value) => `$${value}`} />
+              <YAxis stroke="#64748b" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(value: number | string) => `$${value}`} />
               <Tooltip content={<CustomTooltip />} />
               <Area type="monotone" dataKey="amount" name="Revenue" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorRevenue)" animationDuration={1500} />
             </AreaChart>

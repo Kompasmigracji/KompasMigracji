@@ -2,7 +2,12 @@
 import React from 'react';
 import { GlassCard } from '@/components/lifeos/GlassCard';
 import { getSupabaseAdmin } from '@/lib/supabase';
-import { ArchitectCharts } from '@/components/lifeos/ArchitectCharts';
+import nextDynamic from 'next/dynamic';
+
+const ArchitectCharts = nextDynamic(() => import('@/components/lifeos/ArchitectCharts').then(mod => mod.ArchitectCharts), {
+  ssr: false,
+  loading: () => <div className="h-[500px] w-full flex items-center justify-center text-slate-500">Loading charts...</div>
+});
 
 export const dynamic = 'force-dynamic';
 
