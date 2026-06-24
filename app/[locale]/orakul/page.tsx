@@ -659,10 +659,71 @@ const CSS = `
 .e-faq-chevron{font-size:.75rem;transition:transform .25s;flex-shrink:0;color:var(--union-blue)}
 .e-faq-item.open .e-faq-chevron{transform:rotate(180deg)}
 .e-faq-a{
-  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
-  font-size:.9rem;color:var(--text-muted);line-height:1.6;padding:0 1.2rem;
+  max-height:0;overflow:hidden;transition:max-height .3s ease,p/* ── AI ACADEMY (PREMIUM TIER) ── */
+.e-academy{padding:8rem 0;position:relative;background:transparent;z-index:2;overflow:hidden}
+.e-academy::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(0,229,255,0.08) 0%, transparent 60%);pointer-events:none}
+.e-ac-title{font-size:clamp(2.5rem, 5vw, 3.8rem);font-weight:900;text-align:center;margin-bottom:1rem;letter-spacing:-.03em;
+  background:linear-gradient(180deg,#ffffff 0%,#b4d5ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 4px 24px rgba(0,229,255,.25))}
+.e-ac-sub{text-align:center;color:var(--text-muted);margin-bottom:5rem;font-size:1.25rem;font-weight:500;max-width:600px;margin-inline:auto}
+.e-ac-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2.5rem;max-width:1080px;margin:0 auto;padding:0 1.5rem}
+
+.e-ac-card{
+  position:relative;
+  background:rgba(8,12,32,.4);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,229,255,.15);
+  border-radius:28px;padding:3rem 2.5rem;
+  transition:all .5s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);
+  display:flex;flex-direction:column;
 }
-.e-faq-item.open .e-faq-a{max-height:200px;padding:0 1.2rem 1rem}
+.e-ac-card::after{
+  content:'';position:absolute;inset:0;border-radius:28px;
+  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 50%,rgba(0,229,255,.05) 100%);
+  pointer-events:none;
+}
+.e-ac-card:hover{
+  transform:translateY(-10px);
+  border-color:rgba(0,229,255,.4);
+  box-shadow:0 30px 60px rgba(0,229,255,.15),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.e-ac-badge{
+  position:absolute;top:1.5rem;right:1.5rem;
+  background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);
+  color:#00e5ff;font-size:.75rem;font-weight:800;padding:.4rem 1rem;
+  border-radius:50px;text-transform:uppercase;letter-spacing:.1em;
+  backdrop-filter:blur(8px);
+}
+.e-ac-icon{font-size:4rem;margin-bottom:1.5rem;filter:drop-shadow(0 0 20px rgba(0,229,255,.3))}
+.e-ac-name{font-size:2rem;font-weight:900;margin-bottom:1rem;color:#fff;letter-spacing:-.02em}
+.e-ac-desc{font-size:1.05rem;color:rgba(180,210,255,.7);line-height:1.7;margin-bottom:2.5rem;flex:1}
+
+/* 🔥 PREMIUM BUY BUTTON 🔥 */
+.e-ac-btn{
+  width:100%;padding:1.2rem;border-radius:16px;border:none;
+  background:linear-gradient(135deg,#00e5ff 0%,#0055ff 100%);
+  color:#fff;font-weight:900;font-size:1.1rem;cursor:pointer;
+  text-transform:uppercase;letter-spacing:.1em;
+  position:relative;overflow:hidden;
+  transition:all .4s cubic-bezier(.16,1,.3,1);
+  box-shadow:0 10px 30px rgba(0,188,255,.3),inset 0 2px 0 rgba(255,255,255,.3);
+}
+.e-ac-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,#ffffff 0%,transparent 50%);
+  opacity:.2;transition:opacity .4s;
+}
+.e-ac-btn::after{
+  content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
+  transform:skewX(-20deg);transition:0s;
+}
+.e-ac-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 40px rgba(0,188,255,.4),inset 0 2px 0 rgba(255,255,255,.5);
+}
+.e-ac-btn:hover::after{left:200%;transition:left .8s ease-in-out}
+.e-ac-btn:active{transform:translateY(1px);box-shadow:0 5px 15px rgba(0,188,255,.4)}
 `;
 
 
