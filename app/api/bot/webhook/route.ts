@@ -277,9 +277,6 @@ export async function POST(req: NextRequest) {
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
       }
 
-    } catch (err: any) {
-      console.error("[webhook] AI error", err);
-    }
 
   } catch (globalErr: any) {
     console.error("[webhook] Global error", globalErr);
