@@ -139,29 +139,60 @@ export async function POST(req: NextRequest) {
 
     history.push({ role: 'user', content: text });
 
-    if (!process.env.GEMINI_API_KEY) {
-      console.error('[webhook] GEMINI_API_KEY missing');
-      return NextResponse.json({ ok: true });
+    let aiText = '';
+    const useLocalLlm = process.env.USE_LOCAL_LLM === 'true';
+
+    if (useLocalLlm) {
+      const localUrl = process.env.LOCAL_LLM_URL || 'http://127.0.0.1:11434/v1';
+      const localModel = process.env.LOCAL_LLM_MODEL || 'qwen2.5:32b';
+      try {
+        const response = await fetch(`${localUrl}/chat/completions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: localModel,
+            messages: [
+              { role: 'system', content: ORAKUL_SYSTEM_PROMPT },
+              ...history.map((m: any) => ({ role: m.role, content: m.content })).slice(-20)
+            ],
+            temperature: 0.7,
+          })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          aiText = data.choices?.[0]?.message?.content || '';
+        } else {
+          console.error("[webhook] Local LLM error:", await response.text());
+        }
+      } catch (err) {
+        console.error("[webhook] Local LLM connection failed:", err);
+      }
+    } else {
+      if (!process.env.GEMINI_API_KEY) {
+        console.error('[webhook] GEMINI_API_KEY missing');
+        return NextResponse.json({ ok: true });
+      }
+      try {
+        const { GoogleGenAI } = await import('@google/genai');
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const aiMessages = history.map((m: any) => ({
+          role: m.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: m.content }]
+        })).slice(-20);
+        const resp = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: aiMessages,
+          config: { systemInstruction: ORAKUL_SYSTEM_PROMPT }
+        });
+        aiText = resp.text || '';
+      } catch (err) {
+        console.error("[webhook] Gemini AI error", err);
+      }
     }
 
-    try {
-      const { GoogleGenAI } = await import('@google/genai');
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      
-      const aiMessages = history.map((m: any) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }]
-      })).slice(-20);
-
-      const resp = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: aiMessages,
-        config: {
-          systemInstruction: ORAKUL_SYSTEM_PROMPT,
-        }
-      });
-
-      const aiText = resp.text || '';
+    if (!aiText) {
+      return NextResponse.json({ ok: true });
+    }
       history.push({ role: 'assistant', content: aiText });
 
       const [visibleText] = aiText.split(/\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]/);
