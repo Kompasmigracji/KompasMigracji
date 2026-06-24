@@ -686,7 +686,7 @@ interface PageTrans {
   exitTitle: string; exitSub: string; exitPlh: string; exitBtn: string; exitOk: string;
   chatInputPlh: string; chatLeadSaved: string; chatBtnLabel: string;
 }
-const TRANSLATIONS: Record<LangKey, PageTrans> = {
+const TRANSLATIONS: Record<LangKey, any> = {
   uk: {
     badge: '',
     h1: 'Європейський Союз Зварювальників',
@@ -1016,6 +1016,49 @@ export default function OrakulPage() {
   const [exitSent, setExitSent] = useState(false);
   const [faqOpen, setFaqOpen] = useState<number|null>(null);
   const msgsEndRef = useRef<HTMLDivElement>(null);
+
+  const T_AC = {
+    uk: { title: 'AI-Академія Оракула', sub: 'Сертифікована підготовка', w: 'Зварювальник 4.0', wd: 'Підготовка до TIG/MIG/MAG, AI-симуляція співбесід', f: 'Монтер 4.0', fd: 'Читання ізометрії, віртуальні AI-тести', btn: 'Купити курс (499 PLN)' },
+    pl: { title: 'Akademia AI Orakul', sub: 'Certyfikowane szkolenie', w: 'Spawacz 4.0', wd: 'Przygotowanie do TIG/MIG/MAG, AI-symulacja', f: 'Monter 4.0', fd: 'Czytanie izometrii, testy AI', btn: 'Kup kurs (499 PLN)' },
+    ru: { title: 'AI-Академия Оракула', sub: 'Сертифицированная подготовка', w: 'Сварщик 4.0', wd: 'Подготовка к TIG/MIG/MAG, AI-симуляция', f: 'Монтер 4.0', fd: 'Чтение изометрии, AI-тесты', btn: 'Купить курс (499 PLN)' },
+    en: { title: 'Orakul AI Academy', sub: 'Certified Training', w: 'Welder 4.0', wd: 'TIG/MIG/MAG prep, AI simulation', f: 'Fitter 4.0', fd: 'Isometric reading, AI tests', btn: 'Buy Course (499 PLN)' },
+  }[lang] || { title: 'AI-Академія Оракула', sub: 'Сертифікована підготовка', w: 'Зварювальник 4.0', wd: 'Підготовка до TIG/MIG/MAG, AI-симуляція', f: 'Монтер 4.0', fd: 'Читання ізометрії, AI-тести', btn: 'Купити курс (499 PLN)' };
+
+  const [academyModal, setAcademyModal] = useState<{ course: string; price: number; name: string } | null>(null);
+  const [acName, setAcName] = useState('');
+  const [acEmail, setAcEmail] = useState('');
+  const [acPhone, setAcPhone] = useState('');
+  const [acLoading, setAcLoading] = useState(false);
+
+  const handleBuyCourse = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!academyModal) return;
+    setAcLoading(true);
+    try {
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: academyModal.price,
+          description: `AI-Академія: ${academyModal.name}`,
+          email: acEmail,
+          firstName: acName,
+          phone: acPhone,
+          source: 'ai_academy'
+        })
+      });
+      const data = await res.json();
+      if (data.redirectUrl) {
+        window.location.href = data.redirectUrl;
+      } else {
+        alert(data.error || 'Помилка оплати');
+      }
+    } catch (err) {
+      alert('Помилка сервера');
+    } finally {
+      setAcLoading(false);
+    }
+  };
 
   const GREET: Record<LangKey, string> = {
     uk: 'Привіт! Я — Оракул ⟁\n\nОпераційний розум мережі EWU для зварювальників і роботодавців.\n\nТи шукаєш роботу чи підбираєш персонал?',
@@ -1845,6 +1888,30 @@ export default function OrakulPage() {
           <div className="e-social-pill">🌍 <span className="num">12+</span> {T.socialStrip[3]}</div>
         </div>
 
+        {/* ── AI ACADEMY ── */}
+        <section className="e-academy">
+          <div className="e-wrap">
+            <h2 className="e-ac-title">{T_AC.title}</h2>
+            <p className="e-ac-sub">{T_AC.sub}</p>
+            <div className="e-ac-cards">
+              <div className="e-ac-card">
+                <div className="e-ac-badge">Cert Included</div>
+                <div className="e-ac-icon">🔥</div>
+                <h3 className="e-ac-name">{T_AC.w}</h3>
+                <p className="e-ac-desc">{T_AC.wd}</p>
+                <button className="e-ac-btn" onClick={() => setAcademyModal({ course: 'welder', price: 499, name: T_AC.w })}>{T_AC.btn}</button>
+              </div>
+              <div className="e-ac-card">
+                <div className="e-ac-badge">Cert Included</div>
+                <div className="e-ac-icon">🔧</div>
+                <h3 className="e-ac-name">{T_AC.f}</h3>
+                <p className="e-ac-desc">{T_AC.fd}</p>
+                <button className="e-ac-btn" onClick={() => setAcademyModal({ course: 'fitter', price: 499, name: T_AC.f })}>{T_AC.btn}</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* ── FAQ ── */}
         <section className="e-faq">
           <div className="e-wrap">
@@ -1873,6 +1940,25 @@ export default function OrakulPage() {
       </div>
 
       {/* ── EXIT INTENT POPUP ── */}
+      {academyModal && (
+        <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setAcademyModal(null); }}>
+          <div className="e-exit-box">
+            <button className="e-exit-close" onClick={() => setAcademyModal(null)}>✕</button>
+            <div className="e-exit-emoji">🎓</div>
+            <div className="e-exit-title">Оформлення курсу</div>
+            <div className="e-exit-sub">{academyModal.name} — 499 PLN. Введіть дані для отримання доступу та сертифікату.</div>
+            <form onSubmit={handleBuyCourse}>
+              <input className="e-inp" placeholder="Ім'я та Прізвище" value={acName} onChange={e => setAcName(e.target.value)} required />
+              <input className="e-inp" type="email" placeholder="Email" value={acEmail} onChange={e => setAcEmail(e.target.value)} required />
+              <input className="e-inp" placeholder="Телефон" value={acPhone} onChange={e => setAcPhone(e.target.value)} required />
+              <button className="e-submit-btn" type="submit" disabled={acLoading}>
+                {acLoading ? 'Обробка...' : 'Перейти до оплати'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       {exitPopup && (
         <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setExitPopup(false); }}>
           <div className="e-exit-box">
