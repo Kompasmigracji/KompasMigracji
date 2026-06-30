@@ -129,12 +129,24 @@ export default function DualSidebarShell({ children }) {
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
   return (
-    <div className="kc-root" style={{ display: "flex", height: "100vh", overflow: "hidden", position: "relative" }}>
-      
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--bg-color)" }}>
+      {/* 
+        ==================================================
+        IP WATERMARK (GLOBAL OVERLAY)
+        ==================================================
+      */}
+      <div style={{
+        position: 'fixed', bottom: 10, right: 10, zIndex: 9999, pointerEvents: 'none',
+        color: 'rgba(0,0,0,0.1)', fontSize: '10px', fontFamily: 'monospace', textAlign: 'right'
+      }}>
+        Intellectual Property of iPhoenix Oleksandr Khrystodul<br/>
+        +48729417050 | iPhoenixGSM@gmail.com
+      </div>
+
       {/* Primary Sidebar (Icons) */}
       <aside style={{
         width: 64,
-        background: "#0d1117",
+        background: "#1e1b4b",
         borderRight: "1px solid var(--border)",
         display: "flex",
         flexDirection: "column",
@@ -237,6 +249,11 @@ export default function DualSidebarShell({ children }) {
           >
             <Avatar name="Admin" size={32} />
           </button>
+        </div>
+        
+        {/* Intellectual Property Watermark (Vertical) */}
+        <div style={{ position: "absolute", bottom: 80, left: 0, width: 64, color: "rgba(255,255,255,0.07)", fontSize: 8, textAlign: "center", pointerEvents: "none", transform: "rotate(-90deg)", whiteSpace: "nowrap", transformOrigin: "center" }}>
+          © iPhoenix Oleksandr Khrystodul<br/>+48729417050 iPhoenixGSM@gmail.com
         </div>
       </aside>
 

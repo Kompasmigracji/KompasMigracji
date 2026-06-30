@@ -2,58 +2,65 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
+import { getSupabase } from "@/lib/supabase";
 
 const FUNNEL_COLUMNS = [
-  { id: "new", title: "Новый", color: "#ef4444" },
-  { id: "first_contact", title: "Первый контакт", color: "#f97316" },
-  { id: "follow_up", title: "Дотискання", color: "#eab308" },
-  { id: "marriage", title: "Шлюб", color: "#8b5cf6" },
-  { id: "notary", title: "Нотаріус", color: "#ec4899" },
-  { id: "translation", title: "Переклад", color: "#6366f1" },
-  { id: "residence", title: "Побут", color: "#14b8a6" },
-  { id: "dpo", title: "DPO", color: "#10b981" },
-  { id: "doc_analysis", title: "Аналіз документів", color: "#84cc16" },
-  { id: "invoice", title: "Виставлено рахунок", color: "#0ea5e9" },
-  { id: "payment", title: "Підтвердження оплати", color: "#3b82f6" },
-  { id: "feedback", title: "Фідбек", color: "#64748b" },
+  { id: "Новый", title: "Новый", color: "#10b981" },
+  { id: "Кваліфікація", title: "Квалификация", color: "#3b82f6" },
+  { id: "Переговори", title: "Переговоры", color: "#eab308" },
+  { id: "Оплата", title: "Оплата", color: "#f97316" },
+  { id: "Реалізація", title: "Реализация", color: "#8b5cf6" },
 ];
 
 export default function FunnelsPage() {
   const [leads, setLeads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const supabase = getSupabase();
 
   const loadLeads = useCallback(async () => {
+    if (!supabase) return;
     setIsLoading(true);
     try {
-      // Fetch all leads (no filter)
-      const res = await fetch("/api/admin/leads");
-      const d = await res.json();
-      setLeads(d.leads || []);
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (!error && data) {
+        setLeads(data);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     loadLeads();
-  }, [loadLeads]);
+
+    if (!supabase) return;
+    const channel = supabase.channel('leads_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'leads' }, (payload) => {
+        loadLeads(); // Refresh on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [loadLeads, supabase]);
 
   const handleStatusChange = async (leadId, newStatus) => {
     // Optimistic UI update
-    setLeads(prev => prev.map(l => String(l.id) === String(leadId) ? { ...l, status: newStatus } : l));
+    setLeads(prev => prev.map(l => String(l.id) === String(leadId) ? { ...l, funnel_step: newStatus } : l));
     
     // API Call
-    try {
-      await fetch("/api/admin/leads", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: leadId, status: newStatus }),
-      });
-    } catch (e) {
-      console.error("Failed to update status", e);
-      loadLeads(); // Revert on failure
+    if (supabase) {
+      await supabase
+        .from('leads')
+        .update({ funnel_step: newStatus })
+        .eq('id', leadId);
     }
   };
 
@@ -61,17 +68,17 @@ export default function FunnelsPage() {
   const cards = leads.map(l => {
     // Determine how long ago it was created
     const createdDate = new Date(l.created_at);
-    const timeFormatted = createdDate.toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+    const timeFormatted = createdDate.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
     
-    // Some basic logic to assign a random urgency just for UI demo purposes if it's "new"
-    const isUrgent = l.status === 'new' && (Date.now() - createdDate.getTime()) > 86400000; 
+    // Some basic logic to assign a random urgency just for UI demo purposes if it's "Новый"
+    const isUrgent = l.funnel_step === 'Новый' && (Date.now() - createdDate.getTime()) > 86400000; 
     
     return {
       id: String(l.id),
-      title: l.name ? `Чат з ${l.name}` : "Новий лід",
+      title: l.title || l.name ? `Чат з ${l.name}` : "Новый лид",
       subtitle: timeFormatted,
-      timeAgo: l.contact || "", // Put contact info in timeAgo spot or just leave it
-      columnId: l.status || "new",
+      timeAgo: l.phone || l.email || "", // Put contact info in timeAgo spot or just leave it
+      columnId: l.funnel_step || "Новый",
       amount: 0,
       tags: [l.source || "direct"],
       assignee: { name: "Олександр" }, // Mock assignee

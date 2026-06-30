@@ -1,58 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
-
-// Mock Data matching the screenshot structure
-const MOCK_ORDERS = [
-  {
-    id: "3",
-    source: "Приватний вайбер",
-    sourceIcon: "phone",
-    sourceColor: "#a855f7",
-    createdAt: "28.06.2023 18:07",
-    deliveryDate: null, // show "+ Добавить"
-    status: "новый",
-    manager: "Анна Новікова",
-    buyer: "Антон Павлюченко",
-    deliveryService: null,
-    trackingCode: "-",
-    deliveryStatus: "-",
-    products: "Автомобіль",
-  },
-  {
-    id: "2",
-    source: "Приватний вайбер",
-    sourceIcon: "phone",
-    sourceColor: "#a855f7",
-    createdAt: "27.06.2023 09:55",
-    deliveryDate: null,
-    status: "новый",
-    manager: "Олександр Воронцов",
-    buyer: "Андрій Яблонський",
-    deliveryService: null,
-    trackingCode: "-",
-    deliveryStatus: "-",
-    products: "-",
-  },
-  {
-    id: "1",
-    source: "Приватний вайбер",
-    sourceIcon: "phone",
-    sourceColor: "#a855f7",
-    createdAt: "27.06.2023 09:50",
-    deliveryDate: null,
-    status: "новый",
-    manager: "Олександр Воронцов",
-    buyer: "Олександр Шпак",
-    deliveryService: null,
-    trackingCode: "-",
-    deliveryStatus: "-",
-    products: "Автомобіль",
-  }
-];
+import { getSupabase } from "@/lib/supabase";
 
 export default function OrdersDemoPage() {
   const [activeFilter, setActiveFilter] = useState("новый");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = getSupabase();
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    const fetchOrders = async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*, buyers(full_name)')
+        .order('created_at', { ascending: false });
+        
+      if (!error && data) {
+        setOrders(data);
+      }
+      setLoading(false);
+    };
+
+    fetchOrders();
+
+    const channel = supabase.channel('orders_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
+        fetchOrders(); // Refresh on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
 
   const filters = [
     { id: "all", label: "ФИЛЬТР СТАТУСОВ", color: "var(--dim)", outline: true },
@@ -157,22 +140,26 @@ export default function OrdersDemoPage() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_ORDERS.map(order => (
+            {loading ? (
+              <tr><td colSpan="13" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка данных из базы...</td></tr>
+            ) : orders.length === 0 ? (
+              <tr><td colSpan="13" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Нет заказов</td></tr>
+            ) : orders.map(order => (
               <tr key={order.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
                 <td style={{ padding: "12px 16px" }}>
                   <input type="checkbox" />
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {order.id}
+                  {order.order_number}
                 </td>
                 <td style={{ padding: "12px 8px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--color-primary)" }}>
-                    <Icon name={order.sourceIcon} size={14} color={order.sourceColor} />
-                    {order.source}
+                    <Icon name="phone" size={14} color="#a855f7" />
+                    Приватний вайбер
                   </div>
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {order.createdAt}
+                  {new Date(order.created_at).toLocaleString('ru-RU')}
                 </td>
                 <td style={{ padding: "12px 8px" }}>
                   <button style={{ background: "none", border: "none", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: 12 }}>
@@ -185,13 +172,10 @@ export default function OrdersDemoPage() {
                   </span>
                 </td>
                 <td style={{ padding: "12px 8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Avatar name={order.manager} size={24} />
-                    <span style={{ color: "var(--text)" }}>{order.manager}</span>
-                  </div>
+                  <span style={{ color: "var(--dim)" }}>-</span>
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--color-primary)" }}>
-                  {order.buyer}
+                  {order.buyers?.full_name || "Без имени"}
                 </td>
                 <td style={{ padding: "12px 8px" }}>
                   <button style={{ background: "none", border: "none", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: 4, cursor: "pointer", fontSize: 12 }}>
@@ -206,17 +190,10 @@ export default function OrdersDemoPage() {
                   </div>
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  {order.deliveryStatus}
+                  -
                 </td>
                 <td style={{ padding: "12px 8px" }}>
-                  {order.products !== "-" ? (
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--color-primary)" }}>
-                      <Icon name="folder" size={14} />
-                      {order.products}
-                    </div>
-                  ) : (
-                    <span style={{ color: "var(--dim)" }}>-</span>
-                  )}
+                  <span style={{ color: "var(--dim)" }}>-</span>
                 </td>
                 <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>

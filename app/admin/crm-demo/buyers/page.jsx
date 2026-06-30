@@ -1,22 +1,43 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-
-// Mock Data matching the screenshot structure for Buyers
-const MOCK_BUYERS = [
-  { id: 1, name: "Alena Holovina", email: "[пусто]", phone: "[пусто]", orders: 0, lastOrder: "-", date: "03.05.2023 18:35", manager: "Анна Новікова" },
-  { id: 2, name: "Альона Попович", email: "[пусто]", phone: "[пусто]", orders: 1, lastOrder: "03.06.2023 15:57", date: "28.02.2023 20:13", manager: "Анна Новікова" },
-  { id: 3, name: "Artur", isCompany: true, email: "roman@protonmail.com", phone: "+380630113262", orders: 0, lastOrder: "-", date: "25.07.2023 11:40", manager: null },
-  { id: 4, name: "Artem", isCompany: true, email: "roman@protonmail.com", phone: "+48510363243\n+4866655555", orders: 0, lastOrder: "-", date: "25.07.2023 11:39", manager: null },
-  { id: 5, name: "Yurii", email: "yurii@proton.me", phone: "+48500200300", orders: 0, lastOrder: "-", date: "21.07.2023 11:23", manager: null },
-  { id: 6, name: "Anna", email: "[пусто]", phone: "+380501234567", orders: 0, lastOrder: "-", date: "15.07.2023 09:00", manager: "Аліна Вознесенська" },
-  { id: 7, name: "Олександр Кулініч", email: "[пусто]", phone: "[пусто]", orders: 0, lastOrder: "-", date: "04.07.2023 08:15", manager: null },
-  { id: 8, name: "Oksana", email: "[пусто]", phone: "[пусто]", orders: 0, lastOrder: "-", date: "03.07.2023 10:40", manager: null },
-  { id: 9, name: "Юлія Бойко", email: "[пусто]", phone: "[пусто]", orders: 0, lastOrder: "-", date: "28.06.2023 10:05", manager: null },
-  { id: 10, name: "Сергій Гочачко", email: "[пусто]", phone: "[пусто]", orders: 0, lastOrder: "-", date: "27.06.2023 11:47", manager: null },
-];
+import { getSupabase } from "@/lib/supabase";
 
 export default function BuyersDemoPage() {
+  const [buyers, setBuyers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = getSupabase();
+
+  useEffect(() => {
+    if (!supabase) return;
+    
+    // Fetch initial buyers
+    const fetchBuyers = async () => {
+      const { data, error } = await supabase
+        .from('buyers')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (!error && data) {
+        setBuyers(data);
+      }
+      setLoading(false);
+    };
+
+    fetchBuyers();
+
+    // Subscribe to realtime changes
+    const channel = supabase.channel('buyers_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'buyers' }, (payload) => {
+        fetchBuyers(); // Refresh on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
       
@@ -87,7 +108,11 @@ export default function BuyersDemoPage() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_BUYERS.map(buyer => (
+            {loading ? (
+              <tr><td colSpan="9" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка данных из базы...</td></tr>
+            ) : buyers.length === 0 ? (
+              <tr><td colSpan="9" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Нет покупателей</td></tr>
+            ) : buyers.map(buyer => (
               <tr key={buyer.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
                 <td style={{ padding: "12px 16px" }}>
                   <input type="checkbox" />
@@ -97,34 +122,26 @@ export default function BuyersDemoPage() {
                     <div style={{ width: 24, height: 24, borderRadius: 12, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <Icon name="user" size={12} color="var(--dim)" />
                     </div>
-                    <span style={{ color: "var(--color-primary)", fontWeight: 500 }}>{buyer.name}</span>
-                    {buyer.isCompany && <Icon name="users" size={12} color="var(--color-info)" />}
+                    <span style={{ color: "var(--color-primary)", fontWeight: 500 }}>{buyer.full_name || "Без имени"}</span>
                   </div>
                 </td>
-                <td style={{ padding: "12px 8px", color: buyer.email === "[пусто]" ? "var(--color-primary)" : "var(--color-info)", fontWeight: buyer.email !== "[пусто]" ? 500 : 400 }}>
-                  {buyer.email}
+                <td style={{ padding: "12px 8px", color: !buyer.email ? "var(--color-primary)" : "var(--color-info)", fontWeight: buyer.email ? 500 : 400 }}>
+                  {buyer.email || "[пусто]"}
                 </td>
-                <td style={{ padding: "12px 8px", color: buyer.phone === "[пусто]" ? "var(--color-primary)" : "var(--color-info)", whiteSpace: "pre-line" }}>
-                  {buyer.phone}
-                </td>
-                <td style={{ padding: "12px 8px", color: buyer.orders > 0 ? "var(--color-danger)" : "var(--dim)" }}>
-                  {buyer.orders}
+                <td style={{ padding: "12px 8px", color: !buyer.phone ? "var(--color-primary)" : "var(--color-info)", whiteSpace: "pre-line" }}>
+                  {buyer.phone || "[пусто]"}
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  {buyer.lastOrder}
+                  -
+                </td>
+                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
+                  -
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {buyer.date}
+                  {new Date(buyer.created_at).toLocaleString('ru-RU')}
                 </td>
                 <td style={{ padding: "12px 8px" }}>
-                  {buyer.manager ? (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <Avatar name={buyer.manager} size={24} />
-                      <span style={{ color: "var(--text)" }}>{buyer.manager}</span>
-                    </div>
-                  ) : (
-                    <span style={{ color: "var(--dim)" }}>-</span>
-                  )}
+                  <span style={{ color: "var(--dim)" }}>-</span>
                 </td>
                 <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>

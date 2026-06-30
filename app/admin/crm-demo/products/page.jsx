@@ -1,19 +1,41 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@/components/admin/ui";
-
-const MOCK_PRODUCTS = [
-  { id: 1, name: "Авто + 0%", category: "", price: "250.00 PLN", qty: "0 шт" },
-  { id: 2, name: "Авто + 10%", category: "", price: "210.00 PLN", qty: "0 шт" },
-  { id: 3, name: "Заява на вступ без доручення", category: "", price: "250.00 PLN", qty: "0 шт" },
-  { id: 4, name: "Вступ в спадщину заява + доручення", category: "", price: "300.00 PLN", qty: "0 шт" },
-  { id: 5, name: "Дія", category: "", price: "200.00 PLN", qty: "0 шт" },
-  { id: 6, name: "Представлення інтересів", category: "", price: "200.00 PLN", qty: "0 шт" },
-  { id: 7, name: "Автомобіль", category: "", price: "250.00 PLN", qty: "0 шт" },
-  { id: 8, name: "Нерухомість", category: "", price: "300.00 PLN", qty: "0 шт" },
-];
+import { getSupabase } from "@/lib/supabase";
 
 export default function ProductsDemoPage() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = getSupabase();
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (!error && data) {
+        setProducts(data);
+      }
+      setLoading(false);
+    };
+
+    fetchProducts();
+
+    const channel = supabase.channel('products_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, (payload) => {
+        fetchProducts(); // Refresh on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
       
@@ -98,7 +120,11 @@ export default function ProductsDemoPage() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_PRODUCTS.map(product => (
+            {loading ? (
+              <tr><td colSpan="8" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка товаров из базы...</td></tr>
+            ) : products.length === 0 ? (
+              <tr><td colSpan="8" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Нет товаров</td></tr>
+            ) : products.map(product => (
               <tr key={product.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
                 <td style={{ padding: "12px 16px" }}>
                   <input type="checkbox" />
@@ -113,16 +139,16 @@ export default function ProductsDemoPage() {
                   {product.name}
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  {product.category}
+                  {product.category || "-"}
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)", fontWeight: 500 }}>
-                  {product.price}
+                  {Number(product.price).toFixed(2)} PLN
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {product.qty}
+                  {product.qty_in_stock} шт
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  
+                  {product.qty_in_stock > 0 ? "В наличии" : "Нет"}
                 </td>
                 <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
