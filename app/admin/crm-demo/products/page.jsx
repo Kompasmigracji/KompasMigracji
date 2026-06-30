@@ -3,13 +3,14 @@ import React from "react";
 import { Icon } from "@/components/admin/ui";
 
 const MOCK_PRODUCTS = [
-  { id: 1, name: "Довідка про несудимість", category: "Довідки", price: "450.00 PLN", qty: "5 шт" },
-  { id: 2, name: "Карта побиту", category: "Легалізація", price: "1200.00 PLN", qty: "3 шт" },
-  { id: 3, name: "Автомобіль (реєстрація)", category: "Авто", price: "550.00 PLN", qty: "10 шт" },
-  { id: 4, name: "Юридична година", category: "Консультації", price: "450.00 PLN", qty: "2 шт" },
-  { id: 5, name: "Песель UKR", category: "Легалізація", price: "300.00 PLN", qty: "5 шт" },
-  { id: 6, name: "Присяжний переклад", category: "Переклади", price: "150.00 PLN", qty: "8 шт" },
-  { id: 7, name: "Відкриття JDG", category: "Бізнес", price: "1500.00 PLN", qty: "1 шт" },
+  { id: 1, name: "Авто + 0%", category: "", price: "250.00 PLN", qty: "0 шт" },
+  { id: 2, name: "Авто + 10%", category: "", price: "210.00 PLN", qty: "0 шт" },
+  { id: 3, name: "Заява на вступ без доручення", category: "", price: "250.00 PLN", qty: "0 шт" },
+  { id: 4, name: "Вступ в спадщину заява + доручення", category: "", price: "300.00 PLN", qty: "0 шт" },
+  { id: 5, name: "Дія", category: "", price: "200.00 PLN", qty: "0 шт" },
+  { id: 6, name: "Представлення інтересів", category: "", price: "200.00 PLN", qty: "0 шт" },
+  { id: 7, name: "Автомобіль", category: "", price: "250.00 PLN", qty: "0 шт" },
+  { id: 8, name: "Нерухомість", category: "", price: "300.00 PLN", qty: "0 шт" },
 ];
 
 export default function ProductsDemoPage() {
@@ -17,22 +18,26 @@ export default function ProductsDemoPage() {
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
       
       {/* Top Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, color: "var(--text)" }}>Каталог</h2>
+      <div style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--panel)", padding: "12px 16px", borderRadius: 8, border: "1px solid var(--border)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ background: "var(--color-primary)", width: 24, height: 24, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
+            <Icon name="package" size={14} />
+          </div>
+          <h2 style={{ margin: 0, fontSize: 16, color: "var(--text)" }}>Товары</h2>
+        </div>
         
         {/* Search Bar */}
         <div style={{ 
-          flex: 1, 
           display: "flex", 
           alignItems: "center", 
-          background: "var(--panel-2)", 
+          background: "var(--bg)", 
           border: "1px solid var(--border)", 
-          borderRadius: 6,
+          borderRadius: 4,
           padding: "6px 12px",
           gap: 8,
-          maxWidth: 400
+          width: 300
         }}>
-          <Icon name="search" size={16} color="var(--dim)" />
+          <Icon name="search" size={14} color="var(--dim)" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
@@ -44,31 +49,24 @@ export default function ProductsDemoPage() {
         <div style={{ 
           display: "flex", 
           alignItems: "center", 
-          background: "var(--panel-2)", 
+          background: "var(--bg)", 
           border: "1px solid var(--border)", 
-          borderRadius: 6,
+          borderRadius: 4,
           padding: "6px 12px",
           gap: 8,
-          cursor: "pointer"
+          cursor: "pointer",
+          minWidth: 180
         }}>
-          <Icon name="menu" size={16} color="var(--dim)" />
-          <span style={{ color: "var(--text)", fontSize: 13 }}>Выбрать категорию</span>
+          <span style={{ color: "var(--dim)", fontSize: 13, flex: 1 }}>Выберите категорию...</span>
           <Icon name="chevron-down" size={14} color="var(--dim)" />
         </div>
 
         <button style={{ 
-          background: "var(--panel-2)", border: "1px solid var(--border)", 
-          padding: "8px", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center"
-        }}>
-          <Icon name="sliders" size={14} color="var(--dim)" />
-        </button>
-
-        <button style={{ 
           background: "var(--color-primary)", color: "#fff", border: "none", 
-          padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600,
-          display: "flex", alignItems: "center", gap: 8, cursor: "pointer", marginLeft: "auto"
+          padding: "8px 16px", borderRadius: 4, fontSize: 12, fontWeight: 600,
+          display: "flex", alignItems: "center", gap: 6, cursor: "pointer", marginLeft: "auto"
         }}>
-          <Icon name="plus" size={14} />
+          <Icon name="plus" size={12} />
           Добавить товар
         </button>
       </div>
@@ -77,22 +75,24 @@ export default function ProductsDemoPage() {
       <div style={{ 
         background: "var(--panel)", 
         border: "1px solid var(--border)", 
-        borderRadius: 8,
+        borderRadius: 4,
         overflowX: "auto" 
       }}>
         <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 12 }}>
           <thead>
-            <tr style={{ background: "var(--panel-2)", borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
+            <tr style={{ background: "var(--bg)", borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
               <th style={{ padding: "12px 16px", width: 40 }}>
                 <input type="checkbox" />
               </th>
-              <th style={{ padding: "12px 8px", width: 40 }}>
-                <Icon name="image" size={14} color="var(--dim)" />
+              <th style={{ padding: "12px 8px", width: 40, textAlign: "center" }}>
+                -
               </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Наименование</th>
+              <th style={{ padding: "12px 8px", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                Название <Icon name="arrow-up" size={10} color="var(--color-primary)" />
+              </th>
               <th style={{ padding: "12px 8px", fontWeight: 600 }}>Категория</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Стоимость</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Количество</th>
+              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Стоимость <Icon name="arrow-up" size={10} color="var(--color-primary)" /></th>
+              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Количество <Icon name="arrow-up" size={10} color="var(--color-primary)" /></th>
               <th style={{ padding: "12px 8px", fontWeight: 600 }}>Наличие</th>
               <th style={{ padding: "12px 16px", fontWeight: 600, textAlign: "right" }}>Действия</th>
             </tr>
@@ -103,28 +103,26 @@ export default function ProductsDemoPage() {
                 <td style={{ padding: "12px 16px" }}>
                   <input type="checkbox" />
                 </td>
-                <td style={{ padding: "12px 8px" }}>
-                  <div style={{ width: 32, height: 32, background: "var(--panel-2)", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Icon name="package" size={16} color="var(--dim)" />
+                <td style={{ padding: "12px 8px", textAlign: "center" }}>
+                  <div style={{ display: "inline-flex", padding: 6, border: "1px solid var(--border)", borderRadius: 4, color: "var(--dim)" }}>
+                    <Icon name="camera" size={14} />
                   </div>
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--color-primary)", fontWeight: 500 }}>
+                  <Icon name="folder" size={12} style={{ marginRight: 6 }} color="var(--color-primary)" />
                   {product.name}
                 </td>
-                <td style={{ padding: "12px 8px", color: "var(--text)" }}>
+                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
                   {product.category}
                 </td>
                 <td style={{ padding: "12px 8px", color: "var(--text)", fontWeight: 500 }}>
                   {product.price}
                 </td>
-                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
+                <td style={{ padding: "12px 8px", color: "var(--text)" }}>
                   {product.qty}
                 </td>
-                <td style={{ padding: "12px 8px" }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#d1fae5", color: "#10b981", padding: "2px 8px", borderRadius: 12, fontSize: 10, fontWeight: 700 }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981" }}></span>
-                    В НАЛИЧИИ
-                  </div>
+                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
+                  
                 </td>
                 <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
