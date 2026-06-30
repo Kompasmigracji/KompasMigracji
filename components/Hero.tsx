@@ -5,6 +5,7 @@ import { Link } from '@/lib/navigation';
 import { motion } from 'framer-motion';
 
 function TrustBadges() {
+  const t = useTranslations();
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -12,12 +13,12 @@ function TrustBadges() {
       transition={{ delay: 0.8, duration: 0.5 }}
       className="flex flex-wrap items-center gap-3 mt-8 pt-8 border-t border-gray-100"
     >
-      <span className="text-xs text-gray-400 font-medium mr-1">Довіряють нам:</span>
+      <span className="text-xs text-gray-400 font-medium mr-1">{t('hero_trust_title')}</span>
       {[
-        { label: 'Przelewy24', icon: '🔐' },
-        { label: 'SSL захист', icon: '🛡️' },
-        { label: 'RODO/GDPR', icon: '📋' },
-        { label: '10+ років досвіду', icon: '🏆' },
+        { label: t('hero_trust_b1'), icon: '🔐' },
+        { label: t('hero_trust_b2'), icon: '🛡️' },
+        { label: t('hero_trust_b3'), icon: '📋' },
+        { label: t('hero_trust_b4'), icon: '🏆' },
       ].map((b, i) => (
         <motion.span 
           key={i} 
@@ -33,6 +34,7 @@ function TrustBadges() {
 }
 
 function PanicStrip() {
+  const t = useTranslations();
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -52,8 +54,8 @@ function PanicStrip() {
             🆘
           </motion.span>
           <div>
-            <div className="font-bold text-red-700 text-sm">Термінова ситуація?</div>
-            <div className="text-xs text-red-600">Депортація · Відмова · Суд · Криза</div>
+            <div className="font-bold text-red-700 text-sm">{t('hero_panic_title')}</div>
+            <div className="text-xs text-red-600">{t('hero_panic_desc')}</div>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -65,7 +67,7 @@ function PanicStrip() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.03 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
             </svg>
-            Зателефонувати
+            {t('hero_panic_call')}
           </a>
           <a
             href="https://wa.me/48729271848?text=ТЕРМІНОВО+—+потребую+негайної+допомоги+в+міграційній+справі"

@@ -1,8 +1,8 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useTranslations } from 'next-intl';
 
-const GREETING = 'Привіт! Я AI-асистент Kompas Migracji 👋\n\nДопоможу з питаннями про Карту побуту, легалізацію та наші послуги.\n\nОберіть тему або напишіть своє питання:';
 const LEAD_RE = /\[\[LEAD:(\{[^}]*\})\]\]/;
 
 interface Msg { 
@@ -122,8 +122,9 @@ function TypingDots() {
 }
 
 export default function ChatBot() {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([{ id: 'greeting', role: 'assistant', content: GREETING, greeting: true }]);
+  const [messages, setMessages] = useState<Msg[]>([{ id: 'greeting', role: 'assistant', content: t('bot_greeting'), greeting: true }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasNew, setHasNew] = useState(true);
@@ -143,7 +144,7 @@ export default function ChatBot() {
       const apiMessages = history.filter(m => !m.greeting).map(m => ({ role: m.role, content: m.content }));
       const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: apiMessages }) });
       const data = await res.json();
-      let content = data.content || 'Вибачте, сталася помилка. Спробуйте пізніше.';
+      let content = data.content || t('ai_error');
       const match = content.match(LEAD_RE);
       if (match) {
         try {
@@ -170,7 +171,7 @@ export default function ChatBot() {
     } catch (err) {
       console.error('Chat error:', err);
       const errorId = `msg-${Date.now()}-${messageCountRef.current++}`;
-      setMessages([...history, { id: errorId, role: 'assistant', content: 'Вибачте, сталася помилка. Спробуйте пізніше або напишіть нам у WhatsApp.' }]);
+      setMessages([...history, { id: errorId, role: 'assistant', content: t('ai_no_conn') }]);
     }
     setLoading(false);
   };
@@ -212,10 +213,10 @@ export default function ChatBot() {
             <div style={styles.header}>
               <div style={styles.avatar}>🧭</div>
               <div style={styles.headerText}>
-                <div style={styles.title}>Kompas AI</div>
+                <div style={styles.title}>{t('bot_title')}</div>
                 <div style={styles.status}>
                   <span style={styles.statusDot} />
-                  Онлайн · Відповідає одразу
+                  {t('bot_online')}
                 </div>
               </div>
               <button onClick={() => setOpen(false)} style={styles.closeButton} aria-label="Закрити чат">
@@ -229,10 +230,10 @@ export default function ChatBot() {
               {messages.length === 1 && !loading && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
                   {[
-                    '🚨 Загрожує депортація',
-                    '📋 Карта побуту',
-                    '💰 Скільки коштує?',
-                    '📅 Записатися',
+                    t('bot_q1'),
+                    t('bot_q2'),
+                    t('bot_q3'),
+                    t('bot_q4'),
                   ].map(chip => (
                     <button
                       key={chip}
@@ -259,7 +260,7 @@ export default function ChatBot() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={onKey}
-                placeholder="Напишіть питання..."
+                placeholder={t('bot_placeholder')}
                 rows={1}
                 style={styles.textarea}
                 onInput={e => { const t = e.target as HTMLTextAreaElement; t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 90) + 'px'; }}
@@ -276,7 +277,7 @@ export default function ChatBot() {
               </button>
             </div>
             <div style={styles.footer}>
-              Powered by Claude AI · Kompas Migracji
+              {t('bot_footer')}
             </div>
           </div>
         )}

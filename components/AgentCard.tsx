@@ -2,12 +2,14 @@
 
 import React from 'react';
 import type { Agent } from '../types/agents';
+import { useTranslations } from 'next-intl';
 
 interface AgentCardProps {
   agent: Agent;
 }
 
 export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
+  const t = useTranslations();
   const handleRestart = async () => {
     await fetch('/api/agents/primus/dispatch', {
       method: 'POST',
@@ -23,7 +25,7 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
       body: JSON.stringify({
         agentId: agent.id,
         type: 'motivate',
-        payload: { message: 'Вы делаете отличную работу! 🚀' },
+        payload: { message: t('admin_motivate_msg') },
       }),
     });
   };
@@ -37,10 +39,10 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
 
   const statusLabel =
     agent.status === 'idle'
-      ? 'Активен'
+      ? t('admin_status_active')
       : agent.status === 'busy'
-        ? 'Занят'
-        : 'Ошибка';
+        ? t('admin_status_busy')
+        : t('admin_status_err');
 
   return (
     <div className="glass p-5 flex flex-col gap-3 transform transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl">
@@ -51,11 +53,11 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
           title={statusLabel}
         />
       </div>
-      <p className="text-sm text-gray-300">Роль: <span className="text-primusBlue font-medium">{agent.role}</span></p>
+      <p className="text-sm text-gray-300">{t('admin_role')}<span className="text-primusBlue font-medium">{agent.role}</span></p>
       <p className="text-xs text-gray-400">
-        Последний heartbeat:{' '}
+        {t('admin_last_hb')}
         {agent.last_heartbeat
-          ? new Date(agent.last_heartbeat).toLocaleTimeString('ru-RU')
+          ? new Date(agent.last_heartbeat).toLocaleTimeString()
           : '—'}
       </p>
       <div className="flex gap-2 mt-auto pt-2">
@@ -63,13 +65,13 @@ export const AgentCard: React.FC<AgentCardProps> = ({ agent }) => {
           onClick={handleRestart}
           className="flex-1 bg-primusBlue/90 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-primusBlue transition-colors duration-200"
         >
-          Перезапустить
+          {t('admin_restart')}
         </button>
         <button
           onClick={handleMotivate}
           className="flex-1 bg-monitorGreen/90 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-monitorGreen transition-colors duration-200"
         >
-          Мотивировать
+          {t('admin_motivate')}
         </button>
       </div>
     </div>

@@ -6,18 +6,16 @@ import Image from 'next/image';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
-const GREETING = 'Привіт! 👋 Я ваш персональний AI-асистент від Kompas Migracji.\n\nЩоб я міг максимально швидко допомогти вам і передати справу нашому юристу, будь ласка, опишіть вашу ситуацію. Які питання з легалізації чи документів вас цікавлять?';
-
-const QUICK_REPLIES = [
-  'Карта побуту (подача/апеляція)',
-  'Отримання PESEL або NFZ',
-  'Питання щодо громадянства',
-  'Інша юридична допомога'
-];
-
 export default function AIAssistantIntake() {
   const t = useTranslations();
-  const [messages, setMessages] = useState<Msg[]>([{ role: 'assistant', content: GREETING }]);
+  const QUICK_REPLIES = [
+    t('ai_quick_1'),
+    t('ai_quick_2'),
+    t('ai_quick_3'),
+    t('ai_quick_4')
+  ];
+
+  const [messages, setMessages] = useState<Msg[]>([{ role: 'assistant', content: t('ai_greeting') }]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [leadCreated, setLeadCreated] = useState(false);
@@ -49,7 +47,7 @@ export default function AIAssistantIntake() {
         body: JSON.stringify({ messages: next }),
       });
       const data = await res.json();
-      let content: string = data.content || 'Вибачте, сталася помилка. Напишіть нам у WhatsApp: +48 729 271 848';
+      let content: string = data.content || t('ai_error');
 
       const leadMatch = content.match(/\[\[LEAD:(\{.*?\})\]\]/);
       if (leadMatch) {
@@ -67,7 +65,7 @@ export default function AIAssistantIntake() {
 
       setMessages(prev => [...prev, { role: 'assistant', content }]);
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Немає підключення. Напишіть нам у WhatsApp: +48 729 271 848' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: t('ai_no_conn') }]);
     }
     setLoading(false);
   }, [messages, loading]);
@@ -98,17 +96,17 @@ export default function AIAssistantIntake() {
 
             <div className="flex-1">
               <h1 className="text-3xl font-serif font-light mb-6 leading-tight text-white">
-                Опишіть вашу ситуацію <span className="text-orange-400 font-medium">— ми знайдемо рішення</span>
+                {t('ai_title_1')} <span className="text-orange-400 font-medium">{t('ai_title_2')}</span>
               </h1>
               <p className="text-gray-300 mb-8 leading-relaxed text-sm">
-                Наш інтелектуальний асистент збирає необхідну інформацію, щоб юрист міг одразу запропонувати вам оптимальний план дій.
+                {t('ai_desc')}
               </p>
               
               <ul className="space-y-5">
                 {[
-                  { icon: '🔒', title: '100% Конфіденційно', desc: 'Всі дані захищені та не передаються третім особам.' },
-                  { icon: '⚡', title: 'Швидко', desc: 'Економія часу на базових питаннях. Юрист отримує готове резюме.' },
-                  { icon: '⚖️', title: 'Точно', desc: 'Відповідно до актуального міграційного законодавства Польщі.' }
+                  { icon: '🔒', title: t('ai_f1_title'), desc: t('ai_f1_desc') },
+                  { icon: '⚡', title: t('ai_f2_title'), desc: t('ai_f2_desc') },
+                  { icon: '⚖️', title: t('ai_f3_title'), desc: t('ai_f3_desc') }
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-all hover:bg-white/10">
                     <span className="text-2xl mt-1">{feature.icon}</span>
@@ -129,8 +127,8 @@ export default function AIAssistantIntake() {
                   <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-xs font-bold text-white">+3k</div>
                 </div>
                 <div className="text-xs text-gray-300">
-                  <strong className="text-white block text-sm">97% успішних справ</strong>
-                  Більше 3200 клієнтів у Польщі
+                  <strong className="text-white block text-sm">{t('ai_stat_1')}</strong>
+                  {t('ai_stat_2')}
                 </div>
               </div>
             </div>
@@ -147,10 +145,10 @@ export default function AIAssistantIntake() {
                 🧭
               </div>
               <div>
-                <h3 className="font-bold text-[#0f172a] text-sm lg:text-base m-0">Kompas AI Асистент</h3>
+                <h3 className="font-bold text-[#0f172a] text-sm lg:text-base m-0">{t('ai_name')}</h3>
                 <div className="flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  На зв'язку
+                  {t('ai_online')}
                 </div>
               </div>
             </div>
@@ -158,7 +156,7 @@ export default function AIAssistantIntake() {
             {leadCreated && (
               <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Заявка прийнята
+                {t('ai_lead_ok')}
               </span>
             )}
           </div>
@@ -230,7 +228,7 @@ export default function AIAssistantIntake() {
                   }
                 }}
                 disabled={loading || leadCreated}
-                placeholder={leadCreated ? "Заявку відправлено. Очікуйте на дзвінок." : "Опишіть вашу ситуацію або задайте питання..."}
+                placeholder={leadCreated ? t('ai_sent') : t('ai_placeholder')}
                 className="w-full bg-transparent border-0 focus:ring-0 resize-none py-3 px-4 text-gray-700 text-base max-h-32 min-h-[56px] disabled:opacity-50 outline-none"
                 rows={1}
               />
@@ -246,7 +244,7 @@ export default function AIAssistantIntake() {
               </button>
             </div>
             <div className="text-center mt-3 text-xs text-gray-400">
-              Натискаючи Enter, ви погоджуєтесь з політикою обробки персональних даних.
+              {t('ai_policy')}
             </div>
           </div>
           
