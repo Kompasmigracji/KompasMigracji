@@ -14,7 +14,7 @@ const NAV_DATA = [
         title: "",
         items: [
           { label: "Воронки", href: "/admin/crm-demo/funnels" },
-          { label: "Заказы", href: "/admin/crm-demo" },
+          { label: "Заказы", href: "/admin/crm-demo/orders" },
           { label: "Списки заказов", href: "/admin/crm-demo/order-lists" },
           { label: "Покупатели", href: "/admin/crm-demo/buyers" },
           { label: "История звонков", href: "/admin/crm-demo/calls" },
