@@ -70,6 +70,7 @@ export default function DualSidebarShell({ children }) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isBillingOpen, setIsBillingOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   // Fetch notifications logic
   const [notifications, setNotifications] = useState([]);
@@ -220,7 +221,7 @@ export default function DualSidebarShell({ children }) {
             <Icon name="settings" size={20} />
           </button>
           <button 
-            onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); }}
+            onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsProfileOpen(false); }}
             style={{ 
               background: isBillingOpen ? "var(--color-primary)" : "transparent", 
               border: "none", color: isBillingOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
@@ -230,9 +231,12 @@ export default function DualSidebarShell({ children }) {
           >
             <Icon name="briefcase" size={20} />
           </button>
-          <div style={{ width: 32, height: 32, marginTop: 8 }}>
+          <button 
+            onClick={() => { setIsProfileOpen(!isProfileOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsBillingOpen(false); }}
+            style={{ width: 32, height: 32, marginTop: 8, padding: 0, border: "none", background: "none", cursor: "pointer", borderRadius: "50%", boxShadow: isProfileOpen ? "0 0 0 2px var(--color-primary)" : "none" }}
+          >
             <Avatar name="Admin" size={32} />
-          </div>
+          </button>
         </div>
       </aside>
 
@@ -413,6 +417,78 @@ export default function DualSidebarShell({ children }) {
             <Icon name="credit-card" size={14} /> Перейти к оплате
           </button>
           <a href="#" style={{ color: "#fff", fontSize: 12, textDecoration: "none", fontWeight: 500, transition: "opacity 0.2s" }}>История платежей</a>
+        </div>
+      </div>
+
+      {/* Profile Slide-out Panel */}
+      <div style={{
+        position: "absolute",
+        bottom: 10,
+        left: isProfileOpen ? 64 : -400,
+        width: 320,
+        background: "#4b7fcc",
+        zIndex: 50,
+        transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        boxShadow: "4px 0 15px rgba(0,0,0,0.15)",
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff",
+        borderRadius: "0 8px 8px 0",
+        overflow: "hidden"
+      }}>
+        {/* Banner */}
+        <div style={{ padding: "16px", background: "#0ea5e9", margin: "16px", borderRadius: 8, position: "relative", overflow: "hidden" }}>
+          <p style={{ margin: "0 0 12px 0", fontSize: 13, fontWeight: 600, lineHeight: 1.4, position: "relative", zIndex: 2 }}>
+            Приглашайте новых пользователей и получайте до 50% от их оплат в течении года
+          </p>
+          <button style={{ background: "transparent", border: "1px solid #fff", color: "#fff", padding: "6px 12px", borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: "pointer", position: "relative", zIndex: 2 }}>
+            Узнать больше о программе
+          </button>
+          {/* Decorative coin */}
+          <div style={{ position: "absolute", right: -10, top: "20%", width: 60, height: 60, background: "#fbbf24", borderRadius: "50%", border: "4px dashed #f59e0b", opacity: 0.8, zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#d97706", fontSize: 32, fontWeight: 700 }}>$</div>
+        </div>
+
+        {/* User Info */}
+        <div style={{ padding: "0 20px 20px 20px" }}>
+          <span style={{ background: "#fff", color: "#1e3a8a", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, marginBottom: 12, display: "inline-block" }}>Administrator</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Avatar name="Alex Khrysto" size={48} />
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 2 }}>Alex Khrysto</div>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)" }}>iphoenixgsm@gmail.com</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Links and Toggles */}
+        <div style={{ background: "rgba(0,0,0,0.1)", padding: "20px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ background: "#10b981", color: "#fff", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>Online</span>
+            {/* Toggle ON */}
+            <div style={{ width: 34, height: 20, background: "#0ea5e9", borderRadius: 20, position: "relative", cursor: "pointer" }}>
+              <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: 16 }}></div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, fontWeight: 600 }}>Темная тема</span>
+            {/* Toggle OFF */}
+            <div style={{ width: 34, height: 20, background: "#cbd5e1", borderRadius: 20, position: "relative", cursor: "pointer" }}>
+              <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: 2 }}></div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 13, fontWeight: 600, cursor: "pointer", marginTop: 8 }}>Мой профиль</div>
+          <div style={{ fontSize: 13, fontWeight: 600, cursor: "pointer", marginBottom: 16 }}>Просмотр под другой ролью</div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: 16 }}>
+            <button style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 4, color: "#fff", padding: "8px 16px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              <Icon name="log-out" size={14} /> Выйти
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
+               Рус <Icon name="chevron-down" size={14} />
+            </div>
+          </div>
         </div>
       </div>
 
