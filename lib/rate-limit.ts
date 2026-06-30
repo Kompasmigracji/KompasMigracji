@@ -16,7 +16,7 @@ function getStore(ns: string): Map<string, WindowEntry> {
 
 export function rateLimit(
   key: string,
-  { max, windowMs, ns = 'default' }: { max: number; windowMs: number; ns?: string }
+  { max = 10, windowMs = 60000, ns = 'default' }: { max?: number; windowMs?: number; ns?: string } = {}
 ): { ok: boolean; remaining: number } {
   const store = getStore(ns);
   const now   = Date.now();

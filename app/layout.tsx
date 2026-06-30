@@ -5,6 +5,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html suppressHydrationWarning>
       <head>
+        <link rel="stylesheet" href="/design-system/tokens.css" />
         <script dangerouslySetInnerHTML={{ __html: `
           // PostHog Mock Initialization
           window.posthog = { init: function(){}, capture: function(){} };

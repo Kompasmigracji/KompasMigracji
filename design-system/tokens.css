@@ -1,0 +1,53 @@
+/* design-system/tokens.css - Apple‑inspired design system */
+:root {
+  /* Colors – subtle, muted palette */
+  --color-primary: hsl(210, 5%, 15%);      /* Dark charcoal */
+  --color-primary-light: hsl(210, 5%, 30%);
+  --color-secondary: hsl(210, 5%, 90%);    /* Light gray */
+  --color-background: hsl(0, 0%, 100%);
+  --color-background-dark: hsl(0, 0%, 98%);
+  --color-accent: hsl(210, 80%, 55%);      /* Apple blue */
+  --color-border: hsl(210, 5%, 85%);
+  --color-text: hsl(210, 5%, 10%);
+  --color-text-muted: hsl(210, 5%, 45%);
+
+  /* Spacing – consistent 4‑px grid */
+  --spacing-xxs: 0.125rem;   /* 2px */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-xxl: 3rem;     /* 48px */
+
+  /* Typography – San Francisco (system) */
+  --font-family-sans: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-sm: 0.8125rem;   /* 13px */
+  --font-size-base: 0.875rem;   /* 14px */
+  --font-size-lg: 1rem;        /* 16px */
+  --font-size-xl: 1.125rem;    /* 18px */
+  --line-height: 1.4;
+
+  /* Border radius – subtle */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* Dark mode – prefers‑color‑scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: hsl(210, 5%, 10%);
+    --color-background-dark: hsl(210, 5%, 12%);
+    --color-primary: hsl(210, 5%, 80%);
+    --color-text: hsl(210, 5%, 95%);
+    --color-text-muted: hsl(210, 5%, 70%);
+    --color-secondary: hsl(210, 5%, 20%);
+    --color-border: hsl(210, 5%, 30%);
+  }
+}
+
+/* Global smooth transitions */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
