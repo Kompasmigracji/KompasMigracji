@@ -10,7 +10,7 @@ export default function ThemeSwitch() {
     const stored = (localStorage.getItem('theme') as Theme | null) || null;
     if (stored === 'light' || stored === 'dark') return stored;
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-    return 'dark';
+    return 'light';
   });
 
   useEffect(() => {
@@ -33,6 +33,7 @@ export default function ThemeSwitch() {
   return (
     <button
       className="theme-toggle"
+      data-testid="theme-toggle"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       aria-label="Toggle theme"
       title={theme === 'dark' ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
