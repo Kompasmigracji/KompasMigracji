@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon, Avatar } from "./ui";
+import { Icon, Avatar } from "@/components/admin/ui";
+import { supabase } from "@/lib/supabase";
 
 const NAV_DATA = [
   {
@@ -69,6 +70,60 @@ export default function DualSidebarShell({ children }) {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
+  // Real-time Notifications State
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    // 1. Fetch initial notifications
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch("/api/notifications");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.notifications) {
+            setNotifications(data.notifications);
+            setUnreadCount(data.notifications.filter(n => !n.is_read).length);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch notifications:", err);
+      }
+    };
+    fetchNotifications();
+
+    // 2. Subscribe to realtime updates
+    if (supabase) {
+      const channel = supabase.channel('public:notifications')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
+          console.log("New notification received!", payload.new);
+          setNotifications(prev => [payload.new, ...prev]);
+          setUnreadCount(prev => prev + 1);
+          // Play a gentle notification sound if needed
+          try { new Audio("/notification-ding.mp3").play().catch(() => {}); } catch(e) {}
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, []);
+
+  // Handle opening notifications drawer
+  const handleOpenNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+    setIsHelpOpen(false);
+    setIsSettingsOpen(false);
+    
+    if (!isNotificationsOpen && unreadCount > 0) {
+      // Mark as read in DB
+      fetch("/api/notifications", { method: "PATCH" }).catch(() => {});
+      setUnreadCount(0);
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+    }
+  };
+
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
   return (
@@ -124,7 +179,7 @@ export default function DualSidebarShell({ children }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
           <div style={{ position: "relative" }}>
             <button 
-              onClick={() => { setIsNotificationsOpen(!isNotificationsOpen); setIsHelpOpen(false); setIsSettingsOpen(false); }}
+              onClick={handleOpenNotifications}
               style={{ 
                 background: isNotificationsOpen ? "rgba(255,255,255,0.1)" : "transparent", 
                 border: "none", color: isNotificationsOpen ? "#fff" : "var(--faint)", cursor: "pointer",
@@ -133,7 +188,12 @@ export default function DualSidebarShell({ children }) {
               }}
             >
               <Icon name="bell" size={20} />
-              <div style={{ position: "absolute", top: 10, right: 12, width: 6, height: 6, background: "#ef4444", borderRadius: "50%" }}></div>
+              {unreadCount > 0 && (
+                <div style={{ 
+                  position: "absolute", top: 8, right: 10, width: 8, height: 8, 
+                  background: "#ef4444", borderRadius: "50%", boxShadow: "0 0 0 2px #0d1117" 
+                }}></div>
+              )}
             </button>
           </div>
           <button 
@@ -185,16 +245,41 @@ export default function DualSidebarShell({ children }) {
         <div style={{ padding: "24px 20px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Icon name="bell" size={18} color="#94a3b8" />
-            <span style={{ fontWeight: 700, fontSize: 16 }}>Уведомления <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 400 }}>(12)</span></span>
+            <span style={{ fontWeight: 700, fontSize: 16 }}>Уведомления <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 400 }}>({notifications.length})</span></span>
           </div>
           <Icon name="settings" size={16} color="#94a3b8" style={{ cursor: "pointer" }} />
         </div>
         <div style={{ display: "flex", padding: "0 20px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-          <button style={{ background: "none", border: "none", borderBottom: "2px solid transparent", color: "#94a3b8", padding: "12px 16px", cursor: "pointer", fontSize: 13 }}>События</button>
-          <button style={{ background: "none", border: "none", borderBottom: "2px solid #fff", color: "#fff", padding: "12px 16px", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Системные (12)</button>
+          <button style={{ background: "none", border: "none", borderBottom: "2px solid #fff", color: "#fff", padding: "12px 16px", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>События</button>
+          <button style={{ background: "none", border: "none", borderBottom: "2px solid transparent", color: "#94a3b8", padding: "12px 16px", cursor: "pointer", fontSize: 13 }}>Системные</button>
         </div>
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 13 }}>
-          Уведомлений нет
+        
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto", overflowX: "hidden" }}>
+          {notifications.length === 0 ? (
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 13 }}>
+              Уведомлений нет
+            </div>
+          ) : (
+            notifications.map((notif, i) => (
+              <div key={notif.id || i} style={{ 
+                padding: "16px 20px", 
+                borderBottom: "1px solid rgba(255,255,255,0.05)",
+                display: "flex", flexDirection: "column", gap: 6,
+                background: notif.is_read ? "transparent" : "rgba(255,255,255,0.05)",
+                position: "relative"
+              }}>
+                {!notif.is_read && <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: "#ef4444" }}></div>}
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Icon name={notif.type === "telegram" ? "send" : notif.type === "viber" ? "phone" : "info"} size={14} color="#94a3b8" />
+                  <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{notif.title}</span>
+                </div>
+                {notif.message && <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.4 }}>{notif.message}</div>}
+                <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
+                  {new Date(notif.created_at || Date.now()).toLocaleString("ru-RU", { day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' })}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
