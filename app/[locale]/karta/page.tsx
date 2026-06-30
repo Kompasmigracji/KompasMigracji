@@ -465,7 +465,7 @@ export default function KartaPage(): React.JSX.Element {
                 <Tag color={ORANGE}>{t.p1tag}</Tag>
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '4px 0 2px' }}>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: '#9ca3af', textDecoration: 'line-through' }}>450</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: '#9ca3af', textDecoration: 'line-through' }}>600</span>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ORANGE} strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 7, margin: '0 0 2px' }}>
