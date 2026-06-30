@@ -36,7 +36,7 @@ export default function ReturnVisitor() {
           href="https://wa.me/48729271848?text=Повертаюся+до+питання+міграційної+допомоги"
           target="_blank"
           rel="noreferrer"
-          className="text-xs font-semibold no-underline px-3 py-1.5 rounded-lg text-white"
+          className="text-xs font-semibold no-underline px-4 py-2 rounded-full text-white transition-premium hover-lift shadow-sm"
           style={{ background: '#25D366' }}
         >
           WhatsApp

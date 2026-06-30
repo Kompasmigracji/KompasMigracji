@@ -66,9 +66,9 @@ export default function CookieBanner() {
         )}
 
         <div className="flex gap-2 flex-wrap mt-3.5">
-          <button onClick={acceptAll} className="flex-1 min-w-[120px] px-4 py-2.5 rounded-xl border-none bg-orange-500 text-white font-bold text-[13px] cursor-pointer">Прийняти всі</button>
-          <button onClick={() => setOpen(o => !o)} className={`px-3.5 py-2.5 rounded-xl border bg-transparent font-semibold text-[13px] cursor-pointer ${dark ? 'border-white/10 text-[#7a8ba8]' : 'border-gray-200 text-gray-500'}`}>{open ? 'Сховати' : 'Налаштувати'}</button>
-          {open && <button onClick={() => saveCustom({ analytics: analyticsOn })} className={`px-3.5 py-2.5 rounded-xl border bg-transparent font-semibold text-[13px] cursor-pointer ${dark ? 'border-white/10 text-[#dde4f0]' : 'border-gray-200 text-[#1a1a2e]'}`}>Зберегти</button>}
+          <button onClick={acceptAll} className="flex-1 min-w-[120px] px-4 py-2.5 rounded-full border-none bg-orange-500 text-white font-bold text-[13px] cursor-pointer transition-premium hover-lift shadow-md">Прийняти всі</button>
+          <button onClick={() => setOpen(o => !o)} className={`px-4 py-2.5 rounded-full border bg-transparent font-semibold text-[13px] cursor-pointer transition-premium ${dark ? 'border-white/10 text-[#7a8ba8] hover:bg-white/5' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>{open ? 'Сховати' : 'Налаштувати'}</button>
+          {open && <button onClick={() => saveCustom({ analytics: analyticsOn })} className={`px-4 py-2.5 rounded-full border bg-transparent font-semibold text-[13px] cursor-pointer transition-premium ${dark ? 'border-white/10 text-[#dde4f0] hover:bg-white/5' : 'border-gray-200 text-[#1a1a2e] hover:bg-gray-50'}`}>Зберегти</button>}
           <button onClick={rejectAll} className={`px-3.5 py-2.5 rounded-xl border-none bg-transparent font-medium text-[12px] cursor-pointer ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Відхилити</button>
         </div>
       </div>

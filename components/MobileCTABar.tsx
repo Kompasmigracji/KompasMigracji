@@ -14,7 +14,7 @@ export default function MobileCTABar() {
 
   return (
     <div
-      className={`md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-white border-t border-gray-200 shadow-2xl transition-transform duration-300 ${show ? 'translate-y-0' : 'translate-y-full'}`}
+      className={`md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-white/90 backdrop-blur-xl border-t border-gray-200/50 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 ${show ? 'translate-y-0' : 'translate-y-full'}`}
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <div className="grid grid-cols-3 h-16">

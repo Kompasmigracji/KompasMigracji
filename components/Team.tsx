@@ -14,12 +14,12 @@ export default function Team() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-14">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">НАШІ КОНСУЛЬТАНТИ</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
             Хто вас консультує
           </h2>
         </div>
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-3xl shadow-lg overflow-hidden flex flex-col md:flex-row card-hover">
+          <div className="apple-card overflow-hidden flex flex-col md:flex-row">
             <div className="md:w-72 flex-shrink-0 relative">
               <Image src={PHOTO} alt="Олександр Василишин" width={288} height={288} className="w-full h-72 md:h-full object-cover object-top" />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent md:bg-gradient-to-r" />
@@ -27,7 +27,7 @@ export default function Team() {
             <div className="p-8 md:p-10 flex flex-col justify-between">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Засновник · Міграційний юрист</div>
-                <h3 className="text-2xl font-black text-navy mb-4 leading-tight">Олександр Василишин</h3>
+                <h3 className="text-3xl font-display font-bold tracking-tight text-navy mb-4 leading-tight">Олександр Василишин</h3>
                 <p className="text-sm text-gray-600 leading-relaxed mb-6">
                   10 років у міграційному праві Польщі. Особисто веде кожну консультацію та завжди бере трубку.
                   Засновник Kompas Migracji — єдиного вікна для вирішення всіх бюрократичних завдань українців в ЄС.
@@ -45,7 +45,7 @@ export default function Team() {
                 href="https://wa.me/48729271848"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-[#25d366] text-white font-bold text-sm py-3 px-6 rounded-xl hover:opacity-90 transition-opacity no-underline"
+                className="inline-flex items-center justify-center gap-2 bg-[#25d366] text-white font-bold text-sm py-3.5 px-6 rounded-full hover-lift transition-premium no-underline shadow-sm"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
                   <path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.5-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.2-.5 0-.2-.1-.4-.2-.5-.1-.2-.6-1.5-.9-2-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.1 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.6.2-1.2.2-1.3 0-.1-.3-.2-.5-.3z"/>

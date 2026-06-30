@@ -1801,7 +1801,7 @@ export default function OrakulPage() {
             <div className="e-grid-2">
               <div>
                 <ul className="e-list" style={{ marginTop: '2rem' }}>
-                  {T.workersItems.map((item, i) => <li key={i}>{item}</li>)}
+                  {T.workersItems.map((item: any, i: number) => <li key={i}>{item}</li>)}
                 </ul>
                 <div className="e-geo">
                   <span className="e-chip">🇩🇪 Німеччина</span>
@@ -1899,7 +1899,7 @@ export default function OrakulPage() {
                   </div>
                 </div>
                 <ul className="e-list">
-                  {T.employersItems.map((item, i) => <li key={i}>{item}</li>)}
+                  {T.employersItems.map((item: any, i: number) => <li key={i}>{item}</li>)}
                 </ul>
               </div>
 
@@ -1979,7 +1979,7 @@ export default function OrakulPage() {
             <h2 className="e-faq-title">{T.faqTitle}</h2>
             <p className="e-faq-sub">{T.faqSub}</p>
             <div className="e-faq-list">
-              {T.faqItems.map((item, i) => (
+              {T.faqItems.map((item: any, i: number) => (
                 <div key={i} className={`e-faq-item${faqOpen === i ? ' open' : ''}`}>
                   <button className="e-faq-q" onClick={() => setFaqOpen(faqOpen === i ? null : i)}>
                     <span>{item.q}</span>

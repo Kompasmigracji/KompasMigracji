@@ -23,13 +23,13 @@ export default function ServicesGrid() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('services_tag')}</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('services_title')}</h2>
+          <h2 className="font-display font-semibold text-navy tracking-tight" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('services_title')}</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((s, i) => (
             <div
               key={i}
-              className={`relative bg-white p-8 rounded-xl border-2 card-hover flex flex-col gap-3 cursor-pointer transition-all ${s.urgentIdx >= 0 ? 'border-red-200 hover:border-red-400' : 'border-gray-200 hover:border-primary'}`}
+              className={`relative apple-card p-8 flex flex-col gap-3 cursor-pointer ${s.urgentIdx >= 0 ? 'border-red-200/50 hover:border-red-400' : 'hover:border-primary/50'}`}
               onClick={() => window.dispatchEvent(new CustomEvent('OPEN_AI_CHAT', { detail: s.title }))}
             >
               {s.urgentIdx >= 0 && (
@@ -41,7 +41,7 @@ export default function ServicesGrid() {
                 </span>
               )}
               <div className="text-3xl h-10 flex items-center">{s.icon}</div>
-              <h3 className="font-serif text-lg font-medium text-navy">{s.title}</h3>
+              <h3 className="font-display text-lg font-semibold text-navy">{s.title}</h3>
               <p className="text-sm text-gray-500 leading-relaxed flex-grow">{s.desc}</p>
               <span className={`text-sm font-medium self-start ${s.urgentIdx >= 0 ? 'text-red-600' : 'text-primary'}`}>
                 {s.urgentIdx === 0 ? '→ Отримати допомогу зараз' : t('services_more')}

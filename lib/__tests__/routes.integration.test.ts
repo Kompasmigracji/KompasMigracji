@@ -87,10 +87,9 @@ describe('Integration Tests - API Routes', () => {
   describe('POST /api/god/command', () => {
     it('returns 503 if Supabase is not configured', async () => {
       (getSupabase as jest.Mock).mockReturnValue(null);
-      const req = new Request('http://localhost/api/god/command', {
-        method: 'POST',
-        body: JSON.stringify({ command: 'test' }),
-      });
+      const req = {
+        json: async () => ({ command: 'test' }),
+      } as unknown as Request;
 
       const res = await postCommand(req);
       expect(res.status).toBe(503);
@@ -103,10 +102,9 @@ describe('Integration Tests - API Routes', () => {
         auth: { getSession: mockGetSession.mockResolvedValue({ data: { session: null } }) },
       };
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
-      const req = new Request('http://localhost/api/god/command', {
-        method: 'POST',
-        body: JSON.stringify({ command: 'test' }),
-      });
+      const req = {
+        json: async () => ({ command: 'test' }),
+      } as unknown as Request;
 
       const res = await postCommand(req);
       expect(res.status).toBe(403);
@@ -123,10 +121,9 @@ describe('Integration Tests - API Routes', () => {
         },
       };
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
-      const req = new Request('http://localhost/api/god/command', {
-        method: 'POST',
-        body: JSON.stringify({ payload: {} }),
-      });
+      const req = {
+        json: async () => ({ payload: {} }),
+      } as unknown as Request;
 
       const res = await postCommand(req);
       expect(res.status).toBe(400);
@@ -145,10 +142,9 @@ describe('Integration Tests - API Routes', () => {
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
       (evaluateAndCommandGod as jest.Mock).mockResolvedValue(false);
 
-      const req = new Request('http://localhost/api/god/command', {
-        method: 'POST',
-        body: JSON.stringify({ command: 'scale' }),
-      });
+      const req = {
+        json: async () => ({ command: 'scale' }),
+      } as unknown as Request;
 
       const res = await postCommand(req);
       expect(res.status).toBe(500);
@@ -167,10 +163,9 @@ describe('Integration Tests - API Routes', () => {
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
       (evaluateAndCommandGod as jest.Mock).mockResolvedValue(true);
 
-      const req = new Request('http://localhost/api/god/command', {
-        method: 'POST',
-        body: JSON.stringify({ command: 'scale', payload: { factor: 2 } }),
-      });
+      const req = {
+        json: async () => ({ command: 'scale', payload: { factor: 2 } }),
+      } as unknown as Request;
 
       const res = await postCommand(req);
       expect(res.status).toBe(200);

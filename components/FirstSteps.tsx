@@ -42,7 +42,7 @@ export default function FirstSteps() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Перші кроки</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
             Що зробити{' '}
             <em className="gradient-text not-italic">в перші 24 години</em>
           </h2>
@@ -55,7 +55,7 @@ export default function FirstSteps() {
           {steps.map((step, i) => (
             <div
               key={i}
-              className={`flex items-start gap-5 p-6 rounded-xl border-2 bg-white transition-all hover:shadow-md ${step.highlight ? 'border-red-200 bg-red-50/20' : 'border-gray-200'}`}
+              className={`flex items-start gap-5 p-8 apple-card hover-lift ${step.highlight ? 'border-red-200/50 bg-red-50/20' : 'border-transparent'}`}
             >
               <div
                 className={`w-12 h-12 rounded-full flex items-center justify-center text-xl shrink-0 ${step.highlight ? 'bg-red-100' : 'bg-primary/10'}`}
@@ -73,7 +73,7 @@ export default function FirstSteps() {
                     </span>
                   )}
                 </div>
-                <h3 className="font-semibold text-navy text-base mb-1">{step.title}</h3>
+                <h3 className="font-display font-semibold text-navy text-lg mb-1">{step.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{step.desc}</p>
               </div>
             </div>
@@ -85,7 +85,7 @@ export default function FirstSteps() {
             href="https://wa.me/48729271848?text=Я+щойно+приїхав+до+Польщі+і+потребую+допомоги+з+міграційним+питанням"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-white font-semibold no-underline transition-opacity hover:opacity-90 shadow-lg"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-white font-semibold no-underline transition-premium hover-lift shadow-[0_8px_20px_rgba(37,211,102,0.3)]"
             style={{ background: '#25D366' }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

@@ -27,7 +27,7 @@ export default function SituationQuiz() {
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-2xl mx-auto px-6 text-center">
           <div className="text-5xl mb-5">{ICONS[selected]}</div>
-          <h3 className="font-serif text-2xl text-navy mb-3 font-light">
+          <h3 className="font-display text-2xl font-semibold tracking-tight text-navy mb-3">
             {t('sq_result_title').split('—')[0]}—{' '}
             <em className="gradient-text not-italic">{t('sq_result_title').split('—')[1]?.trim()}</em>
           </h3>
@@ -40,7 +40,7 @@ export default function SituationQuiz() {
               href={`https://wa.me/48729271848?text=${WA_MESSAGES[selected]}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-white font-semibold no-underline transition-opacity hover:opacity-90 shadow-lg"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-white font-semibold no-underline transition-opacity hover:opacity-90 shadow-lg hover-lift"
               style={{ background: '#25D366' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -50,7 +50,7 @@ export default function SituationQuiz() {
             </a>
             <a
               href="tel:+48729271848"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl text-navy font-semibold no-underline border-2 border-gray-200 hover:border-primary transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-navy font-semibold no-underline border-2 border-gray-200 hover:border-primary hover-lift transition-all"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.03 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
@@ -76,7 +76,7 @@ export default function SituationQuiz() {
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">
             {t('sq_tag')}
           </div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(24px, 3.5vw, 38px)' }}>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(24px, 3.5vw, 38px)' }}>
             {t('sq_title').split(t('sq_title_em'))[0]}
             <em className="gradient-text not-italic">{t('sq_title_em')}</em>
             {t('sq_title').split(t('sq_title_em'))[1]}
@@ -88,7 +88,7 @@ export default function SituationQuiz() {
             <button
               key={i}
               onClick={() => setSelected(i)}
-              className={`flex items-center gap-4 text-left p-5 rounded-xl border-2 transition-all bg-white cursor-pointer group ${URGENT[i] ? 'border-red-200 hover:border-red-400 hover:shadow-md hover:bg-red-50/30' : 'border-gray-200 hover:border-primary hover:shadow-md'}`}
+              className={`flex items-center gap-4 text-left p-6 apple-card cursor-pointer group hover-lift ${URGENT[i] ? 'border-red-200/50 hover:border-red-400' : 'border-transparent hover:border-primary/30'}`}
             >
               <span className="text-3xl shrink-0">{ICONS[i]}</span>
               <div className="flex-1 min-w-0">

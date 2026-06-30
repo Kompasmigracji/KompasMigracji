@@ -27,7 +27,7 @@ export default function GuaranteeSection() {
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Наші гарантії</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
             Можете нам{' '}
             <em className="gradient-text not-italic">довіряти</em>
           </h2>
@@ -37,20 +37,20 @@ export default function GuaranteeSection() {
           {items.map((item, i) => (
             <div
               key={i}
-              className="flex items-start gap-4 p-6 rounded-xl border border-gray-200 hover:border-primary hover:shadow-md transition-all"
+              className="flex items-start gap-5 apple-card p-8 border-transparent hover:border-primary/20"
             >
               <div className="text-3xl shrink-0">{item.icon}</div>
               <div>
-                <h3 className="font-semibold text-navy mb-2">{item.title}</h3>
+                <h3 className="font-display font-semibold text-lg text-navy mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="rounded-2xl bg-navy text-white p-8 text-center">
-          <div className="text-3xl mb-4">🤝</div>
-          <h3 className="font-serif text-xl font-light mb-3">
+        <div className="rounded-3xl bg-navy text-white p-10 md:p-12 text-center shadow-xl">
+          <div className="text-4xl mb-4">🤝</div>
+          <h3 className="font-display tracking-tight text-2xl font-semibold mb-3">
             Не зможемо допомогти? Скажемо чесно.
           </h3>
           <p className="text-gray-300 text-sm max-w-xl mx-auto leading-relaxed">
@@ -59,9 +59,9 @@ export default function GuaranteeSection() {
           </p>
           <a
             href="#contact"
-            className="inline-block mt-6 px-6 py-3 rounded-xl border border-white/30 text-white text-sm font-semibold no-underline hover:bg-white/10 transition-colors"
+            className="inline-block mt-8 px-8 py-4 rounded-full border border-white/20 text-white text-sm font-semibold no-underline hover:bg-white/10 hover:border-white/40 transition-all hover-lift"
           >
-            Задати питання безкоштовно →
+            Задати питання безкоштовно &rarr;
           </a>
         </div>
       </div>

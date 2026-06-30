@@ -88,7 +88,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300 ${scrolled ? 'shadow-md' : 'border-b border-gray-100'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-premium ${scrolled ? 'apple-glass border-b border-transparent shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[62px] gap-3">
 
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">

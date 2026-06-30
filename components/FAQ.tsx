@@ -37,13 +37,13 @@ export default function FAQ() {
       <div className="max-w-3xl mx-auto px-6">
         <div className="text-center mb-16">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('faq_tag')}</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('faq_title')}</h2>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('faq_title')}</h2>
         </div>
         <div className="flex flex-col gap-3">
           {items.map((it, idx) => (
             <div
               key={idx}
-              className={`bg-white border-2 rounded-xl overflow-hidden transition-all ${it.panic ? 'border-red-200' : 'border-gray-200'}`}
+              className={`apple-card overflow-hidden transition-all hover-lift ${it.panic ? 'border-red-200/50 bg-red-50/10' : 'border-transparent'}`}
             >
               <button
                 className="w-full text-left px-6 py-4 flex items-center justify-between gap-4"
@@ -67,14 +67,14 @@ export default function FAQ() {
                         href="https://wa.me/48729271848?text=Потребую+термінової+допомоги"
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-white text-xs font-semibold no-underline"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold no-underline shadow-sm hover:opacity-90"
                         style={{ background: '#25D366' }}
                       >
                         Написати в WhatsApp →
                       </a>
                       <a
                         href="tel:+48729271848"
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-navy text-xs font-semibold no-underline border border-gray-200 hover:border-red-300 transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-navy text-xs font-semibold no-underline border border-gray-200 hover:border-red-300 transition-colors bg-white"
                       >
                         Зателефонувати
                       </a>

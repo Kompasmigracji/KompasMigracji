@@ -69,7 +69,7 @@ export default function Reviews() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-14">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">ПРО НАС ГОВОРЯТЬ</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>Відгуки клієнтів</h2>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>Відгуки клієнтів</h2>
           <p className="text-gray-500 text-sm mt-3">
             Реальні відгуки на{' '}
             <a href="https://www.gowork.pl/opinie_czytaj,24275530" target="_blank" rel="noreferrer" className="text-primary hover:underline">GoWork.pl</a>
@@ -78,10 +78,10 @@ export default function Reviews() {
 
         <div className="max-w-2xl mx-auto" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
           <div
-            className="bg-soft rounded-3xl px-10 py-12 text-center relative"
+            className="apple-card px-10 py-12 text-center relative border-0 bg-gray-50/50"
             style={{ minHeight: 260, opacity: animating ? 0 : 1, transition: 'opacity 0.2s ease' }}
           >
-            <div className="absolute top-6 left-8 font-serif text-7xl leading-none select-none" style={{ color: '#2563eb18' }}>&ldquo;</div>
+            <div className="absolute top-6 left-8 font-display font-bold text-7xl leading-none select-none" style={{ color: '#2563eb18' }}>&ldquo;</div>
             <Stars n={r.rating} />
             <p className="text-gray-700 text-base leading-relaxed mt-5 mb-6 relative z-10">{r.text}</p>
             <div className="font-bold text-navy text-sm">{r.author}</div>

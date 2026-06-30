@@ -89,8 +89,8 @@ function StatCard({
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
-        padding: '32px 20px',
-        borderRadius: 16,
+        padding: '36px 20px',
+        borderRadius: 24,
         background: hovered ? 'rgba(37,99,235,0.08)' : 'rgba(255,255,255,0.03)',
         border: `1px solid ${hovered ? 'rgba(37,99,235,0.4)' : 'rgba(255,255,255,0.07)'}`,
         boxShadow: hovered
@@ -186,8 +186,9 @@ export default function SocialProof() {
             {t("sp_tag")}
           </div>
           <h2 style={{
-            fontFamily: 'var(--font-serif)',
-            fontWeight: 300,
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
             color: 'var(--text-main)',
             fontSize: 'clamp(28px, 4vw, 44px)',
             margin: 0,

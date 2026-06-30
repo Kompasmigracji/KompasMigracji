@@ -2,23 +2,16 @@ import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Syne, Cormorant_Garamond } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { locales } from '@/i18n';
 import { ThemeProvider } from '@/lib/ThemeContext';
 import '../globals.css';
 
-const syne = Syne({
-  subsets: ['latin', 'latin-ext'],
-  variable: '--font-syne',
-  display: 'swap',
-});
-
-const cormorant = Cormorant_Garamond({
+const inter = Inter({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-cormorant',
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -61,7 +54,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${syne.variable} ${cormorant.variable}`}>
+    <html lang={locale} className={`${inter.variable} antialiased`}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>{children}</ThemeProvider>

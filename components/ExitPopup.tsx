@@ -62,8 +62,8 @@ export default function ExitPopup() {
       onClick={e => { if (e.target === e.currentTarget) setOpen(false); }}
     >
       <div style={{
-        background: "#fff", borderRadius: 20, maxWidth: 460, width: "100%",
-        boxShadow: "0 24px 80px rgba(0,0,0,0.3)",
+        background: "#fff", borderRadius: 28, maxWidth: 460, width: "100%",
+        boxShadow: "0 24px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)",
         position: "relative", overflow: "hidden",
       }}>
         {/* Top accent bar */}
@@ -84,10 +84,10 @@ export default function ExitPopup() {
             <>
               <div style={{ textAlign: "center", marginBottom: 20 }}>
                 <div style={{ fontSize: 40, marginBottom: 10 }}>🤝</div>
-                <h2 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 800, color: "#111", lineHeight: 1.3 }}>
+                <h2 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 700, color: "#111", lineHeight: 1.2, letterSpacing: "-0.03em" }}>
                   Не залишайтеся наодинці з цим
                 </h2>
-                <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>
+                <p style={{ margin: 0, fontSize: 15, color: "#6B7280", lineHeight: 1.5 }}>
                   Залиште свій email — ми зв&#x27;яжемося з вами та дамо безкоштовну оцінку вашої ситуації
                 </p>
               </div>
@@ -99,9 +99,9 @@ export default function ExitPopup() {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   style={{
-                    padding: "11px 14px", borderRadius: 10, border: "1.5px solid #E5E7EB",
-                    fontSize: 14, color: "#111", outline: "none",
-                    fontFamily: "inherit", background: "#F9FAFB",
+                    padding: "14px 16px", borderRadius: 16, border: "1.5px solid #E5E7EB",
+                    fontSize: 15, color: "#111", outline: "none",
+                    fontFamily: "inherit", background: "#F9FAFB", transition: "all 0.2s"
                   }}
                 />
                 <input
@@ -111,18 +111,19 @@ export default function ExitPopup() {
                   onChange={e => setEmail(e.target.value)}
                   required
                   style={{
-                    padding: "11px 14px", borderRadius: 10, border: "1.5px solid #E5E7EB",
-                    fontSize: 14, color: "#111", outline: "none",
-                    fontFamily: "inherit", background: "#F9FAFB",
+                    padding: "14px 16px", borderRadius: 16, border: "1.5px solid #E5E7EB",
+                    fontSize: 15, color: "#111", outline: "none",
+                    fontFamily: "inherit", background: "#F9FAFB", transition: "all 0.2s"
                   }}
                 />
                 <button
                   type="submit"
                   disabled={!email.trim() || loading}
                   style={{
-                    padding: "13px 0", borderRadius: 10, background: BRAND, color: "#fff",
-                    fontWeight: 700, fontSize: 15, border: "none", cursor: "pointer",
-                    opacity: (!email.trim() || loading) ? 0.6 : 1, transition: "opacity 0.2s",
+                    padding: "16px 0", borderRadius: 9999, background: BRAND, color: "#fff",
+                    fontWeight: 600, fontSize: 16, border: "none", cursor: "pointer",
+                    opacity: (!email.trim() || loading) ? 0.6 : 1, transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    boxShadow: "0 8px 20px rgba(216,35,42,0.3)"
                   }}
                 >
                   {loading ? "Відправляємо..." : "Отримати безкоштовну оцінку →"}
@@ -137,15 +138,15 @@ export default function ExitPopup() {
                     target="_blank"
                     rel="noreferrer"
                     style={{
-                      padding: "8px 16px", borderRadius: 8, background: "#25D366", color: "#fff",
-                      textDecoration: "none", fontWeight: 700, fontSize: 13,
+                      padding: "10px 20px", borderRadius: 9999, background: "#25D366", color: "#fff",
+                      textDecoration: "none", fontWeight: 600, fontSize: 14, boxShadow: "0 4px 12px rgba(37,211,102,0.3)"
                     }}
                   >💬 WhatsApp</a>
                   <a
                     href="tel:+48729271848"
                     style={{
-                      padding: "8px 16px", borderRadius: 8, background: "#f1f5f9", color: "#1e293b",
-                      textDecoration: "none", fontWeight: 700, fontSize: 13,
+                      padding: "10px 20px", borderRadius: 9999, background: "#f1f5f9", color: "#1e293b",
+                      textDecoration: "none", fontWeight: 600, fontSize: 14,
                     }}
                   >📞 Телефон</a>
                 </div>
@@ -171,9 +172,10 @@ export default function ExitPopup() {
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  display: "inline-block", marginTop: 12, padding: "10px 22px",
-                  background: "#25D366", color: "#fff", borderRadius: 10,
-                  textDecoration: "none", fontWeight: 700, fontSize: 14,
+                  display: "inline-block", marginTop: 16, padding: "14px 28px",
+                  background: "#25D366", color: "#fff", borderRadius: 9999,
+                  textDecoration: "none", fontWeight: 600, fontSize: 16,
+                  boxShadow: "0 8px 20px rgba(37,211,102,0.3)", transition: "transform 0.2s"
                 }}
               >
                 💬 Написати у WhatsApp зараз

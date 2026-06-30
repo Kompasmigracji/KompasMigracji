@@ -45,7 +45,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const inputCls = 'w-full px-4 py-3 border border-gray-200 rounded-lg text-sm text-navy focus:outline-none focus:border-primary transition-colors bg-white';
+  const inputCls = 'w-full px-5 py-4 border border-gray-200 rounded-xl text-sm text-navy focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all bg-gray-50 hover:bg-white';
   const labelCls = 'block text-sm font-semibold text-navy mb-2';
 
   return (
@@ -53,11 +53,11 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('contact_tag')}</div>
-          <h2 className="font-serif font-light text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('contact_title')}</h2>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('contact_title')}</h2>
         </div>
         <form
           onSubmit={handleSubmit}
-          className="max-w-xl mx-auto bg-white border border-gray-200 rounded-2xl p-8 shadow-sm"
+          className="max-w-xl mx-auto apple-card p-8 sm:p-12"
         >
           {/* Urgency selector */}
           <div className="mb-6">
@@ -136,7 +136,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
           </label>
           <button
             type="submit"
-            className="w-full gradient-btn text-white font-semibold py-3.5 rounded-lg text-sm transition-all hover:opacity-90 hover:shadow-lg"
+            className="w-full gradient-btn text-white font-bold py-4 rounded-full text-sm transition-premium hover-lift shadow-[0_8px_20px_rgba(37,99,235,0.3)]"
             style={urgency === 'critical' ? { background: 'linear-gradient(135deg, #dc2626, #b91c1c)' } : {}}
           >
             {urgency === 'critical' ? '🚨 Відправити — ТЕРМІНОВО' : t('form_submit')}

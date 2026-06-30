@@ -22,7 +22,7 @@ function TrustBadges() {
         <motion.span 
           key={i} 
           whileHover={{ scale: 1.05 }}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 glass-badge rounded-lg text-xs font-semibold text-gray-700 shadow-sm border border-white/40"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 apple-glass rounded-full text-xs font-semibold text-gray-700 shadow-sm"
         >
           <span>{b.icon}</span>
           <span>{b.label}</span>
@@ -39,7 +39,7 @@ function PanicStrip() {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 1, duration: 0.5, type: 'spring' }}
       whileHover={{ scale: 1.02 }}
-      className="mt-8 rounded-xl border border-red-200/60 glass-panel relative overflow-hidden p-4 group cursor-pointer shadow-lg"
+      className="mt-8 rounded-2xl apple-card border border-red-200/50 relative overflow-hidden p-5 group cursor-pointer"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-red-50/80 to-transparent pointer-events-none" />
       <div className="relative z-10 flex items-center justify-between gap-3 flex-wrap">
@@ -59,7 +59,7 @@ function PanicStrip() {
         <div className="flex items-center gap-2">
           <a
             href="tel:+48729271848"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline transition-all hover:brightness-110 shadow-md"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-white text-xs font-bold no-underline transition-all hover:scale-105 shadow-md"
             style={{ background: '#dc2626' }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -71,7 +71,7 @@ function PanicStrip() {
             href="https://wa.me/48729271848?text=ТЕРМІНОВО+—+потребую+негайної+допомоги+в+міграційній+справі"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-white text-xs font-bold no-underline transition-all hover:brightness-110 shadow-md"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-white text-xs font-bold no-underline transition-all hover:scale-105 shadow-md"
             style={{ background: '#25D366' }}
           >
             WhatsApp
@@ -87,8 +87,8 @@ export default function Hero() {
 
   return (
     <section
-      className="hero-section relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f0fdf4 100%)', paddingTop: 'calc(5rem + 80px)', paddingBottom: '96px' }}
+      className="hero-section relative overflow-hidden bg-soft"
+      style={{ paddingTop: 'calc(6rem + 80px)', paddingBottom: '120px' }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
@@ -110,7 +110,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-3 glass-badge rounded-lg text-xs font-semibold text-primary mb-10 shadow-sm border border-primary/20">
+          <span className="inline-flex items-center gap-2 px-4 py-2 apple-glass rounded-full text-xs font-semibold text-primary mb-10 border border-primary/10">
             <span className="animate-pulse">✦</span>
             <span>{t('hero_badge')}</span>
           </span>
@@ -120,7 +120,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="font-serif font-light leading-tight mb-8"
+          className="font-display font-semibold leading-[1.1] mb-8 tracking-tight"
           style={{ fontSize: 'clamp(40px, 6vw, 70px)', letterSpacing: '-0.5px' }}
         >
           <span className="text-navy">{t('hero_title').split(' ').slice(0, 3).join(' ')}</span>
@@ -132,7 +132,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="text-gray-500 text-lg leading-relaxed mb-10 max-w-xl"
+          className="text-gray-500 text-xl leading-relaxed mb-10 max-w-xl font-medium tracking-tight"
         >
           {t('hero_sub')}
         </motion.p>
@@ -147,7 +147,7 @@ export default function Hero() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             href="#contact"
-            className="gradient-btn text-white font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 shadow-[0_8px_20px_rgba(37,99,235,0.25)]"
+            className="bg-union-blue text-white font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 shadow-[0_8px_20px_rgba(0,102,204,0.3)] transition-premium"
           >
             {t('cta_consult')}
           </motion.a>
@@ -155,7 +155,7 @@ export default function Hero() {
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             <Link
               href="/videos"
-              className="font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 border border-amber-400/40 text-amber-700 bg-amber-50/80 hover:bg-amber-100 shadow-sm"
+              className="font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 border border-gray-200/50 text-gray-800 bg-white hover:bg-gray-50 shadow-sm transition-premium"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
               {t('videos_home_cta')}
@@ -168,7 +168,7 @@ export default function Hero() {
             href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
             target="_blank"
             rel="noreferrer"
-            className="glass-panel text-navy font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-primary hover:text-primary shadow-sm"
+            className="apple-glass text-navy font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 hover:border-primary hover:text-primary shadow-sm"
           >
             WhatsApp
           </motion.a>
@@ -177,7 +177,7 @@ export default function Hero() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             href="viber://chat?number=48729271848"
-            className="glass-panel border-purple-200 text-purple-700 font-semibold px-7 py-3.5 rounded-lg text-sm no-underline inline-flex items-center gap-2 hover:border-purple-500 hover:text-purple-900 shadow-sm"
+            className="apple-glass border-purple-200/50 text-purple-700 font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 hover:border-purple-500 shadow-sm"
           >
             Viber
           </motion.a>

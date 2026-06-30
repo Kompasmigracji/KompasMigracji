@@ -23,7 +23,7 @@ export default function VideosShowcase() {
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                 {t('videos_badge')}
               </span>
-              <h2 className="font-serif text-3xl md:text-4xl font-light text-white mb-3 leading-tight">
+              <h2 className="font-display tracking-tight text-3xl md:text-4xl font-semibold text-white mb-3 leading-tight">
                 {t('videos_home_title')}
               </h2>
               <p className="text-gray-400 text-base leading-relaxed max-w-lg mb-6">
@@ -38,7 +38,7 @@ export default function VideosShowcase() {
             <div className="flex-shrink-0">
               <Link
                 href="/videos"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-sm no-underline text-white transition-all hover:scale-105 hover:shadow-2xl"
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-sm no-underline text-white transition-premium hover:scale-105 shadow-lg"
                 style={{
                   background: 'linear-gradient(135deg, #d4af37, #f59e0b)',
                   boxShadow: '0 8px 32px rgba(212,175,55,0.35)',
