@@ -147,7 +147,7 @@ export default function Hero() {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             href="#contact"
-            className="bg-union-blue text-white font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 shadow-[0_8px_20px_rgba(0,102,204,0.3)] transition-premium"
+            className="bg-primary text-white font-semibold px-8 py-4 rounded-full text-sm no-underline inline-flex items-center gap-2 shadow-[0_8px_20px_rgba(37,99,235,0.3)] transition-premium"
           >
             {t('cta_consult')}
           </motion.a>
