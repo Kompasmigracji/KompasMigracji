@@ -69,8 +69,9 @@ export default function DualSidebarShell({ children }) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isBillingOpen, setIsBillingOpen] = useState(false);
 
-  // Real-time Notifications State
+  // Fetch notifications logic
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -218,7 +219,15 @@ export default function DualSidebarShell({ children }) {
           >
             <Icon name="settings" size={20} />
           </button>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
+          <button 
+            onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); }}
+            style={{ 
+              background: isBillingOpen ? "var(--color-primary)" : "transparent", 
+              border: "none", color: isBillingOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
+              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s"
+            }}
+          >
             <Icon name="briefcase" size={20} />
           </button>
           <div style={{ width: 32, height: 32, marginTop: 8 }}>
@@ -346,6 +355,67 @@ export default function DualSidebarShell({ children }) {
         </div>
       </div>
 
+      {/* Billing Slide-out Panel */}
+      <div style={{
+        position: "absolute",
+        bottom: 80,
+        left: isBillingOpen ? 64 : -400,
+        width: 320,
+        background: "#4b7fcc",
+        zIndex: 50,
+        transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        boxShadow: "4px 0 15px rgba(0,0,0,0.15)",
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff",
+        borderRadius: "0 8px 8px 0"
+      }}>
+        <div style={{ padding: "20px" }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 4px 0", color: "#fff" }}>Состояние счета</h3>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, marginBottom: 20 }}>
+            <span>Остаток на счету:</span>
+            <span style={{ fontWeight: 700 }}>0,00 USD</span>
+          </div>
+
+          <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 12 }}>Использование в текущем месяце:</div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>Базовый тариф</span>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>19,00 USD</span>
+            </div>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Заявки</span>
+                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)" }}>Всего 74 заявок</span>
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>FREE</span>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Сообщения</span>
+                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)" }}>Всего 1850 сообщений</span>
+              </div>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>FREE</span>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>ВСЕГО:</span>
+              <span style={{ fontSize: 14, fontWeight: 700 }}>19,00 USD</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+          <button style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 6, color: "#fff", padding: "8px 16px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", transition: "background 0.2s" }}>
+            <Icon name="credit-card" size={14} /> Перейти к оплате
+          </button>
+          <a href="#" style={{ color: "#fff", fontSize: 12, textDecoration: "none", fontWeight: 500, transition: "opacity 0.2s" }}>История платежей</a>
+        </div>
+      </div>
+
       {/* Settings Slide-out Panel */}
       <div style={{
         position: "absolute",
@@ -372,12 +442,14 @@ export default function DualSidebarShell({ children }) {
             { label: "Основные", path: "/admin/crm-demo/settings/general" },
             { label: "Источники", path: "/admin/crm-demo/settings/sources" },
             { label: "Коммуникации", path: "/admin/crm-demo/settings/communications" },
-            { label: "Воронки", path: "#" },
-            { label: "Заказы", path: "#" }, 
-            { label: "Товары", path: "#" },
+            { label: "Воронки", path: "/admin/crm-demo/settings/funnels" },
+            { label: "Заказы", path: "/admin/crm-demo/settings/orders" }, 
+            { label: "Товары", path: "/admin/crm-demo/settings/products" },
             { label: "Доставки", path: "#" },
-            { label: "Финансы", path: "#" },
-            { label: "Дополнительно", path: "#" }
+            { label: "Финансы", path: "/admin/crm-demo/settings/finances" },
+            { label: "Дополнительно", path: "/admin/crm-demo/settings/additional" },
+            { label: "Пользователи", path: "/admin/crm-demo/settings/users" },
+            { label: "Роли", path: "/admin/crm-demo/settings/roles" }
           ].map(item => (
             <Link 
               key={item.label} 
