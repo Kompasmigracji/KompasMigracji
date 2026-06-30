@@ -35,10 +35,13 @@ const NAV_DATA = [
     label: "Товары",
     groups: [
       {
-        title: "КАТАЛОГ",
+        title: "",
         items: [
-          { label: "Все товары", href: "/admin/crm-demo/products" },
-          { label: "Склады", href: "/admin/crm-demo/inventory" },
+          { label: "Товары", href: "/admin/crm-demo/products" },
+          { label: "Публикации", href: "/admin/crm-demo/publications" },
+          { label: "Остатки", href: "/admin/crm-demo/inventory" },
+          { label: "Движение товаров", href: "/admin/crm-demo/movements" },
+          { label: "Категории", href: "/admin/crm-demo/categories" },
         ]
       }
     ]
