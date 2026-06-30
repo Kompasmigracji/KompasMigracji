@@ -1,20 +1,41 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-
-// Mock Data matching the Payment Journal screenshot structure
-const MOCK_PAYMENTS = [
-  { id: 1, date: "15.06 12:47", type: "income", typeLabel: "Оплаты", desc: "Банковский перевод PL: Чат з Alena Holovina", manager: "Анна Новікова", amount: "500,00 PLN", status: "cancelled" },
-  { id: 2, date: "06.05.2023 16:50", type: "expense", typeLabel: "Затраты", desc: "Бонус сотруднику: Чат 2", manager: "Анна Новікова", amount: "-50,00 PLN", status: "paid" },
-  { id: 3, date: "06.05.2023 16:50", type: "expense", typeLabel: "Затраты", desc: "Бонус сотруднику: Чат 3", manager: "Анна Новікова", amount: "-50,00 PLN", status: "paid" },
-  { id: 4, date: "06.05.2023 16:47", type: "income", typeLabel: "Оплаты", desc: "Банковский перевод PL: Чат 2", manager: "Анна Новікова", amount: "200,00 PLN", status: "paid" },
-  { id: 5, date: "06.05.2023 09:16", type: "income", typeLabel: "Оплаты", desc: "Банковская карта UA: Чат з Саша", manager: "Олександр Воронцов", amount: "200,00 PLN", status: "paid" },
-  { id: 6, date: "27.06.2023 10:25", type: "income", typeLabel: "Оплаты", desc: "Банковская карта UA: Чат з Vasyl Babiy", manager: "Олександр Воронцов", amount: "220,00 PLN", status: "paid" },
-  { id: 7, date: "27.06.2023 09:15", type: "income", typeLabel: "Оплаты", desc: "Банковский перевод PL: Чат 1", manager: "Олександр Воронцов", amount: "200,00 PLN", status: "paid" },
-  { id: 8, date: "26.06.2023 20:25", type: "income", typeLabel: "Оплаты", desc: "Банковский перевод PL: Чат з Василь", manager: "Олександр Воронцов", amount: "200,00 PLN", status: "cancelled" },
-];
+import { getSupabase } from "@/lib/supabase";
 
 export default function PaymentsDemoPage() {
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = getSupabase();
+
+  useEffect(() => {
+    if (!supabase) return;
+
+    const fetchPayments = async () => {
+      const { data, error } = await supabase
+        .from('custom_payments')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setPayments(data);
+      }
+      setLoading(false);
+    };
+
+    fetchPayments();
+
+    const channel = supabase.channel('custom_payments_changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'custom_payments' }, (payload) => {
+        fetchPayments(); // Refresh on any change
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase]);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
       
@@ -79,25 +100,32 @@ export default function PaymentsDemoPage() {
             </tr>
           </thead>
           <tbody>
-            {MOCK_PAYMENTS.map(pay => {
+            {loading ? (
+              <tr><td colSpan="5" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка платежей...</td></tr>
+            ) : payments.length === 0 ? (
+              <tr><td colSpan="5" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Журнал пуст</td></tr>
+            ) : payments.map(pay => {
               const isIncome = pay.type === "income";
               const isCancelled = pay.status === "cancelled";
               const borderColor = isIncome ? "#10b981" : "#ef4444";
               const badgeBg = isIncome ? "#d1fae5" : "#fee2e2";
               
+              const dateObj = new Date(pay.created_at);
+              const dateStr = dateObj.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+              
               return (
                 <tr key={pay.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
                   <td style={{ padding: "12px 16px", color: "var(--dim)", whiteSpace: "nowrap" }}>
-                    {pay.date}
+                    {dateStr}
                   </td>
                   <td style={{ padding: "0" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "12px 16px", borderLeft: `3px solid ${borderColor}` }}>
                       <div>
                         <span style={{ background: badgeBg, color: borderColor, padding: "2px 6px", borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: "uppercase" }}>
-                          {pay.typeLabel}
+                          {pay.type_label}
                         </span>
                       </div>
-                      <span style={{ color: "var(--color-primary)", fontSize: 13 }}>{pay.desc}</span>
+                      <span style={{ color: "var(--color-primary)", fontSize: 13 }}>{pay.description}</span>
                     </div>
                   </td>
                   <td style={{ padding: "12px 8px" }}>
@@ -110,7 +138,7 @@ export default function PaymentsDemoPage() {
                     </div>
                   </td>
                   <td style={{ padding: "12px 8px", textAlign: "right", color: borderColor, fontWeight: 600, fontSize: 13 }}>
-                    {pay.amount}
+                    {pay.amount} {pay.currency}
                   </td>
                   <td style={{ padding: "12px 16px", textAlign: "right" }}>
                     {isCancelled ? (
