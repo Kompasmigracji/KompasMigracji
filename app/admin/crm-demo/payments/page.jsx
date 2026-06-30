@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
 import { getSupabase } from "@/lib/supabase";
+import { motion } from "framer-motion";
 
 export default function PaymentsDemoPage() {
   const [payments, setPayments] = useState([]);
@@ -37,11 +38,11 @@ export default function PaymentsDemoPage() {
   }, [supabase]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 24, padding: "24px" }}>
       
       {/* Top Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, color: "var(--text)" }}>Журнал платежей</h2>
+      <div className="premium-glass" style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 24px", borderRadius: 16 }}>
+        <h2 style={{ margin: 0, fontSize: 20, color: "var(--text)" }}>Журнал платежів</h2>
         
         {/* Search Bar */}
         <div style={{ 
@@ -81,15 +82,14 @@ export default function PaymentsDemoPage() {
       </div>
 
       {/* Data Table */}
-      <div style={{ 
-        background: "var(--panel)", 
-        border: "1px solid var(--border)", 
-        borderRadius: 8,
-        overflowX: "auto" 
+      <div className="premium-card" style={{ 
+        borderRadius: 16,
+        overflowX: "auto",
+        padding: 8
       }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 12 }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 13 }}>
           <thead>
-            <tr style={{ background: "var(--panel-2)", borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
+            <tr style={{ borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
               <th style={{ padding: "12px 16px", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
                 Дата и время <Icon name="arrow-down" size={12} />
               </th>
@@ -114,8 +114,14 @@ export default function PaymentsDemoPage() {
               const dateStr = dateObj.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
               
               return (
-                <tr key={pay.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-                  <td style={{ padding: "12px 16px", color: "var(--dim)", whiteSpace: "nowrap" }}>
+                <motion.tr 
+                  key={pay.id} 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.01, backgroundColor: "var(--border)" }}
+                  style={{ borderBottom: "1px solid var(--border)", cursor: "pointer", transition: "background-color 0.2s" }}
+                >
+                  <td style={{ padding: "16px", color: "var(--dim)", whiteSpace: "nowrap" }}>
                     {dateStr}
                   </td>
                   <td style={{ padding: "0" }}>
@@ -151,7 +157,7 @@ export default function PaymentsDemoPage() {
                       </div>
                     )}
                   </td>
-                </tr>
+                </motion.tr>
               )
             })}
           </tbody>

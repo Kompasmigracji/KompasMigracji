@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
 import { getSupabase } from "@/lib/supabase";
+import { motion } from "framer-motion";
 
 export default function ChatsDemoPage() {
   const [activeTab, setActiveTab] = useState("open");
@@ -108,10 +109,10 @@ export default function ChatsDemoPage() {
   };
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 32px)", margin: "-16px", background: "var(--bg)", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "calc(100vh - 32px)", margin: "-16px", background: "transparent", overflow: "hidden" }}>
       
       {/* LEFT SIDEBAR: CHAT LIST */}
-      <div style={{ 
+      <div className="premium-glass" style={{ 
         width: 320, 
         borderRight: "1px solid var(--border)", 
         display: "flex", 
@@ -145,17 +146,19 @@ export default function ChatsDemoPage() {
           {loadingChats ? (
             <div style={{ padding: "20px", textAlign: "center", color: "var(--dim)", fontSize: 13 }}>Загрузка чатов...</div>
           ) : chats.filter(c => activeTab === "all" || c.status === activeTab).map(chat => (
-            <div 
-              key={chat.id} 
+            <div key={chat.id} style={{ perspective: "1000px", padding: "0 8px", marginBottom: 8 }}>
+            <motion.div 
               onClick={() => setActiveChat(chat)}
+              className={activeChat?.id === chat.id ? "premium-card" : "premium-glass"}
+              whileHover={{ scale: 1.02, rotateX: 2, rotateY: -2, zIndex: 10 }}
               style={{ 
                 padding: "12px 16px", 
-                borderBottom: "1px solid var(--border)", 
+                borderRadius: 12,
                 display: "flex", 
                 gap: 12,
                 cursor: "pointer",
-                background: activeChat?.id === chat.id ? "var(--panel-2)" : "transparent",
-                transition: "background 0.2s"
+                border: activeChat?.id === chat.id ? "1px solid var(--color-primary)" : "1px solid transparent",
+                transformStyle: "preserve-3d"
               }}
             >
               <div style={{ position: "relative" }}>
@@ -178,13 +181,14 @@ export default function ChatsDemoPage() {
                   )}
                 </div>
               </div>
+            </motion.div>
             </div>
           ))}
         </div>
       </div>
 
       {/* MAIN CHAT WINDOW */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--panel-2)" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "transparent" }}>
         
         {/* Chat Header */}
         {activeChat ? (
@@ -220,10 +224,15 @@ export default function ChatsDemoPage() {
                   <div key={msg.id} style={{ display: "flex", justifyContent: isManager ? "flex-end" : "flex-start" }}>
                     <div style={{ display: "flex", gap: 8, maxWidth: "70%", flexDirection: isManager ? "row-reverse" : "row" }}>
                       {!isManager && <Avatar name={activeChat.name} size={28} />}
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: isManager ? "flex-end" : "flex-start", gap: 4 }}>
-                        <div style={{ 
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: isManager ? "flex-end" : "flex-start", gap: 4, perspective: "800px" }}>
+                        <motion.div 
+                          className={isManager ? "premium-card" : "premium-glass"}
+                          initial={{ opacity: 0, scale: 0.9, rotateX: 10 }}
+                          animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          style={{ 
                           background: isManager ? "var(--color-primary)" : "var(--panel)", 
-                          color: isManager ? "#000" : "var(--text)", // Primary is gold, black text looks good
+                          color: isManager ? "#fff" : "var(--text)",
                           padding: "10px 14px", 
                           borderRadius: 16,
                           borderTopLeftRadius: !isManager ? 4 : 16,
@@ -235,7 +244,7 @@ export default function ChatsDemoPage() {
                           wordBreak: "break-word"
                         }}>
                           {msg.text}
-                        </div>
+                        </motion.div>
                         <div style={{ fontSize: 10, color: "var(--dim)", display: "flex", alignItems: "center", gap: 4 }}>
                           {msg.time}
                           {isManager && msg.is_seen && <Icon name="check" size={10} color="var(--color-primary)" />}
