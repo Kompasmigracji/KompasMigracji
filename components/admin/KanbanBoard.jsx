@@ -125,30 +125,37 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                 else if (sLower.includes("instagram") || sLower.includes("ig")) { sourceIcon = "instagram"; sourceColor = "#e1306c"; }
 
                 return (
-                <motion.div
-                  layout
-                  className="premium-card"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  key={card.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, String(card.id))}
-                  onDragEnd={handleDragEnd}
-                  onClick={() => onCardClick && onCardClick(card)}
-                  style={{
-                    borderRadius: 12,
-                    padding: "16px",
-                    cursor: "grab",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 12,
-                    position: "relative",
-                    overflow: "hidden"
-                  }}
-                >
+                <div key={card.id} style={{ perspective: "1000px" }}>
+                  <motion.div
+                    layout
+                    className="premium-card"
+                    initial={{ opacity: 0, scale: 0.95, rotateX: -5 }}
+                    animate={{ opacity: 1, scale: 1, rotateX: 0, rotateY: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateX: 4, 
+                      rotateY: -4, 
+                      boxShadow: "20px 20px 60px rgba(0,0,0,0.1), -10px -10px 30px rgba(255,255,255,0.8)",
+                      y: -8
+                    }}
+                    whileTap={{ scale: 0.95, rotateX: 0, rotateY: 0 }}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, String(card.id))}
+                    onDragEnd={handleDragEnd}
+                    onClick={() => onCardClick && onCardClick(card)}
+                    style={{
+                      borderRadius: 12,
+                      padding: "16px",
+                      cursor: "grab",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 12,
+                      position: "relative",
+                      overflow: "hidden",
+                      transformStyle: "preserve-3d"
+                    }}
+                  >
                   <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 4, background: col.color || 'var(--border)' }} />
                   <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${col.color}15, transparent 70%)` }} />
                   {/* Lead Title & Main Info */}
@@ -192,7 +199,8 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       </div>
                     )}
                   </div>
-                </motion.div>
+                  </motion.div>
+                </div>
               )})}
               
               {colCards.length === 0 && (
