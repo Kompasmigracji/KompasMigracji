@@ -1,6 +1,6 @@
 import React from "react";
 import DualSidebarShell from "@/components/admin/DualSidebarShell";
-import "@/styles/kompascrm.css";
+import "@/app/globals.css";
 
 export const metadata = { title: "KompasCRM | Панель админа" };
 

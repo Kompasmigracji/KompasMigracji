@@ -1,9 +1,13 @@
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
+
 /* Кореневий layout — обов'язковий html+body для Next.js App Router.
    suppressHydrationWarning дозволяє [locale]/layout та admin/layout
    додавати lang= та className через React merging без гідрація-помилок. */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html suppressHydrationWarning>
+    <html className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
       <head>
         <link rel="stylesheet" href="/design-system/tokens.css" />
         <script dangerouslySetInnerHTML={{ __html: `

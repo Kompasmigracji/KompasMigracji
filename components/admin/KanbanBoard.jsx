@@ -68,12 +68,15 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
           <div 
             key={col.id}
             style={{
-              flex: "0 0 300px",
-              background: "var(--panel-2)",
-              borderRadius: "var(--radius-lg)",
+              flex: "0 0 320px",
+              background: "rgba(255, 255, 255, 0.4)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              borderRadius: 16,
               display: "flex",
               flexDirection: "column",
-              border: dragOverColId === col.id ? `2px dashed ${col.color || 'var(--color-primary)'}` : "2px solid transparent",
+              border: dragOverColId === col.id ? `2px dashed ${col.color || 'var(--color-primary)'}` : "1px solid rgba(0,0,0,0.05)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.02)",
               transition: "border-color 0.2s"
             }}
             onDragOver={(e) => handleDragOver(e, col.id)}
@@ -137,13 +140,13 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   onDragEnd={handleDragEnd}
                   onClick={() => onCardClick && onCardClick(card)}
                   style={{
-                    background: "var(--bg)",
-                    border: "1px solid var(--border)",
+                    background: "rgba(255, 255, 255, 0.9)",
+                    backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(0,0,0,0.03)",
                     borderRadius: 12,
                     padding: "16px",
                     cursor: "grab",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
-                    borderLeft: `4px solid ${col.color || 'var(--border)'}`,
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                     display: "flex",
                     flexDirection: "column",
                     gap: 12,
@@ -151,7 +154,8 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                     overflow: "hidden"
                   }}
                 >
-                  <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${col.color}20, transparent 70%)` }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 4, background: col.color || 'var(--border)' }} />
+                  <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${col.color}15, transparent 70%)` }} />
                   {/* Lead Title & Main Info */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", wordBreak: "break-word" }}>

@@ -147,8 +147,10 @@ export default function DualSidebarShell({ children }) {
       {/* Primary Sidebar (Icons) */}
       <aside style={{
         width: 64,
-        background: "#1e1b4b",
-        borderRight: "1px solid var(--border)",
+        background: "rgba(18, 18, 20, 0.75)",
+        backdropFilter: "blur(40px) saturate(200%)",
+        WebkitBackdropFilter: "blur(40px) saturate(200%)",
+        borderRight: "1px solid rgba(255, 255, 255, 0.1)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -573,8 +575,11 @@ export default function DualSidebarShell({ children }) {
       {/* Secondary Sidebar (Menu Items) */}
       <aside style={{
         width: 240,
-        background: "var(--panel)",
+        background: "rgba(250, 250, 250, 0.6)",
+        backdropFilter: "blur(40px) saturate(180%)",
+        WebkitBackdropFilter: "blur(40px) saturate(180%)",
         borderRight: "1px solid var(--border)",
+        boxShadow: "1px 0 20px rgba(0,0,0,0.02)",
         display: "flex",
         flexDirection: "column",
         flexShrink: 0,
@@ -657,14 +662,15 @@ export default function DualSidebarShell({ children }) {
       <main style={{ flex: 1, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Topbar of main area */}
         <header style={{
-          height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", background: "var(--panel)", backdropFilter: "blur(12px)"
+          height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", 
+          background: "rgba(255,255,255,0.6)", backdropFilter: "blur(20px) saturate(180%)", WebkitBackdropFilter: "blur(20px) saturate(180%)", zIndex: 5
         }}>
           <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)" }}>Панель админа</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {/* Search placeholder */}
             <motion.div 
               whileFocus={{ scale: 1.02 }}
-              style={{ background: "var(--bg)", border: "1px solid var(--border)", padding: "8px 16px", borderRadius: 8, display: "flex", alignItems: "center", gap: 8, color: "var(--faint)", fontSize: 13, width: 240, boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)" }}
+              style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)", padding: "8px 16px", borderRadius: 10, display: "flex", alignItems: "center", gap: 8, color: "var(--faint)", fontSize: 13, width: 240, transition: "background 0.2s" }}
             >
               <Icon name="search" size={14} />
               <input type="text" placeholder="Быстрый поиск..." style={{ background: "transparent", border: "none", outline: "none", width: "100%", color: "var(--text)" }} />
