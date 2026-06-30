@@ -65,11 +65,12 @@ const NAV_DATA = [
 export default function DualSidebarShell({ children }) {
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState("sales");
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
   return (
-    <div className="kc-root" style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div className="kc-root" style={{ display: "flex", height: "100vh", overflow: "hidden", position: "relative" }}>
       
       {/* Primary Sidebar (Icons) */}
       <aside style={{
@@ -81,7 +82,7 @@ export default function DualSidebarShell({ children }) {
         alignItems: "center",
         padding: "16px 0",
         flexShrink: 0,
-        zIndex: 20
+        zIndex: 50
       }}>
         {/* Brand Lock/Compass Logo */}
         <div style={{
@@ -95,11 +96,11 @@ export default function DualSidebarShell({ children }) {
         {/* Primary Nav Icons */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%", alignItems: "center", flex: 1 }}>
           {NAV_DATA.map(nav => {
-            const isActive = activeMenu === nav.id;
+            const isActive = activeMenu === nav.id && !isNotificationsOpen;
             return (
               <button
                 key={nav.id}
-                onClick={() => setActiveMenu(nav.id)}
+                onClick={() => { setActiveMenu(nav.id); setIsNotificationsOpen(false); }}
                 title={nav.label}
                 style={{
                   width: 44, height: 44, borderRadius: 12, border: "none", cursor: "pointer",
@@ -119,20 +120,65 @@ export default function DualSidebarShell({ children }) {
 
         {/* Bottom Icons (Settings, Profile, etc) */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer" }}>
-            <Icon name="bell" size={20} />
-          </button>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer" }}>
+          <div style={{ position: "relative" }}>
+            <button 
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              style={{ 
+                background: isNotificationsOpen ? "rgba(255,255,255,0.1)" : "transparent", 
+                border: "none", color: isNotificationsOpen ? "#fff" : "var(--faint)", cursor: "pointer",
+                width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
+                transition: "all 0.2s"
+              }}
+            >
+              <Icon name="bell" size={20} />
+              <div style={{ position: "absolute", top: 10, right: 12, width: 6, height: 6, background: "#ef4444", borderRadius: "50%" }}></div>
+            </button>
+          </div>
+          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
             <Icon name="help-circle" size={20} />
           </button>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer" }}>
+          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
             <Icon name="settings" size={20} />
           </button>
-          <div style={{ width: 32, height: 32, marginTop: 16 }}>
+          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
+            <Icon name="briefcase" size={20} />
+          </button>
+          <div style={{ width: 32, height: 32, marginTop: 8 }}>
             <Avatar name="Admin" size={32} />
           </div>
         </div>
       </aside>
+
+      {/* Notifications Slide-out Panel */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: isNotificationsOpen ? 64 : -400,
+        width: 350,
+        height: "100vh",
+        background: "#1c2c54", // A specific blue-ish theme from the screenshot
+        zIndex: 40,
+        transition: "left 0.3s ease",
+        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff"
+      }}>
+        <div style={{ padding: "24px 20px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Icon name="bell" size={18} color="#94a3b8" />
+            <span style={{ fontWeight: 700, fontSize: 16 }}>Уведомления <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 400 }}>(12)</span></span>
+          </div>
+          <Icon name="settings" size={16} color="#94a3b8" style={{ cursor: "pointer" }} />
+        </div>
+        <div style={{ display: "flex", padding: "0 20px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+          <button style={{ background: "none", border: "none", borderBottom: "2px solid transparent", color: "#94a3b8", padding: "12px 16px", cursor: "pointer", fontSize: 13 }}>События</button>
+          <button style={{ background: "none", border: "none", borderBottom: "2px solid #fff", color: "#fff", padding: "12px 16px", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>Системные (12)</button>
+        </div>
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 13 }}>
+          Уведомлений нет
+        </div>
+      </div>
 
       {/* Secondary Sidebar (Menu Items) */}
       <aside style={{
