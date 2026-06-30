@@ -66,6 +66,8 @@ export default function DualSidebarShell({ children }) {
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState("sales");
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
@@ -96,11 +98,11 @@ export default function DualSidebarShell({ children }) {
         {/* Primary Nav Icons */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%", alignItems: "center", flex: 1 }}>
           {NAV_DATA.map(nav => {
-            const isActive = activeMenu === nav.id && !isNotificationsOpen;
+            const isActive = activeMenu === nav.id && !isNotificationsOpen && !isHelpOpen && !isSettingsOpen;
             return (
               <button
                 key={nav.id}
-                onClick={() => { setActiveMenu(nav.id); setIsNotificationsOpen(false); }}
+                onClick={() => { setActiveMenu(nav.id); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); }}
                 title={nav.label}
                 style={{
                   width: 44, height: 44, borderRadius: 12, border: "none", cursor: "pointer",
@@ -122,7 +124,7 @@ export default function DualSidebarShell({ children }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
           <div style={{ position: "relative" }}>
             <button 
-              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              onClick={() => { setIsNotificationsOpen(!isNotificationsOpen); setIsHelpOpen(false); setIsSettingsOpen(false); }}
               style={{ 
                 background: isNotificationsOpen ? "rgba(255,255,255,0.1)" : "transparent", 
                 border: "none", color: isNotificationsOpen ? "#fff" : "var(--faint)", cursor: "pointer",
@@ -134,10 +136,26 @@ export default function DualSidebarShell({ children }) {
               <div style={{ position: "absolute", top: 10, right: 12, width: 6, height: 6, background: "#ef4444", borderRadius: "50%" }}></div>
             </button>
           </div>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
+          <button 
+            onClick={() => { setIsHelpOpen(!isHelpOpen); setIsNotificationsOpen(false); setIsSettingsOpen(false); }}
+            style={{ 
+              background: isHelpOpen ? "rgba(255,255,255,0.1)" : "transparent", 
+              border: "none", color: isHelpOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
+              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s"
+            }}
+          >
             <Icon name="help-circle" size={20} />
           </button>
-          <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
+          <button 
+            onClick={() => { setIsSettingsOpen(!isSettingsOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); }}
+            style={{ 
+              background: isSettingsOpen ? "var(--color-primary)" : "transparent", 
+              border: "none", color: isSettingsOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
+              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
+              transition: "all 0.2s"
+            }}
+          >
             <Icon name="settings" size={20} />
           </button>
           <button style={{ background: "transparent", border: "none", color: "var(--faint)", cursor: "pointer", width: 44, height: 44 }}>
@@ -177,6 +195,115 @@ export default function DualSidebarShell({ children }) {
         </div>
         <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 13 }}>
           Уведомлений нет
+        </div>
+      </div>
+
+      {/* Help Slide-out Panel */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: isHelpOpen ? 64 : -400,
+        width: 350,
+        height: "100vh",
+        background: "#3263a5", // The exact blue color from the Help screenshot
+        zIndex: 40,
+        transition: "left 0.3s ease",
+        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff"
+      }}>
+        <div style={{ padding: "24px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+          <Icon name="help-circle" size={18} color="#cbd5e1" />
+          <span style={{ fontWeight: 700, fontSize: 18 }}>Помощь</span>
+        </div>
+        
+        <div style={{ padding: "0 20px 20px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5 }}>ЗАДАТЬ ВОПРОС</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
+          </div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "background 0.2s" }}>
+              <Icon name="message-circle" size={16} /> Здесь в чате
+            </a>
+            <a href="https://t.me/iPhoenix" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#229ED9", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
+              <Icon name="send" size={16} /> Telegram
+            </a>
+            <a href="viber://chat?number=%2B48729417050" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#7360F2", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
+              <Icon name="phone" size={16} /> Viber
+            </a>
+            <a href="https://wa.me/48729417050" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#25D366", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
+              <Icon name="message-square" size={16} /> WhatsApp
+            </a>
+            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
+              <Icon name="camera" size={16} /> Instagram
+            </a>
+            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#1877F2", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
+              <Icon name="facebook" size={16} /> Facebook
+            </a>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 32, marginBottom: 16 }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5 }}>ВНЕШНИЕ РЕСУРСЫ</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <a href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+              Инструкции по keyCRM <Icon name="external-link" size={12} color="#94a3b8" />
+            </a>
+            <a href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
+              Обновления <Icon name="external-link" size={12} color="#94a3b8" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Settings Slide-out Panel */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: isSettingsOpen ? 64 : -400,
+        width: 350,
+        height: "100vh",
+        background: "#3263a5", // The exact blue color from the screenshots
+        zIndex: 40,
+        transition: "left 0.3s ease",
+        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
+        display: "flex",
+        flexDirection: "column",
+        color: "#fff",
+        overflowY: "auto"
+      }}>
+        <div style={{ padding: "24px 20px", display: "flex", alignItems: "center", gap: 12 }}>
+          <Icon name="settings" size={18} color="#cbd5e1" />
+          <span style={{ fontWeight: 700, fontSize: 18 }}>Настройки</span>
+        </div>
+        
+        <div style={{ display: "flex", flexDirection: "column", padding: "0 0 20px 0" }}>
+          {[
+            "Основные", "Источники", "Коммуникации", "Воронки", "Заказы", 
+            "Товары", "Доставки", "Финансы", "Дополнительно"
+          ].map(item => (
+            <a key={item} href="#" style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}>
+              {item}
+            </a>
+          ))}
+
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 24, marginBottom: 12, padding: "0 20px" }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5, textTransform: "uppercase" }}>Доступ</span>
+            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
+          </div>
+
+          {[
+            "Пользователи", "Роли", "История действий"
+          ].map(item => (
+            <a key={item} href="#" style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}>
+              {item}
+            </a>
+          ))}
         </div>
       </div>
 
