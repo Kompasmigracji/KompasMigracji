@@ -112,7 +112,17 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
               gap: "var(--space-sm)",
               overflowY: "auto"
             }}>
-              {colCards.map(card => (
+              {colCards.map(card => {
+                // Parse source to pick an icon (telegram, viber, fb, etc)
+                let sourceIcon = "message-circle";
+                let sourceColor = "var(--dim)";
+                const sLower = (card.tags?.[0] || "").toLowerCase();
+                if (sLower.includes("telegram")) { sourceIcon = "send"; sourceColor = "#3b82f6"; }
+                else if (sLower.includes("viber")) { sourceIcon = "phone"; sourceColor = "#a855f7"; }
+                else if (sLower.includes("facebook") || sLower.includes("fb")) { sourceIcon = "facebook"; sourceColor = "#3b5998"; }
+                else if (sLower.includes("instagram") || sLower.includes("ig")) { sourceIcon = "instagram"; sourceColor = "#e1306c"; }
+
+                return (
                 <div
                   key={card.id}
                   draggable
@@ -120,50 +130,64 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   onDragEnd={handleDragEnd}
                   onClick={() => onCardClick && onCardClick(card)}
                   style={{
-                    background: "var(--panel)",
+                    background: "var(--bg)",
                     border: "1px solid var(--border)",
-                    borderRadius: "var(--radius-md)",
-                    padding: "var(--space-md)",
+                    borderRadius: 6,
+                    padding: "12px",
                     cursor: "grab",
-                    boxShadow: "var(--shadow-sm)",
-                    transition: "transform 0.15s, box-shadow 0.15s",
-                    borderLeft: `3px solid ${col.color || 'var(--border)'}`
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+                    transition: "box-shadow 0.15s",
+                    borderLeft: `4px solid ${col.color || 'var(--border)'}`,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "var(--shadow-md)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "var(--shadow-sm)"; }}
+                  onMouseEnter={e => { e.currentTarget.style.boxShadow = "var(--shadow-md)"; }}
+                  onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)"; }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                    <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text)" }}>
+                  {/* Lead Title & Main Info */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", wordBreak: "break-word" }}>
                       {card.title}
                     </div>
-                    {card.badge && (
-                      <Badge status={card.badge.status} text={card.badge.text} />
-                    )}
                   </div>
                   
+                  {/* Time Badge / Subtitle */}
                   {card.subtitle && (
-                    <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", marginBottom: 8 }}>
-                      {card.subtitle}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div style={{ 
+                        background: card.isUrgent ? "var(--color-danger)" : "var(--border)", 
+                        color: card.isUrgent ? "#fff" : "var(--text)", 
+                        fontSize: 10, padding: "2px 6px", borderRadius: 4, fontWeight: 700,
+                        display: "flex", alignItems: "center", gap: 4
+                      }}>
+                        <Icon name="clock" size={10} />
+                        {card.subtitle}
+                      </div>
+                      <span style={{ fontSize: 11, color: "var(--dim)" }}>{card.timeAgo || ""}</span>
                     </div>
                   )}
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "var(--space-sm)" }}>
-                    <div style={{ display: "flex", gap: 4 }}>
-                      {card.tags?.map((tag, i) => (
-                        <span key={i} style={{ 
-                          fontSize: 10, padding: "2px 6px", background: "var(--panel-2)", 
-                          borderRadius: 4, color: "var(--faint)", textTransform: "uppercase" 
-                        }}>
-                          {tag}
-                        </span>
-                      ))}
+                  {/* Source and Name/Contact */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "var(--dim)" }}>
+                    <Icon name={sourceIcon} size={14} color={sourceColor} />
+                    <span>{card.tags?.[0] || "Direct"}</span>
+                  </div>
+
+                  {/* Assignee Footer */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4, paddingTop: 8, borderTop: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <Avatar name={card.assignee?.name || "Unassigned"} size={20} />
+                      <span style={{ fontSize: 11, color: "var(--dim)" }}>{card.assignee?.name || "Не призначено"}</span>
                     </div>
-                    {card.assignee && (
-                      <Avatar name={card.assignee.name} size={24} />
+                    {card.amount > 0 && (
+                      <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-primary)" }}>
+                        {card.amount} zł
+                      </div>
                     )}
                   </div>
                 </div>
-              ))}
+              )})}
               
               {colCards.length === 0 && (
                 <div style={{ 
