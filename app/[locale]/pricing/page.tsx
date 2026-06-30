@@ -366,12 +366,12 @@ export default function PricingPage() {
                 <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#94a3b8', margin:'0 0 6px' }}>{t('pricing_hero_product')}</p>
                 
                 <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
-                  <span style={{ fontSize:44, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>450</span>
+                  <span style={{ fontSize:44, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>300</span>
                   <span style={{ fontSize:22, fontWeight:800, color:ORANGE }}>zł</span>
-                  <span style={{ fontSize:12, color: 'var(--text-muted)', marginLeft:4 }}>≈ 105 €</span>
+                  <span style={{ fontSize:12, color: 'var(--text-muted)', marginLeft:4 }}>≈ 70 €</span>
                 </div>
               </div>
-              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} style={{ padding:'12px 24px', borderRadius:10, border:'none', background:ORANGE, color:'#fff', fontWeight:700, fontSize:14, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'opacity 0.15s' }} onMouseEnter={e => { e.currentTarget.style.opacity='0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity='1'; }}>
+              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:30000, price:'300' })} style={{ padding:'12px 24px', borderRadius:10, border:'none', background:ORANGE, color:'#fff', fontWeight:700, fontSize:14, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'opacity 0.15s' }} onMouseEnter={e => { e.currentTarget.style.opacity='0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity='1'; }}>
                 {t('pricing_hero_order')}
               </button>
             </div>
