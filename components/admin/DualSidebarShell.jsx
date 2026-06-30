@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, Avatar } from "@/components/admin/ui";
 import { supabase } from "@/lib/supabase";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_DATA = [
   {
@@ -603,24 +604,31 @@ export default function DualSidebarShell({ children }) {
                 </div>
               )}
               <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "0 12px" }}>
-                {grp.items.map(item => {
+                {grp.items.map((item, index) => {
                   const isActive = pathname === item.href;
                   return (
-                    <Link 
-                      key={item.href} 
-                      href={item.href}
-                      style={{
-                        padding: "8px 12px", borderRadius: 8, fontSize: 14, textDecoration: "none",
-                        color: isActive ? "var(--text)" : "var(--dim)",
-                        background: isActive ? "rgba(255,255,255,0.05)" : "transparent",
-                        fontWeight: isActive ? 600 : 500,
-                        transition: "all 0.15s"
-                      }}
-                      onMouseEnter={e => { if(!isActive) { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.background = "rgba(255,255,255,0.02)"; } }}
-                      onMouseLeave={e => { if(!isActive) { e.currentTarget.style.color = "var(--dim)"; e.currentTarget.style.background = "transparent"; } }}
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05, duration: 0.3 }}
                     >
-                      {item.label}
-                    </Link>
+                      <Link 
+                        href={item.href}
+                        style={{
+                          padding: "8px 12px", borderRadius: 8, fontSize: 14, textDecoration: "none",
+                          color: isActive ? "var(--text)" : "var(--dim)",
+                          background: isActive ? "rgba(255,255,255,0.05)" : "transparent",
+                          fontWeight: isActive ? 600 : 500,
+                          transition: "all 0.15s",
+                          display: "block"
+                        }}
+                        onMouseEnter={e => { if(!isActive) { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.background = "rgba(0,0,0,0.02)"; } }}
+                        onMouseLeave={e => { if(!isActive) { e.currentTarget.style.color = "var(--dim)"; e.currentTarget.style.background = "transparent"; } }}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
                   );
                 })}
               </div>
@@ -649,21 +657,35 @@ export default function DualSidebarShell({ children }) {
       <main style={{ flex: 1, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Topbar of main area */}
         <header style={{
-          height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between"
+          height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", background: "var(--panel)", backdropFilter: "blur(12px)"
         }}>
-          <h1 style={{ margin: 0, fontSize: 18, fontWeight: 600, color: "var(--text)" }}>Панель админа</h1>
+          <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)" }}>Панель админа</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {/* Search placeholder */}
-            <div style={{ background: "var(--panel)", border: "1px solid var(--border)", padding: "6px 12px", borderRadius: 6, display: "flex", alignItems: "center", gap: 8, color: "var(--faint)", fontSize: 13, width: 200 }}>
+            <motion.div 
+              whileFocus={{ scale: 1.02 }}
+              style={{ background: "var(--bg)", border: "1px solid var(--border)", padding: "8px 16px", borderRadius: 8, display: "flex", alignItems: "center", gap: 8, color: "var(--faint)", fontSize: 13, width: 240, boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)" }}
+            >
               <Icon name="search" size={14} />
-              Поиск...
-            </div>
+              <input type="text" placeholder="Быстрый поиск..." style={{ background: "transparent", border: "none", outline: "none", width: "100%", color: "var(--text)" }} />
+            </motion.div>
           </div>
         </header>
 
         {/* Scrollable Page Content */}
-        <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
-          {children}
+        <div style={{ flex: 1, overflowY: "auto", padding: 24, position: "relative" }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{ minHeight: "100%" }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>

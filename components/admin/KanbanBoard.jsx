@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Icon, Avatar, Badge } from "./ui";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function KanbanBoard({ columns, cards, onCardMove, onCardClick }) {
   const [draggedCardId, setDraggedCardId] = useState(null);
@@ -123,7 +124,13 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                 else if (sLower.includes("instagram") || sLower.includes("ig")) { sourceIcon = "instagram"; sourceColor = "#e1306c"; }
 
                 return (
-                <div
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  whileHover={{ scale: 1.02, y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
+                  whileTap={{ scale: 0.98 }}
                   key={card.id}
                   draggable
                   onDragStart={(e) => handleDragStart(e, String(card.id))}
@@ -132,19 +139,19 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   style={{
                     background: "var(--bg)",
                     border: "1px solid var(--border)",
-                    borderRadius: 6,
-                    padding: "12px",
+                    borderRadius: 12,
+                    padding: "16px",
                     cursor: "grab",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-                    transition: "box-shadow 0.15s",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
                     borderLeft: `4px solid ${col.color || 'var(--border)'}`,
                     display: "flex",
                     flexDirection: "column",
-                    gap: 8
+                    gap: 12,
+                    position: "relative",
+                    overflow: "hidden"
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.boxShadow = "var(--shadow-md)"; }}
-                  onMouseLeave={e => { e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)"; }}
                 >
+                  <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${col.color}20, transparent 70%)` }} />
                   {/* Lead Title & Main Info */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", wordBreak: "break-word" }}>
@@ -186,7 +193,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               )})}
               
               {colCards.length === 0 && (
