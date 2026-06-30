@@ -67,11 +67,9 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
         return (
           <div 
             key={col.id}
+            className="premium-glass"
             style={{
               flex: "0 0 320px",
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
               borderRadius: 16,
               display: "flex",
               flexDirection: "column",
@@ -129,10 +127,11 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                 return (
                 <motion.div
                   layout
+                  className="premium-card"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  whileHover={{ scale: 1.02, y: -4, boxShadow: "0 12px 24px rgba(0,0,0,0.06)" }}
+                  whileHover={{ scale: 1.02, y: -4 }}
                   whileTap={{ scale: 0.98 }}
                   key={card.id}
                   draggable
@@ -140,13 +139,9 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   onDragEnd={handleDragEnd}
                   onClick={() => onCardClick && onCardClick(card)}
                   style={{
-                    background: "rgba(255, 255, 255, 0.9)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(0,0,0,0.03)",
                     borderRadius: 12,
                     padding: "16px",
                     cursor: "grab",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
                     display: "flex",
                     flexDirection: "column",
                     gap: 12,

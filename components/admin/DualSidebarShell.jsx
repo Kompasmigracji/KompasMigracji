@@ -145,13 +145,12 @@ export default function DualSidebarShell({ children }) {
       </div>
 
       {/* Primary Sidebar (Icons) */}
-      <aside style={{
-        width: 64,
-        background: "rgba(18, 18, 20, 0.75)",
-        backdropFilter: "blur(40px) saturate(200%)",
-        WebkitBackdropFilter: "blur(40px) saturate(200%)",
-        borderRight: "1px solid rgba(255, 255, 255, 0.1)",
-        display: "flex",
+      <aside 
+        className="premium-glass"
+        style={{
+          width: 64,
+          borderRight: "1px solid var(--border)",
+          display: "flex",
         flexDirection: "column",
         alignItems: "center",
         padding: "16px 0",
@@ -573,14 +572,12 @@ export default function DualSidebarShell({ children }) {
       </div>
 
       {/* Secondary Sidebar (Menu Items) */}
-      <aside style={{
-        width: 240,
-        background: "rgba(250, 250, 250, 0.6)",
-        backdropFilter: "blur(40px) saturate(180%)",
-        WebkitBackdropFilter: "blur(40px) saturate(180%)",
-        borderRight: "1px solid var(--border)",
-        boxShadow: "1px 0 20px rgba(0,0,0,0.02)",
-        display: "flex",
+      <aside 
+        className="premium-glass"
+        style={{
+          width: 240,
+          borderRight: "1px solid var(--border)",
+          display: "flex",
         flexDirection: "column",
         flexShrink: 0,
         zIndex: 10
@@ -661,10 +658,12 @@ export default function DualSidebarShell({ children }) {
       {/* Main Content Area */}
       <main style={{ flex: 1, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Topbar of main area */}
-        <header style={{
-          height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", 
-          background: "rgba(255,255,255,0.6)", backdropFilter: "blur(20px) saturate(180%)", WebkitBackdropFilter: "blur(20px) saturate(180%)", zIndex: 5
-        }}>
+        <header 
+          className="premium-glass"
+          style={{
+            height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", zIndex: 5
+          }}
+        >
           <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)" }}>Панель админа</h1>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {/* Search placeholder */}
