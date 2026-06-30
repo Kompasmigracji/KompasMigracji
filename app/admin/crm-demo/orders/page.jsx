@@ -117,7 +117,7 @@ export default function OrdersDemoPage() {
               fontWeight: 700,
               textTransform: "uppercase",
               cursor: "pointer",
-              border: f.outline ? \`1px solid \${f.color}\` : "1px solid transparent",
+              border: f.outline ? `1px solid ${f.color}` : "1px solid transparent",
               background: f.outline ? "transparent" : f.bg,
               color: f.color,
               opacity: activeFilter === f.id ? 1 : 0.7,

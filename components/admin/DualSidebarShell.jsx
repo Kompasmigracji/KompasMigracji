@@ -369,12 +369,24 @@ export default function DualSidebarShell({ children }) {
         
         <div style={{ display: "flex", flexDirection: "column", padding: "0 0 20px 0" }}>
           {[
-            "Основные", "Источники", "Коммуникации", "Воронки", "Заказы", 
-            "Товары", "Доставки", "Финансы", "Дополнительно"
+            { label: "Основные", path: "/admin/crm-demo/settings/general" },
+            { label: "Источники", path: "/admin/crm-demo/settings/sources" },
+            { label: "Коммуникации", path: "/admin/crm-demo/settings/communications" },
+            { label: "Воронки", path: "#" },
+            { label: "Заказы", path: "#" }, 
+            { label: "Товары", path: "#" },
+            { label: "Доставки", path: "#" },
+            { label: "Финансы", path: "#" },
+            { label: "Дополнительно", path: "#" }
           ].map(item => (
-            <a key={item} href="#" style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}>
-              {item}
-            </a>
+            <Link 
+              key={item.label} 
+              href={item.path} 
+              onClick={() => setIsSettingsOpen(false)}
+              style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}
+            >
+              {item.label}
+            </Link>
           ))}
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 24, marginBottom: 12, padding: "0 20px" }}>
