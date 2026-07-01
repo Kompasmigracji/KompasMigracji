@@ -664,7 +664,9 @@ export default function DualSidebarShell({ children }) {
             height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", zIndex: 5
           }}
         >
-          <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)" }}>iPhoenixCRM</h1>
+          <Link href="/admin/crm-demo" style={{ textDecoration: "none" }}>
+            <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)", cursor: "pointer" }}>iPhoenixCRM</h1>
+          </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             {/* Search placeholder */}
             <motion.div 
