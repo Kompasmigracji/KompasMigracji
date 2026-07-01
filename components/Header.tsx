@@ -185,11 +185,11 @@ export default function Header() {
             {t('nav_videos')}
           </Link>
           <Link
-            href="/admin"
+            href="/admin/crm-demo"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
           >
-            KompasCRM
+            iPhoenixCRM
           </Link>
         </nav>
 
@@ -293,12 +293,12 @@ export default function Header() {
             {t('nav_videos')}
           </Link>
           <Link
-            href="/admin"
+            href="/admin/crm-demo"
             onClick={() => setMobileOpen(false)}
             className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn no-underline mt-1 text-center"
             style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
           >
-            KompasCRM
+            iPhoenixCRM
           </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>
