@@ -8,8 +8,10 @@ const STATS = [
   { val: '24/7',  label: 'на звʼязку' },
 ];
 
+import { useTranslations } from 'next-intl';
+
 export default function Team() {
-  const { t } = useTranslation('common');
+  const t = useTranslations();
 
   return (
     <section className="py-24 bg-soft">

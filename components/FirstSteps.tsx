@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+
 const steps = [
   {
     num: '1',
@@ -37,6 +39,7 @@ const steps = [
 ];
 
 export default function FirstSteps() {
+  const t = useTranslations();
   return (
     <section className="py-24 bg-soft">
       <div className="max-w-5xl mx-auto px-6">

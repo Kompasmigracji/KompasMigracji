@@ -37,6 +37,7 @@ function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: 'prev' | 'next' 
 }
 
 export default function Reviews() {
+  const t = useTranslations();
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [animating, setAnimating] = useState(false);
