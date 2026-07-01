@@ -174,8 +174,8 @@ export default function AIAssistantIntake() {
                   )}
                   <div className={`max-w-[85%] sm:max-w-[75%] px-5 py-3.5 rounded-2xl text-[15px] leading-relaxed shadow-sm
                     ${isUser 
-                      ? 'bg-[#0f172a] text-white rounded-br-sm' 
-                      : 'bg-gray-50 border border-gray-100 text-gray-800 rounded-bl-sm whitespace-pre-wrap'
+                      ? 'bg-[#0f172a] dark:bg-blue-600 text-white rounded-br-sm' 
+                      : 'bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-gray-800 dark:text-gray-100 rounded-bl-sm whitespace-pre-wrap'
                     }`}
                   >
                     {msg.content}
@@ -189,7 +189,7 @@ export default function AIAssistantIntake() {
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-white text-sm shrink-0 shadow-sm">
                   🧭
                 </div>
-                <div className="bg-gray-50 border border-gray-100 px-5 py-4 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
+                <div className="bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 px-5 py-4 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150"></span>
                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300"></span>
@@ -215,8 +215,8 @@ export default function AIAssistantIntake() {
           )}
 
           {/* Input Area */}
-          <div className="p-4 sm:p-6 bg-white border-t border-gray-100">
-            <div className="relative flex items-center shadow-sm border border-gray-200 rounded-2xl bg-gray-50 focus-within:border-orange-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-orange-100 transition-all overflow-hidden p-1.5">
+          <div className="p-4 sm:p-6 bg-white dark:bg-[#0f172a] border-t border-gray-100 dark:border-slate-800">
+            <div className="relative flex items-center shadow-sm border border-gray-200 dark:border-slate-700 rounded-2xl bg-gray-50 dark:bg-slate-800 focus-within:border-orange-400 focus-within:bg-white dark:focus-within:bg-slate-900 focus-within:ring-2 focus-within:ring-orange-100 transition-all overflow-hidden p-1.5">
               <textarea
                 ref={inputRef}
                 value={input}
@@ -229,7 +229,7 @@ export default function AIAssistantIntake() {
                 }}
                 disabled={loading || leadCreated}
                 placeholder={leadCreated ? t('ai_sent') : t('ai_placeholder')}
-                className="w-full bg-transparent border-0 focus:ring-0 resize-none py-3 px-4 text-gray-700 text-base max-h-32 min-h-[56px] disabled:opacity-50 outline-none"
+                className="w-full bg-transparent border-0 focus:ring-0 resize-none py-3 px-4 text-gray-700 dark:text-gray-200 text-base max-h-32 min-h-[56px] disabled:opacity-50 outline-none"
                 rows={1}
               />
               <button
