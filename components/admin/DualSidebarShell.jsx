@@ -657,6 +657,16 @@ export default function DualSidebarShell({ children }) {
 
       {/* Main Content Area */}
       <main style={{ flex: 1, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        
+        {/* Promotional Banner */}
+        <div style={{
+          width: "100%", background: "linear-gradient(90deg, #f97316 0%, #fb923c 50%, #f97316 100%)", backgroundSize: "200% auto", animation: "gradient 3s linear infinite",
+          color: "white", textAlign: "center", padding: "6px 16px", fontSize: "13px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", zIndex: 10
+        }}>
+          <span style={{ animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite", fontSize: "16px" }}>🔥</span>
+          Спеціальна пропозиція: Знижка до 30% на юридичну годину! Пропонуйте клієнтам в чатах.
+        </div>
+
         {/* Topbar of main area */}
         <header 
           className="premium-glass"

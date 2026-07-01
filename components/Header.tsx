@@ -89,6 +89,11 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-premium ${scrolled ? 'apple-glass border-b border-transparent shadow-sm' : 'bg-transparent'}`}>
+      <div className="w-full bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 text-white text-center py-1.5 px-4 text-[13px] font-bold tracking-wide shadow-sm flex items-center justify-center gap-2" style={{ backgroundSize: '200% auto', animation: 'gradient 3s linear infinite' }}>
+        <span className="animate-pulse text-base">🔥</span> 
+        Спеціальна пропозиція: Знижка до 30% на юридичну годину!
+        <Link href="/pricing" className="underline ml-1 hover:text-orange-100 transition-colors">Запишіться зараз</Link>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[62px] gap-3">
 
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
