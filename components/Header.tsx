@@ -2,10 +2,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
-import Link from 'next/link';
-import { useRouter, usePathname } from '@/lib/navigation';
+import { Link, useRouter, usePathname } from '@/lib/navigation';
 import { useTheme } from '@/lib/ThemeContext';
 import type { Locale } from '@/i18n';
+import AIAssistantIntake from '@/components/AIAssistantIntake';
 
 const PHONE = '+48 729 271 848';
 const WA_LINK = 'https://wa.me/48729271848';
@@ -56,6 +56,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showAIModal, setShowAIModal] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
   const SERVICES = [
@@ -92,7 +93,7 @@ export default function Header() {
       <div className="w-full bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 text-white text-center py-1.5 px-4 text-[13px] font-bold tracking-wide shadow-sm flex items-center justify-center gap-2" style={{ backgroundSize: '200% auto', animation: 'gradient 3s linear infinite' }}>
         <span className="animate-pulse text-base">🔥</span> 
         Спеціальна пропозиція: Знижка до 30% на юридичну годину!
-        <Link href="/pricing" className="underline ml-1 hover:text-orange-100 transition-colors">Запишіться зараз</Link>
+        <button onClick={() => setShowAIModal(true)} className="underline ml-1 hover:text-orange-100 transition-colors bg-transparent border-0 cursor-pointer text-white font-bold text-[13px] p-0 m-0">Запишіться зараз</button>
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[62px] gap-3">
 
@@ -310,6 +311,14 @@ export default function Header() {
             <div className="flex gap-2 ml-auto">
               {SOCIAL.map(s => <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="social-circle-btn" aria-label={s.label}>{s.icon}</a>)}
             </div>
+          </div>
+        </div>
+      )}
+
+      {showAIModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-4xl bg-transparent animate-fade-in-up">
+            <AIAssistantIntake asModal={true} onClose={() => setShowAIModal(false)} />
           </div>
         </div>
       )}

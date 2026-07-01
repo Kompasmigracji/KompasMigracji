@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
-export default function AIAssistantIntake() {
+export default function AIAssistantIntake({ asModal = false, onClose }: { asModal?: boolean, onClose?: () => void }) {
   const t = useTranslations();
   const QUICK_REPLIES = [
     t('ai_quick_1'),
@@ -68,14 +68,14 @@ export default function AIAssistantIntake() {
       setMessages(prev => [...prev, { role: 'assistant', content: t('ai_no_conn') }]);
     }
     setLoading(false);
-  }, [messages, loading]);
+  }, [messages, loading, t]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans">
-      <div className="max-w-6xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-gray-100 h-[calc(100vh-120px)] min-h-[600px] max-h-[900px]">
+    <div className={asModal ? "w-full h-[85vh] sm:h-[600px] flex flex-col font-sans relative" : "min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 font-sans"}>
+      <div className={asModal ? "w-full bg-white flex flex-col lg:flex-row h-full rounded-2xl overflow-hidden" : "max-w-6xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row border border-gray-100 h-[calc(100vh-120px)] min-h-[600px] max-h-[900px]"}>
         
         {/* Left sidebar - Branding & Instructions */}
-        <div className="hidden lg:flex flex-col w-1/3 p-10 relative overflow-hidden bg-[#0f172a]">
+        <div className={`${asModal ? 'hidden' : 'hidden lg:flex'} flex-col w-1/3 p-10 relative overflow-hidden bg-[#0f172a]`}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] to-blue-900 opacity-90 z-0"></div>
           <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none z-0 text-white">
             <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
@@ -153,12 +153,19 @@ export default function AIAssistantIntake() {
               </div>
             </div>
             
-            {leadCreated && (
-              <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                {t('ai_lead_ok')}
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {leadCreated && (
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  {t('ai_lead_ok')}
+                </span>
+              )}
+              {asModal && onClose && (
+                <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Messages Area */}
