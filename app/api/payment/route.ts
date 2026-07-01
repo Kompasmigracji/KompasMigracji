@@ -63,62 +63,101 @@ export async function POST(req: NextRequest) {
   }
 
   const leadSource = String(source || 'pricing');
+  const sessionId  = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
 
-  /* ── Try Stripe Payment Checkout ──────────────────────────────────── */
+  /* ── 1. Try PayU ─────────────────────────────────────────────────── */
   try {
-    const { stripe } = await import("@/lib/stripe");
-    if (!stripe) {
-      // Мок-режим: Stripe не налаштований
-      const sessionId = `km-${randomUUID()}`;
-      let appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? 'https://kompasmigracji.com').replace(/\/$/, '');
-      if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
-        appUrl = `https://${appUrl}`;
-      }
+    const { isPayUConfigured, createPayUOrder } = await import('@/lib/payu');
+    if (isPayUConfigured()) {
+      await createLeadForPayment({
+        sessionId,
+        description: String(description),
+        email:       String(email),
+        source:      leadSource,
+        firstName:   firstName ? String(firstName) : undefined,
+        lastName:    lastName  ? String(lastName)  : undefined,
+        phone:       phone     ? String(phone)     : undefined,
+      });
 
-      await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
+      const result = await createPayUOrder({
+        sessionId,
+        amount:      Number(amount),
+        description: String(description),
+        email:       String(email),
+        firstName:   firstName ? String(firstName) : undefined,
+        lastName:    lastName  ? String(lastName)  : undefined,
+        phone:       phone     ? String(phone)     : undefined,
+        lang:        lang      ? String(lang)      : 'pl',
+        notifyUrl:   `${siteUrl}/api/payu/notify`,
+        continueUrl: `${siteUrl}/payment/success`,
+      });
 
-      const qs = new URLSearchParams({
-        amount: String(amount),
-        desc:   String(description),
-        cur:    'PLN',
-      }).toString();
-      return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${sessionId}?${qs}` });
+      return NextResponse.json({ redirectUrl: result.redirectUrl });
     }
+  } catch (err) {
+    console.error('PayU handler error, trying Stripe:', err);
+  }
 
-    const sessionId = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    const siteUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
+  /* ── 2. Try Stripe Checkout ──────────────────────────────────────── */
+  try {
+    const { stripe } = await import('@/lib/stripe');
+    if (stripe) {
+      await createLeadForPayment({
+        sessionId,
+        description: String(description),
+        email:       String(email),
+        source:      leadSource,
+        firstName:   firstName ? String(firstName) : undefined,
+        lastName:    lastName  ? String(lastName)  : undefined,
+        phone:       phone     ? String(phone)     : undefined,
+      });
 
-    // Зберігаємо лід і для реального Stripe
-    await createLeadForPayment({ sessionId, description: String(description), email: String(email), source: leadSource, firstName: firstName ? String(firstName) : undefined, lastName: lastName ? String(lastName) : undefined, phone: phone ? String(phone) : undefined });
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "p24", "blik"],
-      line_items: [
-        {
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card', 'p24', 'blik'],
+        line_items: [{
           price_data: {
-            currency: "pln",
-            product_data: {
-              name: String(description),
-            },
-            unit_amount: Number(amount), // amount is already in grosze
+            currency: 'pln',
+            product_data: { name: String(description) },
+            unit_amount: Number(amount),
           },
           quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: `${siteUrl}/payment/success`,
-      cancel_url: `${siteUrl}/pricing`,
-      customer_email: String(email),
-      client_reference_id: sessionId,
-      metadata: {
-        sessionId,
-        source: leadSource,
-      }
-    });
+        }],
+        mode:             'payment',
+        success_url:      `${siteUrl}/payment/success`,
+        cancel_url:       `${siteUrl}/test/pricing`,
+        customer_email:   String(email),
+        client_reference_id: sessionId,
+        metadata: { sessionId, source: leadSource },
+      });
 
-    return NextResponse.json({ redirectUrl: session.url });
-  } catch (err: any) {
-    console.error('Payment handler error:', err);
-    return NextResponse.json({ error: 'Внутрішня помилка сервера' }, { status: 500 });
+      return NextResponse.json({ redirectUrl: session.url });
+    }
+  } catch (err) {
+    console.error('Stripe handler error, falling back to mock:', err);
   }
+
+  /* ── 3. Mock mode ────────────────────────────────────────────────── */
+  const mockSessionId = `km-${randomUUID()}`;
+  let appUrl = siteUrl;
+  if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
+    appUrl = `https://${appUrl}`;
+  }
+
+  await createLeadForPayment({
+    sessionId:   mockSessionId,
+    description: String(description),
+    email:       String(email),
+    source:      leadSource,
+    firstName:   firstName ? String(firstName) : undefined,
+    lastName:    lastName  ? String(lastName)  : undefined,
+    phone:       phone     ? String(phone)     : undefined,
+  });
+
+  const qs = new URLSearchParams({
+    amount: String(amount),
+    desc:   String(description),
+    cur:    'PLN',
+  }).toString();
+  return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${mockSessionId}?${qs}` });
 }
