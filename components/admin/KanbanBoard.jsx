@@ -54,11 +54,11 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
   return (
     <div style={{ 
       display: "flex", 
-      gap: "var(--space-md)", 
+      gap: "21px", // Fibonacci
       overflowX: "auto", 
       width: "100%",
-      paddingBottom: "var(--space-md)",
-      minHeight: "calc(100vh - 200px)"
+      paddingBottom: "21px", // Fibonacci
+      minHeight: "calc(100vh - 233px)" // Fibonacci approximation
     }}>
       {columns.map((col) => {
         const colCards = cards.filter(c => String(c.columnId) === String(col.id));
@@ -69,12 +69,12 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             key={col.id}
             className="premium-glass"
             style={{
-              flex: "0 0 320px",
-              borderRadius: 16,
+              flex: "0 0 377px", // Fibonacci
+              borderRadius: 21, // Fibonacci
               display: "flex",
               flexDirection: "column",
               border: dragOverColId === col.id ? `2px dashed ${col.color || 'var(--color-primary)'}` : "1px solid rgba(0,0,0,0.05)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.02)",
+              boxShadow: "0 8px 34px rgba(0,0,0,0.03)", // Fibonacci
               transition: "border-color 0.2s"
             }}
             onDragOver={(e) => handleDragOver(e, col.id)}
@@ -83,14 +83,14 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
           >
             {/* Column Header */}
             <div style={{ 
-              padding: "var(--space-md)", 
+              padding: "21px", // Fibonacci
               borderBottom: "1px solid var(--border)",
-              borderTop: `4px solid ${col.color || 'var(--border)'}`,
-              borderTopLeftRadius: "var(--radius-lg)",
-              borderTopRightRadius: "var(--radius-lg)",
+              borderTop: `5px solid ${col.color || 'var(--border)'}`, // Fibonacci
+              borderTopLeftRadius: 21, // Fibonacci
+              borderTopRightRadius: 21, // Fibonacci
             }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                <h3 style={{ margin: 0, fontSize: "var(--text-sm)", fontWeight: 600 }}>{col.title}</h3>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+                <h3 style={{ margin: 0, fontSize: 21, fontWeight: 700, letterSpacing: "-0.02em" }}>{col.title}</h3>
                 <span style={{ 
                   background: "var(--panel)", padding: "2px 8px", 
                   borderRadius: 12, fontSize: "var(--text-xs)", color: "var(--dim)", fontWeight: 600 
@@ -108,10 +108,10 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             {/* Column Body (Drop Zone) */}
             <div style={{ 
               flex: 1, 
-              padding: "var(--space-sm)", 
+              padding: "13px", // Fibonacci
               display: "flex", 
               flexDirection: "column", 
-              gap: "var(--space-sm)",
+              gap: "13px", // Fibonacci
               overflowY: "auto"
             }}>
               {colCards.map(card => {
@@ -133,30 +133,30 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                     animate={{ opacity: 1, scale: 1, rotateX: 0, rotateY: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     whileHover={{ 
-                      scale: 1.05, 
-                      rotateX: 4, 
-                      rotateY: -4, 
-                      boxShadow: "20px 20px 60px rgba(0,0,0,0.1), -10px -10px 30px rgba(255,255,255,0.8)",
-                      y: -8
+                      scale: 1.03, // Golden ratio subtle scale
+                      rotateX: 3, // Fibonacci
+                      rotateY: -3, // Fibonacci
+                      boxShadow: "21px 21px 55px rgba(0,0,0,0.08), -13px -13px 34px rgba(255,255,255,0.5)", // Fibonacci
+                      y: -5 // Fibonacci
                     }}
-                    whileTap={{ scale: 0.95, rotateX: 0, rotateY: 0 }}
+                    whileTap={{ scale: 0.98, rotateX: 0, rotateY: 0 }}
                     draggable
                     onDragStart={(e) => handleDragStart(e, String(card.id))}
                     onDragEnd={handleDragEnd}
                     onClick={() => onCardClick && onCardClick(card)}
                     style={{
-                      borderRadius: 12,
-                      padding: "16px",
+                      borderRadius: 13, // Fibonacci
+                      padding: "21px", // Fibonacci
                       cursor: "grab",
                       display: "flex",
                       flexDirection: "column",
-                      gap: 12,
+                      gap: 13, // Fibonacci
                       position: "relative",
                       overflow: "hidden",
                       transformStyle: "preserve-3d"
                     }}
                   >
-                  <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 4, background: col.color || 'var(--border)' }} />
+                  <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 5, background: col.color || 'var(--border)' }} />
                   <div style={{ position: "absolute", top: 0, right: 0, width: 60, height: 60, background: `radial-gradient(circle at top right, ${col.color}15, transparent 70%)` }} />
                   {/* Lead Title & Main Info */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -188,10 +188,10 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   </div>
 
                   {/* Assignee Footer */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4, paddingTop: 8, borderTop: "1px solid var(--border)" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <Avatar name={card.assignee?.name || "Unassigned"} size={20} />
-                      <span style={{ fontSize: 11, color: "var(--dim)" }}>{card.assignee?.name || "Не призначено"}</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 5, paddingTop: 13, borderTop: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <Avatar name={card.assignee?.name || "Unassigned"} size={21} />
+                      <span style={{ fontSize: 13, color: "var(--dim)" }}>{card.assignee?.name || "Не призначено"}</span>
                     </div>
                     {card.amount > 0 && (
                       <div style={{ fontSize: 12, fontWeight: 700, color: "var(--color-primary)" }}>
