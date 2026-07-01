@@ -2,13 +2,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 
-const REVIEWS = [
-  { text: 'Роботодавець відмовлявся виплачувати зарплату за два місяці. Завдяки юридичній консультації і правильно складеній заяві — отримав усе до копійки. Дякую!', rating: 5, author: 'Олексій Н.', date: 'квітень 2026' },
-  { text: 'Зупинила поліція, хотіли вилучити права через технічну помилку в базі. Олександр підключився швидко — права залишилися при мені. Врятував ситуацію буквально за день.', rating: 5, author: 'Сергій М.', date: 'березень 2026' },
-  { text: 'Після розлучення не могли домовитися про аліменти. Юридична консультація допомогла знайти рішення без суду — мирно і справедливо для обох сторін.', rating: 5, author: 'Наталія В.', date: 'лютий 2026' },
-  { text: 'Спірний спадок між кількома родичами тягнувся місяцями. Олександр розклав усе по поличках, склав необхідні документи — і ми нарешті домовилися. Рекомендую всім.', rating: 5, author: 'Людмила Г.', date: 'травень 2026' },
-];
-
 function Stars({ n }: { n: number }) {
   return (
     <div className="flex justify-center gap-1">
@@ -38,6 +31,16 @@ function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: 'prev' | 'next' 
 
 export default function Reviews() {
   const t = useTranslations();
+  
+  const REVIEWS = [
+    { text: t('rev1_t'), rating: 5, author: t('rev1_a'), date: t('rev1_d') },
+    { text: t('rev2_t'), rating: 5, author: t('rev2_a'), date: t('rev2_d') },
+    { text: t('rev3_t'), rating: 5, author: t('rev3_a'), date: t('rev3_d') },
+    { text: t('rev4_t'), rating: 5, author: t('rev4_a'), date: t('rev4_d') },
+  ];
+
+
+
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [animating, setAnimating] = useState(false);
@@ -66,7 +69,7 @@ export default function Reviews() {
           <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('reviews_tag')}</div>
           <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('reviews_title')}</h2>
           <p className="text-gray-500 text-sm mt-3">
-            Реальні відгуки на{' '}
+            {t('rev_real_text')} {' '}
             <a href="https://www.gowork.pl/opinie_czytaj,24275530" target="_blank" rel="noreferrer" className="text-primary hover:underline">GoWork.pl</a>
           </p>
         </div>

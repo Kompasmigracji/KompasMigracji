@@ -1,30 +1,29 @@
 import { useTranslations } from 'next-intl';
 
-const items = [
-  {
-    icon: '🔒',
-    title: 'Повна конфіденційність',
-    desc: 'Ваші дані захищені відповідно до RODO. Ми ніколи не передаємо інформацію про клієнтів третім особам.',
-  },
-  {
-    icon: '⚖️',
-    title: 'Тільки законні методи',
-    desc: 'Працюємо виключно в рамках польського та європейського права. Нуль корупції, нуль обхідних шляхів.',
-  },
-  {
-    icon: '💰',
-    title: 'Прозорі ціни',
-    desc: 'Ціна узгоджується до початку роботи. Без прихованих платежів і несподіванок наприкінці.',
-  },
-  {
-    icon: '📞',
-    title: 'Завжди на зв\'язку',
-    desc: 'Відповідаємо протягом 2 годин в робочі дні. Ви в курсі кожного кроку вашої справи.',
-  },
-];
-
 export default function GuaranteeSection() {
   const t = useTranslations();
+  const items = [
+    {
+      icon: '🔒',
+      title: t('guar_i1_t'),
+      desc: t('guar_i1_d'),
+    },
+    {
+      icon: '⚖️',
+      title: t('guar_i2_t'),
+      desc: t('guar_i2_d'),
+    },
+    {
+      icon: '💰',
+      title: t('guar_i3_t'),
+      desc: t('guar_i3_d'),
+    },
+    {
+      icon: '📞',
+      title: t('guar_i4_t'),
+      desc: t('guar_i4_d'),
+    },
+  ];
   return (
     <section className="py-24 bg-white">
       <div className="max-w-5xl mx-auto px-6">
@@ -53,17 +52,16 @@ export default function GuaranteeSection() {
         <div className="rounded-3xl bg-navy text-white p-10 md:p-12 text-center shadow-xl">
           <div className="text-4xl mb-4">🤝</div>
           <h3 className="font-display tracking-tight text-2xl font-semibold mb-3">
-            Не зможемо допомогти? Скажемо чесно.
+            {t('guar_fail_title')}
           </h3>
           <p className="text-gray-300 text-sm max-w-xl mx-auto leading-relaxed">
-            Якщо ваша ситуація потребує інших спеціалістів — направимо вас до потрібних людей.
-            Ваше благополуччя важливіше за наш прибуток.
+            {t('guar_fail_desc')}
           </p>
           <a
             href="#contact"
             className="inline-block mt-8 px-8 py-4 rounded-full border border-white/20 text-white text-sm font-semibold no-underline hover:bg-white/10 hover:border-white/40 transition-all hover-lift"
           >
-            Задати питання безкоштовно &rarr;
+            {t('guar_fail_btn')}
           </a>
         </div>
       </div>

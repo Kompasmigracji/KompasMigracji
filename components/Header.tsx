@@ -60,14 +60,14 @@ export default function Header() {
   const dropRef = useRef<HTMLDivElement>(null);
 
   const SERVICES = [
-    { label: t('pcat_legalization'), href: '/pricing#legalization', icon: '🏠' },
-    { label: t('pcat_notary'),       href: '/pricing#notary',       icon: '✍️' },
-    { label: t('pcat_legal'),        href: '/pricing#legal',        icon: '⚖️' },
-    { label: t('pcat_marriage'),     href: '/pricing#marriage',     icon: '💍' },
-    { label: t('pcat_translations'), href: '/pricing#translations', icon: '📄' },
-    { label: t('pcat_bureaucracy'),  href: '/pricing#bureaucracy',  icon: '📋' },
-    { label: t('pcat_free'),         href: '/pricing#free',         icon: '🎁' },
-    { label: t('nav_svc_express'),   href: '/karta',                icon: '⚡', accent: true },
+    { label: t('pcat_legalization'), href: '/test/pricing#legalization', icon: '🏠' },
+    { label: t('pcat_notary'),       href: '/test/pricing#notary',       icon: '✍️' },
+    { label: t('pcat_legal'),        href: '/test/pricing#legal',        icon: '⚖️' },
+    { label: t('pcat_marriage'),     href: '/test/pricing#marriage',     icon: '💍' },
+    { label: t('pcat_translations'), href: '/test/pricing#translations', icon: '📄' },
+    { label: t('pcat_bureaucracy'),  href: '/test/pricing#bureaucracy',  icon: '📋' },
+    { label: t('pcat_free'),         href: '/test/pricing#free',         icon: '🎁' },
+    { label: t('nav_svc_express'),   href: '/test/karta',                icon: '⚡', accent: true },
   ];
 
   const changeLang = (lng: string) => {
@@ -127,7 +127,7 @@ export default function Header() {
                       <span>{s.icon}</span>{s.label}
                     </a>
                   ))}
-                  <a href="/pricing" onClick={() => setDropOpen(false)}
+                  <a href="/test/pricing" onClick={() => setDropOpen(false)}
                     className="flex items-center gap-1 px-3 py-2 text-sm font-semibold no-underline text-gray-500 hover:text-primary hover:bg-gray-50 rounded-lg transition-colors ml-auto">
                     {t('nav_pricelist')} →
                   </a>
@@ -140,7 +140,7 @@ export default function Header() {
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
           <Link
-            href="/pricing"
+            href="/test/pricing"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
@@ -206,11 +206,11 @@ export default function Header() {
             </a>
           ))}
           <div className="my-1 border-t border-gray-100" />
-          {[['#process', t('nav_process')], ['#pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#process', t('nav_process')], ['/test/pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}</a>
           ))}
           <Link
-            href="/pricing"
+            href="/test/pricing"
             onClick={() => setMobileOpen(false)}
             className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
