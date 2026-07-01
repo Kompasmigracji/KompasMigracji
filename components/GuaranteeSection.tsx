@@ -26,10 +26,9 @@ export default function GuaranteeSection() {
     <section className="py-24 bg-white">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Наші гарантії</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('guarantee_tag')}</div>
           <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
-            Можете нам{' '}
-            <em className="gradient-text not-italic">довіряти</em>
+            {t('guarantee_title')}
           </h2>
         </div>
 

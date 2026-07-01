@@ -316,7 +316,7 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
           </div>
         ) : (
           <span style={{ fontSize:14, fontWeight:700, color: 'var(--text-main)' }}>
-            {(isFixed || row.price.includes('–')) ? `${row.price} zł` : row.price}
+            {(isFixed || /^\d+$/.test(row.price)) ? `${row.price} zł` : row.price}
           </span>
         )}
       </td>

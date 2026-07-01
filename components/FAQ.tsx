@@ -3,21 +3,9 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 const EMOTIONAL_ITEMS = [
-  {
-    q: 'Я в паніці і не знаю що робити. З чого почати?',
-    a: 'Зробіть один крок — напишіть нам у WhatsApp або зателефонуйте. Ми самі розберемося з чого починати у вашій ситуації. Вам не потрібно нічого знати заздалегідь — для цього і існуємо ми. Перша консультація безкоштовна і без зобов\'язань.',
-    panic: true,
-  },
-  {
-    q: 'У мене немає грошей. Чи можете ви мені допомогти?',
-    a: 'Так. Починаємо з безкоштовної 2-хвилинної оцінки. Якщо потрібна платна допомога — підберемо план, який відповідає вашому бюджету. Також маємо гнучку систему оплати частинами для складних справ. Гроші не мають бути причиною, щоб залишитися без допомоги.',
-    panic: false,
-  },
-  {
-    q: 'Мені відмовили у Karcie pobytu. Це кінець?',
-    a: 'Ні. Відмова — це не кінець. Є право на оскарження рішення протягом 14 днів. Ми маємо досвід успішного оскарження відмов. Зв\'яжіться з нами якомога швидше — часові рамки важливі.',
-    panic: true,
-  },
+  { q: 'faq_panic_q_0', a: 'faq_panic_a_0', panic: true },
+  { q: 'faq_panic_q_1', a: 'faq_panic_a_1', panic: false },
+  { q: 'faq_panic_q_2', a: 'faq_panic_a_2', panic: true },
 ];
 
 export default function FAQ() {
@@ -30,7 +18,10 @@ export default function FAQ() {
     panic: false,
   }));
 
-  const items = [...EMOTIONAL_ITEMS, ...translatedItems];
+  const items = [
+    ...EMOTIONAL_ITEMS.map(it => ({ q: t(it.q as any), a: t(it.a as any), panic: it.panic })),
+    ...translatedItems
+  ];
 
   return (
     <section className="py-24 bg-white">
@@ -70,13 +61,13 @@ export default function FAQ() {
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-white text-xs font-semibold no-underline shadow-sm hover:opacity-90"
                         style={{ background: '#25D366' }}
                       >
-                        Написати в WhatsApp →
+                        {t('faq_panic_whatsapp')}
                       </a>
                       <a
                         href="tel:+48729271848"
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-navy text-xs font-semibold no-underline border border-gray-200 hover:border-red-300 transition-colors bg-white"
                       >
-                        Зателефонувати
+                        {t('faq_panic_call')}
                       </a>
                     </div>
                   )}

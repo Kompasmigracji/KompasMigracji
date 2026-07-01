@@ -9,13 +9,15 @@ const STATS = [
 ];
 
 export default function Team() {
+  const { t } = useTranslation('common');
+
   return (
     <section className="py-24 bg-soft">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-14">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">НАШІ КОНСУЛЬТАНТИ</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('team_tag')}</div>
           <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
-            Хто вас консультує
+            {t('team_title')}
           </h2>
         </div>
         <div className="max-w-3xl mx-auto">

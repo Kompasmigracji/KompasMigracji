@@ -90,11 +90,6 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-premium ${scrolled ? 'apple-glass border-b border-transparent shadow-sm' : 'bg-transparent'}`}>
-      <div className="w-full bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 text-white text-center py-1.5 px-4 text-[13px] font-bold tracking-wide shadow-sm flex items-center justify-center gap-2" style={{ backgroundSize: '200% auto', animation: 'gradient 3s linear infinite' }}>
-        <span className="animate-pulse text-base">🔥</span> 
-        Спеціальна пропозиція: Знижка до 30% на юридичну годину!
-        <button onClick={() => setShowAIModal(true)} className="underline ml-1 hover:text-orange-100 transition-colors bg-transparent border-0 cursor-pointer text-white font-bold text-[13px] p-0 m-0">Запишіться зараз</button>
-      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[62px] gap-3">
 
         <Link href="/" className="flex items-center gap-2.5 no-underline flex-shrink-0">
@@ -155,47 +150,11 @@ export default function Header() {
           <div style={{ width: 1, height: 20, background: '#e5e7eb', flexShrink: 0, margin: '0 4px' }} />
 
           <Link
-            href="/ai"
+            href="/test"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
-            {t('nav_ai_assistant')}
-          </Link>
-          <Link
-            href="/portal"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
-            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
-            title="Portal klienta — sprawdź status swojej sprawy"
-          >
-            Portal
-          </Link>
-          <Link
-            href="/plans"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn rounded-full transition-all hover:opacity-90 hover:scale-105 no-underline whitespace-nowrap"
-            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
-          >
-            Plany
-          </Link>
-          <Link
-            href="/orakul"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
-            style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
-          >
-            Оракул
-          </Link>
-          <Link
-            href="/videos"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
-            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
-          >
-            {t('nav_videos')}
-          </Link>
-          <Link
-            href="/admin/crm-demo"
-            className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
-            style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
-          >
-            iPhoenixCRM
+            {t('nav_services') || 'Usługi'}
           </Link>
         </nav>
 
@@ -259,52 +218,12 @@ export default function Header() {
             {t('nav_pricelist')}
           </Link>
           <Link
-            href="/ai"
+            href="/test"
             onClick={() => setMobileOpen(false)}
             className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
             style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
           >
-            {t('nav_ai_assistant')}
-          </Link>
-          <Link
-            href="/portal"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
-            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
-          >
-            Portal klienta
-          </Link>
-          <Link
-            href="/plans"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn text-center no-underline mt-1"
-            style={{ boxShadow: '0 2px 12px -2px rgba(5,150,105,.4)' }}
-          >
-            Plany subskrypcji
-          </Link>
-          <Link
-            href="/orakul"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn no-underline mt-1 text-center"
-            style={{ boxShadow: '0 2px 12px -2px rgba(29,78,216,.4)' }}
-          >
-            Оракул — AI для зварювальників
-          </Link>
-          <Link
-            href="/videos"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white no-underline mt-1 text-center"
-            style={{ background: 'linear-gradient(135deg, #d4af37, #f59e0b)', boxShadow: '0 2px 12px -2px rgba(212,175,55,.4)' }}
-          >
-            {t('nav_videos')}
-          </Link>
-          <Link
-            href="/admin/crm-demo"
-            onClick={() => setMobileOpen(false)}
-            className="block px-4 py-2.5 rounded-full text-sm font-bold text-white gradient-btn no-underline mt-1 text-center"
-            style={{ background: 'linear-gradient(135deg, #4f46e5, #4338ca)', boxShadow: '0 2px 12px -2px rgba(79,70,229,.4)' }}
-          >
-            iPhoenixCRM
+            {t('nav_services') || 'Usługi'}
           </Link>
           <div className="mt-3 flex items-center gap-2 px-3">
             <a href="tel:+48729271848" className="text-sm font-semibold text-navy no-underline">{PHONE}</a>

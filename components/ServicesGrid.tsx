@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 const icons = ['🔴','🔵','💛','🟢','📚','🏥','🏠','💼','👨‍👩‍👧','🌍','📄','🤝'];
 
 const URGENT_INDICES = [0, 1, 2];
-const URGENT_LABEL = ['ТЕРМІНОВО', 'ТОП', 'ВАЖЛИВО'];
+const getUrgentLabel = (t: any) => [t('badge_urgent'), t('badge_top'), t('badge_important')];
 
 export default function ServicesGrid() {
   const t = useTranslations();
@@ -37,14 +37,14 @@ export default function ServicesGrid() {
                   className="absolute -top-3 left-5 text-white text-[10px] font-bold px-3 py-1 rounded-full"
                   style={{ background: s.urgentIdx === 0 ? '#dc2626' : s.urgentIdx === 1 ? '#2563eb' : '#d97706' }}
                 >
-                  {URGENT_LABEL[s.urgentIdx]}
+                  {getUrgentLabel(t)[s.urgentIdx]}
                 </span>
               )}
               <div className="text-3xl h-10 flex items-center">{s.icon}</div>
               <h3 className="font-display text-lg font-semibold text-navy">{s.title}</h3>
               <p className="text-sm text-gray-500 leading-relaxed flex-grow">{s.desc}</p>
               <span className={`text-sm font-medium self-start ${s.urgentIdx >= 0 ? 'text-red-600' : 'text-primary'}`}>
-                {s.urgentIdx === 0 ? '→ Отримати допомогу зараз' : t('services_more')}
+                {s.urgentIdx === 0 ? t('service_get_help') : t('services_more')}
               </span>
             </div>
           ))}

@@ -41,13 +41,13 @@ export default function FirstSteps() {
     <section className="py-24 bg-soft">
       <div className="max-w-5xl mx-auto px-6">
         <div className="text-center mb-16">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">Перші кроки</div>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('first_steps_tag')}</div>
           <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>
-            Що зробити{' '}
-            <em className="gradient-text not-italic">в перші 24 години</em>
+            {t('first_steps_title')}
+            <em className="gradient-text not-italic"> {t('first_steps_highlight')}</em>
           </h2>
           <p className="text-gray-500 mt-4 max-w-xl mx-auto text-sm leading-relaxed">
-            Якщо ви щойно опинилися в Польщі і не знаєте що робити — це саме для вас
+            {t('first_steps_desc')}
           </p>
         </div>
 

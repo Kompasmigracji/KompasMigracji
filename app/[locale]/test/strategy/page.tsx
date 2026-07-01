@@ -121,7 +121,7 @@ const SOURCES_DATA: Source[] = [
     id: 'website', icon: '🌐', name: 'kompasmigracji.com', status: 'live',
     potential: '80 лідів/міс', potentialNum: 80, color: '#2563eb',
     desc: 'Центральний хаб. Оновлений з 21 нововведенням для конверсії панічних клієнтів.',
-    actions: ['✅ SituationQuiz + PanicStrip + MobileCTABar', '✅ Форма з рівнем терміновості', '✅ Countdown таймер до акції (06.06)', '📅 Chatbot навчити більше кейсів', '📅 Блог: 2 статті/тиждень'],
+    actions: ['✅ SituationQuiz + PanicStrip + MobileCTABar', '✅ Форма з рівнем терміновості', '✅ Countdown таймер до акції', '📅 Chatbot навчити більше кейсів', '📅 Блог: 2 статті/тиждень'],
     kpi: 'Conversion rate > 4% · < 45 сек до CTA',
   },
   {
@@ -153,7 +153,7 @@ const PRODUCTS_DATA: Product[] = [
   { name: 'Підписка Базова', price: 49, unit: 'zł/міс', target: 200, mrr: 9800, color: '#8b5cf6', icon: '📋', desc: 'Необмежені запитання, відповідь до 24 год' },
   { name: 'Підписка Стандарт', price: 99, unit: 'zł/міс', target: 80, mrr: 7920, color: '#6366f1', icon: '🚀', desc: 'Консультація + пріоритетна підтримка' },
   { name: 'Підписка Преміум', price: 199, unit: 'zł/міс', target: 20, mrr: 3980, color: '#a855f7', icon: '👑', desc: 'Повний супровід + необмежені консультації' },
-  { name: 'Юр. година (акція)', price: 450, unit: 'zł', target: 16, mrr: 7200, color: '#f97316', icon: '⚡', desc: 'Знижка 33% до 06.06 (звичайна ціна 600 zł)' },
+  { name: 'Юр. година (акція)', price: 450, unit: 'zł', target: 16, mrr: 7200, color: '#f97316', icon: '⚡', desc: 'Знижка 33% (звичайна ціна 600 zł)' },
   { name: 'B2B корпоративний', price: 500, unit: 'zł/міс', target: 4, mrr: 2000, color: '#334155', icon: '🏢', desc: 'Для роботодавців і агентств зайнятості' },
   { name: 'Ведення справи', price: 1200, unit: 'zł', target: 0, mrr: 0, color: '#dc2626', icon: '⚖️', desc: 'Складні міграційні справи — індивідуально' },
 ];

@@ -1,14 +1,8 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 const REVIEWS = [
-  { text: 'Отримала карту побуту після двох років очікування. Олександр чітко розʼяснив ситуацію і зібрав правильний пакет документів. Результат — за 6 тижнів.', rating: 5, author: 'Олена К.', date: 'лютий 2026' },
-  { text: 'Скарга на бездіяльність уженду вирішила питання, яке тягнулося рік. Рекомендую всім, хто застряг в очікуванні — не гайте час.', rating: 5, author: 'Михайло Д.', date: 'грудень 2025' },
-  { text: 'Дуже задоволений сервісом. Пакет документів готовий за 2 дні. Олександр завжди на звʼязку і пояснює кожен крок.', rating: 5, author: 'Ігор С.', date: 'березень 2026' },
-  { text: 'Після 14 місяців без відповіді від уженду нарешті маю карту резидента ЄС. Без Kompas Migracji це зайняло б ще роки.', rating: 5, author: 'Марія Л.', date: 'квітень 2026' },
-  { text: 'Зверталася з нуля — не знала навіть з чого починати. Олександр провів через весь процес. Тепер маю карту і спокій.', rating: 5, author: 'Тетяна В.', date: 'січень 2026' },
-  { text: 'Хотіли одружитися в Польщі — не знали з чого починати. Олександр пояснив весь шлях: від легалізації документів до отримання громадянства. Все чітко, без зайвих слів.', rating: 5, author: 'Анна і Василь Р.', date: 'березень 2026' },
-  { text: 'Після переїзду не розумів, що робити далі: робота, реєстрація, перспективи. Kompas Migracji розробили для мене дорожню карту на 3 роки — тепер знаю кожен наступний крок.', rating: 5, author: 'Дмитро П.', date: 'лютий 2026' },
   { text: 'Роботодавець відмовлявся виплачувати зарплату за два місяці. Завдяки юридичній консультації і правильно складеній заяві — отримав усе до копійки. Дякую!', rating: 5, author: 'Олексій Н.', date: 'квітень 2026' },
   { text: 'Зупинила поліція, хотіли вилучити права через технічну помилку в базі. Олександр підключився швидко — права залишилися при мені. Врятував ситуацію буквально за день.', rating: 5, author: 'Сергій М.', date: 'березень 2026' },
   { text: 'Після розлучення не могли домовитися про аліменти. Юридична консультація допомогла знайти рішення без суду — мирно і справедливо для обох сторін.', rating: 5, author: 'Наталія В.', date: 'лютий 2026' },
@@ -68,8 +62,8 @@ export default function Reviews() {
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-14">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">ПРО НАС ГОВОРЯТЬ</div>
-          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>Відгуки клієнтів</h2>
+          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('reviews_tag')}</div>
+          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('reviews_title')}</h2>
           <p className="text-gray-500 text-sm mt-3">
             Реальні відгуки на{' '}
             <a href="https://www.gowork.pl/opinie_czytaj,24275530" target="_blank" rel="noreferrer" className="text-primary hover:underline">GoWork.pl</a>

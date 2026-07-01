@@ -20,6 +20,20 @@ const nextConfig = {
       { protocol: 'https', hostname: 'yt3.ggpht.com' },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/en/prices',
+        destination: '/en/pricing',
+        permanent: true,
+      },
+      {
+        source: '/prices',
+        destination: '/pricing',
+        permanent: true,
+      }
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

@@ -460,7 +460,7 @@ export default function KartaPage(): React.JSX.Element {
               {/* pkg 1 */}
               <div style={{ position: 'relative' }}>
                 <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, #f97316, #dc2626)', color: '#fff', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', padding: '3px 12px', borderRadius: 999, textTransform: 'uppercase', marginBottom: 8 }}>
-                  АКЦІЯ · ДО 06.06.2026
+                  АКЦІЯ
                 </span>
                 <Tag color={ORANGE}>{t.p1tag}</Tag>
                 <p className="karta-pkg-name" style={{ fontSize: 20, fontWeight: 800, margin: '0 0 2px', color: DARK }}>{t.p1name}</p>

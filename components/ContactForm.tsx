@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
 
-const URGENCY_OPTIONS = [
-  { value: 'normal', label: 'Звичайний', desc: 'Відповімо протягом 24 год', color: '#2563eb' },
-  { value: 'urgent', label: 'Терміново (3-7 днів)', desc: 'Пріоритетна обробка', color: '#d97706' },
-  { value: 'critical', label: 'КРИТИЧНО — сьогодні', desc: 'Відповімо протягом 2 год', color: '#dc2626' },
+const getUrgencyOptions = (t: any) => [
+  { value: 'normal', label: t('urgency_normal'), desc: t('urgency_normal_desc'), color: '#2563eb' },
+  { value: 'urgent', label: t('urgency_urgent'), desc: t('urgency_urgent_desc'), color: '#d97706' },
+  { value: 'critical', label: t('urgency_critical'), desc: t('urgency_critical_desc'), color: '#dc2626' },
 ];
 
 export default function ContactForm({ preselectedPlan }: { preselectedPlan?: string }) {
@@ -61,9 +61,9 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
         >
           {/* Urgency selector */}
           <div className="mb-6">
-            <label className={labelCls}>Терміновість ситуації</label>
+            <label className={labelCls}>{t('urgency_label')}</label>
             <div className="flex flex-col gap-2">
-              {URGENCY_OPTIONS.map(opt => (
+              {getUrgencyOptions(t).map((opt: any) => (
                 <label
                   key={opt.value}
                   className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${urgency === opt.value ? 'border-opacity-100' : 'border-gray-200 hover:border-gray-300'}`}
@@ -139,7 +139,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             className="w-full gradient-btn text-white font-bold py-4 rounded-full text-sm transition-premium hover-lift shadow-[0_8px_20px_rgba(37,99,235,0.3)]"
             style={urgency === 'critical' ? { background: 'linear-gradient(135deg, #dc2626, #b91c1c)' } : {}}
           >
-            {urgency === 'critical' ? '🚨 Відправити — ТЕРМІНОВО' : t('form_submit')}
+            {urgency === 'critical' ? t('form_submit_critical') : t('form_submit')}
           </button>
         </form>
       </div>
