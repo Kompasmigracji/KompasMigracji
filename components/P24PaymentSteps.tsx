@@ -146,6 +146,10 @@ export default function P24PaymentSteps({
   steps = DEFAULT_STEPS,
   securityNote,
 }: P24PaymentStepsProps) {
+  const accentFn = (idx: number) => idx % 2 === 0
+    ? `linear-gradient(90deg, ${PAYU_BLUE}, #7dd3fc)`
+    : `linear-gradient(90deg, ${GREEN}, #86efac)`;
+
   return (
     <section style={{
       background: LIGHT,
@@ -158,9 +162,9 @@ export default function P24PaymentSteps({
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <div style={{ height: 2, width: 40, background: RED, borderRadius: 2 }} />
+            <div style={{ height: 2, width: 40, background: PAYU_BLUE, borderRadius: 2 }} />
             <P24Logo width={120} />
-            <div style={{ height: 2, width: 40, background: RED, borderRadius: 2 }} />
+            <div style={{ height: 2, width: 40, background: PAYU_BLUE, borderRadius: 2 }} />
           </div>
           <h2 style={{
             fontSize: "clamp(22px, 4vw, 34px)",
