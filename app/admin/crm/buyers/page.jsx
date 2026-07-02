@@ -6,6 +6,34 @@ import { Icon, Avatar } from "@/components/admin/ui";
 export default function BuyersDemoPage() {
   const [buyers, setBuyers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newBuyer, setNewBuyer] = useState({ full_name: '', email: '', phone: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleAddBuyer = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/admin/crm/buyers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBuyer)
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setBuyers([json.data, ...buyers]);
+        setIsModalOpen(false);
+        setNewBuyer({ full_name: '', email: '', phone: '' });
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Ошибка');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Ошибка');
+    }
+    setIsSubmitting(false);
+  };
   
 
   useEffect(() => {
@@ -64,7 +92,7 @@ export default function BuyersDemoPage() {
           <Icon name="sliders" size={14} color="var(--dim)" />
         </button>
 
-        <button style={{ 
+        <button onClick={() => setIsModalOpen(true)} style={{ 
           background: "var(--color-primary)", color: "#fff", border: "none", 
           padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600,
           display: "flex", alignItems: "center", gap: 8, cursor: "pointer", marginLeft: "auto"
@@ -167,6 +195,23 @@ export default function BuyersDemoPage() {
           </div>
         </div>
       </div>
+      
+      {isModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+          <div style={{ background: 'var(--bg)', padding: 24, borderRadius: 8, width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+            <h3 style={{ margin: '0 0 16px', color: 'var(--text)' }}>Новый покупатель</h3>
+            <form onSubmit={handleAddBuyer} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <input required placeholder="ФИО" value={newBuyer.full_name} onChange={e => setNewBuyer({...newBuyer, full_name: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
+              <input type="email" placeholder="Email" value={newBuyer.email} onChange={e => setNewBuyer({...newBuyer, email: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
+              <input type="tel" placeholder="Телефон" value={newBuyer.phone} onChange={e => setNewBuyer({...newBuyer, phone: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 8 }}>
+                <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '8px 16px', borderRadius: 4, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text)', cursor: 'pointer' }}>Отмена</button>
+                <button type="submit" disabled={isSubmitting} style={{ padding: '8px 16px', borderRadius: 4, border: 'none', background: 'var(--color-primary)', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>{isSubmitting ? 'Сохранение...' : 'Сохранить'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
