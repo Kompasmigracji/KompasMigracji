@@ -6,9 +6,9 @@ import { useTranslations } from 'next-intl';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import P24PaymentSteps, { CartIcon, UserIcon, CardIcon, CheckCircleIcon } from '@/components/P24PaymentSteps';
+import { motion } from 'framer-motion';
 
 const ORANGE = '#f97316';
-const NAVY   = '#0f172a';
 
 type ServiceRow = { name: string; price: string; amountGrosze: number | null; oldPrice?: string; free?: boolean };
 type Category   = { id: string; title: string; icon: string; free?: boolean; rows: ServiceRow[] };
@@ -111,22 +111,22 @@ function ContactModal({ service, onClose }: { service: ServiceRow; onClose: () =
     <>
       <style>{`@keyframes cm-in { from { opacity:0; transform:translateY(20px) scale(0.97) } to { opacity:1; transform:none } }`}</style>
       <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,0.65)', display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
-        <div onClick={e => e.stopPropagation()} style={{ background:NAVY, borderRadius:20, padding:'32px', maxWidth:400, width:'100%', position:'relative', border:'1px solid rgba(249,115,22,0.25)', fontFamily:"'Syne', sans-serif", animation:'cm-in 0.32s cubic-bezier(0.22,1,0.36,1) both' }}>
+        <div onClick={e => e.stopPropagation()} className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-gray-800" style={{ borderRadius:20, padding:'32px', maxWidth:400, width:'100%', position:'relative', fontFamily:"'Syne', sans-serif", animation:'cm-in 0.32s cubic-bezier(0.22,1,0.36,1) both' }}>
           <button onClick={onClose} style={{ position:'absolute', top:14, right:16, background:'none', border:'none', color:'#475569', fontSize:22, cursor:'pointer', lineHeight:1 }}>✕</button>
           <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.14em', color:ORANGE, textTransform:'uppercase', margin:'0 0 12px' }}>{t('pricing_modal_tag')}</p>
-          <p style={{ fontSize:15, fontWeight:800, color:'#fff', margin:'0 0 8px', lineHeight:1.4 }}>{service.name}</p>
-          <p style={{ fontSize:13, color: 'var(--text-muted)', margin:'0 0 20px', lineHeight:1.6 }}>{t('pricing_modal_desc')}</p>
+          <p className="text-black dark:text-white" style={{ fontSize:15, fontWeight:800, margin:'0 0 8px', lineHeight:1.4 }}>{service.name}</p>
+          <p className="text-gray-500 dark:text-gray-400" style={{ fontSize:13, margin:'0 0 20px', lineHeight:1.6 }}>{t('pricing_modal_desc')}</p>
           <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
             <a href={`https://wa.me/48729271848?text=${waMsg}`} target="_blank" rel="noreferrer"
-              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(37,211,102,0.12)', border:'1px solid rgba(37,211,102,0.3)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(37,211,102,0.12)', border:'1px solid rgba(37,211,102,0.3)', textDecoration:'none', color:'#25D366', fontWeight:600, fontSize:13 }}>
               <span style={{ fontSize:18 }}>💬</span> WhatsApp · +48 729 271 848
             </a>
             <a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer"
-              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(41,182,246,0.12)', border:'1px solid rgba(41,182,246,0.3)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(41,182,246,0.12)', border:'1px solid rgba(41,182,246,0.3)', textDecoration:'none', color:'#29B6F6', fontWeight:600, fontSize:13 }}>
               <span style={{ fontSize:18 }}>✈️</span> Telegram · @kompasmigracji
             </a>
             <a href="mailto:info@kompasmigracji.com"
-              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', textDecoration:'none', color:'#fff', fontWeight:600, fontSize:13 }}>
+              style={{ display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderRadius:10, background:'rgba(249,115,22,0.08)', border:'1px solid rgba(249,115,22,0.2)', textDecoration:'none', color:ORANGE, fontWeight:600, fontSize:13 }}>
               <span style={{ fontSize:18 }}>📧</span> info@kompasmigracji.com
             </a>
           </div>
@@ -147,7 +147,6 @@ const CHANNELS: { id: Channel; icon: string; label: string }[] = [
 const P24_RED    = '#D8232A';
 const P24_GREEN  = '#44A649';
 const P24_BORDER = '#DEE2E6';
-const P24_BG     = '#F8F9FA';
 const P24_TEXT   = '#212529';
 const P24_MUTED  = '#6C757D';
 
@@ -222,7 +221,7 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
           </div>
 
           <div style={{ padding:'20px 24px 0' }}>
-            <div style={{ background:P24_BG, border:`1px solid ${P24_BORDER}`, borderRadius:8, padding:'14px 16px', marginBottom:20 }}>
+            <div className="bg-gray-50 border border-gray-200" style={{ borderRadius:8, padding:'14px 16px', marginBottom:20 }}>
               <div style={{ fontSize:10, fontWeight:700, color:P24_MUTED, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:6 }}>Kompas Migracji</div>
               <div style={{ fontSize:14, fontWeight:700, color:P24_TEXT, marginBottom:10, lineHeight:1.4 }}>{service.name}</div>
               {service.oldPrice && (
@@ -278,7 +277,7 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
             </button>
           </div>
 
-          <div style={{ background:P24_BG, borderTop:`1px solid ${P24_BORDER}`, padding:'12px 24px', marginTop:20, display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
+          <div className="bg-gray-50 border-t border-gray-200" style={{ padding:'12px 24px', marginTop:20, display:'flex', flexDirection:'column', alignItems:'center', gap:8 }}>
             <PaymentBadges />
             <span style={{ fontSize:10, color:'#9CA3AF', display:'flex', alignItems:'center', gap:4 }}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -298,37 +297,39 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
   const isFree  = row.free === true;
 
   return (
-    <tr style={{ background:isEven ? 'rgba(0,0,0,0.02)' : 'transparent', borderBottom:'1px solid var(--border)' }}>
-      <td style={{ padding:'14px 16px', fontSize:13, color: 'var(--text-main)', lineHeight:1.5 }}>{row.name}</td>
-      <td style={{ padding:'10px 16px', textAlign:'right', whiteSpace:'nowrap' }}>
+    <tr className="border-b border-gray-200 dark:border-gray-800">
+      <td className="px-4 py-4 text-sm text-black dark:text-white" style={{ lineHeight:1.5 }}>{row.name}</td>
+      <td className="px-4 py-3 text-right whitespace-nowrap">
         {isFree ? (
-          <span style={{ fontSize:14, fontWeight:700, color:'#059669' }}>{row.price}</span>
+          <span className="text-sm font-bold text-green-600 dark:text-green-500">{row.price}</span>
         ) : row.oldPrice ? (
-          <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:3 }}>
-            <div style={{ display:'flex', alignItems:'center', gap:5 }}>
-              <span style={{ fontSize:10, fontWeight:700, background:'rgba(34,197,94,0.13)', color:'#059669', padding:'1px 6px', borderRadius:20 }}>−30%</span>
-              <span style={{ fontSize:12, color:'#94a3b8', textDecoration:'line-through' }}>{row.oldPrice} zł</span>
+          <div className="flex flex-col items-end gap-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full dark:bg-green-900/30 dark:text-green-400">−30%</span>
+              <span className="text-xs text-gray-400 line-through">{row.oldPrice} zł</span>
             </div>
-            <div style={{ display:'flex', alignItems:'baseline', gap:2 }}>
-              <span style={{ fontSize:22, fontWeight:900, color:ORANGE, letterSpacing:'-0.03em', lineHeight:1 }}>{row.price}</span>
-              <span style={{ fontSize:12, fontWeight:700, color:ORANGE }}>zł</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-xl font-bold tracking-tight text-black dark:text-white">{row.price}</span>
+              <span className="text-xs font-bold text-black dark:text-white">zł</span>
             </div>
           </div>
         ) : (
-          <span style={{ fontSize:14, fontWeight:700, color: 'var(--text-main)' }}>
+          <span className="text-sm font-bold text-black dark:text-white">
             {(isFixed || /^\d+$/.test(row.price)) ? `${row.price} zł` : row.price}
           </span>
         )}
       </td>
-      <td style={{ padding:'14px 16px 14px 8px', textAlign:'right', whiteSpace:'nowrap' }}>
+      <td className="pl-2 pr-4 py-3 text-right whitespace-nowrap">
         {isFree ? (
-          <a href="/blog" style={{ fontSize:12, color:'#059669', fontWeight:600, textDecoration:'none' }}>{t('pricing_btn_read')}</a>
+          <Link href="/blog" className="text-xs font-semibold text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 transition-colors">
+            {t('pricing_btn_read')}
+          </Link>
         ) : isFixed ? (
-          <button onClick={() => onBuy(row)} style={{ padding:'8px 20px', borderRadius:9, border:'none', background:ORANGE, color:'#fff', fontWeight:800, fontSize:13, cursor:'pointer', whiteSpace:'nowrap', fontFamily:'inherit', transition:'transform 0.12s, box-shadow 0.12s', boxShadow:'0 2px 8px rgba(249,115,22,0.35)' }} onMouseEnter={e => { e.currentTarget.style.transform='scale(1.05)'; e.currentTarget.style.boxShadow='0 4px 16px rgba(249,115,22,0.5)'; }} onMouseLeave={e => { e.currentTarget.style.transform='scale(1)'; e.currentTarget.style.boxShadow='0 2px 8px rgba(249,115,22,0.35)'; }}>
+          <button onClick={() => onBuy(row)} className="bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
             {t('pricing_btn_buy')}
           </button>
         ) : (
-          <button onClick={() => onContact(row)} style={{ padding:'6px 14px', borderRadius:8, border:'1.5px solid #e2e8f0', background:'transparent', color: 'var(--text-muted)', fontWeight:600, fontSize:12, cursor:'pointer', whiteSpace:'nowrap', fontFamily:'inherit', transition:'all 0.15s' }} onMouseEnter={e => { e.currentTarget.style.borderColor=ORANGE; e.currentTarget.style.color=ORANGE; }} onMouseLeave={e => { e.currentTarget.style.borderColor='#e2e8f0'; e.currentTarget.style.color='#64748b'; }}>
+          <button onClick={() => onContact(row)} className="bg-gray-100 text-black dark:bg-zinc-800 dark:text-white px-4 py-2 rounded-full font-semibold text-xs border border-transparent hover:border-black dark:hover:border-white transition-all">
             {t('pricing_btn_contact')}
           </button>
         )}
@@ -344,59 +345,61 @@ export default function PricingPage() {
   const [contactService, setContactService] = useState<ServiceRow | null>(null);
 
   return (
-    <div className="min-h-screen bg-white text-navy">
+    <div className="min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <Header />
-      <main style={{ paddingTop:96 }}>
-
+      <main className="pt-24">
         {/* Hero */}
-        <section style={{ background:NAVY, padding:'clamp(48px,8vw,80px) 24px clamp(40px,6vw,64px)', textAlign:'center' }}>
-          <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.15em', color:ORANGE, textTransform:'uppercase', margin:'0 0 14px', fontFamily:"'Syne', sans-serif" }}>
-            {t('pricing_hero_tag')}
-          </p>
-          <h1 style={{ fontSize:'clamp(38px,7vw,64px)', fontWeight:900, letterSpacing:'-0.04em', lineHeight:1.05, margin:'0 0 20px', color:'#fff', fontFamily:"'Syne', sans-serif" }}>
-            {t('pricing_hero_h1')}
-          </h1>
-          <p style={{ fontSize:15, color:'#94a3b8', maxWidth:600, margin:'0 auto 32px', lineHeight:1.7, fontFamily:"'Syne', sans-serif" }}>
-            {t('pricing_hero_sub')}
-          </p>
-          <div style={{ position:'relative', display:'inline-block' }}>
+        <section className="relative w-full flex flex-col items-center justify-center text-center px-6" style={{ minHeight: '60vh' }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-4xl mx-auto"
+          >
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-black dark:text-white mb-8" style={{ letterSpacing: '-0.02em' }}>
+              {t('pricing_hero_h1')}
+            </h1>
             
-            <div style={{ display:'inline-flex', alignItems:'center', gap:16, background:'rgba(249,115,22,0.12)', border:'1.5px solid rgba(249,115,22,0.35)', borderRadius:16, padding:'20px 28px 18px', fontFamily:"'Syne', sans-serif" }}>
-              <div style={{ textAlign:'left' }}>
-                <p style={{ fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:'#94a3b8', margin:'0 0 6px' }}>{t('pricing_hero_product')}</p>
-                
-                <div style={{ display:'flex', alignItems:'baseline', gap:6 }}>
-                  <span style={{ fontSize:44, fontWeight:900, color:ORANGE, letterSpacing:'-0.04em', lineHeight:1 }}>450</span>
-                  <span style={{ fontSize:22, fontWeight:800, color:ORANGE }}>zł</span>
-                  <span style={{ fontSize:12, color: 'var(--text-muted)', marginLeft:4 }}>≈ 105 €</span>
-                </div>
+            <p className="text-xl md:text-2xl text-gray-500 dark:text-gray-400 font-medium max-w-2xl mx-auto mb-12">
+              {t('pricing_hero_sub')}
+            </p>
+
+            <div className="inline-flex flex-col items-center justify-center border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 shadow-sm">
+              <p className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">{t('pricing_hero_product')}</p>
+              <div className="flex items-baseline gap-2 mb-6">
+                <span className="text-5xl font-black tracking-tight text-black dark:text-white">450</span>
+                <span className="text-xl font-bold text-black dark:text-white">zł</span>
+                <span className="text-sm text-gray-500 ml-1">≈ 105 €</span>
               </div>
-              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} style={{ padding:'12px 24px', borderRadius:10, border:'none', background:ORANGE, color:'#fff', fontWeight:700, fontSize:14, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'opacity 0.15s' }} onMouseEnter={e => { e.currentTarget.style.opacity='0.85'; }} onMouseLeave={e => { e.currentTarget.style.opacity='1'; }}>
+              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} className="bg-black text-white dark:bg-white dark:text-black px-8 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
                 {t('pricing_hero_order')}
               </button>
             </div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Categories */}
-        <section style={{ maxWidth:900, margin:'0 auto', padding:'56px 24px 80px' }}>
+        <section className="max-w-4xl mx-auto px-6 pb-24">
           {CATEGORIES.map(cat => (
-            <div key={cat.id} id={cat.id} style={{ marginBottom:48, scrollMarginTop: 80 }}>
-              <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
-                <span style={{ fontSize:22 }}>{cat.icon}</span>
-                <h2 style={{ fontSize:'clamp(18px,3vw,24px)', fontWeight:800, color: 'var(--text-main)', margin:0, fontFamily:"'Syne', sans-serif", letterSpacing:'-0.02em' }}>{cat.title}</h2>
+            <div key={cat.id} id={cat.id} className="mb-16 scroll-mt-24">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-3xl">{cat.icon}</span>
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-black dark:text-white">{cat.title}</h2>
                 {cat.free && (
-                  <span style={{ fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:20, background:'rgba(5,150,105,0.1)', color:'#059669', letterSpacing:'0.08em' }}>{t('pricing_in_blog')}</span>
+                  <span className="text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 ml-2 tracking-wide uppercase">
+                    {t('pricing_in_blog')}
+                  </span>
                 )}
               </div>
-              <div style={{ borderRadius:14, overflow:'hidden', border:'1px solid var(--border)', boxShadow:'0 2px 12px rgba(0,0,0,0.04)' }}>
-                <table style={{ width:'100%', borderCollapse:'collapse' }}>
-                  <colgroup><col style={{ width:'55%' }}/><col style={{ width:'25%' }}/><col style={{ width:'20%' }}/></colgroup>
+              
+              <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-zinc-900 shadow-sm">
+                <table className="w-full border-collapse">
+                  <colgroup><col className="w-3/5"/><col className="w-1/5"/><col className="w-1/5"/></colgroup>
                   <thead>
-                    <tr style={{ background: 'var(--bg-soft)', borderBottom:'2px solid var(--border)' }}>
-                      <th style={{ padding:'10px 16px', textAlign:'left',  fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_service')}</th>
-                      <th style={{ padding:'10px 16px', textAlign:'right', fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}>{t('pricing_col_price')}</th>
-                      <th style={{ padding:'10px 8px',  textAlign:'right', fontSize:11, fontWeight:700, color: 'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase' }}></th>
+                    <tr className="bg-gray-50 dark:bg-zinc-800/50 border-b-2 border-gray-200 dark:border-gray-800">
+                      <th className="px-4 py-3 text-left text-xs font-bold text-gray-500 dark:text-gray-400 tracking-wider uppercase">{t('pricing_col_service')}</th>
+                      <th className="px-4 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 tracking-wider uppercase">{t('pricing_col_price')}</th>
+                      <th className="px-2 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 tracking-wider uppercase"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -409,30 +412,32 @@ export default function PricingPage() {
             </div>
           ))}
 
-          <div style={{ background:'#fff7ed', border:'1px solid rgba(249,115,22,0.2)', borderRadius:12, padding:'16px 20px', fontSize:13, color:'#92400e', lineHeight:1.7 }}>
-            <strong>⚠</strong> {t('pricing_important')}
+          <div className="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 text-sm text-gray-600 dark:text-gray-400 leading-relaxed shadow-sm">
+            <strong className="text-black dark:text-white">⚠ Note:</strong> {t('pricing_important')}
           </div>
         </section>
 
-        {/* How payments work — PayU branded */}
-        <P24PaymentSteps
-          title={t('pricing_how_title')}
-          steps={[
-            { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
-            { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
-            { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
-            { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
-          ]}
-          securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
-        />
+        {/* How payments work */}
+        <div className="border-t border-gray-200 dark:border-gray-800">
+          <P24PaymentSteps
+            title={t('pricing_how_title')}
+            steps={[
+              { n:'01', icon:<CartIcon />,        title:t('pricing_step1_title'), desc:t('pricing_step1_desc') },
+              { n:'02', icon:<UserIcon />,        title:t('pricing_step2_title'), desc:t('pricing_step2_desc') },
+              { n:'03', icon:<CardIcon />,        title:t('pricing_step3_title'), desc:t('pricing_step3_desc') },
+              { n:'04', icon:<CheckCircleIcon />, title:t('pricing_step4_title'), desc:t('pricing_step4_desc') },
+            ]}
+            securityNote={`${t('pricing_safe_title')} · ${t('pricing_safe_desc')}`}
+          />
+        </div>
 
         {/* Company info */}
-        <section style={{ borderTop:'1px solid #e2e8f0', padding:'32px 24px', textAlign:'center', background:'#fff' }}>
-          <p style={{ fontSize:13, fontWeight:700, color: 'var(--text-muted)', margin:'0 0 6px', fontFamily:"'Syne', sans-serif" }}>DOMUS V Sp. z o.o.</p>
-          <p style={{ fontSize:12, color:'#94a3b8', margin:0, lineHeight:1.8 }}>
+        <section className="border-t border-gray-200 dark:border-gray-800 py-12 px-6 text-center bg-gray-50 dark:bg-black">
+          <p className="text-sm font-bold text-black dark:text-white mb-2">DOMUS V Sp. z o.o.</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
             NIP: 5223350030 · KRS: 0001198474<br />
             ul. Dzieci Warszawy 27c/49, 02-495 Warszawa<br />
-            Nr konta: <span style={{ fontFamily:'monospace', letterSpacing:'0.04em' }}>10 1050 1025 1000 0090 8594 6938</span>
+            Nr konta: <span className="font-mono tracking-wider text-black dark:text-white ml-1">10 1050 1025 1000 0090 8594 6938</span>
           </p>
         </section>
       </main>

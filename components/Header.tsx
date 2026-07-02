@@ -136,9 +136,7 @@ export default function Header() {
             )}
           </div>
 
-          {[['#blog', t('nav_blog')]].map(([href, label]) => (
-            <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
-          ))}
+
           <Link
             href="/test/pricing"
             className="px-3.5 py-1.5 text-sm font-bold text-white gradient-btn no-underline rounded-full transition-all hover:opacity-90 hover:scale-105 whitespace-nowrap"
@@ -193,7 +191,7 @@ export default function Header() {
             </a>
           ))}
           <div className="my-1 border-t border-gray-100" />
-          {[['#process', t('nav_process')], ['/test/pricing', t('nav_pricing')], ['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#process', t('nav_process')], ['/test/pricing', t('nav_pricing')], ['#contact', t('nav_contact')]].map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-sm text-gray-700 hover:bg-gray-50 no-underline">{label}</a>
           ))}
           <Link
