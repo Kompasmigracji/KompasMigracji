@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
-// F2: Subscribe endpoint — creates subscription record + P24 payment
+// F2: Subscribe endpoint — creates subscription record + PayU payment
 // POST { planSlug, name, email, phone }
-// Returns { redirectUrl } to P24 checkout or mock
+// Returns { redirectUrl } to PayU checkout or mock
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
@@ -89,11 +89,12 @@ export async function POST(req: NextRequest) {
     sendEmail(email, "Witamy w Kompas Migracji!", welcomeEmailHtml(name), "welcome").catch(() => {});
   }
 
-  // Try Stripe Payment Checkout
+  // Try PayU Checkout
   try {
-    const { stripe } = await import("@/lib/stripe");
-    if (!stripe) {
-      // Fallback to mock if Stripe is not configured
+    const { createPayUOrder, isPayUConfigured } = await import("@/lib/payu");
+    
+    if (!isPayUConfigured()) {
+      // Fallback to mock if PayU is not configured
       const params = new URLSearchParams({
         session: sessionId,
         amount: String(Math.round(Number(plan.price_pln) * 100)),
@@ -107,37 +108,21 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Create Stripe Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card", "p24", "blik"],
-      line_items: [
-        {
-          price_data: {
-            currency: "pln",
-            product_data: {
-              name: `Subskrypcja ${plan.name} - Kompas Migracji`,
-              description: "Dostęp do panelu klienta i usług.",
-            },
-            unit_amount: Math.round(Number(plan.price_pln) * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment", // Use 'subscription' if we were using Stripe Billing, but for now just one-time payment as per existing logic
-      success_url: `${SITE}/payment-success?session=${sessionId}&type=subscription`,
-      cancel_url: `${SITE}/plans`,
-      customer_email: email,
-      client_reference_id: sessionId,
-      metadata: {
-        sessionId,
-        plan: plan.name,
-        type: "subscription"
-      }
+    const result = await createPayUOrder({
+      sessionId,
+      amount: Math.round(Number(plan.price_pln) * 100), // in grosze
+      description: `Subskrypcja ${plan.name} - Kompas Migracji`,
+      email,
+      firstName: name.split(' ')[0] || '',
+      lastName: name.split(' ').slice(1).join(' ') || '',
+      phone,
+      notifyUrl: `${SITE}/api/payu/notify`,
+      continueUrl: `${SITE}/payment/success`,
     });
 
-    return NextResponse.json({ redirectUrl: session.url, sessionId });
+    return NextResponse.json({ redirectUrl: result.redirectUrl, sessionId: result.orderId });
   } catch (err: any) {
-    console.error("[subscribe] Stripe checkout error:", err.message);
+    console.error("[subscribe] PayU checkout error:", err.message);
     return NextResponse.json({ error: err.message }, { status: 502 });
   }
 }

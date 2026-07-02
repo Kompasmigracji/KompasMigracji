@@ -1,16 +1,16 @@
 export const dynamic = "force-dynamic";
 /* /api/admin/leads/[id]/payment-link
    POST { amount_pln, description?, email? }
-   → реєструє транзакцію в Przelewy24
+   → реєструє транзакцію в PayU
    → зберігає session_id у leads
-   → повертає { paymentUrl, sessionId, token } */
+   → повертає { paymentUrl, sessionId } */
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { q, one } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
-import { registerTransaction } from "@/lib/przelewy24";
+import { createPayUOrder } from "@/lib/payu";
 
 export async function POST(
   req: NextRequest,
@@ -58,14 +58,13 @@ export async function POST(
   const appUrl       = (process.env.NEXT_PUBLIC_APP_URL ?? "https://kompas-migracji.vercel.app").replace(/\/$/, "");
 
   try {
-    const result = await registerTransaction({
+    const result = await createPayUOrder({
       sessionId,
       amount:      amountGroszy,
-      currency:    "PLN",
       description: description?.trim() || `Usługa: ${lead.service ?? "KompasMigracji"}`,
       email:       email?.trim()       || "client@kompas-migracji.pl",
-      urlReturn:   `${appUrl}/payment/success`,
-      urlStatus:   `${appUrl}/api/payment-notify`,
+      continueUrl: `${appUrl}/payment/success`,
+      notifyUrl:   `${appUrl}/api/payu/notify`,
     });
 
     /* ── Зберегти session_id у лідові ───────────────────────────── */
@@ -75,9 +74,8 @@ export async function POST(
     );
 
     return NextResponse.json({
-      paymentUrl: result.paymentUrl,
-      sessionId:  result.sessionId,
-      token:      result.token,
+      paymentUrl: result.redirectUrl,
+      sessionId:  result.orderId,
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unknown error";
