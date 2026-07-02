@@ -1,6 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from 'framer-motion';
+import { MouseEvent } from 'react';
 
 const VIDEOS = [
   {
@@ -8,60 +10,133 @@ const VIDEOS = [
     titleKey: 'blog_v1_title',
     descKey: 'blog_v1_desc',
     tagKey: 'blog_v1_tag',
-    color: 'from-blue-900 to-slate-900',
+    color: 'from-blue-600/20 to-purple-600/20',
+    spanClass: 'md:col-span-2 md:row-span-2', // Bento highlight
   },
   {
     id: 'DW9VsneCeDd',
     titleKey: 'blog_v2_title',
     descKey: 'blog_v2_desc',
     tagKey: 'blog_v2_tag',
-    color: 'from-indigo-900 to-slate-900',
+    color: 'from-purple-600/20 to-pink-600/20',
+    spanClass: 'md:col-span-1 md:row-span-1',
   },
   {
     id: 'DPN7km-iAYg',
     titleKey: 'blog_v3_title',
     descKey: 'blog_v3_desc',
     tagKey: 'blog_v3_tag',
-    color: 'from-slate-800 to-blue-950',
+    color: 'from-blue-500/20 to-cyan-500/20',
+    spanClass: 'md:col-span-1 md:row-span-1',
   },
 ];
 
 function PlayIcon() {
   return (
-    <svg viewBox="0 0 80 80" fill="none" width="56" height="56">
-      <circle cx="40" cy="40" r="40" fill="rgba(0,0,0,0.55)" />
-      <polygon points="32,24 60,40 32,56" fill="#fff" />
-    </svg>
+    <div className="relative group-hover:scale-110 transition-transform duration-300">
+      <div className="absolute inset-0 bg-white/20 rounded-full blur-md" />
+      <svg viewBox="0 0 80 80" fill="none" className="w-14 h-14 relative z-10 drop-shadow-xl">
+        <circle cx="40" cy="40" r="40" fill="rgba(0,0,0,0.6)" className="backdrop-blur-md" />
+        <polygon points="34,26 56,40 34,54" fill="#fff" />
+      </svg>
+    </div>
   );
 }
 
 function VideoModal({ videoId, onClose }: { videoId: string; onClose: () => void }) {
   return (
-    <div
-      onClick={onClose}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 10000,
-        background: 'rgba(0,0,0,0.82)', display: 'flex',
-        alignItems: 'center', justifyContent: 'center', padding: 16,
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{ width: '100%', maxWidth: 400, aspectRatio: '9/16', position: 'relative' }}
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+        animate={{ opacity: 1, backdropFilter: 'blur(12px)' }}
+        exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+        onClick={onClose}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60"
       >
-        <iframe
-          src={`https://www.instagram.com/reel/${videoId}/embed/`}
-          title="Video"
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-          allowFullScreen
-          style={{ width: '100%', height: '100%', border: 'none', borderRadius: 12 }}
-        />
-        <button
-          onClick={onClose}
-          style={{ position: 'absolute', top: -40, right: 0, background: 'none', border: 'none', color: '#fff', fontSize: 28, cursor: 'pointer', lineHeight: 1 }}
-        >✕</button>
+        <motion.div
+          initial={{ scale: 0.9, y: 20 }}
+          animate={{ scale: 1, y: 0 }}
+          exit={{ scale: 0.9, y: 20 }}
+          onClick={e => e.stopPropagation()}
+          className="relative w-full max-w-[400px] aspect-[9/16] rounded-3xl overflow-hidden bg-[#111] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+        >
+          <iframe
+            src={`https://www.instagram.com/reel/${videoId}/embed/`}
+            title="Video"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+            allowFullScreen
+            className="w-full h-full border-none"
+          />
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md border border-white/20 hover:bg-black/70 hover:scale-105 transition-all"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+function BlogCard({ v, i, t, onClick }: { v: any, i: number, t: any, onClick: () => void }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.6, delay: i * 0.1 }}
+      onMouseMove={handleMouseMove}
+      onClick={onClick}
+      className={`group cursor-pointer relative overflow-hidden rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:border-white/20 transition-colors flex flex-col ${v.spanClass}`}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-20"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              400px circle at ${mouseX}px ${mouseY}px,
+              rgba(255, 255, 255, 0.1),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      
+      <div className={`relative flex-shrink-0 w-full bg-gradient-to-br ${v.color} flex items-center justify-center overflow-hidden border-b border-white/10`} 
+           style={{ aspectRatio: v.spanClass.includes('row-span-2') ? '16/10' : '16/9' }}>
+        
+        {/* Abstract Background pattern for video placeholder */}
+        <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+        
+        <PlayIcon />
+        
+        <div className="absolute bottom-4 left-4">
+          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-md rounded-full border border-white/20">
+            Instagram Reels
+          </span>
+        </div>
       </div>
-    </div>
+
+      <div className="p-6 sm:p-8 flex flex-col flex-grow relative z-10">
+        <div className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-3">{t(v.tagKey)}</div>
+        <h3 className={`font-display font-semibold text-white mb-3 ${v.spanClass.includes('col-span-2') ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
+          {t(v.titleKey)}
+        </h3>
+        <p className="text-sm text-gray-400 leading-relaxed flex-grow">
+          {t(v.descKey)}
+        </p>
+      </div>
+    </motion.div>
   );
 }
 
@@ -70,68 +145,37 @@ export default function Blog() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <section id="blog" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-14">
-          <div className="text-xs font-semibold uppercase tracking-widest text-primary mb-3">{t('blog_section')}</div>
-          <h2 className="font-display tracking-tight font-semibold text-navy" style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}>{t('blog_title')}</h2>
-          <p className="text-gray-500 text-sm mt-3 max-w-xl mx-auto">
+    <section id="blog" className="py-24 sm:py-32 relative bg-[#050505] text-white overflow-hidden">
+      {/* Glows */}
+      <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16 sm:mb-20"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            {t('blog_section')}
+          </div>
+          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
+            {t('blog_title')}
+          </h2>
+          <p className="text-gray-400 text-base sm:text-lg mt-4 max-w-xl mx-auto">
             {t('blog_desc')}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {VIDEOS.map((v) => (
-            <div
-              key={v.id}
-              className="group apple-card p-0 overflow-hidden border-0 hover-lift cursor-pointer flex flex-col"
-              onClick={() => setActive(v.id)}
-            >
-              <div
-                className={`relative overflow-hidden bg-gradient-to-br ${v.color} flex items-center justify-center`}
-                style={{ aspectRatio: '16/9' }}
-              >
-                {/* Instagram logo watermark */}
-                <svg
-                  viewBox="0 0 24 24" fill="rgba(255,255,255,0.08)"
-                  style={{ position: 'absolute', width: 120, height: 120 }}
-                >
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                {/* Play button */}
-                <div className="relative z-10 transform group-hover:scale-110 transition-transform duration-200">
-                  <PlayIcon />
-                </div>
-              </div>
-              <div className="p-5">
-                <span className="inline-block text-xs font-semibold text-primary uppercase tracking-wider bg-orange-50 px-2.5 py-1 rounded-full mb-3">{t(v.tagKey)}</span>
-                <h3 className="font-semibold text-navy text-sm leading-snug mb-2 group-hover:text-primary transition-colors">{t(v.titleKey)}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{t(v.descKey)}</p>
-                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-primary">
-                  {t('blog_watch')}
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 auto-rows-[minmax(250px,auto)]">
+          {VIDEOS.map((v, i) => (
+            <BlogCard key={v.id} v={v} i={i} t={t} onClick={() => setActive(v.id)} />
           ))}
         </div>
-
-        <div className="text-center mt-10">
-          <a
-            href="https://www.instagram.com/kompasmigracji/reels/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 border border-gray-200 text-gray-600 hover:border-primary hover:text-primary text-sm font-semibold px-8 py-4 rounded-full transition-premium hover-lift no-underline shadow-sm bg-white"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            {t('blog_all_videos')}
-          </a>
-        </div>
       </div>
+
       {active && <VideoModal videoId={active} onClose={() => setActive(null)} />}
     </section>
   );

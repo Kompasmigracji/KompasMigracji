@@ -1,18 +1,16 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
 /* ─── Reusable scroll-reveal wrapper ──────────────────────── */
 function Reveal({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
@@ -23,12 +21,12 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 
 /* ─── Services data ───────────────────────────────────────── */
 const SERVICES = [
-  { icon: '🛂', title: 'Wizy i zaproszenia', desc: 'Робочі, студентські, бізнес-візи та запрошення для іноземців до Польщі', gradient: 'linear-gradient(135deg, #0066FF 0%, #00AAFF 100%)', span: 'md:col-span-2 md:row-span-2' },
-  { icon: '🏠', title: 'Legalizacja pobytu', desc: 'Карта побуту, побут тимчасовий та сталий, резидент ЄС', gradient: 'linear-gradient(135deg, #FF6B35 0%, #FF3366 100%)', span: 'md:col-span-1' },
-  { icon: '⚖️', title: 'Prawo pracy', desc: 'Дозволи на роботу, oświadczenia, зміна роботодавця', gradient: 'linear-gradient(135deg, #7C3AED 0%, #DB2777 100%)', span: 'md:col-span-1' },
-  { icon: '📄', title: 'Tłumaczenia', desc: 'Присяжні переклади документів з/на польську, українську, англійську', gradient: 'linear-gradient(135deg, #059669 0%, #10B981 100%)', span: 'md:col-span-1' },
-  { icon: '💍', title: 'Ślub w Polsce', desc: 'Повний супровід шлюбу для іноземців — документи, USC, apostille', gradient: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)', span: 'md:col-span-1' },
-  { icon: '🔐', title: 'Pomoc prawna', desc: 'Юридичні консультації, оскарження відмов, представництво в уженді', gradient: 'linear-gradient(135deg, #1E40AF 0%, #6366F1 100%)', span: 'md:col-span-2' },
+  { icon: '🛂', title: 'Wizy i zaproszenia', desc: 'Робочі, студентські, бізнес-візи та запрошення для іноземців до Польщі', gradient: 'linear-gradient(135deg, #0066FF 0%, #00AAFF 100%)', span: 'md:col-span-2 md:row-span-2', delay: 0.1 },
+  { icon: '🏠', title: 'Legalizacja pobytu', desc: 'Карта побуту, побут тимчасовий та сталий, резидент ЄС', gradient: 'linear-gradient(135deg, #FF6B35 0%, #FF3366 100%)', span: 'md:col-span-1', delay: 0.2 },
+  { icon: '⚖️', title: 'Prawo pracy', desc: 'Дозволи на роботу, oświadczenia, зміна роботодавця', gradient: 'linear-gradient(135deg, #7C3AED 0%, #DB2777 100%)', span: 'md:col-span-1', delay: 0.3 },
+  { icon: '📄', title: 'Tłumaczenia', desc: 'Присяжні переклади документів з/на польську, українську, англійську', gradient: 'linear-gradient(135deg, #059669 0%, #10B981 100%)', span: 'md:col-span-1', delay: 0.4 },
+  { icon: '💍', title: 'Ślub w Polsce', desc: 'Повний супровід шлюбу для іноземців — документи, USC, apostille', gradient: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)', span: 'md:col-span-1', delay: 0.5 },
+  { icon: '🔐', title: 'Pomoc prawna', desc: 'Юридичні консультації, оскарження відмов, представництво в уженді', gradient: 'linear-gradient(135deg, #1E40AF 0%, #6366F1 100%)', span: 'md:col-span-2', delay: 0.6 },
 ];
 
 /* ─── Process steps ───────────────────────────────────────── */
@@ -38,75 +36,95 @@ const STEPS = [
   { num: '03', title: 'Decyzja', desc: 'Супровід до отримання позитивного рішення — карти побуту, візи або дозволу' },
 ];
 
-
-
 /* ════════════════════════════════════════════════════════════ */
 /*                     MAIN HERO COMPONENT                     */
 /* ════════════════════════════════════════════════════════════ */
 export default function Hero() {
   const t = useTranslations();
+  
+  // Mouse parallax state
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150 };
+  const springX = useSpring(mouseX, springConfig);
+  const springY = useSpring(mouseY, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    const x = (clientX / innerWidth - 0.5) * 40; // max rotation degrees
+    const y = (clientY / innerHeight - 0.5) * 40;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   return (
     <>
-      {/* ─── HERO SECTION ─────────────────────────────────── */}
-      <section className="relative w-full flex flex-col items-center justify-center text-center px-6 overflow-hidden" style={{ minHeight: '100vh' }}>
+      {/* ─── SPATIAL HERO SECTION ─────────────────────────────────── */}
+      <section 
+        className="relative w-full flex flex-col lg:flex-row items-center justify-between px-6 xl:px-12 overflow-hidden" 
+        style={{ minHeight: '100vh', paddingBottom: '4rem' }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
         
         {/* Animated gradient mesh background */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute inset-0 -z-10 overflow-hidden bg-white dark:bg-black">
           <div className="hero-mesh-1" />
           <div className="hero-mesh-2" />
           <div className="hero-mesh-3" />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-5xl mx-auto pt-24"
-        >
-          {/* Badge */}
+        {/* Left side: Text Content */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 pt-32 lg:pt-0 pb-16 lg:pb-0 pr-0 lg:pr-12 text-center lg:text-left">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge mx-auto lg:mx-0"
           >
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Ваш шлях до легалізації починається тут
           </motion.div>
 
-          {/* Main heading */}
-          <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6"
-            style={{ letterSpacing: '-0.04em', lineHeight: 0.95, color: 'var(--text)' }}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6"
+            style={{ letterSpacing: '-0.04em', lineHeight: 1.05, color: 'var(--text)' }}
           >
             {t('hero_title')}
-          </h1>
+          </motion.h1>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12"
+            className="text-lg sm:text-xl md:text-2xl font-medium max-w-xl mx-auto lg:mx-0 mb-12"
             style={{ color: 'var(--dim)', lineHeight: 1.5 }}
           >
             {t('hero_sub')}
           </motion.p>
 
-          {/* CTA buttons */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
           >
             <a
               href="https://wa.me/48729271848"
               target="_blank"
               rel="noreferrer"
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
-              style={{ background: '#000' }}
+              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25"
+              style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)' }}
             >
               <span className="relative z-10 flex items-center gap-3">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -122,33 +140,79 @@ export default function Hero() {
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>
             </a>
           </motion.div>
+        </div>
 
-          {/* Trust badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="flex flex-wrap items-center justify-center gap-6 sm:gap-10"
+        {/* Right side: Spatial UI / Bento Grid */}
+        <div className="w-full lg:w-1/2 relative h-[500px] lg:h-[700px] hidden md:block" style={{ perspective: 1000 }}>
+          <motion.div 
+            className="absolute inset-0 flex items-center justify-center transform-style-3d"
+            style={{ 
+              rotateX: useTransform(springY, [-40, 40], [10, -10]), 
+              rotateY: useTransform(springX, [-40, 40], [-10, 10]) 
+            }}
           >
-            {[
-              { value: '5000+', label: 'Клієнтів' },
-              { value: '98%', label: 'Успішних справ' },
-              { value: '10+', label: 'Років досвіду' },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <span className="text-2xl sm:text-3xl font-bold" style={{ color: 'var(--text)' }}>{stat.value}</span>
-                <span className="text-xs sm:text-sm font-medium" style={{ color: 'var(--dim)' }}>{stat.label}</span>
-              </div>
-            ))}
+            <div className="grid grid-cols-2 gap-4 w-full max-w-[600px] p-8">
+              {/* Card 1 */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, z: -100 }}
+                animate={{ opacity: 1, scale: 1, z: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="col-span-2 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-[32px] shadow-2xl flex items-center gap-4 hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
+                style={{ transform: 'translateZ(40px)' }}
+              >
+                <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-3xl shrink-0">🛂</div>
+                <div>
+                  <h3 className="font-bold text-xl text-gray-900 dark:text-white">Wizy i zaproszenia</h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Повний супровід візових питань для іноземців до Польщі</p>
+                </div>
+              </motion.div>
+
+              {/* Card 2 */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, z: -100 }}
+                animate={{ opacity: 1, scale: 1, z: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="col-span-1 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-[32px] shadow-2xl hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
+                style={{ transform: 'translateZ(70px)' }}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-2xl mb-4">🏠</div>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Karta Pobytu</h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Отримання посвідки на проживання</p>
+              </motion.div>
+
+              {/* Card 3 */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, z: -100 }}
+                animate={{ opacity: 1, scale: 1, z: 0 }}
+                transition={{ duration: 0.8, delay: 0.8 }}
+                className="col-span-1 bg-gradient-to-br from-blue-600 to-indigo-600 border border-white/20 p-6 rounded-[32px] shadow-2xl shadow-blue-500/30 text-white"
+                style={{ transform: 'translateZ(90px)' }}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl mb-4">💼</div>
+                <h3 className="font-bold text-lg mb-2">Prawo pracy</h3>
+                <p className="text-white/80 text-sm">Дозволи на роботу та легалізація праці</p>
+              </motion.div>
+
+              {/* Card 4 (Floatie) */}
+              <motion.div 
+                animate={{ y: [-10, 10, -10] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -right-4 top-12 bg-white/80 dark:bg-black/80 backdrop-blur-md border border-white/20 dark:border-white/10 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3"
+                style={{ transform: 'translateZ(120px)' }}
+              >
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="font-semibold text-sm">24/7 Wsparcie клієнтів</span>
+              </motion.div>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
         >
           <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor: 'var(--dim)' }}>
             <motion.div
@@ -160,8 +224,6 @@ export default function Hero() {
           </div>
         </motion.div>
       </section>
-
-
 
       {/* ─── SERVICES BENTO GRID ──────────────────────────── */}
       <section className="py-20 sm:py-28 px-6">
@@ -251,7 +313,7 @@ export default function Hero() {
               href="https://wa.me/48729271848"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-5 rounded-full font-bold text-lg text-black transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="inline-flex items-center gap-3 px-10 py-5 rounded-full font-bold text-lg text-black transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl"
               style={{ background: '#fff' }}
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -309,8 +371,10 @@ export default function Hero() {
           color: #00AAFF;
           border-color: rgba(0, 170, 255, 0.2);
         }
-
-
+        
+        .transform-style-3d {
+          transform-style: preserve-3d;
+        }
       `}</style>
     </>
   );

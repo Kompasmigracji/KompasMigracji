@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { motion, AnimatePresence, useMotionValue, useMotionTemplate } from "framer-motion";
 
 const STORAGE_KEY = "km_exit_popup_shown";
-const BRAND = "#D8232A";
 
 export default function ExitPopup() {
   const [open, setOpen] = useState(false);
@@ -12,6 +12,10 @@ export default function ExitPopup() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const t = useTranslations("ExitPopup");
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   const show = useCallback(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY)) return;
@@ -30,6 +34,13 @@ export default function ExitPopup() {
       clearTimeout(timer);
     };
   }, [show]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const { left, top } = cardRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - left);
+    mouseY.set(e.clientY - top);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,141 +62,108 @@ export default function ExitPopup() {
     setLoading(false);
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      style={{
-        position: "fixed", inset: 0, zIndex: 99999,
-        background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 16, fontFamily: "'Segoe UI', Arial, sans-serif",
-      }}
-      onClick={e => { if (e.target === e.currentTarget) setOpen(false); }}
-    >
-      <div style={{
-        background: "#fff", borderRadius: 28, maxWidth: 460, width: "100%",
-        boxShadow: "0 24px 80px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)",
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* Top accent bar */}
-        <div style={{ height: 4, background: "linear-gradient(90deg, #2563eb, #f97316)" }} />
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md"
+          onClick={e => { if (e.target === e.currentTarget) setOpen(false); }}
+        >
+          <motion.div
+            ref={cardRef}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            onMouseMove={handleMouseMove}
+            className="relative w-full max-w-md bg-[#0a0a0a] rounded-3xl overflow-hidden border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]"
+          >
+            {/* Spotlight */}
+            <motion.div
+              className="absolute inset-0 z-0 pointer-events-none opacity-20"
+              style={{
+                background: useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(59,130,246,0.5), transparent 80%)`,
+              }}
+            />
 
-        <div style={{ padding: "28px 28px 24px" }}>
-          <button
-            onClick={() => setOpen(false)}
-            style={{
-              position: "absolute", top: 16, right: 16, background: "none",
-              border: "none", cursor: "pointer", fontSize: 20, color: "#9CA3AF",
-              lineHeight: 1, padding: 4,
-            }}
-            aria-label="Закрити"
-          >✕</button>
-
-          {!sent ? (
-            <>
-              <div style={{ textAlign: "center", marginBottom: 20 }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>🤝</div>
-                <h2 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 700, color: "#111", lineHeight: 1.2, letterSpacing: "-0.03em" }}>
-                  {t('title')}
-                </h2>
-                <p style={{ margin: 0, fontSize: 15, color: "#6B7280", lineHeight: 1.5 }}>
-                  {t('subtitle')}
-                </p>
-              </div>
-
-              <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                <input
-                  type="text"
-                  placeholder={t('name')}
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  style={{
-                    padding: "14px 16px", borderRadius: 16, border: "1.5px solid #E5E7EB",
-                    fontSize: 15, color: "#111", outline: "none",
-                    fontFamily: "inherit", background: "#F9FAFB", transition: "all 0.2s"
-                  }}
-                />
-                <input
-                  type="email"
-                  placeholder={t('email')}
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                  style={{
-                    padding: "14px 16px", borderRadius: 16, border: "1.5px solid #E5E7EB",
-                    fontSize: 15, color: "#111", outline: "none",
-                    fontFamily: "inherit", background: "#F9FAFB", transition: "all 0.2s"
-                  }}
-                />
-                <button
-                  type="submit"
-                  disabled={!email.trim() || loading}
-                  style={{
-                    padding: "16px 0", borderRadius: 9999, background: BRAND, color: "#fff",
-                    fontWeight: 600, fontSize: 16, border: "none", cursor: "pointer",
-                    opacity: (!email.trim() || loading) ? 0.6 : 1, transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                    boxShadow: "0 8px 20px rgba(216,35,42,0.3)"
-                  }}
-                >
-                  {loading ? t('sending') : t('submit')}
-                </button>
-              </form>
-
-              <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{t('or_contact')}</span>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <a
-                    href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      padding: "10px 20px", borderRadius: 9999, background: "#25D366", color: "#fff",
-                      textDecoration: "none", fontWeight: 600, fontSize: 14, boxShadow: "0 4px 12px rgba(37,211,102,0.3)"
-                    }}
-                  >💬 WhatsApp</a>
-                  <a
-                    href="tel:+48729271848"
-                    style={{
-                      padding: "10px 20px", borderRadius: 9999, background: "#f1f5f9", color: "#1e293b",
-                      textDecoration: "none", fontWeight: 600, fontSize: 14,
-                    }}
-                  >📞 {t('phone')}</a>
-                </div>
-                <button
-                  onClick={() => setOpen(false)}
-                  style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#9CA3AF", marginTop: 4 }}
-                >
-                  {t('close_without_help')}
-                </button>
-              </div>
-            </>
-          ) : (
-            <div style={{ textAlign: "center", padding: "12px 0" }}>
-              <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "#111" }}>
-                {t('success_title')}
-              </h3>
-              <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>
-                {t('success_subtitle')}
-              </p>
-              <a
-                href="https://wa.me/48729271848"
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: "inline-block", marginTop: 16, padding: "14px 28px",
-                  background: "#25D366", color: "#fff", borderRadius: 9999,
-                  textDecoration: "none", fontWeight: 600, fontSize: 16,
-                  boxShadow: "0 8px 20px rgba(37,211,102,0.3)", transition: "transform 0.2s"
-                }}
+            <div className="relative z-10 p-8">
+              <button
+                onClick={() => setOpen(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                aria-label="Закрити"
               >
-                💬 {t('whatsapp_now')}
-              </a>
+                ✕
+              </button>
+
+              {!sent ? (
+                <>
+                  <div className="text-center mb-6">
+                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center mb-4 border border-white/5">
+                      <span className="text-3xl">🤝</span>
+                    </div>
+                    <h2 className="text-2xl font-display font-bold text-white mb-2 tracking-tight">
+                      {t('title')}
+                    </h2>
+                    <p className="text-sm text-gray-400">
+                      {t('subtitle')}
+                    </p>
+                  </div>
+
+                  <form onSubmit={submit} className="flex flex-col gap-3">
+                    <input
+                      type="text"
+                      placeholder={t('name')}
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
+                    />
+                    <input
+                      type="text"
+                      placeholder={t('email_ph')}
+                      required
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full mt-2 relative overflow-hidden group bg-blue-600 rounded-xl px-4 py-3.5 text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(37,99,235,0.3)] disabled:opacity-50 disabled:hover:scale-100"
+                    >
+                      <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+                      <span className="relative z-10">{loading ? t('btn_loading') : t('btn')}</span>
+                    </button>
+                    
+                    <p className="text-center text-[11px] text-gray-500 mt-2">
+                      {t('disclaimer')}
+                    </p>
+                  </form>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-20 h-20 mx-auto bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">{t('success_title')}</h3>
+                  <p className="text-gray-400 text-sm">{t('success_desc')}</p>
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="mt-8 px-6 py-2.5 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm"
+                  >
+                    Закрити
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

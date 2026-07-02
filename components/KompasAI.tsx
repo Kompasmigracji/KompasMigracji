@@ -1,14 +1,13 @@
 'use client';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 
 type Msg = { role: 'user' | 'assistant'; content: string };
 
 const GREETING = 'Привіт! 👋 Я AI-асистент Kompas Migracji.\n\nРозкажіть про вашу ситуацію — допоможу розібратись з легалізацією в Польщі або підберу потрібну послугу.';
 
 const QUICK = ['Карта побуту', 'PESEL / NFZ', 'Ціни на послуги', 'Записатись на консультацію'];
-
-const ORANGE = '#f97316';
-const NAVY   = '#0f172a';
 
 export default function KompasAI() {
   const [shown,    setShown]    = useState(false);
@@ -92,143 +91,155 @@ export default function KompasAI() {
 
   return (
     <>
-      <style>{`
-        @keyframes kai-in    { from{opacity:0;transform:scale(0.6) translateY(10px)} to{opacity:1;transform:none} }
-        @keyframes kai-panel { from{opacity:0;transform:translateY(20px) scale(0.97)} to{opacity:1;transform:none} }
-        @keyframes kai-pulse { 0%,100%{box-shadow:0 4px 20px rgba(249,115,22,0.5)} 60%{box-shadow:0 4px 20px rgba(249,115,22,0.5),0 0 0 12px rgba(249,115,22,0)} }
-        @keyframes kai-dot   { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
-        .kai-btn   { animation: kai-in 0.4s cubic-bezier(0.22,1,0.36,1) both, kai-pulse 2.5s 1.5s infinite; }
-        .kai-panel { animation: kai-panel 0.3s cubic-bezier(0.22,1,0.36,1) both; }
-        .kai-d1    { animation: kai-dot 1.4s infinite; }
-        .kai-d2    { animation: kai-dot 1.4s 0.2s infinite; }
-        .kai-d3    { animation: kai-dot 1.4s 0.4s infinite; }
-        .kai-scroll::-webkit-scrollbar       { width:4px; }
-        .kai-scroll::-webkit-scrollbar-track { background:transparent; }
-        .kai-scroll::-webkit-scrollbar-thumb { background:#1e293b; border-radius:4px; }
-        .kai-chip:hover { background:rgba(249,115,22,0.18) !important; }
-        .kai-close:hover { color:#fff !important; }
-      `}</style>
+      {/* Floating Button */}
+      <AnimatePresence>
+        {!open && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setOpen(true)}
+            className="fixed bottom-24 right-5 sm:right-8 z-50 w-16 h-16 rounded-full flex items-center justify-center cursor-pointer overflow-hidden group shadow-[0_0_30px_rgba(59,130,246,0.3)] border border-blue-500/30"
+            style={{ background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)' }}
+          >
+            {/* Glow ring */}
+            <div className="absolute inset-0 rounded-full border-[2px] border-blue-400 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+            
+            {/* Shimmer */}
+            <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shimmer_3s_infinite]" />
+            
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 drop-shadow-md">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              <circle cx="9" cy="10" r="1" fill="white"></circle>
+              <circle cx="15" cy="10" r="1" fill="white"></circle>
+            </svg>
+            
+            {/* Notification Dot */}
+            {messages.length === 1 && (
+              <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full border-2 border-blue-900 animate-pulse" />
+            )}
+          </motion.button>
+        )}
+      </AnimatePresence>
 
-      {/* Floating compass button */}
-      {!open && (
-        <button
-          className="kai-btn"
-          onClick={() => setOpen(true)}
-          aria-label="Kompas AI — відкрити чат"
-          style={{
-            position:'fixed', bottom:24, right:24, zIndex:9997,
-            width:60, height:60, borderRadius:'50%',
-            background:'linear-gradient(135deg,#f97316,#ea580c)',
-            border:'none', cursor:'pointer', fontSize:26,
-          }}
-        >🧭</button>
-      )}
-
-      {/* Chat panel */}
-      {open && (
-        <div
-          className="kai-panel"
-          style={{
-            position:'fixed', bottom:24, right:24, zIndex:9997,
-            width:'min(360px,calc(100vw - 32px))',
-            height:'min(540px,calc(100vh - 48px))',
-            background:NAVY, borderRadius:20,
-            border:'1px solid rgba(249,115,22,0.25)',
-            boxShadow:'0 16px 56px rgba(0,0,0,0.6)',
-            display:'flex', flexDirection:'column', overflow:'hidden',
-            fontFamily:"'Syne',sans-serif",
-          }}
-        >
-          {/* Header */}
-          <div style={{ display:'flex', alignItems:'center', gap:10, padding:'13px 15px', borderBottom:'1px solid rgba(255,255,255,0.07)', background:'rgba(249,115,22,0.07)', flexShrink:0 }}>
-            <div style={{ width:36, height:36, borderRadius:'50%', background:'linear-gradient(135deg,#f97316,#ea580c)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:17, flexShrink:0 }}>
-              🧭
-            </div>
-            <div style={{ flex:1 }}>
-              <div style={{ fontSize:12, fontWeight:800, color:ORANGE, letterSpacing:'0.1em', textTransform:'uppercase', lineHeight:1.2 }}>Kompas AI</div>
-              <div style={{ fontSize:10, color:'#10b981', display:'flex', alignItems:'center', gap:4, marginTop:2 }}>
-                <span style={{ width:5, height:5, borderRadius:'50%', background:'#10b981', display:'inline-block' }}/>
-                Онлайн · відповідає одразу
-              </div>
-            </div>
-            <button
-              className="kai-close"
-              onClick={() => setOpen(false)}
-              style={{ background:'none', border:'none', color:'#334155', fontSize:19, cursor:'pointer', lineHeight:1, padding:'2px 4px', transition:'color 0.15s' }}
-            >✕</button>
-          </div>
-
-          {/* Messages */}
-          <div className="kai-scroll" style={{ flex:1, overflowY:'auto', padding:'14px 12px', display:'flex', flexDirection:'column', gap:10 }}>
-            {messages.map((msg, i) => (
-              <div key={i} style={{ display:'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start', alignItems:'flex-end', gap:6 }}>
-                {msg.role === 'assistant' && (
-                  <span style={{ fontSize:15, flexShrink:0, marginBottom:2 }}>🧭</span>
-                )}
-                <div style={{
-                  maxWidth:'78%', padding:'10px 13px',
-                  borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                  background: msg.role === 'user' ? ORANGE : '#1e293b',
-                  color: msg.role === 'user' ? '#fff' : '#e2e8f0',
-                  fontSize:13, lineHeight:1.65,
-                  whiteSpace:'pre-wrap', wordBreak:'break-word',
-                }}>
-                  {msg.content}
+      {/* Chat Window */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95, transformOrigin: 'bottom right' }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-[60] w-[calc(100vw-40px)] sm:w-[380px] h-[600px] max-h-[calc(100vh-40px)] flex flex-col rounded-3xl overflow-hidden bg-[#0f1115]/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
+          >
+            {/* Header */}
+            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-white/10 bg-white/5">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0f1115]" />
+                </div>
+                <div>
+                  <div className="font-bold text-white text-sm">Kompas AI</div>
+                  <div className="text-xs text-blue-400 font-medium tracking-wide uppercase mt-0.5 animate-pulse">Online</div>
                 </div>
               </div>
-            ))}
+              <button
+                onClick={() => setOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
 
-            {/* Typing indicator */}
-            {loading && (
-              <div style={{ display:'flex', alignItems:'flex-end', gap:6 }}>
-                <span style={{ fontSize:15, flexShrink:0 }}>🧭</span>
-                <div style={{ padding:'12px 15px', borderRadius:'16px 16px 16px 4px', background:'#1e293b', display:'flex', gap:5, alignItems:'center' }}>
-                  <span className="kai-d1" style={{ width:6, height:6, borderRadius:'50%', background:'#64748b', display:'inline-block' }}/>
-                  <span className="kai-d2" style={{ width:6, height:6, borderRadius:'50%', background:'#64748b', display:'inline-block' }}/>
-                  <span className="kai-d3" style={{ width:6, height:6, borderRadius:'50%', background:'#64748b', display:'inline-block' }}/>
-                </div>
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 flex flex-col gap-4 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              {messages.map((m, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                    m.role === 'user' 
+                      ? 'bg-blue-600 text-white rounded-br-sm shadow-lg' 
+                      : 'bg-white/10 text-gray-100 rounded-bl-sm border border-white/5'
+                  }`}>
+                    {m.content.split('\n').map((line, j) => (
+                      <span key={j}>
+                        {line}
+                        {j !== m.content.split('\n').length - 1 && <br />}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+              
+              {loading && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                  <div className="bg-white/5 border border-white/5 rounded-2xl rounded-bl-sm px-4 py-4 flex gap-1.5 items-center">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </motion.div>
+              )}
+              <div ref={bottomRef} className="h-1" />
+            </div>
+
+            {/* Quick Actions */}
+            {messages.length === 1 && !loading && (
+              <div className="px-4 pb-2 flex flex-wrap gap-2">
+                {QUICK.map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => doSend(q)}
+                    className="px-3 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xs font-medium hover:bg-blue-500/20 transition-colors whitespace-nowrap"
+                  >
+                    {q}
+                  </button>
+                ))}
               </div>
             )}
-            <div ref={bottomRef}/>
-          </div>
 
-          {/* Quick chips — only at start */}
-          {messages.length === 1 && !loading && (
-            <div style={{ padding:'0 12px 10px', display:'flex', gap:6, flexWrap:'wrap', flexShrink:0 }}>
-              {QUICK.map(q => (
+            {/* Input */}
+            <div className="p-4 bg-[#0a0a0a] border-t border-white/10">
+              <form
+                onSubmit={e => { e.preventDefault(); doSend(input); }}
+                className="relative flex items-center bg-white/5 border border-white/10 rounded-full px-2 py-1 focus-within:border-blue-500/50 focus-within:bg-white/10 transition-all"
+              >
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(input); }
+                  }}
+                  placeholder="Напишіть повідомлення..."
+                  className="flex-1 bg-transparent border-none text-white text-sm px-3 py-2.5 resize-none max-h-32 focus:outline-none focus:ring-0 placeholder-gray-500"
+                  rows={1}
+                  style={{ minHeight: '40px', scrollbarWidth: 'none' }}
+                />
                 <button
-                  key={q}
-                  className="kai-chip"
-                  onClick={() => doSend(q)}
-                  style={{ padding:'6px 12px', borderRadius:20, border:`1px solid rgba(249,115,22,0.3)`, background:'rgba(249,115,22,0.08)', color:ORANGE, fontSize:11, fontWeight:600, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', transition:'background 0.15s' }}
-                >{q}</button>
-              ))}
+                  type="submit"
+                  disabled={!input.trim() || loading}
+                  className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white disabled:opacity-50 disabled:bg-gray-600 transition-all ml-1 shrink-0 hover:scale-105"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+              </form>
+              <div className="text-center mt-2 text-[10px] text-gray-500 font-medium">
+                Kompas AI 2.0 ⚡
+              </div>
             </div>
-          )}
-
-          {/* Input */}
-          <div style={{ padding:'10px 12px', borderTop:'1px solid rgba(255,255,255,0.06)', display:'flex', gap:8, alignItems:'flex-end', flexShrink:0 }}>
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(input); } }}
-              placeholder="Напишіть питання..."
-              rows={1}
-              style={{ flex:1, background:'#1e293b', border:'1.5px solid rgba(255,255,255,0.08)', borderRadius:12, padding:'10px 13px', color:'#e2e8f0', fontSize:13, fontFamily:'inherit', resize:'none', outline:'none', lineHeight:1.5, maxHeight:80, overflowY:'auto' }}
-            />
-            <button
-              onClick={() => doSend(input)}
-              disabled={loading || !input.trim()}
-              style={{ width:40, height:40, borderRadius:10, border:'none', flexShrink:0, background: loading || !input.trim() ? '#1e293b' : ORANGE, cursor: loading || !input.trim() ? 'default' : 'pointer', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.15s' }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={loading || !input.trim() ? '#334155' : '#fff'} strokeWidth="2.5">
-                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

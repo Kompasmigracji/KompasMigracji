@@ -2,76 +2,125 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCookieConsent } from '@/lib/useCookieConsent';
-import { useTheme } from '@/lib/ThemeContext';
-
-const ORANGE = '#f97316';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function Toggle({ on, onChange }: { on: boolean; onChange: ((v: boolean) => void) | null }) {
   return (
     <button
       onClick={() => onChange?.(!on)}
       disabled={!onChange}
-      className={`relative w-10 h-[22px] rounded-full shrink-0 transition-colors duration-250 ${onChange ? 'cursor-pointer' : 'cursor-default'} ${on ? 'bg-orange-500' : 'bg-white/15 border-none'}`}
+      className={`relative w-11 h-6 rounded-full shrink-0 transition-colors duration-300 ${
+        onChange ? 'cursor-pointer' : 'cursor-default opacity-60'
+      } ${on ? 'bg-blue-600' : 'bg-white/10'}`}
     >
-      <span className={`absolute top-[3px] w-4 h-4 rounded-full bg-white transition-all duration-250 shadow-md ${on ? 'left-[21px]' : 'left-[3px]'}`} />
+      <span 
+        className={`absolute top-[2px] w-5 h-5 rounded-full bg-white transition-all duration-300 shadow-md ${
+          on ? 'left-[22px]' : 'left-[2px]'
+        }`} 
+      />
     </button>
   );
 }
 
 export default function CookieBanner() {
   const { decided, acceptAll, rejectAll, saveCustom } = useCookieConsent();
-  const { dark } = useTheme();
   const [open, setOpen] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);
 
   if (decided) return null;
 
-  const bg     = dark ? 'rgba(10, 18, 36, 0.97)' : '#ffffff';
-  const border = dark ? 'rgba(255,255,255,0.12)' : '#e5e7eb';
-  const text   = dark ? '#dde4f0' : '#1a1a2e';
-  const muted  = dark ? '#7a8ba8' : '#6b7280';
-  const card   = dark ? 'rgba(255,255,255,0.04)' : '#f9fafb';
-
   return (
-    <div className="fixed bottom-4 left-0 right-0 flex justify-center px-4 z-[9995] pointer-events-none">
-      <div className={`max-w-[480px] w-full mx-auto rounded-2xl p-5 pb-[18px] pointer-events-auto shadow-2xl backdrop-blur-md ${dark ? 'bg-[#0a1224]/97 border border-white/10' : 'bg-white border border-gray-200'}`}>
-        <div className="flex gap-2.5 items-start mb-2.5">
-          <span className="text-[20px] leading-none">🍪</span>
-          <div>
-            <p className={`m-0 font-bold text-sm leading-tight ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Ми використовуємо файли cookie</p>
-            <p className={`mt-1 text-xs leading-relaxed ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>
-              Необхідні cookies завжди активні. Аналітичні допомагають покращувати сервіс.{' '}
-              <Link href="/privacy" className="text-orange-500 no-underline hover:underline">Політика конфіденційності</Link>
-            </p>
-          </div>
-        </div>
-
-        {open && (
-          <div className="my-3 flex flex-col gap-2">
-            <div className={`flex items-center justify-between rounded-xl p-2.5 px-3.5 border ${dark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-              <div>
-                <p className={`m-0 text-[13px] font-semibold ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Необхідні</p>
-                <p className={`mt-0.5 text-[11px] ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Мова, тема, сесія — завжди активні</p>
-              </div>
-              <Toggle on={true} onChange={null} />
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 50 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-[9995] flex justify-center sm:justify-end pointer-events-none"
+      >
+        <div className="w-full max-w-[420px] bg-[#0a0a0a]/95 backdrop-blur-3xl border border-white/10 rounded-3xl p-5 sm:p-6 shadow-[0_20px_60px_rgba(0,0,0,0.8)] pointer-events-auto">
+          
+          <div className="flex gap-4 items-start mb-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center shrink-0 border border-white/5">
+              <span className="text-2xl animate-[spin_10s_linear_infinite]">🍪</span>
             </div>
-            <div className={`flex items-center justify-between rounded-xl p-2.5 px-3.5 border ${dark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-200'}`}>
-              <div>
-                <p className={`m-0 text-[13px] font-semibold ${dark ? 'text-[#dde4f0]' : 'text-[#1a1a2e]'}`}>Аналітичні</p>
-                <p className={`mt-0.5 text-[11px] ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Vercel Analytics — статистика відвідувань</p>
-              </div>
-              <Toggle on={analyticsOn} onChange={setAnalyticsOn} />
+            <div>
+              <p className="m-0 font-display font-bold text-base text-white leading-tight mb-1">
+                Ми використовуємо cookies
+              </p>
+              <p className="m-0 text-xs text-gray-400 leading-relaxed">
+                Необхідні cookies завжди активні. Аналітичні допомагають нам стати краще.{' '}
+                <Link href="/privacy" className="text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors">
+                  Політика конфіденційності
+                </Link>
+              </p>
             </div>
           </div>
-        )}
 
-        <div className="flex gap-2 flex-wrap mt-3.5">
-          <button onClick={acceptAll} className="flex-1 min-w-[120px] px-4 py-2.5 rounded-full border-none bg-orange-500 text-white font-bold text-[13px] cursor-pointer transition-premium hover-lift shadow-md">Прийняти всі</button>
-          <button onClick={() => setOpen(o => !o)} className={`px-4 py-2.5 rounded-full border bg-transparent font-semibold text-[13px] cursor-pointer transition-premium ${dark ? 'border-white/10 text-[#7a8ba8] hover:bg-white/5' : 'border-gray-200 text-gray-500 hover:bg-gray-50'}`}>{open ? 'Сховати' : 'Налаштувати'}</button>
-          {open && <button onClick={() => saveCustom({ analytics: analyticsOn })} className={`px-4 py-2.5 rounded-full border bg-transparent font-semibold text-[13px] cursor-pointer transition-premium ${dark ? 'border-white/10 text-[#dde4f0] hover:bg-white/5' : 'border-gray-200 text-[#1a1a2e] hover:bg-gray-50'}`}>Зберегти</button>}
-          <button onClick={rejectAll} className={`px-3.5 py-2.5 rounded-xl border-none bg-transparent font-medium text-[12px] cursor-pointer ${dark ? 'text-[#7a8ba8]' : 'text-gray-500'}`}>Відхилити</button>
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="py-3 flex flex-col gap-2 border-t border-white/10 mt-2">
+                  <div className="flex items-center justify-between rounded-xl p-3 bg-white/5 border border-white/5">
+                    <div>
+                      <p className="m-0 text-sm font-semibold text-white">Необхідні</p>
+                      <p className="m-0 mt-0.5 text-[11px] text-gray-400">Мова, тема, сесія — завжди активні</p>
+                    </div>
+                    <Toggle on={true} onChange={null} />
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl p-3 bg-white/5 border border-white/5">
+                    <div>
+                      <p className="m-0 text-sm font-semibold text-white">Аналітичні</p>
+                      <p className="m-0 mt-0.5 text-[11px] text-gray-400">Допомагають покращувати сервіс</p>
+                    </div>
+                    <Toggle on={analyticsOn} onChange={setAnalyticsOn} />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex flex-wrap items-center gap-2 mt-2 pt-4 border-t border-white/10">
+            <button 
+              onClick={acceptAll} 
+              className="flex-1 min-w-[120px] px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all active:scale-95 shadow-[0_0_15px_rgba(37,99,235,0.3)] relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
+              <span className="relative z-10">Прийняти всі</span>
+            </button>
+            
+            {open && (
+              <button 
+                onClick={() => saveCustom({ analytics: analyticsOn })} 
+                className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm transition-all active:scale-95"
+              >
+                Зберегти
+              </button>
+            )}
+
+            <button 
+              onClick={() => setOpen(!open)} 
+              className="px-4 py-2.5 rounded-full border border-white/10 hover:bg-white/5 text-gray-300 font-medium text-sm transition-all active:scale-95"
+            >
+              {open ? 'Сховати' : 'Налаштувати'}
+            </button>
+          </div>
+          
+          {!open && (
+             <div className="text-center mt-3">
+               <button onClick={rejectAll} className="text-xs text-gray-500 hover:text-gray-300 transition-colors bg-transparent border-none cursor-pointer">
+                 Продовжити без прийняття
+               </button>
+             </div>
+          )}
+
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </AnimatePresence>
   );
 }

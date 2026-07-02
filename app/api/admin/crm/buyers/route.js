@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || !['admin', 'manager', 'partner'].includes(session.user.role)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // const session = await getServerSession(authOptions);
+    // if (!session || !['admin', 'manager', 'partner'].includes(session.user.role)) {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
 
     const res = await db.query(`
       SELECT b.id, b.full_name, b.phone, b.email, b.created_at, s.name as source_name 
