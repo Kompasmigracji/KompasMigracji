@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-
 import { motion } from "framer-motion";
+import SpotlightCard from "@/components/SpotlightCard";
 
 export default function PaymentsDemoPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -19,142 +18,117 @@ export default function PaymentsDemoPage() {
       setLoading(false);
     };
     fetchData();
-
-    
-
-    
-
-    
-
-    
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 24, padding: "24px" }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
       
       {/* Top Header */}
-      <div className="premium-glass" style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 24px", borderRadius: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, color: "var(--text)" }}>Журнал платежів</h2>
+      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+            <Icon name="credit-card" size={16} />
+          </div>
+          <h2 className="m-0 text-xl font-bold text-white tracking-tight">Журнал платежів</h2>
+        </div>
         
         {/* Search Bar */}
-        <div style={{ 
-          flex: 1, 
-          display: "flex", 
-          alignItems: "center", 
-          background: "var(--panel-2)", 
-          border: "1px solid var(--border)", 
-          borderRadius: 6,
-          padding: "6px 12px",
-          gap: 8,
-          maxWidth: 400
-        }}>
-          <Icon name="search" size={16} color="var(--dim)" />
+        <div className="flex-1 flex items-center bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-emerald-500/50">
+          <Icon name="search" size={16} className="text-gray-500" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
-            style={{ border: "none", background: "transparent", outline: "none", color: "var(--text)", width: "100%", fontSize: 13 }}
+            className="bg-transparent border-none outline-none text-gray-200 w-full text-sm placeholder:text-gray-600"
           />
         </div>
 
-        <button style={{ 
-          background: "var(--panel-2)", border: "1px solid var(--border)", 
-          padding: "8px", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center"
-        }}>
-          <Icon name="sliders" size={14} color="var(--dim)" />
+        <button className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+          <Icon name="sliders" size={16} />
         </button>
 
-        <button style={{ 
-          background: "var(--color-primary)", color: "#fff", border: "none", 
-          padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600,
-          display: "flex", alignItems: "center", gap: 8, cursor: "pointer", marginLeft: "auto"
-        }}>
-          <Icon name="plus" size={14} />
+        <button className="ml-auto bg-emerald-500 hover:bg-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all">
+          <Icon name="plus" size={16} />
           Добавить оплату
         </button>
       </div>
 
-      {/* Data Table */}
-      <div className="premium-card" style={{ 
-        borderRadius: 16,
-        overflowX: "auto",
-        padding: 8
-      }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 13 }}>
-          <thead>
-            <tr style={{ borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
-              <th style={{ padding: "12px 16px", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                Дата и время <Icon name="arrow-down" size={12} />
-              </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Детали платежа</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Пользователь</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600, textAlign: "right" }}>Сумма</th>
-              <th style={{ padding: "12px 16px", fontWeight: 600, textAlign: "right" }}>Статус</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="5" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка платежей...</td></tr>
-            ) : payments.length === 0 ? (
-              <tr><td colSpan="5" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Журнал пуст</td></tr>
-            ) : payments.map(pay => {
-              const isIncome = pay.type === "income";
-              const isCancelled = pay.status === "cancelled";
-              const borderColor = isIncome ? "#10b981" : "#ef4444";
-              const badgeBg = isIncome ? "#d1fae5" : "#fee2e2";
-              
-              const dateObj = new Date(pay.created_at);
-              const dateStr = dateObj.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-              
-              return (
-                <motion.tr 
-                  key={pay.id} 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  whileHover={{ scale: 1.01, backgroundColor: "var(--border)" }}
-                  style={{ borderBottom: "1px solid var(--border)", cursor: "pointer", transition: "background-color 0.2s" }}
-                >
-                  <td style={{ padding: "16px", color: "var(--dim)", whiteSpace: "nowrap" }}>
-                    {dateStr}
-                  </td>
-                  <td style={{ padding: "0" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "12px 16px", borderLeft: `3px solid ${borderColor}` }}>
-                      <div>
-                        <span style={{ background: badgeBg, color: borderColor, padding: "2px 6px", borderRadius: 4, fontSize: 10, fontWeight: 700, textTransform: "uppercase" }}>
-                          {pay.type_label}
-                        </span>
+      <div className="p-8">
+        {/* Data Table */}
+        <SpotlightCard className="bg-white/5 border border-white/10 rounded-2xl overflow-x-auto p-0">
+          <table className="w-full min-w-[1000px] text-sm text-left">
+            <thead className="bg-black/20 text-xs text-gray-500 uppercase font-semibold border-b border-white/10">
+              <tr>
+                <th className="px-6 py-4 font-semibold tracking-wider flex items-center gap-2">
+                  Дата и время <Icon name="arrow-down" size={12} className="text-emerald-500" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Детали платежа</th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Пользователь</th>
+                <th className="px-4 py-4 font-semibold tracking-wider text-right">Сумма</th>
+                <th className="px-6 py-4 font-semibold tracking-wider text-right">Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500">Загрузка платежей...</td></tr>
+              ) : payments.length === 0 ? (
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500">Журнал пуст</td></tr>
+              ) : payments.map((pay, index) => {
+                const isIncome = pay.type === "income";
+                const isCancelled = pay.status === "cancelled";
+                
+                const dateObj = new Date(pay.created_at);
+                const dateStr = dateObj.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                
+                return (
+                  <motion.tr 
+                    key={pay.id} 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`transition-colors hover:bg-white/5 border-white/5 cursor-pointer ${index !== payments.length - 1 ? 'border-b' : ''}`}
+                  >
+                    <td className="px-6 py-4 text-gray-400 whitespace-nowrap font-medium">
+                      {dateStr}
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className={`flex flex-col gap-1.5 pl-4 border-l-2 ${isIncome ? 'border-emerald-500' : 'border-red-500'}`}>
+                        <div>
+                          <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider
+                            ${isIncome ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}`}>
+                            {pay.type_label}
+                          </span>
+                        </div>
+                        <span className="text-blue-400 font-medium">{pay.description}</span>
                       </div>
-                      <span style={{ color: "var(--color-primary)", fontSize: 13 }}>{pay.description}</span>
-                    </div>
-                  </td>
-                  <td style={{ padding: "12px 8px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <Avatar name={pay.manager} size={24} />
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <span style={{ color: "var(--text)" }}>{pay.manager}</span>
-                        <span style={{ fontSize: 10, color: "var(--dim)" }}>Administrator</span>
+                    </td>
+                    <td className="px-4 py-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar name={pay.manager} size={32} className="border border-white/10" />
+                        <div className="flex flex-col">
+                          <span className="text-gray-200 font-bold">{pay.manager}</span>
+                          <span className="text-xs text-gray-500 font-medium">Administrator</span>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td style={{ padding: "12px 8px", textAlign: "right", color: borderColor, fontWeight: 600, fontSize: 13 }}>
-                    {pay.amount} {pay.currency}
-                  </td>
-                  <td style={{ padding: "12px 16px", textAlign: "right" }}>
-                    {isCancelled ? (
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, border: "1px solid #fca5a5", color: "#ef4444", padding: "4px 8px", borderRadius: 4, fontSize: 10, fontWeight: 600, textTransform: "uppercase" }}>
-                        <Icon name="x" size={12} /> Отменено
-                      </div>
-                    ) : (
-                      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, border: "1px solid #6ee7b7", color: "#10b981", padding: "4px 8px", borderRadius: 4, fontSize: 10, fontWeight: 600, textTransform: "uppercase" }}>
-                        <Icon name="check" size={12} /> Оплачено
-                      </div>
-                    )}
-                  </td>
-                </motion.tr>
-              )
-            })}
-          </tbody>
-        </table>
-        
+                    </td>
+                    <td className={`px-4 py-4 text-right font-bold text-base ${isIncome ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {pay.amount} {pay.currency}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      {isCancelled ? (
+                        <div className="inline-flex items-center gap-1.5 border border-red-500/30 bg-red-500/10 text-red-400 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                          <Icon name="x" size={12} /> Отменено
+                        </div>
+                      ) : (
+                        <div className="inline-flex items-center gap-1.5 border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                          <Icon name="check" size={12} /> Оплачено
+                        </div>
+                      )}
+                    </td>
+                  </motion.tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </SpotlightCard>
       </div>
     </div>
   );

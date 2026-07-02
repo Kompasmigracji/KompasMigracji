@@ -1,64 +1,68 @@
+"use client";
 import React from "react";
 import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion } from "framer-motion";
 
 export default function CrmDemoPage() {
   return (
-    <div style={{ maxWidth: 1000, display: "flex", flexDirection: "column", gap: 24 }}>
+    <div className="flex flex-col gap-8 p-8 bg-[#050505] text-gray-200 h-full max-w-5xl mx-auto">
+      
       {/* Welcome Banner */}
-      <div style={{
-        background: "linear-gradient(135deg, var(--panel-2), var(--panel))",
-        border: "1px solid var(--border)",
-        borderRadius: 16,
-        padding: 32,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between"
-      }}>
-        <div>
-          <h2 style={{ fontSize: 24, margin: "0 0 8px", color: "var(--text)" }}>Добро пожаловать в KompasCRM</h2>
-          <p style={{ margin: 0, color: "var(--dim)", fontSize: 15, maxWidth: 500, lineHeight: 1.5 }}>
-            Это новая концепция админ-панели с двухколоночным сайдбаром (в стиле KeyCRM), адаптированная под дизайн-систему KompasMigracji. 
+      <SpotlightCard className="bg-white/5 border border-white/10 p-8 rounded-3xl relative overflow-hidden flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 blur-[80px] rounded-full pointer-events-none" />
+        
+        <div className="relative z-10 flex flex-col gap-3">
+          <h2 className="text-3xl font-bold text-white m-0 tracking-tight">Добро пожаловать в KompasCRM</h2>
+          <p className="text-gray-400 text-base leading-relaxed max-w-lg m-0">
+            Это новая концепция админ-панели с двухколоночным сайдбаром (в стиле iPhoenix), адаптированная под дизайн-систему Spatial UI.
           </p>
         </div>
-        <div style={{ width: 64, height: 64, borderRadius: 32, background: "rgba(217,158,84,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon name="zap" size={32} color="var(--color-primary)" />
+        
+        <div className="relative z-10 w-20 h-20 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shadow-[0_0_30px_rgba(245,158,11,0.15)] text-amber-500">
+          <Icon name="zap" size={32} />
         </div>
-      </div>
+      </SpotlightCard>
 
       {/* Metric Cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Новых лидов", val: "14", icon: "user-plus", c: "var(--color-info)" },
-          { label: "Заказов в работе", val: "38", icon: "shopping-bag", c: "var(--color-warning)" },
-          { label: "Успешных сделок", val: "12", icon: "check-circle", c: "var(--color-success)" },
-          { label: "Выручка", val: "48,500 zł", icon: "dollar-sign", c: "var(--color-primary)" },
-        ].map(m => (
-          <div key={m.label} style={{
-            background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 12, padding: 20
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, background: `color-mix(in srgb, ${m.c} 15%, transparent)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon name={m.icon} size={18} color={m.c} />
+          { label: "Новых лидов", val: "14", icon: "user-plus", color: "blue" },
+          { label: "Заказов в работе", val: "38", icon: "shopping-bag", color: "amber" },
+          { label: "Успешных сделок", val: "12", icon: "check-circle", color: "emerald" },
+          { label: "Выручка", val: "48,500 zł", icon: "dollar-sign", color: "indigo" },
+        ].map((m, i) => (
+          <motion.div
+            key={m.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1 }}
+          >
+            <SpotlightCard className="bg-white/5 border border-white/10 p-6 rounded-2xl flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl bg-${m.color}-500/20 border border-${m.color}-500/30 text-${m.color}-400 flex items-center justify-center shadow-[0_0_15px_rgba(var(--${m.color}-500-rgb),0.2)]`}>
+                  <Icon name={m.icon} size={18} />
+                </div>
+                <span className="text-sm font-semibold text-gray-400">{m.label}</span>
               </div>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--dim)" }}>{m.label}</span>
-            </div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: "var(--text)" }}>{m.val}</div>
-          </div>
+              <div className="text-3xl font-bold text-white tracking-tight">{m.val}</div>
+            </SpotlightCard>
+          </motion.div>
         ))}
       </div>
       
       {/* Recent Activity Table Placeholder */}
-      <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 12, overflow: "hidden" }}>
-        <div style={{ padding: 20, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h3 style={{ margin: 0, fontSize: 16, color: "var(--text)" }}>Последние заказы</h3>
-          <button style={{ background: "transparent", border: "none", color: "var(--color-primary)", fontSize: 14, cursor: "pointer", fontWeight: 600 }}>
-            Смотреть все →
+      <SpotlightCard className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden p-0">
+        <div className="p-6 border-b border-white/10 flex items-center justify-between bg-black/20">
+          <h3 className="m-0 text-lg font-bold text-white tracking-tight">Последние заказы</h3>
+          <button className="bg-transparent border-none text-blue-400 hover:text-blue-300 transition-colors text-sm font-semibold cursor-pointer flex items-center gap-2">
+            Смотреть все <Icon name="arrow-right" size={14} />
           </button>
         </div>
-        <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--faint)", fontSize: 14 }}>
+        <div className="p-12 text-center text-gray-500 text-sm font-medium">
           Выберите раздел слева, чтобы просмотреть данные.
         </div>
-      </div>
+      </SpotlightCard>
     </div>
   );
 }
