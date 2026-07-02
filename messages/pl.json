@@ -443,5 +443,19 @@
   "rev4_t": "Sporny spadek między krewnymi ciągnął się miesiącami. Oleksandr uporządkował to, przygotował dokumenty i w końcu się porozumieliśmy. Polecam każdemu.",
   "rev4_a": "Ludmiła G.",
   "rev4_d": "maj 2026",
-  "rev_real_text": "Prawdziwe opinie na"
+  "rev_real_text": "Prawdziwe opinie na",
+  "ExitPopup": {
+    "title": "Nie zostawaj z tym sam",
+    "subtitle": "Zostaw swój email — skontaktujemy się z Tobą i dokonamy bezpłatnej oceny Twojej sytuacji",
+    "name": "Twoje imię (opcjonalnie)",
+    "email": "Twój email *",
+    "sending": "Wysyłanie...",
+    "submit": "Zdobądź bezpłatną ocenę →",
+    "or_contact": "lub skontaktuj się teraz:",
+    "close_without_help": "Zamknij bez pomocy",
+    "success_title": "Dziękujemy! Skontaktujemy się z Tobą",
+    "success_subtitle": "Spodziewaj się wiadomości w ciągu 2 godzin w godzinach pracy",
+    "whatsapp_now": "Napisz na WhatsApp teraz",
+    "phone": "Telefon"
+  }
 }

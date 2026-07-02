@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 
 const STORAGE_KEY = "km_exit_popup_shown";
 const BRAND = "#D8232A";
@@ -10,6 +11,7 @@ export default function ExitPopup() {
   const [name, setName] = useState("");
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const t = useTranslations("ExitPopup");
 
   const show = useCallback(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY)) return;
@@ -85,17 +87,17 @@ export default function ExitPopup() {
               <div style={{ textAlign: "center", marginBottom: 20 }}>
                 <div style={{ fontSize: 40, marginBottom: 10 }}>🤝</div>
                 <h2 style={{ margin: "0 0 8px", fontSize: 24, fontWeight: 700, color: "#111", lineHeight: 1.2, letterSpacing: "-0.03em" }}>
-                  Не залишайтеся наодинці з цим
+                  {t('title')}
                 </h2>
                 <p style={{ margin: 0, fontSize: 15, color: "#6B7280", lineHeight: 1.5 }}>
-                  Залиште свій email — ми зв&#x27;яжемося з вами та дамо безкоштовну оцінку вашої ситуації
+                  {t('subtitle')}
                 </p>
               </div>
 
               <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 <input
                   type="text"
-                  placeholder="Ваше ім'я (необов'язково)"
+                  placeholder={t('name')}
                   value={name}
                   onChange={e => setName(e.target.value)}
                   style={{
@@ -106,7 +108,7 @@ export default function ExitPopup() {
                 />
                 <input
                   type="email"
-                  placeholder="Ваш email *"
+                  placeholder={t('email')}
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
@@ -126,12 +128,12 @@ export default function ExitPopup() {
                     boxShadow: "0 8px 20px rgba(216,35,42,0.3)"
                   }}
                 >
-                  {loading ? "Відправляємо..." : "Отримати безкоштовну оцінку →"}
+                  {loading ? t('sending') : t('submit')}
                 </button>
               </form>
 
               <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}>
-                <span style={{ fontSize: 11, color: "#9CA3AF" }}>або зв&#x27;яжіться прямо зараз:</span>
+                <span style={{ fontSize: 11, color: "#9CA3AF" }}>{t('or_contact')}</span>
                 <div style={{ display: "flex", gap: 8 }}>
                   <a
                     href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
@@ -148,13 +150,13 @@ export default function ExitPopup() {
                       padding: "10px 20px", borderRadius: 9999, background: "#f1f5f9", color: "#1e293b",
                       textDecoration: "none", fontWeight: 600, fontSize: 14,
                     }}
-                  >📞 Телефон</a>
+                  >📞 {t('phone')}</a>
                 </div>
                 <button
                   onClick={() => setOpen(false)}
                   style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, color: "#9CA3AF", marginTop: 4 }}
                 >
-                  Закрити без допомоги
+                  {t('close_without_help')}
                 </button>
               </div>
             </>
@@ -162,10 +164,10 @@ export default function ExitPopup() {
             <div style={{ textAlign: "center", padding: "12px 0" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
               <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 8px", color: "#111" }}>
-                Дякуємо! Ми зв&#x27;яжемося з вами
+                {t('success_title')}
               </h3>
               <p style={{ fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>
-                Очікуйте повідомлення протягом 2 годин у робочий час
+                {t('success_subtitle')}
               </p>
               <a
                 href="https://wa.me/48729271848"
@@ -178,7 +180,7 @@ export default function ExitPopup() {
                   boxShadow: "0 8px 20px rgba(37,211,102,0.3)", transition: "transform 0.2s"
                 }}
               >
-                💬 Написати у WhatsApp зараз
+                💬 {t('whatsapp_now')}
               </a>
             </div>
           )}

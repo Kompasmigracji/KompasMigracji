@@ -443,5 +443,19 @@
   "rev4_t": "A disputed inheritance between relatives dragged on for months. Oleksandr organized everything and we finally agreed. Highly recommend.",
   "rev4_a": "Liudmyla H.",
   "rev4_d": "May 2026",
-  "rev_real_text": "Real reviews on"
+  "rev_real_text": "Real reviews on",
+  "ExitPopup": {
+    "title": "Don't face this alone",
+    "subtitle": "Leave your email — we will contact you and provide a free assessment of your situation",
+    "name": "Your name (optional)",
+    "email": "Your email *",
+    "sending": "Sending...",
+    "submit": "Get a free assessment →",
+    "or_contact": "or contact us right now:",
+    "close_without_help": "Close without help",
+    "success_title": "Thank you! We will contact you",
+    "success_subtitle": "Expect a message within 2 hours during business hours",
+    "whatsapp_now": "Message on WhatsApp now",
+    "phone": "Phone"
+  }
 }

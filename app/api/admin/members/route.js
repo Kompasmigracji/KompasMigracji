@@ -19,7 +19,7 @@ export async function GET(req) {
             p.member_no, p.category, p.city, p.dues_status, p.join_date
      from kompas_users u
      left join kompas_member_profiles p on p.user_id = u.id
-     where u.role = 'member'
+     where (u.role = 'member' or p.user_id is not null)
        and ($1 = '' or u.full_name ilike $2 or u.email ilike $2 or p.member_no ilike $2)
      order by u.created_at desc
      limit 200`,
@@ -44,20 +44,25 @@ export async function POST(req) {
   if (!email || !fullName) {
     return NextResponse.json({ error: "Имя и email обязательны" }, { status: 400 });
   }
-  const exists = await one("select id from kompas_users where email = $1", [email]);
-  if (exists) {
-    return NextResponse.json({ error: "Пользователь с таким email уже есть" }, { status: 409 });
+  let user = await one("select id from kompas_users where email = $1", [email]);
+  let pwd;
+  
+  if (user) {
+    const profileExists = await one("select user_id from kompas_member_profiles where user_id = $1", [user.id]);
+    if (profileExists) {
+      return NextResponse.json({ error: "Користувач вже є учасником профспілки" }, { status: 409 });
+    }
+  } else {
+    pwd = b.password ? String(b.password) : tempPassword();
+    const hash = await hashPassword(pwd);
+
+    user = await one(
+      `insert into kompas_users (email, password_hash, full_name, role, status, phone)
+       values ($1, $2, $3, 'member', 'active', $4)
+       returning id`,
+      [email, hash, fullName, b.phone || null]
+    );
   }
-
-  const pwd = b.password ? String(b.password) : tempPassword();
-  const hash = await hashPassword(pwd);
-
-  const user = await one(
-    `insert into kompas_users (email, password_hash, full_name, role, status, phone)
-     values ($1, $2, $3, 'member', 'active', $4)
-     returning id`,
-    [email, hash, fullName, b.phone || null]
-  );
 
   const memberNo = "KM-" + String(user.id).padStart(5, "0");
   await q(
@@ -74,6 +79,6 @@ export async function POST(req) {
     ok: true,
     id: user.id,
     member_no: memberNo,
-    temp_password: b.password ? undefined : pwd,
+    temp_password: pwd,
   });
 }
