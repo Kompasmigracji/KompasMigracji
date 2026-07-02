@@ -136,7 +136,7 @@ export default function Header() {
             )}
           </div>
 
-          {[['#blog', t('nav_blog')], ['#contact', t('nav_contact')]].map(([href, label]) => (
+          {[['#blog', t('nav_blog')]].map(([href, label]) => (
             <a key={href} href={href} className="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary rounded-lg hover:bg-gray-50 transition-colors no-underline">{label}</a>
           ))}
           <Link
@@ -150,10 +150,6 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          <a href="tel:+48729271848" className="hidden lg:flex items-center gap-1.5 text-sm font-semibold text-navy no-underline hover:text-primary transition-colors mr-1">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.03 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
-            {PHONE}
-          </a>
 
           <div className="hidden sm:flex items-center gap-1.5">
             {SOCIAL.map((s) => (
