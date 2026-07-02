@@ -1,180 +1,200 @@
 "use client";
 import React, { useState } from "react";
 import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion } from "framer-motion";
 
 const MOCK_STATUSES = [
-  { id: 1, name: "Новий", color: "#ef4444", bg: "#fef2f2", qty: 1, conv: "100%", sum: "0 zł" },
-  { id: 2, name: "Перший контакт", color: "#f59e0b", bg: "#fffbeb", qty: 0, conv: "0%", sum: "0 zł" },
-  { id: 3, name: "Аналіз документів", color: "#84cc16", bg: "#f7fee7", qty: 0, conv: "0%", sum: "0 zł" },
-  { id: 4, name: "Аванс", color: "#0284c7", bg: "#f0f9ff", qty: 0, conv: "0%", sum: "0 zł" },
-  { id: 5, name: "Підписання умови", color: "#4f46e5", bg: "#eef2ff", qty: 0, conv: "0%", sum: "0 zł" },
-  { id: 6, name: "Виставлення рахунку", color: "#06b6d4", bg: "#ecfeff", qty: 0, conv: "0%", sum: "0 zł" },
-  { id: 7, name: "Успішно", color: "#a855f7", bg: "#faf5ff", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 1, name: "Новий", color: "bg-red-500/20 text-red-400 border-red-500/30", qty: 1, conv: "100%", sum: "0 zł" },
+  { id: 2, name: "Перший контакт", color: "bg-orange-500/20 text-orange-400 border-orange-500/30", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 3, name: "Аналіз документів", color: "bg-lime-500/20 text-lime-400 border-lime-500/30", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 4, name: "Аванс", color: "bg-sky-500/20 text-sky-400 border-sky-500/30", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 5, name: "Підписання умови", color: "bg-indigo-500/20 text-indigo-400 border-indigo-500/30", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 6, name: "Виставлення рахунку", color: "bg-cyan-500/20 text-cyan-400 border-cyan-500/30", qty: 0, conv: "0%", sum: "0 zł" },
+  { id: 7, name: "Успішно", color: "bg-purple-500/20 text-purple-400 border-purple-500/30", qty: 0, conv: "0%", sum: "0 zł" },
 ];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function AnalyticsDashboardPage() {
   const [activeTab, setActiveTab] = useState("general");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 32px)", margin: "-16px", background: "var(--bg)", overflowY: "auto" }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
       
       {/* Top Header */}
-      <div style={{ background: "var(--panel)", padding: "16px 24px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <h2 style={{ margin: 0, fontSize: 16, color: "var(--text)" }}>Аналитика</h2>
-          <select style={{ background: "var(--bg)", border: "1px solid var(--border)", padding: "6px 12px", borderRadius: 4, color: "var(--text)", fontSize: 13, outline: "none" }}>
+      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center gap-8 sticky top-0 z-20">
+        <div className="flex items-center gap-4">
+          <h2 className="m-0 text-xl font-bold text-white tracking-tight">Аналитика</h2>
+          <select className="bg-black/40 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-200 outline-none focus:border-blue-500/50 transition-colors">
             <option>Воронки</option>
             <option>Заказы</option>
           </select>
         </div>
         
         {/* Tabs */}
-        <div style={{ display: "flex", gap: 24, marginLeft: 12 }}>
-          <button style={{ background: "none", border: "none", borderBottom: activeTab === "general" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "general" ? "var(--color-primary)" : "var(--dim)", padding: "6px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }} onClick={() => setActiveTab("general")}>Общее</button>
-          <button style={{ background: "none", border: "none", borderBottom: activeTab === "managers" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "managers" ? "var(--text)" : "var(--dim)", padding: "6px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }} onClick={() => setActiveTab("managers")}>По менеджерам</button>
-          <button style={{ background: "none", border: "none", borderBottom: activeTab === "pivot" ? "2px solid var(--color-primary)" : "2px solid transparent", color: activeTab === "pivot" ? "var(--text)" : "var(--dim)", padding: "6px 0", fontSize: 13, fontWeight: 600, cursor: "pointer" }} onClick={() => setActiveTab("pivot")}>Сводная таблица</button>
+        <div className="flex gap-6 ml-4">
+          <button 
+            className={`pb-1 text-sm font-semibold transition-colors relative ${activeTab === "general" ? "text-blue-400" : "text-gray-400 hover:text-gray-200"}`} 
+            onClick={() => setActiveTab("general")}
+          >
+            Общее
+            {activeTab === "general" && <motion.div layoutId="dashTab" className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-500 rounded-t-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />}
+          </button>
+          <button 
+            className={`pb-1 text-sm font-semibold transition-colors relative ${activeTab === "managers" ? "text-blue-400" : "text-gray-400 hover:text-gray-200"}`} 
+            onClick={() => setActiveTab("managers")}
+          >
+            По менеджерам
+            {activeTab === "managers" && <motion.div layoutId="dashTab" className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-500 rounded-t-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />}
+          </button>
+          <button 
+            className={`pb-1 text-sm font-semibold transition-colors relative ${activeTab === "pivot" ? "text-blue-400" : "text-gray-400 hover:text-gray-200"}`} 
+            onClick={() => setActiveTab("pivot")}
+          >
+            Сводная таблица
+            {activeTab === "pivot" && <motion.div layoutId="dashTab" className="absolute left-0 bottom-0 w-full h-0.5 bg-blue-500 rounded-t-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />}
+          </button>
         </div>
       </div>
 
-      <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+      <motion.div 
+        variants={containerVariants} 
+        initial="hidden" 
+        animate="visible" 
+        className="p-8 flex flex-col gap-6"
+      >
         
         {/* Filters */}
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 12 }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 4 }}>Период</div>
-            <div style={{ display: "flex", alignItems: "center", background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 4, padding: "6px 12px", gap: 8 }}>
-              <Icon name="calendar" size={14} color="var(--dim)" />
-              <span style={{ fontSize: 13, color: "var(--text)" }}>30.05.2026 — 30.06.2026</span>
+        <motion.div variants={itemVariants} className="flex flex-wrap items-end gap-4">
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Период</div>
+            <div className="flex items-center bg-white/5 border border-white/10 rounded-xl px-4 py-3 gap-3 text-sm text-gray-300 hover:border-white/20 transition-colors cursor-pointer">
+              <Icon name="calendar" size={16} className="text-gray-400" />
+              <span>30.05.2026 — 30.06.2026</span>
             </div>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 4 }}>Дата для группировки</div>
-            <select style={{ width: "100%", background: "var(--panel)", border: "1px solid var(--border)", padding: "8px 12px", borderRadius: 4, color: "var(--text)", fontSize: 13 }}>
-              <option>Дата добавления в указанном периоде</option>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Дата для группировки</div>
+            <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-300 outline-none hover:border-white/20 focus:border-blue-500/50 transition-colors">
+              <option>Дата добавления</option>
             </select>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 4 }}>Воронка</div>
-            <select style={{ width: "100%", background: "var(--panel)", border: "1px solid var(--border)", padding: "8px 12px", borderRadius: 4, color: "var(--text)", fontSize: 13 }}>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Воронка</div>
+            <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-300 outline-none hover:border-white/20 focus:border-blue-500/50 transition-colors">
               <option>Одежа</option>
             </select>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 11, color: "var(--dim)", marginBottom: 4 }}>Менеджеры</div>
-            <select style={{ width: "100%", background: "var(--panel)", border: "1px solid var(--border)", padding: "8px 12px", borderRadius: 4, color: "var(--text)", fontSize: 13 }}>
+          <div className="flex-1 min-w-[200px]">
+            <div className="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Менеджеры</div>
+            <select className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-gray-300 outline-none hover:border-white/20 focus:border-blue-500/50 transition-colors">
               <option>Все</option>
             </select>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button style={{ background: "var(--panel)", border: "1px solid var(--border)", color: "var(--dim)", padding: "8px 16px", borderRadius: 4, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-              <Icon name="x" size={14} /> Очистить
+          <div className="flex gap-3">
+            <button className="bg-white/5 border border-white/10 text-gray-400 px-5 py-3 rounded-xl text-sm font-semibold hover:bg-white/10 hover:text-white transition-colors flex items-center gap-2">
+              <Icon name="x" size={16} /> Очистить
             </button>
-            <button style={{ background: "var(--color-primary)", border: "1px solid var(--color-primary)", color: "#fff", padding: "8px 16px", borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
-              <Icon name="filter" size={14} /> Все фильтры
+            <button className="bg-blue-500 hover:bg-blue-600 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)] px-5 py-3 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+              <Icon name="filter" size={16} /> Все фильтры
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Main Content: Conversion by Status */}
-        <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 6, display: "flex", flexDirection: "column" }}>
-          <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", fontWeight: 600, fontSize: 14, color: "var(--text)" }}>
-            Конверсия по статусам
-          </div>
-          <div style={{ display: "flex" }}>
-            
-            {/* Visual Funnel */}
-            <div style={{ flex: 1, borderRight: "1px solid var(--border)", padding: 40, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }}>
-              <div style={{ 
-                width: "80%", 
-                height: 80, 
-                background: "linear-gradient(to bottom, #fca5a5, #f87171)", 
-                clipPath: "polygon(0 0, 100% 0, 85% 100%, 15% 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: 700, fontSize: 13,
-                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-              }}>
-                100% Новий
-              </div>
-              <div style={{ 
-                width: "68%", 
-                height: 60, 
-                background: "linear-gradient(to bottom, #67e8f9, #22d3ee)", 
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: 700, fontSize: 13,
-                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-              }}>
-                0% В роботі
-              </div>
-              <div style={{ 
-                width: "68%", 
-                height: 60, 
-                background: "linear-gradient(to bottom, #a3e635, #84cc16)", 
-                borderBottomLeftRadius: 8, borderBottomRightRadius: 8,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: 700, fontSize: 13,
-                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
-              }}>
-                0% Успішно
-              </div>
+        <motion.div variants={itemVariants}>
+          <SpotlightCard className="flex flex-col border border-white/10 bg-white/5 rounded-2xl overflow-hidden p-0">
+            <div className="px-6 py-5 border-b border-white/10 font-semibold text-lg text-white flex items-center gap-3">
+              <Icon name="bar-chart" size={20} className="text-blue-400" />
+              Конверсия по статусам
             </div>
+            <div className="flex flex-col lg:flex-row">
+              
+              {/* Visual Funnel */}
+              <div className="flex-1 border-b lg:border-b-0 lg:border-r border-white/10 p-10 flex flex-col items-center justify-center gap-4 relative overflow-hidden">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-blue-500/10 blur-[60px] rounded-full pointer-events-none" />
+                
+                <div className="w-4/5 h-20 bg-gradient-to-b from-red-500/80 to-red-600/80 backdrop-blur-md border border-red-400/50 text-white font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.3)]" style={{ clipPath: "polygon(0 0, 100% 0, 85% 100%, 15% 100%)" }}>
+                  100% Новий
+                </div>
+                <div className="w-[68%] h-16 bg-gradient-to-b from-cyan-400/80 to-cyan-500/80 backdrop-blur-md border border-cyan-300/50 text-white font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.3)]" style={{ clipPath: "polygon(0 0, 100% 0, 85% 100%, 15% 100%)" }}>
+                  0% В роботі
+                </div>
+                <div className="w-[58%] h-16 bg-gradient-to-b from-lime-500/80 to-lime-600/80 backdrop-blur-md border border-lime-400/50 rounded-b-xl text-white font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(132,204,22,0.3)]">
+                  0% Успішно
+                </div>
+              </div>
 
-            {/* Data Table */}
-            <div style={{ flex: 1.5, padding: 20 }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ color: "var(--dim)", borderBottom: "1px solid var(--border)" }}>
-                    <th style={{ padding: "12px 8px", textAlign: "left", fontWeight: 400 }}>Статус</th>
-                    <th style={{ padding: "12px 8px", textAlign: "center", fontWeight: 400 }}>Количество</th>
-                    <th style={{ padding: "12px 8px", textAlign: "center", fontWeight: 400 }}>Конверсия</th>
-                    <th style={{ padding: "12px 8px", textAlign: "right", fontWeight: 400 }}>Сумма</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {MOCK_STATUSES.map((status, index) => (
-                    <tr key={status.id} style={{ borderBottom: index === MOCK_STATUSES.length - 1 ? "none" : "1px solid var(--border)" }}>
-                      <td style={{ padding: "12px 8px" }}>
-                        <span style={{ 
-                          background: status.color, color: "#fff", 
-                          padding: "4px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, display: "inline-block" 
-                        }}>
-                          {status.name}
-                        </span>
-                      </td>
-                      <td style={{ padding: "12px 8px", textAlign: "center", color: "var(--text)" }}>{status.qty}</td>
-                      <td style={{ padding: "12px 8px", textAlign: "center", color: "var(--dim)" }}>{status.conv}</td>
-                      <td style={{ padding: "12px 8px", textAlign: "right", color: "var(--dim)" }}>{status.sum}</td>
+              {/* Data Table */}
+              <div className="flex-[1.5] p-6">
+                <table className="w-full text-sm text-left">
+                  <thead className="text-xs text-gray-500 uppercase font-semibold border-b border-white/10">
+                    <tr>
+                      <th className="px-4 py-4 font-semibold tracking-wider">Статус</th>
+                      <th className="px-4 py-4 font-semibold tracking-wider text-center">Количество</th>
+                      <th className="px-4 py-4 font-semibold tracking-wider text-center">Конверсия</th>
+                      <th className="px-4 py-4 font-semibold tracking-wider text-right">Сумма</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {MOCK_STATUSES.map((status, index) => (
+                      <tr key={status.id} className={`border-white/5 transition-colors hover:bg-white/5 ${index !== MOCK_STATUSES.length - 1 ? 'border-b' : ''}`}>
+                        <td className="px-4 py-4">
+                          <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${status.color}`}>
+                            {status.name}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 text-center font-medium text-gray-200">{status.qty}</td>
+                        <td className="px-4 py-4 text-center text-gray-400">{status.conv}</td>
+                        <td className="px-4 py-4 text-right font-medium text-gray-200">{status.sum}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </div>
+          </SpotlightCard>
+        </motion.div>
 
         {/* Bottom Cards Row */}
-        <div style={{ display: "flex", gap: 16 }}>
-          <div style={{ flex: 1, background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 6, display: "flex", flexDirection: "column", minHeight: 250 }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", fontWeight: 600, fontSize: 14, color: "var(--text)" }}>
-              Отклонения по статусам
-            </div>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "var(--dim)" }}>
-              <Icon name="bar-chart-2" size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
-              <span style={{ fontSize: 13 }}>Нет доступных данных</span>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div variants={itemVariants} className="h-full">
+            <SpotlightCard className="h-full flex flex-col border border-white/10 bg-white/5 rounded-2xl min-h-[300px] p-0">
+              <div className="px-6 py-5 border-b border-white/10 font-semibold text-lg text-white flex items-center gap-3">
+                <Icon name="trending-down" size={20} className="text-red-400" />
+                Отклонения по статусам
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+                <Icon name="bar-chart-2" size={40} className="opacity-20 mb-4" />
+                <span className="text-sm">Нет доступных данных</span>
+              </div>
+            </SpotlightCard>
+          </motion.div>
           
-          <div style={{ flex: 1, background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 6, display: "flex", flexDirection: "column", minHeight: 250 }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", fontWeight: 600, fontSize: 14, color: "var(--text)" }}>
-              Причины отклонения
-            </div>
-            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "var(--dim)" }}>
-              <Icon name="bar-chart-2" size={32} style={{ opacity: 0.3, marginBottom: 12 }} />
-              <span style={{ fontSize: 13 }}>Нет доступных данных</span>
-            </div>
-          </div>
+          <motion.div variants={itemVariants} className="h-full">
+            <SpotlightCard className="h-full flex flex-col border border-white/10 bg-white/5 rounded-2xl min-h-[300px] p-0">
+              <div className="px-6 py-5 border-b border-white/10 font-semibold text-lg text-white flex items-center gap-3">
+                <Icon name="alert-circle" size={20} className="text-orange-400" />
+                Причины отклонения
+              </div>
+              <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+                <Icon name="pie-chart" size={40} className="opacity-20 mb-4" />
+                <span className="text-sm">Нет доступных данных</span>
+              </div>
+            </SpotlightCard>
+          </motion.div>
         </div>
 
-      </div>
+      </motion.div>
     </div>
   );
 }

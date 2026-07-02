@@ -78,7 +78,6 @@ export default function DualSidebarShell({ children }) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    // 1. Fetch initial notifications
     const fetchNotifications = async () => {
       try {
         const res = await fetch("/api/notifications");
@@ -95,14 +94,11 @@ export default function DualSidebarShell({ children }) {
     };
     fetchNotifications();
 
-    // 2. Subscribe to realtime updates
     if (supabase) {
       const channel = supabase.channel('public:notifications')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
-          console.log("New notification received!", payload.new);
           setNotifications(prev => [payload.new, ...prev]);
           setUnreadCount(prev => prev + 1);
-          // Play a gentle notification sound if needed
           try { new Audio("/notification-ding.mp3").play().catch(() => {}); } catch(e) {}
         })
         .subscribe();
@@ -113,14 +109,12 @@ export default function DualSidebarShell({ children }) {
     }
   }, []);
 
-  // Handle opening notifications drawer
   const handleOpenNotifications = () => {
     setIsNotificationsOpen(!isNotificationsOpen);
     setIsHelpOpen(false);
     setIsSettingsOpen(false);
     
     if (!isNotificationsOpen && unreadCount > 0) {
-      // Mark as read in DB
       fetch("/api/notifications", { method: "PATCH" }).catch(() => {});
       setUnreadCount(0);
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
@@ -130,44 +124,23 @@ export default function DualSidebarShell({ children }) {
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--bg-color)" }}>
-      {/* 
-        ==================================================
-        IP WATERMARK (GLOBAL OVERLAY)
-        ==================================================
-      */}
-      <div style={{
-        position: 'fixed', bottom: 10, right: 10, zIndex: 9999, pointerEvents: 'none',
-        color: 'rgba(0,0,0,0.1)', fontSize: '10px', fontFamily: 'monospace', textAlign: 'right'
-      }}>
+    <div className="flex h-screen overflow-hidden bg-[#050505] text-gray-300 font-sans selection:bg-blue-500/30 relative">
+      
+      {/* IP WATERMARK */}
+      <div className="fixed bottom-2 right-2 z-[9999] pointer-events-none text-[10px] font-mono text-white/10 text-right">
         Intellectual Property of iPhoenix Oleksandr Khrystodul<br/>
         +48729417050 | iPhoenixGSM@gmail.com
       </div>
 
       {/* Primary Sidebar (Icons) */}
-      <aside 
-        className="premium-glass"
-        style={{
-          width: 64,
-          borderRight: "1px solid var(--border)",
-          display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "16px 0",
-        flexShrink: 0,
-        zIndex: 50
-      }}>
+      <aside className="w-16 border-r border-white/5 bg-white/5 backdrop-blur-xl flex flex-col items-center py-4 shrink-0 z-50 relative">
         {/* Brand Lock/Compass Logo */}
-        <div style={{
-          width: 40, height: 40, borderRadius: 20, background: "var(--color-primary)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          marginBottom: 32, cursor: "pointer", boxShadow: "0 0 15px rgba(217, 158, 84, 0.4)"
-        }}>
-          <Icon name="compass" size={24} color="#0d1117" />
+        <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center justify-center mb-8 cursor-pointer transition-transform hover:scale-110">
+          <Icon name="compass" size={20} color="#60a5fa" />
         </div>
 
         {/* Primary Nav Icons */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%", alignItems: "center", flex: 1 }}>
+        <div className="flex flex-col gap-4 w-full items-center flex-1">
           {NAV_DATA.map(nav => {
             const isActive = activeMenu === nav.id && !isNotificationsOpen && !isHelpOpen && !isSettingsOpen;
             return (
@@ -175,534 +148,227 @@ export default function DualSidebarShell({ children }) {
                 key={nav.id}
                 onClick={() => { setActiveMenu(nav.id); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); }}
                 title={nav.label}
-                style={{
-                  width: 44, height: 44, borderRadius: 12, border: "none", cursor: "pointer",
-                  background: isActive ? "var(--border)" : "transparent",
-                  color: isActive ? "var(--color-primary)" : "var(--faint)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  transition: "all 0.2s"
-                }}
-                onMouseEnter={e => { if(!isActive) e.currentTarget.style.color = "var(--text)"; }}
-                onMouseLeave={e => { if(!isActive) e.currentTarget.style.color = "var(--faint)"; }}
+                className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 relative group
+                  ${isActive ? 'bg-blue-500/20 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
               >
                 <Icon name={nav.icon} size={22} />
+                {isActive && (
+                  <motion.div layoutId="activeNavIndicator" className="absolute left-0 w-1 h-full bg-blue-500 rounded-r-md" />
+                )}
               </button>
             );
           })}
         </div>
 
         {/* Bottom Icons (Settings, Profile, etc) */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center" }}>
-          <div style={{ position: "relative" }}>
+        <div className="flex flex-col gap-4 items-center">
+          <div className="relative">
             <button 
               onClick={handleOpenNotifications}
-              style={{ 
-                background: isNotificationsOpen ? "rgba(255,255,255,0.1)" : "transparent", 
-                border: "none", color: isNotificationsOpen ? "#fff" : "var(--faint)", cursor: "pointer",
-                width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-                transition: "all 0.2s"
-              }}
+              className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
+                ${isNotificationsOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
             >
               <Icon name="bell" size={20} />
               {unreadCount > 0 && (
-                <div style={{ 
-                  position: "absolute", top: 8, right: 10, width: 8, height: 8, 
-                  background: "#ef4444", borderRadius: "50%", boxShadow: "0 0 0 2px #0d1117" 
-                }}></div>
+                <div className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full shadow-[0_0_0_2px_#050505]"></div>
               )}
             </button>
           </div>
           <button 
             onClick={() => { setIsHelpOpen(!isHelpOpen); setIsNotificationsOpen(false); setIsSettingsOpen(false); }}
-            style={{ 
-              background: isHelpOpen ? "rgba(255,255,255,0.1)" : "transparent", 
-              border: "none", color: isHelpOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
-              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s"
-            }}
+            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
+              ${isHelpOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
           >
             <Icon name="help-circle" size={20} />
           </button>
           <button 
             onClick={() => { setIsSettingsOpen(!isSettingsOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); }}
-            style={{ 
-              background: isSettingsOpen ? "var(--color-primary)" : "transparent", 
-              border: "none", color: isSettingsOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
-              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s"
-            }}
+            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
+              ${isSettingsOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
           >
             <Icon name="settings" size={20} />
           </button>
           <button 
             onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsProfileOpen(false); }}
-            style={{ 
-              background: isBillingOpen ? "var(--color-primary)" : "transparent", 
-              border: "none", color: isBillingOpen ? "#fff" : "var(--faint)", cursor: "pointer", 
-              width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "all 0.2s"
-            }}
+            className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
+              ${isBillingOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
           >
             <Icon name="briefcase" size={20} />
           </button>
           <button 
             onClick={() => { setIsProfileOpen(!isProfileOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsBillingOpen(false); }}
-            style={{ width: 32, height: 32, marginTop: 8, padding: 0, border: "none", background: "none", cursor: "pointer", borderRadius: "50%", boxShadow: isProfileOpen ? "0 0 0 2px var(--color-primary)" : "none" }}
+            className={`w-8 h-8 mt-2 rounded-full overflow-hidden transition-all duration-300 border-2 
+              ${isProfileOpen ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]' : 'border-transparent hover:border-gray-500'}`}
           >
-            <Avatar name="Admin" size={32} />
+            <Avatar name="Admin" size={28} />
           </button>
-        </div>
-        
-        {/* Intellectual Property Watermark (Vertical) */}
-        <div style={{ position: "absolute", bottom: 80, left: 0, width: 64, color: "rgba(255,255,255,0.07)", fontSize: 8, textAlign: "center", pointerEvents: "none", transform: "rotate(-90deg)", whiteSpace: "nowrap", transformOrigin: "center" }}>
-          © iPhoenix Oleksandr Khrystodul<br/>+48729417050 iPhoenixGSM@gmail.com
         </div>
       </aside>
 
-      {/* Notifications Slide-out Panel */}
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: isNotificationsOpen ? 64 : -400,
-        width: 350,
-        height: "100vh",
-        background: "#1c2c54", // A specific blue-ish theme from the screenshot
-        zIndex: 40,
-        transition: "left 0.3s ease",
-        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
-        display: "flex",
-        flexDirection: "column",
-        color: "#fff"
-      }}>
-        <div style={{ padding: "24px 20px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Icon name="bell" size={18} color="#94a3b8" />
-            <span style={{ fontWeight: 700, fontSize: 16 }}>Уведомления <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 400 }}>({notifications.length})</span></span>
-          </div>
-          <Icon name="settings" size={16} color="#94a3b8" style={{ cursor: "pointer" }} />
-        </div>
-        <div style={{ display: "flex", padding: "0 20px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-          <button style={{ background: "none", border: "none", borderBottom: "2px solid #fff", color: "#fff", padding: "12px 16px", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>События</button>
-          <button style={{ background: "none", border: "none", borderBottom: "2px solid transparent", color: "#94a3b8", padding: "12px 16px", cursor: "pointer", fontSize: 13 }}>Системные</button>
-        </div>
-        
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto", overflowX: "hidden" }}>
-          {notifications.length === 0 ? (
-            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#94a3b8", fontSize: 13 }}>
-              Уведомлений нет
-            </div>
-          ) : (
-            notifications.map((notif, i) => (
-              <div key={notif.id || i} style={{ 
-                padding: "16px 20px", 
-                borderBottom: "1px solid rgba(255,255,255,0.05)",
-                display: "flex", flexDirection: "column", gap: 6,
-                background: notif.is_read ? "transparent" : "rgba(255,255,255,0.05)",
-                position: "relative"
-              }}>
-                {!notif.is_read && <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, background: "#ef4444" }}></div>}
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <Icon name={notif.type === "telegram" ? "send" : notif.type === "viber" ? "phone" : "info"} size={14} color="#94a3b8" />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{notif.title}</span>
-                </div>
-                {notif.message && <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.4 }}>{notif.message}</div>}
-                <div style={{ fontSize: 11, color: "#64748b", marginTop: 4 }}>
-                  {new Date(notif.created_at || Date.now()).toLocaleString("ru-RU", { day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' })}
-                </div>
+      {/* Slide-out Panels */}
+      <AnimatePresence>
+        {/* Notifications */}
+        {isNotificationsOpen && (
+          <motion.div 
+            initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white"
+          >
+            <div className="p-6 pb-4 flex items-center justify-between border-b border-white/10">
+              <div className="flex items-center gap-3">
+                <Icon name="bell" size={18} color="#94a3b8" />
+                <span className="font-bold text-lg">Уведомления <span className="text-sm text-gray-500 font-normal">({notifications.length})</span></span>
               </div>
-            ))
-          )}
-        </div>
-      </div>
-
-      {/* Help Slide-out Panel */}
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: isHelpOpen ? 64 : -400,
-        width: 350,
-        height: "100vh",
-        background: "#3263a5", // The exact blue color from the Help screenshot
-        zIndex: 40,
-        transition: "left 0.3s ease",
-        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
-        display: "flex",
-        flexDirection: "column",
-        color: "#fff"
-      }}>
-        <div style={{ padding: "24px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-          <Icon name="help-circle" size={18} color="#cbd5e1" />
-          <span style={{ fontWeight: 700, fontSize: 18 }}>Помощь</span>
-        </div>
-        
-        <div style={{ padding: "0 20px 20px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5 }}>ЗАДАТЬ ВОПРОС</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
-          </div>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "background 0.2s" }}>
-              <Icon name="message-circle" size={16} /> Здесь в чате
-            </a>
-            <a href="https://t.me/iPhoenix" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#229ED9", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
-              <Icon name="send" size={16} /> Telegram
-            </a>
-            <a href="viber://chat?number=%2B48729417050" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#7360F2", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
-              <Icon name="phone" size={16} /> Viber
-            </a>
-            <a href="https://wa.me/48729417050" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#25D366", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
-              <Icon name="message-square" size={16} /> WhatsApp
-            </a>
-            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
-              <Icon name="camera" size={16} /> Instagram
-            </a>
-            <a href="#" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, background: "#1877F2", color: "#fff", textDecoration: "none", padding: "10px", borderRadius: 8, fontSize: 13, fontWeight: 600, transition: "opacity 0.2s" }}>
-              <Icon name="facebook" size={16} /> Facebook
-            </a>
-          </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 32, marginBottom: 16 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5 }}>ВНЕШНИЕ РЕСУРСЫ</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <a href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
-              Инструкции по keyCRM <Icon name="external-link" size={12} color="#94a3b8" />
-            </a>
-            <a href="#" style={{ color: "#fff", textDecoration: "none", fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8 }}>
-              Обновления <Icon name="external-link" size={12} color="#94a3b8" />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Billing Slide-out Panel */}
-      <div style={{
-        position: "absolute",
-        bottom: 80,
-        left: isBillingOpen ? 64 : -400,
-        width: 320,
-        background: "#4b7fcc",
-        zIndex: 50,
-        transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        boxShadow: "4px 0 15px rgba(0,0,0,0.15)",
-        display: "flex",
-        flexDirection: "column",
-        color: "#fff",
-        borderRadius: "0 8px 8px 0"
-      }}>
-        <div style={{ padding: "20px" }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, margin: "0 0 4px 0", color: "#fff" }}>Состояние счета</h3>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, marginBottom: 20 }}>
-            <span>Остаток на счету:</span>
-            <span style={{ fontWeight: 700 }}>0,00 USD</span>
-          </div>
-
-          <div style={{ fontSize: 13, fontWeight: 500, marginBottom: 12 }}>Использование в текущем месяце:</div>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Базовый тариф</span>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>19,00 USD</span>
+              <Icon name="settings" size={16} className="text-gray-500 hover:text-white cursor-pointer transition-colors" />
+            </div>
+            <div className="flex px-5 border-b border-white/10">
+              <button className="border-b-2 border-white text-white px-4 py-3 text-sm font-semibold">События</button>
+              <button className="border-b-2 border-transparent text-gray-500 hover:text-gray-300 px-4 py-3 text-sm transition-colors">Системные</button>
             </div>
             
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ fontSize: 13, fontWeight: 600 }}>Заявки</span>
-                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)" }}>Всего 74 заявок</span>
-              </div>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>FREE</span>
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+              {notifications.length === 0 ? (
+                <div className="h-full flex items-center justify-center text-gray-500 text-sm">Уведомлений нет</div>
+              ) : (
+                notifications.map((notif, i) => (
+                  <div key={notif.id || i} className={`p-4 border-b border-white/5 flex flex-col gap-1.5 relative transition-colors hover:bg-white/5 ${notif.is_read ? 'bg-transparent' : 'bg-blue-900/10'}`}>
+                    {!notif.is_read && <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>}
+                    <div className="flex items-center gap-2">
+                      <Icon name={notif.type === "telegram" ? "send" : notif.type === "viber" ? "phone" : "info"} size={14} className="text-gray-400" />
+                      <span className="text-sm font-semibold text-gray-200">{notif.title}</span>
+                    </div>
+                    {notif.message && <div className="text-sm text-gray-400 leading-relaxed">{notif.message}</div>}
+                    <div className="text-xs text-gray-500 mt-1">
+                      {new Date(notif.created_at || Date.now()).toLocaleString("ru-RU", { day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' })}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
+          </motion.div>
+        )}
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed rgba(255,255,255,0.3)", paddingBottom: 4 }}>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <span style={{ fontSize: 13, fontWeight: 600 }}>Сообщения</span>
-                <span style={{ fontSize: 10, color: "rgba(255,255,255,0.8)" }}>Всего 1850 сообщений</span>
-              </div>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>FREE</span>
+        {/* Help */}
+        {isHelpOpen && (
+          <motion.div 
+            initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white p-6"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <Icon name="help-circle" size={20} className="text-blue-400" />
+              <span className="font-bold text-xl">Помощь</span>
             </div>
-
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>ВСЕГО:</span>
-              <span style={{ fontSize: 14, fontWeight: 700 }}>19,00 USD</span>
+            
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-bold text-gray-500 tracking-wider">ЗАДАТЬ ВОПРОС</span>
+              <div className="flex-1 h-px bg-white/10"></div>
             </div>
-          </div>
-        </div>
-
-        <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-          <button style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 6, color: "#fff", padding: "8px 16px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, cursor: "pointer", transition: "background 0.2s" }}>
-            <Icon name="credit-card" size={14} /> Перейти к оплате
-          </button>
-          <a href="#" style={{ color: "#fff", fontSize: 12, textDecoration: "none", fontWeight: 500, transition: "opacity 0.2s" }}>История платежей</a>
-        </div>
-      </div>
-
-      {/* Profile Slide-out Panel */}
-      <div style={{
-        position: "absolute",
-        bottom: 10,
-        left: isProfileOpen ? 64 : -400,
-        width: 320,
-        background: "#4b7fcc",
-        zIndex: 50,
-        transition: "left 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        boxShadow: "4px 0 15px rgba(0,0,0,0.15)",
-        display: "flex",
-        flexDirection: "column",
-        color: "#fff",
-        borderRadius: "0 8px 8px 0",
-        overflow: "hidden"
-      }}>
-        {/* Banner */}
-        <div style={{ padding: "16px", background: "#0ea5e9", margin: "16px", borderRadius: 8, position: "relative", overflow: "hidden" }}>
-          <p style={{ margin: "0 0 12px 0", fontSize: 13, fontWeight: 600, lineHeight: 1.4, position: "relative", zIndex: 2 }}>
-            Приглашайте новых пользователей и получайте до 50% от их оплат в течении года
-          </p>
-          <button style={{ background: "transparent", border: "1px solid #fff", color: "#fff", padding: "6px 12px", borderRadius: 4, fontSize: 11, fontWeight: 600, cursor: "pointer", position: "relative", zIndex: 2 }}>
-            Узнать больше о программе
-          </button>
-          {/* Decorative coin */}
-          <div style={{ position: "absolute", right: -10, top: "20%", width: 60, height: 60, background: "#fbbf24", borderRadius: "50%", border: "4px dashed #f59e0b", opacity: 0.8, zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", color: "#d97706", fontSize: 32, fontWeight: 700 }}>$</div>
-        </div>
-
-        {/* User Info */}
-        <div style={{ padding: "0 20px 20px 20px" }}>
-          <span style={{ background: "#fff", color: "#1e3a8a", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600, marginBottom: 12, display: "inline-block" }}>Administrator</span>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Avatar name="Alex Khrysto" size={48} />
-            <div>
-              <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 2 }}>Alex Khrysto</div>
-              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)" }}>iphoenixgsm@gmail.com</div>
+            
+            <div className="flex flex-col gap-3">
+              <a href="https://t.me/iPhoenix" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#229ED9]/10 text-[#229ED9] border border-[#229ED9]/20 p-3 rounded-xl text-sm font-semibold hover:bg-[#229ED9]/20 transition-colors">
+                <Icon name="send" size={16} /> Telegram
+              </a>
+              <a href="https://wa.me/48729417050" target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20 p-3 rounded-xl text-sm font-semibold hover:bg-[#25D366]/20 transition-colors">
+                <Icon name="message-square" size={16} /> WhatsApp
+              </a>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        )}
 
-        {/* Links and Toggles */}
-        <div style={{ background: "rgba(0,0,0,0.1)", padding: "20px", display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ background: "#10b981", color: "#fff", padding: "2px 8px", borderRadius: 4, fontSize: 11, fontWeight: 600 }}>Online</span>
-            {/* Toggle ON */}
-            <div style={{ width: 34, height: 20, background: "#0ea5e9", borderRadius: 20, position: "relative", cursor: "pointer" }}>
-              <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: 16 }}></div>
+        {/* Settings */}
+        {isSettingsOpen && (
+          <motion.div 
+            initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white"
+          >
+            <div className="p-6 flex items-center gap-3">
+              <Icon name="settings" size={20} className="text-blue-400" />
+              <span className="font-bold text-xl">Настройки</span>
             </div>
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: 13, fontWeight: 600 }}>Темная тема</span>
-            {/* Toggle OFF */}
-            <div style={{ width: 34, height: 20, background: "#cbd5e1", borderRadius: 20, position: "relative", cursor: "pointer" }}>
-              <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: 2 }}></div>
+            
+            <div className="flex flex-col py-2">
+              {[
+                { label: "Основные", path: "/admin/crm/settings/general" },
+                { label: "Источники", path: "/admin/crm/settings/sources" },
+                { label: "Коммуникации", path: "/admin/crm/settings/communications" },
+                { label: "Воронки", path: "/admin/crm/settings/funnels" },
+                { label: "Заказы", path: "/admin/crm/settings/orders" }, 
+                { label: "Товары", path: "/admin/crm/settings/products" },
+                { label: "Финансы", path: "/admin/crm/settings/finances" },
+                { label: "Пользователи", path: "/admin/crm/settings/users" },
+                { label: "Роли", path: "/admin/crm/settings/roles" }
+              ].map(item => (
+                <Link 
+                  key={item.label} 
+                  href={item.path} 
+                  onClick={() => setIsSettingsOpen(false)}
+                  className="px-6 py-3 text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
             </div>
-          </div>
-
-          <div style={{ fontSize: 13, fontWeight: 600, cursor: "pointer", marginTop: 8 }}>Мой профиль</div>
-          <div style={{ fontSize: 13, fontWeight: 600, cursor: "pointer", marginBottom: 16 }}>Просмотр под другой ролью</div>
-
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "auto", paddingTop: 16 }}>
-            <button style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 4, color: "#fff", padding: "8px 16px", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-              <Icon name="log-out" size={14} /> Выйти
-            </button>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
-               Рус <Icon name="chevron-down" size={14} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Settings Slide-out Panel */}
-      <div style={{
-        position: "absolute",
-        top: 0,
-        left: isSettingsOpen ? 64 : -400,
-        width: 350,
-        height: "100vh",
-        background: "#3263a5", // The exact blue color from the screenshots
-        zIndex: 40,
-        transition: "left 0.3s ease",
-        boxShadow: "4px 0 15px rgba(0,0,0,0.1)",
-        display: "flex",
-        flexDirection: "column",
-        color: "#fff",
-        overflowY: "auto"
-      }}>
-        <div style={{ padding: "24px 20px", display: "flex", alignItems: "center", gap: 12 }}>
-          <Icon name="settings" size={18} color="#cbd5e1" />
-          <span style={{ fontWeight: 700, fontSize: 18 }}>Настройки</span>
-        </div>
-        
-        <div style={{ display: "flex", flexDirection: "column", padding: "0 0 20px 0" }}>
-          {[
-            { label: "Основные", path: "/admin/crm/settings/general" },
-            { label: "Источники", path: "/admin/crm/settings/sources" },
-            { label: "Коммуникации", path: "/admin/crm/settings/communications" },
-            { label: "Воронки", path: "/admin/crm/settings/funnels" },
-            { label: "Заказы", path: "/admin/crm/settings/orders" }, 
-            { label: "Товары", path: "/admin/crm/settings/products" },
-            { label: "Доставки", path: "#" },
-            { label: "Финансы", path: "/admin/crm/settings/finances" },
-            { label: "Дополнительно", path: "/admin/crm/settings/additional" },
-            { label: "Пользователи", path: "/admin/crm/settings/users" },
-            { label: "Роли", path: "/admin/crm/settings/roles" }
-          ].map(item => (
-            <Link 
-              key={item.label} 
-              href={item.path} 
-              onClick={() => setIsSettingsOpen(false)}
-              style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}
-            >
-              {item.label}
-            </Link>
-          ))}
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 24, marginBottom: 12, padding: "0 20px" }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: 0.5, textTransform: "uppercase" }}>Доступ</span>
-            <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.1)" }}></div>
-          </div>
-
-          {[
-            "Пользователи", "Роли", "История действий"
-          ].map(item => (
-            <a key={item} href="#" style={{ padding: "12px 20px", color: "#fff", textDecoration: "none", fontSize: 14, fontWeight: 600, transition: "background 0.2s" }}>
-              {item}
-            </a>
-          ))}
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Secondary Sidebar (Menu Items) */}
-      <aside 
-        className="premium-glass"
-        style={{
-          width: 240,
-          borderRight: "1px solid var(--border)",
-          display: "flex",
-        flexDirection: "column",
-        flexShrink: 0,
-        zIndex: 10
-      }}>
-        {/* Header of Secondary Sidebar */}
-        <div style={{
-          height: 64, display: "flex", alignItems: "center", padding: "0 20px", gap: 12,
-          borderBottom: "1px solid transparent", color: "var(--text)", fontWeight: 700, fontSize: 18
-        }}>
-          <Icon name={currentNav.icon} size={20} color="var(--color-primary)" />
+      <aside className="w-[240px] border-r border-white/5 bg-[#050505] flex flex-col shrink-0 z-10">
+        <div className="h-16 flex items-center px-6 gap-3 font-bold text-lg text-white">
+          <Icon name={currentNav.icon} size={20} className="text-blue-400" />
           {currentNav.label}
         </div>
 
-        {/* Menu Items */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "12px 0" }}>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6 custom-scrollbar">
           {currentNav.groups.map((grp, i) => (
-            <div key={i} style={{ marginBottom: 24 }}>
+            <div key={i}>
               {grp.title && (
-                <div style={{ 
-                  display: "flex", alignItems: "center", padding: "0 20px", marginBottom: 12, gap: 12
-                }}>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "var(--faint)", letterSpacing: "0.05em" }}>
-                    {grp.title}
-                  </span>
-                  <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+                <div className="text-xs font-bold text-gray-600 tracking-wider mb-3 px-2">
+                  {grp.title}
                 </div>
               )}
-              <div style={{ display: "flex", flexDirection: "column", gap: 4, padding: "0 12px" }}>
-                {grp.items.map((item, index) => {
-                  const isActive = pathname === item.href;
+              <div className="flex flex-col gap-1">
+                {grp.items.map(item => {
+                  const isItemActive = pathname === item.href;
                   return (
-                    <motion.div
-                      key={item.href}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05, duration: 0.3 }}
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-3
+                        ${isItemActive 
+                          ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' 
+                          : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border border-transparent'}`}
                     >
-                      <Link 
-                        href={item.href}
-                        style={{
-                          padding: "8px 12px", borderRadius: 8, fontSize: 14, textDecoration: "none",
-                          color: isActive ? "var(--text)" : "var(--dim)",
-                          background: isActive ? "rgba(255,255,255,0.05)" : "transparent",
-                          fontWeight: isActive ? 600 : 500,
-                          transition: "all 0.15s",
-                          display: "block"
-                        }}
-                        onMouseEnter={e => { if(!isActive) { e.currentTarget.style.color = "var(--text)"; e.currentTarget.style.background = "rgba(0,0,0,0.02)"; } }}
-                        onMouseLeave={e => { if(!isActive) { e.currentTarget.style.color = "var(--dim)"; e.currentTarget.style.background = "transparent"; } }}
-                      >
-                        {item.label}
-                      </Link>
-                    </motion.div>
+                      {item.label}
+                    </Link>
                   );
                 })}
               </div>
             </div>
           ))}
         </div>
-
-        {/* Bottom Button (Instructions) */}
-        <div style={{ padding: 16, borderTop: "1px solid var(--border)" }}>
-          <button style={{
-            width: "100%", padding: "10px", borderRadius: 8, background: "transparent",
-            border: "1px solid var(--border)", color: "var(--text)", fontSize: 13, fontWeight: 600,
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 8, cursor: "pointer",
-            transition: "all 0.2s"
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; }}
-          >
-            <Icon name="external-link" size={14} color="var(--dim)" />
-            Инструкции по CRM
-          </button>
-        </div>
       </aside>
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, background: "var(--bg)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#050505]">
+        {/* Subtle top glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none opacity-50 mix-blend-screen" />
         
-        {/* Promotional Banner */}
-        <div style={{
-          width: "100%", background: "linear-gradient(90deg, #f97316 0%, #fb923c 50%, #f97316 100%)", backgroundSize: "200% auto", animation: "gradient 3s linear infinite",
-          color: "white", textAlign: "center", padding: "6px 16px", fontSize: "13px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", zIndex: 10
-        }}>
-          <span style={{ animation: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite", fontSize: "16px" }}>🔥</span>
-          Спеціальна пропозиція: Знижка до 30% на юридичну годину! Пропонуйте клієнтам в чатах.
-        </div>
-
-        {/* Topbar of main area */}
-        <header 
-          className="premium-glass"
-          style={{
-            height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", zIndex: 5
-          }}
-        >
-          <Link href="/admin/crm" style={{ textDecoration: "none" }}>
-            <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)", cursor: "pointer" }}>iPhoenixCRM</h1>
-          </Link>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            {/* Search placeholder */}
-            <motion.div 
-              whileFocus={{ scale: 1.02 }}
-              style={{ background: "rgba(0,0,0,0.04)", border: "1px solid var(--border)", padding: "8px 16px", borderRadius: 10, display: "flex", alignItems: "center", gap: 8, color: "var(--faint)", fontSize: 13, width: 240, transition: "background 0.2s" }}
-            >
-              <Icon name="search" size={14} />
-              <input type="text" placeholder="Быстрый поиск..." style={{ background: "transparent", border: "none", outline: "none", width: "100%", color: "var(--text)" }} />
-            </motion.div>
+        {/* Top Header Bar */}
+        <header className="h-16 flex items-center justify-end px-8 border-b border-white/5 shrink-0 relative z-10 backdrop-blur-sm">
+          <div className="flex items-center gap-4">
+            <div className="text-sm font-medium text-gray-400 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+              Workspace: <span className="text-white font-bold ml-1">Kompas Migracji</span>
+            </div>
+            <div className="w-px h-6 bg-white/10 mx-2"></div>
+            <Link href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+              Перейти на сайт
+            </Link>
           </div>
         </header>
 
-        {/* Scrollable Page Content */}
-        <div style={{ flex: 1, overflowY: "auto", padding: 24, position: "relative" }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              style={{ minHeight: "100%" }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-8 relative z-10 custom-scrollbar">
+          {children}
         </div>
       </main>
     </div>

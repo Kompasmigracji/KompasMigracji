@@ -1,7 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function BuyersDemoPage() {
   const [buyers, setBuyers] = useState([]);
@@ -34,7 +35,6 @@ export default function BuyersDemoPage() {
     }
     setIsSubmitting(false);
   };
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,172 +46,195 @@ export default function BuyersDemoPage() {
       setLoading(false);
     };
     fetchData();
-
-    
-    
-    // Fetch initial buyers
-    
-
-    
-
-    // Subscribe to realtime changes
-    
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
       
       {/* Top Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, color: "var(--text)" }}>Покупатели</h2>
+      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
+        <h2 className="m-0 text-xl font-bold text-white tracking-tight">Покупатели</h2>
         
         {/* Search Bar */}
-        <div style={{ 
-          flex: 1, 
-          display: "flex", 
-          alignItems: "center", 
-          background: "var(--panel-2)", 
-          border: "1px solid var(--border)", 
-          borderRadius: 6,
-          padding: "6px 12px",
-          gap: 8,
-          maxWidth: 400
-        }}>
-          <Icon name="search" size={16} color="var(--dim)" />
+        <div className="flex-1 flex items-center bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
+          <Icon name="search" size={16} className="text-gray-500" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
-            style={{ border: "none", background: "transparent", outline: "none", color: "var(--text)", width: "100%", fontSize: 13 }}
+            className="bg-transparent border-none outline-none text-gray-200 w-full text-sm placeholder:text-gray-600"
           />
         </div>
 
-        <button style={{ 
-          background: "var(--panel-2)", border: "1px solid var(--border)", 
-          padding: "8px", borderRadius: 6, cursor: "pointer", display: "flex", alignItems: "center"
-        }}>
-          <Icon name="sliders" size={14} color="var(--dim)" />
+        <button className="bg-white/5 border border-white/10 p-2.5 rounded-xl hover:bg-white/10 transition-colors">
+          <Icon name="sliders" size={16} className="text-gray-400" />
         </button>
 
-        <button onClick={() => setIsModalOpen(true)} style={{ 
-          background: "var(--color-primary)", color: "#fff", border: "none", 
-          padding: "8px 16px", borderRadius: 6, fontSize: 13, fontWeight: 600,
-          display: "flex", alignItems: "center", gap: 8, cursor: "pointer", marginLeft: "auto"
-        }}>
-          <Icon name="plus" size={14} />
+        <button 
+          onClick={() => setIsModalOpen(true)} 
+          className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all"
+        >
+          <Icon name="plus" size={16} />
           Добавить покупателя
         </button>
       </div>
 
-      {/* Data Table */}
-      <div style={{ 
-        background: "var(--panel)", 
-        border: "1px solid var(--border)", 
-        borderRadius: 8,
-        overflowX: "auto" 
-      }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 12 }}>
-          <thead>
-            <tr style={{ background: "var(--panel-2)", borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
-              <th style={{ padding: "12px 16px", width: 40 }}>
-                <input type="checkbox" />
-              </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Покупатель</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Email</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Телефон</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Кол-во заказов</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Последний заказ</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                Дата создания <Icon name="arrow-down" size={12} color="var(--color-primary)" />
-              </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Менеджер</th>
-              <th style={{ padding: "12px 16px", fontWeight: 600, textAlign: "right" }}>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="9" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка данных из базы...</td></tr>
-            ) : buyers.length === 0 ? (
-              <tr><td colSpan="9" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Нет покупателей</td></tr>
-            ) : buyers.map(buyer => (
-              <tr key={buyer.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-                <td style={{ padding: "12px 16px" }}>
-                  <input type="checkbox" />
-                </td>
-                <td style={{ padding: "12px 8px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 12, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <Icon name="user" size={12} color="var(--dim)" />
-                    </div>
-                    <span style={{ color: "var(--color-primary)", fontWeight: 500 }}>{buyer.full_name || "Без имени"}</span>
-                  </div>
-                </td>
-                <td style={{ padding: "12px 8px", color: !buyer.email ? "var(--color-primary)" : "var(--color-info)", fontWeight: buyer.email ? 500 : 400 }}>
-                  {buyer.email || "[пусто]"}
-                </td>
-                <td style={{ padding: "12px 8px", color: !buyer.phone ? "var(--color-primary)" : "var(--color-info)", whiteSpace: "pre-line" }}>
-                  {buyer.phone || "[пусто]"}
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  -
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  -
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {new Date(buyer.created_at).toLocaleString('ru-RU')}
-                </td>
-                <td style={{ padding: "12px 8px" }}>
-                  <span style={{ color: "var(--dim)" }}>-</span>
-                </td>
-                <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-                    <Icon name="edit-2" size={14} style={{ cursor: "pointer" }} />
-                    <Icon name="trash-2" size={14} style={{ cursor: "pointer" }} />
-                  </div>
-                </td>
+      <div className="p-8">
+        {/* Data Table */}
+        <SpotlightCard className="bg-white/5 border border-white/10 rounded-2xl overflow-x-auto p-0">
+          <table className="w-full min-w-[1000px] text-sm text-left">
+            <thead className="bg-black/20 text-xs text-gray-500 uppercase font-semibold border-b border-white/10">
+              <tr>
+                <th className="px-6 py-4 w-10">
+                  <input type="checkbox" className="accent-blue-500 cursor-pointer" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Покупатель</th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Email</th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Телефон</th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Кол-во заказов</th>
+                <th className="px-4 py-4 font-semibold tracking-wider text-center">Последний заказ</th>
+                <th className="px-4 py-4 font-semibold tracking-wider flex items-center gap-2">
+                  Дата создания <Icon name="arrow-down" size={12} className="text-blue-500" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Менеджер</th>
+                <th className="px-6 py-4 font-semibold tracking-wider text-right">Действия</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        
-        {/* Pagination Footer */}
-        <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--dim)", fontSize: 12, borderTop: "1px solid var(--border)", background: "var(--panel)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <button style={{ padding: "4px 8px", background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", color: "var(--dim)" }}>{"<"}</button>
-            <button style={{ padding: "4px 8px", background: "var(--color-primary)", border: "1px solid var(--color-primary)", borderRadius: 4, cursor: "pointer", color: "#fff", fontWeight: 600 }}>1</button>
-            <button style={{ padding: "4px 8px", background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", color: "var(--text)" }}>2</button>
-            <button style={{ padding: "4px 8px", background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", color: "var(--dim)" }}>{">"}</button>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <span>Показано 1 - 10 из 25 записей</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <select style={{ background: "var(--panel)", border: "1px solid var(--border)", color: "var(--text)", padding: "4px", borderRadius: 4 }}>
-                <option>15</option>
-                <option>25</option>
-                <option>50</option>
-              </select>
-              <span>на странице</span>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan="9" className="p-8 text-center text-gray-500">Загрузка данных из базы...</td></tr>
+              ) : buyers.length === 0 ? (
+                <tr><td colSpan="9" className="p-8 text-center text-gray-500">Нет покупателей</td></tr>
+              ) : buyers.map((buyer, index) => (
+                <tr key={buyer.id} className={`transition-colors hover:bg-white/5 border-white/5 ${index !== buyers.length - 1 ? 'border-b' : ''}`}>
+                  <td className="px-6 py-4">
+                    <input type="checkbox" className="accent-blue-500 cursor-pointer" />
+                  </td>
+                  <td className="px-4 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center border border-white/10 shadow-inner">
+                        <Icon name="user" size={14} className="text-gray-400" />
+                      </div>
+                      <span className="text-blue-400 font-medium">{buyer.full_name || "Без имени"}</span>
+                    </div>
+                  </td>
+                  <td className={`px-4 py-4 ${buyer.email ? 'text-gray-300 font-medium' : 'text-blue-400/50'}`}>
+                    {buyer.email || "[пусто]"}
+                  </td>
+                  <td className={`px-4 py-4 whitespace-pre-line ${buyer.phone ? 'text-gray-300' : 'text-blue-400/50'}`}>
+                    {buyer.phone || "[пусто]"}
+                  </td>
+                  <td className="px-4 py-4 text-center text-gray-500">-</td>
+                  <td className="px-4 py-4 text-center text-gray-500">-</td>
+                  <td className="px-4 py-4 text-gray-300">
+                    {new Date(buyer.created_at).toLocaleString('ru-RU')}
+                  </td>
+                  <td className="px-4 py-4 text-gray-500">-</td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-3 text-gray-500">
+                      <Icon name="edit-2" size={16} className="cursor-pointer hover:text-blue-400 transition-colors" />
+                      <Icon name="trash-2" size={16} className="cursor-pointer hover:text-red-400 transition-colors" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {/* Pagination Footer */}
+          <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-white/10 bg-black/20">
+            <div className="flex items-center gap-1.5">
+              <button className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md cursor-pointer transition-colors">&lt;</button>
+              <button className="px-3 py-1.5 bg-blue-500 text-white border border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] rounded-md cursor-pointer font-bold">1</button>
+              <button className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md cursor-pointer text-gray-300 transition-colors">2</button>
+              <button className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md cursor-pointer transition-colors">&gt;</button>
+            </div>
+            <div className="flex items-center gap-6">
+              <span>Показано 1 - 10 из 25 записей</span>
+              <div className="flex items-center gap-2">
+                <select className="bg-white/5 border border-white/10 text-gray-300 px-2 py-1 rounded-md outline-none">
+                  <option>15</option>
+                  <option>25</option>
+                  <option>50</option>
+                </select>
+                <span>на странице</span>
+              </div>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
       </div>
       
-      {isModalOpen && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: 'var(--bg)', padding: 24, borderRadius: 8, width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
-            <h3 style={{ margin: '0 0 16px', color: 'var(--text)' }}>Новый покупатель</h3>
-            <form onSubmit={handleAddBuyer} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <input required placeholder="ФИО" value={newBuyer.full_name} onChange={e => setNewBuyer({...newBuyer, full_name: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
-              <input type="email" placeholder="Email" value={newBuyer.email} onChange={e => setNewBuyer({...newBuyer, email: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
-              <input type="tel" placeholder="Телефон" value={newBuyer.phone} onChange={e => setNewBuyer({...newBuyer, phone: e.target.value})} style={{ padding: '8px 12px', borderRadius: 4, border: '1px solid var(--border)', background: 'var(--panel)', color: 'var(--text)' }} />
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 8 }}>
-                <button type="button" onClick={() => setIsModalOpen(false)} style={{ padding: '8px 16px', borderRadius: 4, border: '1px solid var(--border)', background: 'transparent', color: 'var(--text)', cursor: 'pointer' }}>Отмена</button>
-                <button type="submit" disabled={isSubmitting} style={{ padding: '8px 16px', borderRadius: 4, border: 'none', background: 'var(--color-primary)', color: '#fff', cursor: 'pointer', fontWeight: 600 }}>{isSubmitting ? 'Сохранение...' : 'Сохранить'}</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      {/* Add Buyer Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[#0a0a0a] border border-white/10 p-8 rounded-2xl w-[400px] shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 blur-[50px] rounded-full pointer-events-none" />
+              
+              <h3 className="m-0 mb-6 text-white font-bold text-xl relative z-10">Новый покупатель</h3>
+              
+              <form onSubmit={handleAddBuyer} className="flex flex-col gap-4 relative z-10">
+                <div>
+                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">ФИО *</label>
+                  <input 
+                    required 
+                    placeholder="Иван Иванов" 
+                    value={newBuyer.full_name} 
+                    onChange={e => setNewBuyer({...newBuyer, full_name: e.target.value})} 
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white outline-none focus:border-blue-500/50 transition-colors" 
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">Email</label>
+                  <input 
+                    type="email" 
+                    placeholder="email@example.com" 
+                    value={newBuyer.email} 
+                    onChange={e => setNewBuyer({...newBuyer, email: e.target.value})} 
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white outline-none focus:border-blue-500/50 transition-colors" 
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">Телефон</label>
+                  <input 
+                    type="tel" 
+                    placeholder="+48 000 000 000" 
+                    value={newBuyer.phone} 
+                    onChange={e => setNewBuyer({...newBuyer, phone: e.target.value})} 
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white outline-none focus:border-blue-500/50 transition-colors" 
+                  />
+                </div>
+                
+                <div className="flex justify-end gap-3 mt-4">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsModalOpen(false)} 
+                    className="px-5 py-2.5 rounded-xl border border-white/10 bg-transparent hover:bg-white/5 text-gray-300 font-semibold cursor-pointer transition-colors"
+                  >
+                    Отмена
+                  </button>
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting} 
+                    className={`px-5 py-2.5 rounded-xl border-none bg-blue-500 text-white font-bold cursor-pointer transition-all ${isSubmitting ? 'opacity-70' : 'hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)]'}`}
+                  >
+                    {isSubmitting ? 'Сохранение...' : 'Сохранить'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

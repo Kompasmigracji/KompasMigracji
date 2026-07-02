@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon } from "@/components/admin/ui";
-
+import SpotlightCard from "@/components/SpotlightCard";
 
 export default function ProductsDemoPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,161 +17,124 @@ export default function ProductsDemoPage() {
       setLoading(false);
     };
     fetchData();
-
-    
-
-    
-
-    
-
-    
   }, []);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
       
       {/* Top Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--panel)", padding: "12px 16px", borderRadius: 8, border: "1px solid var(--border)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ background: "var(--color-primary)", width: 24, height: 24, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
-            <Icon name="package" size={14} />
+      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+            <Icon name="package" size={16} />
           </div>
-          <h2 style={{ margin: 0, fontSize: 16, color: "var(--text)" }}>Товары</h2>
+          <h2 className="m-0 text-xl font-bold text-white tracking-tight">Товары</h2>
         </div>
         
         {/* Search Bar */}
-        <div style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          background: "var(--bg)", 
-          border: "1px solid var(--border)", 
-          borderRadius: 4,
-          padding: "6px 12px",
-          gap: 8,
-          width: 300
-        }}>
-          <Icon name="search" size={14} color="var(--dim)" />
+        <div className="flex-1 flex items-center bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
+          <Icon name="search" size={16} className="text-gray-500" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
-            style={{ border: "none", background: "transparent", outline: "none", color: "var(--text)", width: "100%", fontSize: 13 }}
+            className="bg-transparent border-none outline-none text-gray-200 w-full text-sm placeholder:text-gray-600"
           />
         </div>
 
-        {/* Category Dropdown (Mock) */}
-        <div style={{ 
-          display: "flex", 
-          alignItems: "center", 
-          background: "var(--bg)", 
-          border: "1px solid var(--border)", 
-          borderRadius: 4,
-          padding: "6px 12px",
-          gap: 8,
-          cursor: "pointer",
-          minWidth: 180
-        }}>
-          <span style={{ color: "var(--dim)", fontSize: 13, flex: 1 }}>Выберите категорию...</span>
-          <Icon name="chevron-down" size={14} color="var(--dim)" />
+        {/* Category Dropdown */}
+        <div className="flex items-center bg-black/40 border border-white/10 rounded-xl px-4 py-2.5 gap-3 min-w-[200px] cursor-pointer hover:border-white/20 transition-colors">
+          <span className="text-gray-400 text-sm flex-1">Выберите категорию...</span>
+          <Icon name="chevron-down" size={16} className="text-gray-500" />
         </div>
 
-        <button style={{ 
-          background: "var(--color-primary)", color: "#fff", border: "none", 
-          padding: "8px 16px", borderRadius: 4, fontSize: 12, fontWeight: 600,
-          display: "flex", alignItems: "center", gap: 6, cursor: "pointer", marginLeft: "auto"
-        }}>
-          <Icon name="plus" size={12} />
+        <button className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all">
+          <Icon name="plus" size={16} />
           Добавить товар
         </button>
       </div>
 
-      {/* Data Table */}
-      <div style={{ 
-        background: "var(--panel)", 
-        border: "1px solid var(--border)", 
-        borderRadius: 4,
-        overflowX: "auto" 
-      }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 1000, fontSize: 12 }}>
-          <thead>
-            <tr style={{ background: "var(--bg)", borderBottom: "1px solid var(--border)", color: "var(--dim)", textAlign: "left" }}>
-              <th style={{ padding: "12px 16px", width: 40 }}>
-                <input type="checkbox" />
-              </th>
-              <th style={{ padding: "12px 8px", width: 40, textAlign: "center" }}>
-                -
-              </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
-                Название <Icon name="arrow-up" size={10} color="var(--color-primary)" />
-              </th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Категория</th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Стоимость <Icon name="arrow-up" size={10} color="var(--color-primary)" /></th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Количество <Icon name="arrow-up" size={10} color="var(--color-primary)" /></th>
-              <th style={{ padding: "12px 8px", fontWeight: 600 }}>Наличие</th>
-              <th style={{ padding: "12px 16px", fontWeight: 600, textAlign: "right" }}>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="8" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Загрузка товаров из базы...</td></tr>
-            ) : products.length === 0 ? (
-              <tr><td colSpan="8" style={{ padding: 24, textAlign: "center", color: "var(--dim)" }}>Нет товаров</td></tr>
-            ) : products.map(product => (
-              <tr key={product.id} style={{ borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-                <td style={{ padding: "12px 16px" }}>
-                  <input type="checkbox" />
-                </td>
-                <td style={{ padding: "12px 8px", textAlign: "center" }}>
-                  <div style={{ display: "inline-flex", padding: 6, border: "1px solid var(--border)", borderRadius: 4, color: "var(--dim)" }}>
-                    <Icon name="camera" size={14} />
-                  </div>
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--color-primary)", fontWeight: 500 }}>
-                  <Icon name="folder" size={12} style={{ marginRight: 6 }} color="var(--color-primary)" />
-                  {product.name}
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  {product.category || "-"}
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--text)", fontWeight: 500 }}>
-                  {Number(product.price).toFixed(2)} PLN
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--text)" }}>
-                  {product.qty_in_stock} шт
-                </td>
-                <td style={{ padding: "12px 8px", color: "var(--dim)" }}>
-                  {product.qty_in_stock > 0 ? "В наличии" : "Нет"}
-                </td>
-                <td style={{ padding: "12px 16px", textAlign: "right", color: "var(--dim)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 8 }}>
-                    <Icon name="edit-2" size={14} style={{ cursor: "pointer" }} />
-                    <Icon name="copy" size={14} style={{ cursor: "pointer" }} />
-                    <Icon name="trash-2" size={14} style={{ cursor: "pointer" }} />
-                  </div>
-                </td>
+      <div className="p-8">
+        {/* Data Table */}
+        <SpotlightCard className="bg-white/5 border border-white/10 rounded-2xl overflow-x-auto p-0">
+          <table className="w-full min-w-[1000px] text-sm text-left">
+            <thead className="bg-black/20 text-xs text-gray-500 uppercase font-semibold border-b border-white/10">
+              <tr>
+                <th className="px-6 py-4 w-10"><input type="checkbox" className="accent-blue-500 cursor-pointer" /></th>
+                <th className="px-4 py-4 w-10 text-center">-</th>
+                <th className="px-4 py-4 font-semibold tracking-wider flex items-center gap-2">
+                  Название <Icon name="arrow-up" size={12} className="text-blue-500" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Категория</th>
+                <th className="px-4 py-4 font-semibold tracking-wider flex items-center gap-2">
+                  Стоимость <Icon name="arrow-up" size={12} className="text-blue-500" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider flex items-center gap-2">
+                  Количество <Icon name="arrow-up" size={12} className="text-blue-500" />
+                </th>
+                <th className="px-4 py-4 font-semibold tracking-wider">Наличие</th>
+                <th className="px-6 py-4 font-semibold tracking-wider text-right">Действия</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        
-        {/* Pagination Footer */}
-        <div style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", color: "var(--dim)", fontSize: 12, borderTop: "1px solid var(--border)", background: "var(--panel)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <button style={{ padding: "4px 8px", background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", color: "var(--dim)" }}>{"<"}</button>
-            <button style={{ padding: "4px 8px", background: "var(--color-primary)", border: "1px solid var(--color-primary)", borderRadius: 4, cursor: "pointer", color: "#fff", fontWeight: 600 }}>1</button>
-            <button style={{ padding: "4px 8px", background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 4, cursor: "pointer", color: "var(--dim)" }}>{">"}</button>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <span>Показано 1 - 7 из 7 записей</span>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <select style={{ background: "var(--panel)", border: "1px solid var(--border)", color: "var(--text)", padding: "4px", borderRadius: 4 }}>
-                <option>15</option>
-                <option>25</option>
-                <option>50</option>
-              </select>
-              <span>на странице</span>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan="8" className="p-8 text-center text-gray-500">Загрузка товаров из базы...</td></tr>
+              ) : products.length === 0 ? (
+                <tr><td colSpan="8" className="p-8 text-center text-gray-500">Нет товаров</td></tr>
+              ) : products.map((product, index) => (
+                <tr key={product.id} className={`transition-colors hover:bg-white/5 border-white/5 ${index !== products.length - 1 ? 'border-b' : ''}`}>
+                  <td className="px-6 py-4"><input type="checkbox" className="accent-blue-500 cursor-pointer" /></td>
+                  <td className="px-4 py-4 text-center">
+                    <div className="inline-flex p-1.5 border border-white/10 rounded-md bg-white/5 text-gray-500">
+                      <Icon name="camera" size={16} />
+                    </div>
+                  </td>
+                  <td className="px-4 py-4 font-medium text-blue-400 flex items-center gap-2">
+                    <Icon name="folder" size={14} className="text-blue-500" />
+                    {product.name}
+                  </td>
+                  <td className="px-4 py-4 text-gray-400">{product.category || "-"}</td>
+                  <td className="px-4 py-4 font-bold text-gray-200">{Number(product.price).toFixed(2)} PLN</td>
+                  <td className="px-4 py-4 font-medium text-gray-300">{product.qty_in_stock} шт</td>
+                  <td className="px-4 py-4">
+                    <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border
+                      ${product.qty_in_stock > 0 
+                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' 
+                        : 'bg-red-500/20 text-red-400 border-red-500/30'}`}>
+                      {product.qty_in_stock > 0 ? "В наличии" : "Нет"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-3 text-gray-500">
+                      <Icon name="edit-2" size={16} className="cursor-pointer hover:text-blue-400 transition-colors" />
+                      <Icon name="copy" size={16} className="cursor-pointer hover:text-gray-300 transition-colors" />
+                      <Icon name="trash-2" size={16} className="cursor-pointer hover:text-red-400 transition-colors" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {/* Pagination Footer */}
+          <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-white/10 bg-black/20">
+            <div className="flex items-center gap-1.5">
+              <button className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md cursor-pointer transition-colors">&lt;</button>
+              <button className="px-3 py-1.5 bg-blue-500 text-white border border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] rounded-md cursor-pointer font-bold">1</button>
+              <button className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-md cursor-pointer transition-colors">&gt;</button>
+            </div>
+            <div className="flex items-center gap-6">
+              <span>Показано 1 - {products.length} из {products.length} записей</span>
+              <div className="flex items-center gap-2">
+                <select className="bg-white/5 border border-white/10 text-gray-300 px-2 py-1 rounded-md outline-none">
+                  <option>15</option>
+                  <option>25</option>
+                  <option>50</option>
+                </select>
+                <span>на странице</span>
+              </div>
             </div>
           </div>
-        </div>
+        </SpotlightCard>
       </div>
     </div>
   );
