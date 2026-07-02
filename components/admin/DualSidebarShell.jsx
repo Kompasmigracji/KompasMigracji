@@ -15,18 +15,18 @@ const NAV_DATA = [
       {
         title: "",
         items: [
-          { label: "Чаты", href: "/admin/crm-demo/chats" },
-          { label: "Воронки", href: "/admin/crm-demo/funnels" },
-          { label: "Заказы", href: "/admin/crm-demo/orders" },
-          { label: "Списки заказов", href: "/admin/crm-demo/order-lists" },
-          { label: "Покупатели", href: "/admin/crm-demo/buyers" },
-          { label: "История звонков", href: "/admin/crm-demo/calls" },
+          { label: "Чаты", href: "/admin/crm/chats" },
+          { label: "Воронки", href: "/admin/crm/funnels" },
+          { label: "Заказы", href: "/admin/crm/orders" },
+          { label: "Списки заказов", href: "/admin/crm/order-lists" },
+          { label: "Покупатели", href: "/admin/crm/buyers" },
+          { label: "История звонков", href: "/admin/crm/calls" },
         ]
       },
       {
         title: "ФИНАНСЫ",
         items: [
-          { label: "Журнал платежей", href: "/admin/crm-demo/payments" },
+          { label: "Журнал платежей", href: "/admin/crm/payments" },
         ]
       }
     ]
@@ -39,11 +39,11 @@ const NAV_DATA = [
       {
         title: "",
         items: [
-          { label: "Товары", href: "/admin/crm-demo/products" },
-          { label: "Публикации", href: "/admin/crm-demo/publications" },
-          { label: "Остатки", href: "/admin/crm-demo/inventory" },
-          { label: "Движение товаров", href: "/admin/crm-demo/movements" },
-          { label: "Категории", href: "/admin/crm-demo/categories" },
+          { label: "Товары", href: "/admin/crm/products" },
+          { label: "Публикации", href: "/admin/crm/publications" },
+          { label: "Остатки", href: "/admin/crm/inventory" },
+          { label: "Движение товаров", href: "/admin/crm/movements" },
+          { label: "Категории", href: "/admin/crm/categories" },
         ]
       }
     ]
@@ -56,8 +56,8 @@ const NAV_DATA = [
       {
         title: "ОТЧЕТЫ",
         items: [
-          { label: "Дашборд", href: "/admin/crm-demo/dashboard" },
-          { label: "Эффективность", href: "/admin/crm-demo/efficiency" },
+          { label: "Дашборд", href: "/admin/crm/dashboard" },
+          { label: "Эффективность", href: "/admin/crm/efficiency" },
         ]
       }
     ]
@@ -534,17 +534,17 @@ export default function DualSidebarShell({ children }) {
         
         <div style={{ display: "flex", flexDirection: "column", padding: "0 0 20px 0" }}>
           {[
-            { label: "Основные", path: "/admin/crm-demo/settings/general" },
-            { label: "Источники", path: "/admin/crm-demo/settings/sources" },
-            { label: "Коммуникации", path: "/admin/crm-demo/settings/communications" },
-            { label: "Воронки", path: "/admin/crm-demo/settings/funnels" },
-            { label: "Заказы", path: "/admin/crm-demo/settings/orders" }, 
-            { label: "Товары", path: "/admin/crm-demo/settings/products" },
+            { label: "Основные", path: "/admin/crm/settings/general" },
+            { label: "Источники", path: "/admin/crm/settings/sources" },
+            { label: "Коммуникации", path: "/admin/crm/settings/communications" },
+            { label: "Воронки", path: "/admin/crm/settings/funnels" },
+            { label: "Заказы", path: "/admin/crm/settings/orders" }, 
+            { label: "Товары", path: "/admin/crm/settings/products" },
             { label: "Доставки", path: "#" },
-            { label: "Финансы", path: "/admin/crm-demo/settings/finances" },
-            { label: "Дополнительно", path: "/admin/crm-demo/settings/additional" },
-            { label: "Пользователи", path: "/admin/crm-demo/settings/users" },
-            { label: "Роли", path: "/admin/crm-demo/settings/roles" }
+            { label: "Финансы", path: "/admin/crm/settings/finances" },
+            { label: "Дополнительно", path: "/admin/crm/settings/additional" },
+            { label: "Пользователи", path: "/admin/crm/settings/users" },
+            { label: "Роли", path: "/admin/crm/settings/roles" }
           ].map(item => (
             <Link 
               key={item.label} 
@@ -674,7 +674,7 @@ export default function DualSidebarShell({ children }) {
             height: 64, borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", padding: "0 24px", justifyContent: "space-between", zIndex: 5
           }}
         >
-          <Link href="/admin/crm-demo" style={{ textDecoration: "none" }}>
+          <Link href="/admin/crm" style={{ textDecoration: "none" }}>
             <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "var(--text)", cursor: "pointer" }}>iPhoenixCRM</h1>
           </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>

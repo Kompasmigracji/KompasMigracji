@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-import { getSupabase } from "@/lib/supabase";
+
 import { motion } from "framer-motion";
 
 export default function ChatsDemoPage() {
@@ -13,17 +13,24 @@ export default function ChatsDemoPage() {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
-  const supabase = getSupabase();
+  
 
   // 1. Fetch Chats
   useEffect(() => {
-    if (!supabase) return;
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/chats');
+        const json = await res.json();
+        setChats(json.data || []);
+      } catch (e) { console.error(e); }
+      setLoading(false);
+    };
+    fetchData();
+
+    
 
     const fetchChats = async () => {
-      const { data, error } = await supabase
-        .from('custom_chats')
-        .select('*')
-        .order('created_at', { ascending: false });
+      
 
       if (!error && data) {
         setChats(data);
@@ -34,29 +41,17 @@ export default function ChatsDemoPage() {
       setLoadingChats(false);
     };
 
-    fetchChats();
+    
 
-    const channel = supabase.channel('custom_chats_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'custom_chats' }, (payload) => {
-        fetchChats();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
+    
+  }, []);
 
   // 2. Fetch Messages for Active Chat
   useEffect(() => {
     if (!supabase || !activeChat) return;
 
     const fetchMessages = async () => {
-      const { data, error } = await supabase
-        .from('custom_messages')
-        .select('*')
-        .eq('chat_id', activeChat.id)
-        .order('created_at', { ascending: true });
+      
 
       if (!error && data) {
         setMessages(data);
@@ -68,15 +63,7 @@ export default function ChatsDemoPage() {
 
     fetchMessages();
 
-    const channel = supabase.channel('custom_messages_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'custom_messages', filter: `chat_id=eq.${activeChat.id}` }, (payload) => {
-        fetchMessages();
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    
   }, [supabase, activeChat]);
 
   const handleSendMessage = async () => {

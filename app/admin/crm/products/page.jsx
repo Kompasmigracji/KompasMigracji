@@ -1,40 +1,32 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon } from "@/components/admin/ui";
-import { getSupabase } from "@/lib/supabase";
+
 
 export default function ProductsDemoPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const supabase = getSupabase();
+  
 
   useEffect(() => {
-    if (!supabase) return;
-
-    const fetchProducts = async () => {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-        
-      if (!error && data) {
-        setProducts(data);
-      }
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/products');
+        const json = await res.json();
+        setProducts(json.data || []);
+      } catch (e) { console.error(e); }
       setLoading(false);
     };
+    fetchData();
 
-    fetchProducts();
+    
 
-    const channel = supabase.channel('products_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, (payload) => {
-        fetchProducts(); // Refresh on any change
-      })
-      .subscribe();
+    
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
+    
+
+    
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>

@@ -1,42 +1,34 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-import { getSupabase } from "@/lib/supabase";
+
 
 export default function BuyersDemoPage() {
   const [buyers, setBuyers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const supabase = getSupabase();
+  
 
   useEffect(() => {
-    if (!supabase) return;
-    
-    // Fetch initial buyers
-    const fetchBuyers = async () => {
-      const { data, error } = await supabase
-        .from('buyers')
-        .select('*')
-        .order('created_at', { ascending: false });
-        
-      if (!error && data) {
-        setBuyers(data);
-      }
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/buyers');
+        const json = await res.json();
+        setBuyers(json.data || []);
+      } catch (e) { console.error(e); }
       setLoading(false);
     };
+    fetchData();
 
-    fetchBuyers();
+    
+    
+    // Fetch initial buyers
+    
+
+    
 
     // Subscribe to realtime changes
-    const channel = supabase.channel('buyers_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'buyers' }, (payload) => {
-        fetchBuyers(); // Refresh on any change
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
+    
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 16 }}>

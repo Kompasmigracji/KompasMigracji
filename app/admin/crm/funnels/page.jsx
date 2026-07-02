@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
-import { getSupabase } from "@/lib/supabase";
+
 
 const FUNNEL_COLUMNS = [
   { id: "Новый", title: "Новый", color: "#10b981" },
@@ -15,16 +15,13 @@ const FUNNEL_COLUMNS = [
 export default function FunnelsPage() {
   const [leads, setLeads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = getSupabase();
+  
 
   const loadLeads = useCallback(async () => {
-    if (!supabase) return;
+    
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
+      
         
       if (!error && data) {
         setLeads(data);
@@ -34,21 +31,23 @@ export default function FunnelsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [supabase]);
+  }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/funnels');
+        const json = await res.json();
+        setFunnels(json.data || []);
+      } catch (e) { console.error(e); }
+      setLoading(false);
+    };
+    fetchData();
+
     loadLeads();
 
-    if (!supabase) return;
-    const channel = supabase.channel('leads_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'leads' }, (payload) => {
-        loadLeads(); // Refresh on any change
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    
+    
   }, [loadLeads, supabase]);
 
   const handleStatusChange = async (leadId, newStatus) => {

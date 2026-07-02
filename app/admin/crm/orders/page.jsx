@@ -1,41 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar, Badge } from "@/components/admin/ui";
-import { getSupabase } from "@/lib/supabase";
+
 
 export default function OrdersDemoPage() {
   const [activeFilter, setActiveFilter] = useState("новый");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const supabase = getSupabase();
+  
 
   useEffect(() => {
-    if (!supabase) return;
-
-    const fetchOrders = async () => {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*, buyers(full_name)')
-        .order('created_at', { ascending: false });
-        
-      if (!error && data) {
-        setOrders(data);
-      }
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/orders');
+        const json = await res.json();
+        setOrders(json.data || []);
+      } catch (e) { console.error(e); }
       setLoading(false);
     };
+    fetchData();
 
-    fetchOrders();
+    
 
-    const channel = supabase.channel('orders_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
-        fetchOrders(); // Refresh on any change
-      })
-      .subscribe();
+    
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
+    
+
+    
+  }, []);
 
   const filters = [
     { id: "all", label: "ФИЛЬТР СТАТУСОВ", color: "var(--dim)", outline: true },

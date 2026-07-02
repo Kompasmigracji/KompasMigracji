@@ -1,41 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-import { getSupabase } from "@/lib/supabase";
+
 import { motion } from "framer-motion";
 
 export default function PaymentsDemoPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const supabase = getSupabase();
+  
 
   useEffect(() => {
-    if (!supabase) return;
-
-    const fetchPayments = async () => {
-      const { data, error } = await supabase
-        .from('custom_payments')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (!error && data) {
-        setPayments(data);
-      }
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/payments');
+        const json = await res.json();
+        setPayments(json.data || []);
+      } catch (e) { console.error(e); }
       setLoading(false);
     };
+    fetchData();
 
-    fetchPayments();
+    
 
-    const channel = supabase.channel('custom_payments_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'custom_payments' }, (payload) => {
-        fetchPayments(); // Refresh on any change
-      })
-      .subscribe();
+    
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [supabase]);
+    
+
+    
+  }, []);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 24, padding: "24px" }}>
