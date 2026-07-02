@@ -141,7 +141,7 @@ function ContentUA() {
           ['5 хвилин', '50 zł'],
           ['10 хвилин', '100 zł'],
           ['15 хвилин', '150 zł'],
-          ['1 юридична година', '450 zł'],
+          ['1 юридична година', '355 zł'],
         ]} />
         <P>Методи оплати: банківський переказ, Przelewy24. Фірма виставляє фактуру ПДВ.</P>
       </Sec>
@@ -258,7 +258,7 @@ function ContentPL() {
           ['5 minut', '50 zł'],
           ['10 minut', '100 zł'],
           ['15 minut', '150 zł'],
-          ['1 godzina prawna', '450 zł'],
+          ['1 godzina prawna', '355 zł'],
         ]} />
         <P>Metody płatności: przelew bankowy, Przelewy24. Firma wystawia fakturę VAT.</P>
       </Sec>

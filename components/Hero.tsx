@@ -38,8 +38,7 @@ const STEPS = [
   { num: '03', title: 'Decyzja', desc: 'Супровід до отримання позитивного рішення — карти побуту, візи або дозволу' },
 ];
 
-/* ─── Stats for marquee ───────────────────────────────────── */
-const STATS = ['5 000+ Klientów', '98% Pozytywnych decyzji', '10+ Lat doświadczenia', '24/7 Wsparcie', '🇵🇱 Warszawa & cała Polska'];
+
 
 /* ════════════════════════════════════════════════════════════ */
 /*                     MAIN HERO COMPONENT                     */
@@ -162,18 +161,7 @@ export default function Hero() {
         </motion.div>
       </section>
 
-      {/* ─── STATS MARQUEE ────────────────────────────────── */}
-      <section className="py-6 overflow-hidden" style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div className="marquee-container">
-          <div className="marquee-track">
-            {[...STATS, ...STATS, ...STATS].map((stat, i) => (
-              <span key={i} className="mx-8 sm:mx-12 text-sm sm:text-base font-semibold whitespace-nowrap" style={{ color: 'var(--dim)' }}>
-                {stat}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* ─── SERVICES BENTO GRID ──────────────────────────── */}
       <section className="py-20 sm:py-28 px-6">
@@ -322,21 +310,7 @@ export default function Hero() {
           border-color: rgba(0, 170, 255, 0.2);
         }
 
-        /* Marquee */
-        .marquee-container {
-          display: flex;
-          overflow: hidden;
-          width: 100%;
-        }
-        .marquee-track {
-          display: flex;
-          animation: marquee-scroll 30s linear infinite;
-          white-space: nowrap;
-        }
-        @keyframes marquee-scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
-        }
+
       `}</style>
     </>
   );

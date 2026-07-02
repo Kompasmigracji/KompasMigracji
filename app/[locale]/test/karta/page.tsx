@@ -19,7 +19,7 @@ const small: React.CSSProperties = { fontSize: 10, fontWeight: 700, letterSpacin
 const LANGS = {
   ua: {
     flag: '🇺🇦', label: 'Українська',
-    ticker: ['ПРИСКОРЕННЯ КАРТИ ПОБУТУ ', '✦', ' 450 ЗЛ — 1 ЮРИДИЧНА ГОДИНА'],
+    ticker: ['ПРИСКОРЕННЯ КАРТИ ПОБУТУ ', '✦', ' 355 ЗЛ — 1 ЮРИДИЧНА ГОДИНА'],
     order: 'Замовити →',
     tag: 'ПОСЛУГА ПРИСКОРЕННЯ',
     h1: ['Втомився', 'чекати?'],
@@ -42,7 +42,7 @@ const LANGS = {
       { n: '03', title: 'Справа виходить на комітет рішень', pre: 'Протягом двох місяців — результат. Якщо уженд мовчить —', bold: ' скарга на бездіяльність.', post: ' Якщо знову мовчить — суд. Три етапи. Ми знаємо кожен.' },
     ],
     pricingTag: 'ТАРИФИ',
-    p1tag: 'КАРТА ПОБУТУ', p1name: 'Пакет Прискорення', p1price: '450 ЗЛ', p1sub: '= 1 юридична година',
+    p1tag: 'КАРТА ПОБУТУ', p1name: 'Пакет Прискорення', p1price: '355 ЗЛ', p1sub: '= 1 юридична година',
     p1f: ['Консультація по твоїй справі', 'Скарга на бездіяльність уженду', 'Унікальний пакет документів', 'Підготовка до суду — якщо потрібно'],
     p2tag: 'КАРТА РЕЗИДЕНТА ЄС', p2name: 'Пакет Резидент', p2price: '900 ЗЛ', p2sub: '= 2 юридичні години',
     p2f: ['Все те саме + складніша стратегія', 'Багатоетапний план виводу на рішення', 'Повний статус на 3+ роки', 'Підготовка до суду: 4 год. окремо'],
@@ -63,7 +63,7 @@ const LANGS = {
 
   pl: {
     flag: '🇵🇱', label: 'Polski',
-    ticker: ['PRZYSPIESZENIE KARTY POBYTU ', '✦', ' 450 ZŁ — 1 GODZINA PRAWNA'],
+    ticker: ['PRZYSPIESZENIE KARTY POBYTU ', '✦', ' 355 ZŁ — 1 GODZINA PRAWNA'],
     order: 'Zamów →',
     tag: 'USŁUGA PRZYSPIESZENIA',
     h1: ['Zmęczony', 'czekaniem?'],
@@ -86,7 +86,7 @@ const LANGS = {
       { n: '03', title: 'Sprawa trafia do komitetu decyzyjnego', pre: 'W ciągu dwóch miesięcy — wynik. Jeśli urząd milczy —', bold: ' skarga na bezczynność.', post: ' Jeśli znów milczy — sąd. Trzy etapy. Znamy każdy.' },
     ],
     pricingTag: 'CENNIK',
-    p1tag: 'KARTA POBYTU', p1name: 'Pakiet Przyspieszenia', p1price: '450 ZŁ', p1sub: '= 1 godzina prawna',
+    p1tag: 'KARTA POBYTU', p1name: 'Pakiet Przyspieszenia', p1price: '355 ZŁ', p1sub: '= 1 godzina prawna',
     p1f: ['Konsultacja Twojej sprawy', 'Skarga na bezczynność urzędu', 'Unikalny pakiet dokumentów', 'Przygotowanie do sądu — jeśli potrzeba'],
     p2tag: 'KARTA REZYDENTA UE', p2name: 'Pakiet Rezydent', p2price: '900 ZŁ', p2sub: '= 2 godziny prawne',
     p2f: ['Wszystko to samo + bardziej złożona strategia', 'Wieloetapowy plan prowadzący do decyzji', 'Pełny status na 3+ lata', 'Przygotowanie do sądu: 4 godz. osobno'],
@@ -107,7 +107,7 @@ const LANGS = {
 
   ru: {
     flag: '🇷🇺', label: 'Русский',
-    ticker: ['УСКОРЕНИЕ КАРТЫ ПОБЫТУ ', '✦', ' 450 ЗЛ — 1 ЮРИДИЧЕСКИЙ ЧАС'],
+    ticker: ['УСКОРЕНИЕ КАРТЫ ПОБЫТУ ', '✦', ' 355 ЗЛ — 1 ЮРИДИЧЕСКИЙ ЧАС'],
     order: 'Заказать →',
     tag: 'УСЛУГА УСКОРЕНИЯ',
     h1: ['Устал', 'ждать?'],
@@ -130,7 +130,7 @@ const LANGS = {
       { n: '03', title: 'Дело выходит на комитет решений', pre: 'В течение двух месяцев — результат. Если ужонд молчит —', bold: ' жалоба на бездействие.', post: ' Если снова молчит — суд. Три этапа. Мы знаем каждый.' },
     ],
     pricingTag: 'ТАРИФЫ',
-    p1tag: 'КАРТА ПОБЫТУ', p1name: 'Пакет Ускорения', p1price: '450 ЗЛ', p1sub: '= 1 юридический час',
+    p1tag: 'КАРТА ПОБЫТУ', p1name: 'Пакет Ускорения', p1price: '355 ЗЛ', p1sub: '= 1 юридический час',
     p1f: ['Консультация по твоему делу', 'Жалоба на бездействие ужонда', 'Уникальный пакет документов', 'Подготовка к суду — если нужно'],
     p2tag: 'КАРТА РЕЗИДЕНТА ЕС', p2name: 'Пакет Резидент', p2price: '900 ЗЛ', p2sub: '= 2 юридических часа',
     p2f: ['Всё то же + более сложная стратегия', 'Многоэтапный план выхода на решение', 'Полный статус на 3+ года', 'Подготовка к суду: 4 ч. отдельно'],
@@ -151,7 +151,7 @@ const LANGS = {
 
   en: {
     flag: '🇬🇧', label: 'English',
-    ticker: ['RESIDENCE CARD ACCELERATION ', '✦', ' 450 PLN — 1 LEGAL HOUR'],
+    ticker: ['RESIDENCE CARD ACCELERATION ', '✦', ' 355 PLN — 1 LEGAL HOUR'],
     order: 'Order →',
     tag: 'ACCELERATION SERVICE',
     h1: ['Tired of', 'waiting?'],
@@ -174,7 +174,7 @@ const LANGS = {
       { n: '03', title: 'Case reaches the decision committee', pre: 'Within two months — a result. If the office is silent —', bold: ' complaint for inaction.', post: ' If silent again — court. Three stages. We know each one.' },
     ],
     pricingTag: 'PRICING',
-    p1tag: 'RESIDENCE CARD', p1name: 'Acceleration Package', p1price: '450 PLN', p1sub: '= 1 legal hour',
+    p1tag: 'RESIDENCE CARD', p1name: 'Acceleration Package', p1price: '355 PLN', p1sub: '= 1 legal hour',
     p1f: ['Consultation on your case', 'Complaint for office inaction', 'Unique document package', 'Court preparation — if needed'],
     p2tag: 'EU RESIDENT CARD', p2name: 'Resident Package', p2price: '900 PLN', p2sub: '= 2 legal hours',
     p2f: ['Everything above + complex strategy', 'Multi-step plan leading to decision', 'Full status for 3+ years', 'Court preparation: 4 hrs separately'],
@@ -486,7 +486,7 @@ export default function KartaPage(): React.JSX.Element {
                   ))}
                 </ul>
                 <button
-                  onClick={() => openPay('p1', 45000, t.p1name)}
+                  onClick={() => openPay('p1', 35500, t.p1name)}
                   style={{ width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: 'pointer', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, fontFamily: "'Syne', sans-serif", letterSpacing: '0.01em', transition: 'opacity 0.2s' }}
                   onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -658,7 +658,7 @@ export default function KartaPage(): React.JSX.Element {
             </svg>
             <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '0 0 4px' }}>{payStep.desc}</p>
             <p style={{ fontSize: 26, fontWeight: 900, color: payStep.pkg === 'p1' ? ORANGE : '#1e293b', margin: '0 0 24px', letterSpacing: '-0.02em' }}>
-              {payStep.pkg === 'p1' ? '450 PLN' : '900 PLN'}
+              {payStep.pkg === 'p1' ? '355 PLN' : '900 PLN'}
             </p>
 
             {/* Ім'я */}

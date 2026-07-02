@@ -21,11 +21,11 @@ function useCategories(): Category[] {
       rows: [
         { name: t('psvc_n1'),  price: '250', amountGrosze: 25000 },
         { name: t('psvc_n2'),  price: '350', amountGrosze: 35000 },
-        { name: t('psvc_n3'),  price: '450', amountGrosze: 45000 },
-        { name: t('psvc_n4'),  price: '450', amountGrosze: 45000 },
+        { name: t('psvc_n3'),  price: '355', amountGrosze: 35500 },
+        { name: t('psvc_n4'),  price: '355', amountGrosze: 35500 },
         { name: t('psvc_n5'),  price: '260', amountGrosze: 26000 },
         { name: t('psvc_n6'),  price: '380', amountGrosze: 38000 },
-        { name: t('psvc_n7'),  price: '450', amountGrosze: 45000 },
+        { name: t('psvc_n7'),  price: '355', amountGrosze: 35500 },
         { name: t('psvc_n8'),  price: '720', amountGrosze: 72000 },
         { name: t('psvc_n9'),  price: '580', amountGrosze: 58000 },
         { name: t('psvc_n10'), price: '150', amountGrosze: 15000 },
@@ -42,11 +42,11 @@ function useCategories(): Category[] {
         { name: t('psvc_l6'),  price: '2000', amountGrosze: 200000 },
         { name: t('psvc_l7'),  price: '2500', amountGrosze: 250000 },
         { name: t('psvc_l8'),  price: '4000', amountGrosze: 400000 },
-        { name: t('psvc_l9'),  price: '450', amountGrosze: 45000  },
+        { name: t('psvc_l9'),  price: '355', amountGrosze: 35500  },
         { name: t('psvc_l10'), price: '900', amountGrosze: 90000  },
         { name: t('psvc_l11'), price: '900', amountGrosze: 90000  },
         { name: t('psvc_l12'), price: '150', amountGrosze: 15000  },
-        { name: t('psvc_l13'), price: '450', amountGrosze: 45000  },
+        { name: t('psvc_l13'), price: '355', amountGrosze: 35500  },
       ],
     },
     {
@@ -71,7 +71,7 @@ function useCategories(): Category[] {
       id: 'bureaucracy', title: t('pcat_bureaucracy'), icon: '📋',
       rows: [
         { name: t('psvc_b1'), price: '800', amountGrosze: 80000 },
-        { name: t('psvc_b2'), price: '450', amountGrosze: 45000 },
+        { name: t('psvc_b2'), price: '355', amountGrosze: 35500 },
         { name: t('psvc_b3'), price: '150', amountGrosze: 15000 },
         { name: t('psvc_b4'), price: '150', amountGrosze: 15000 },
         { name: t('psvc_b5'), price: '150', amountGrosze: 15000 },
@@ -367,11 +367,11 @@ export default function PricingPage() {
             <div className="inline-flex flex-col items-center justify-center border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-zinc-900 rounded-3xl p-6 sm:p-8 shadow-sm">
               <p className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">{t('pricing_hero_product')}</p>
               <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-5xl font-black tracking-tight text-black dark:text-white">450</span>
+                <span className="text-5xl font-black tracking-tight text-black dark:text-white">355</span>
                 <span className="text-xl font-bold text-black dark:text-white">zł</span>
                 <span className="text-sm text-gray-500 ml-1">≈ 105 €</span>
               </div>
-              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} className="bg-black text-white dark:bg-white dark:text-black px-8 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
+              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:35500, price:'355' })} className="bg-black text-white dark:bg-white dark:text-black px-8 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
                 {t('pricing_hero_order')}
               </button>
             </div>
