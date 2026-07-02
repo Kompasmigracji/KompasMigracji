@@ -1,5 +1,5 @@
 "use client";
-/* Przelewy24-branded payment steps section — used on pricing, plans, karta pages */
+/* PayU-branded payment steps section — used on pricing, plans, karta pages */
 
 interface Step {
   n: string;
@@ -8,27 +8,21 @@ interface Step {
   desc: string;
 }
 
-const RED   = "#D8232A";
+const PAYU_BLUE = "#00AEEF";
 const GREEN = "#44A649";
 const NAVY  = "#1B2547";
 const GRAY  = "#6C757D";
 const LIGHT = "#F8F9FA";
 const BORD  = "#DEE2E6";
 
-/* ── Official Przelewy24 logo (accurate SVG recreation) ─────────────── */
+/* ── Official PayU logo ─────────────────────────────────── */
 export function P24Logo({ width = 140 }: { width?: number }) {
   const h = Math.round(width * 0.27);
   return (
-    <svg width={width} height={h} viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Przelewy24">
-      {/* Red background */}
-      <rect width="140" height="38" rx="6" fill={RED} />
-      {/* White "przelewy" */}
-      <text x="10" y="25" fill="#fff" fontFamily="'Arial Black', 'Arial', sans-serif"
-        fontSize="15" fontWeight="900" letterSpacing="-0.3">przelewy</text>
-      {/* Green "24" accent */}
-      <rect x="103" y="6" width="29" height="26" rx="4" fill={GREEN} />
-      <text x="117.5" y="24" textAnchor="middle" fill="#fff"
-        fontFamily="'Arial Black', 'Arial', sans-serif" fontSize="15" fontWeight="900">24</text>
+    <svg width={width} height={h} viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PayU">
+      <rect width="140" height="38" rx="6" fill={PAYU_BLUE} />
+      <text x="70" y="26" textAnchor="middle" fill="#fff" fontFamily="'Arial Black', 'Arial', sans-serif"
+        fontSize="18" fontWeight="900" letterSpacing="1">PayU</text>
     </svg>
   );
 }
@@ -56,13 +50,11 @@ function PayIcons() {
         <circle cx="29" cy="12" r="7.5" fill="#F79E1B"/>
         <ellipse cx="23" cy="12" rx="3.5" ry="7.5" fill="#FF5F00"/>
       </svg>
-      {/* Przelew bankowy */}
+      {/* PayU */}
       <svg width="46" height="24" viewBox="0 0 46 24" fill="none">
-        <rect width="46" height="24" rx="4" fill={NAVY}/>
-        <text x="23" y="11" textAnchor="middle" fill="#fff"
-          fontFamily="Arial,sans-serif" fontSize="7" fontWeight="700" letterSpacing="0.3">PRZELEW</text>
-        <text x="23" y="19.5" textAnchor="middle" fill="#86efac"
-          fontFamily="Arial,sans-serif" fontSize="7" fontWeight="700" letterSpacing="0.3">BANKOWY</text>
+        <rect width="46" height="24" rx="4" fill={PAYU_BLUE}/>
+        <text x="23" y="16.5" textAnchor="middle" fill="#fff"
+          fontFamily="'Arial Black',Arial,sans-serif" fontSize="10" fontWeight="900">PayU</text>
       </svg>
       {/* Google Pay */}
       <svg width="46" height="24" viewBox="0 0 46 24" fill="none">
@@ -77,7 +69,7 @@ function PayIcons() {
 /* ── Step card icons (SVG) — exported for use with translated steps ───── */
 export function CartIcon() {
   return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={PAYU_BLUE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
       <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
     </svg>
@@ -138,8 +130,8 @@ const DEFAULT_STEPS: Step[] = [
   {
     n: "03",
     icon: <CardIcon />,
-    title: "Płatność Przelewy24",
-    desc: "Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. Szyfrowanie SSL 256-bit.",
+    title: "Płatność PayU",
+    desc: "Bezpieczna płatność przez PayU — karta, BLIK, przelew. Szyfrowanie SSL 256-bit.",
   },
   {
     n: "04",
@@ -206,9 +198,7 @@ export default function P24PaymentSteps({
               <div style={{
                 position: "absolute",
                 top: 0, left: 0, right: 0, height: 3,
-                background: idx % 2 === 0
-                  ? `linear-gradient(90deg, ${RED}, #f87171)`
-                  : `linear-gradient(90deg, ${GREEN}, #86efac)`,
+                background: accentFn(idx),
               }} />
 
               {/* Step number */}
@@ -271,8 +261,10 @@ export default function P24PaymentSteps({
                 Bezpieczna płatność
               </div>
               <div style={{ fontSize: 11, color: GRAY, lineHeight: 1.4 }}>
+          <div style={{ fontSize: 11, color: GRAY, lineHeight: 1.4 }}>
                 {securityNote ||
-                  "Przelewy24 — licencjonowany operator płatności w Polsce · Dane karty nie są przechowywane na naszym serwerze · Szyfrowanie SSL 256-bit"}
+                  "PayU S.A. — licencjonowany operator płatności w Polsce · Dane karty nie są przechowywane na naszym serwerze · Szyfrowanie SSL 256-bit"}
+              </div>
               </div>
             </div>
           </div>
@@ -289,7 +281,7 @@ export default function P24PaymentSteps({
           marginTop: 14,
           marginBottom: 0,
         }}>
-          Operator płatności Przelewy24 jest nadzorowany przez KNF · Certyfikat PCI DSS Level 1
+          Operator płatności PayU jest nadzorowany przez KNF · Certyfikat PCI DSS Level 1
         </p>
       </div>
     </section>

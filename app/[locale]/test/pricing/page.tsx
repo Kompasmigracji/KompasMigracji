@@ -414,7 +414,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* How payments work — Przelewy24 branded */}
+        {/* How payments work — PayU branded */}
         <P24PaymentSteps
           title={t('pricing_how_title')}
           steps={[

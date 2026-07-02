@@ -197,10 +197,10 @@ const LANGS = {
 type LangKey = keyof typeof LANGS;
 
 const PAY_TEXT = {
-  ua: { btn: 'Оплатити через Przelewy24', firstNameLabel: "Ім'я (латиницею)", firstNamePh: 'Ivan', lastNameLabel: 'Прізвище (латиницею)', lastNamePh: 'Petrenko', phoneLabel: 'Контактний телефон', phonePh: '+48 123 456 789', emailLabel: 'Email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати', cancel: 'Скасувати', loading: 'Перенаправлення...', errFirstName: "Введіть ім'я латиницею (напр. Ivan)", errLastName: 'Введіть прізвище латиницею (напр. Petrenko)', errPhone: 'Введіть контактний номер телефону', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз.", regText: 'Оплачуючи, ви погоджуєтесь з' },
-  pl: { btn: 'Zapłać przez Przelewy24', firstNameLabel: 'Imię (łacińskie litery)', firstNamePh: 'Ivan', lastNameLabel: 'Nazwisko (łacińskie litery)', lastNamePh: 'Petrenko', phoneLabel: 'Telefon kontaktowy', phonePh: '+48 123 456 789', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności', cancel: 'Anuluj', loading: 'Przekierowanie...', errFirstName: 'Wpisz imię łacińskimi literami (np. Ivan)', errLastName: 'Wpisz nazwisko łacińskimi literami (np. Petrenko)', errPhone: 'Wpisz numer telefonu kontaktowego', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
-  ru: { btn: 'Оплатить через Przelewy24', firstNameLabel: 'Имя (латиницей)', firstNamePh: 'Ivan', lastNameLabel: 'Фамилия (латиницей)', lastNamePh: 'Petrenko', phoneLabel: 'Контактный телефон', phonePh: '+48 123 456 789', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате', cancel: 'Отмена', loading: 'Перенаправление...', errFirstName: 'Введите имя латиницей (напр. Ivan)', errLastName: 'Введите фамилию латиницей (напр. Petrenko)', errPhone: 'Введите контактный номер телефона', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
-  en: { btn: 'Pay via Przelewy24', firstNameLabel: 'First name (Latin)', firstNamePh: 'Ivan', lastNameLabel: 'Last name (Latin)', lastNamePh: 'Petrenko', phoneLabel: 'Contact phone', phonePh: '+48 123 456 789', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to payment', cancel: 'Cancel', loading: 'Redirecting...', errFirstName: 'Enter first name in Latin (e.g. Ivan)', errLastName: 'Enter last name in Latin (e.g. Petrenko)', errPhone: 'Enter your contact phone number', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
+  ua: { btn: 'Оплатити через PayU', firstNameLabel: "Ім'я (латиницею)", firstNamePh: 'Ivan', lastNameLabel: 'Прізвище (латиницею)', lastNamePh: 'Petrenko', phoneLabel: 'Контактний телефон', phonePh: '+48 123 456 789', emailLabel: 'Email для чеку', emailPh: 'example@gmail.com', go: 'Перейти до оплати PayU', cancel: 'Скасувати', loading: 'Перенаправлення...', errFirstName: "Введіть ім'я латиницею (напр. Ivan)", errLastName: 'Введіть прізвище латиницею (напр. Petrenko)', errPhone: 'Введіть контактний номер телефону', errEmail: 'Введіть коректний email', errNet: "Помилка з'єднання. Спробуйте ще раз.", regText: 'Оплачуючи, ви погоджуєтесь з' },
+  pl: { btn: 'Zapłać przez PayU', firstNameLabel: 'Imię (łacińskie litery)', firstNamePh: 'Ivan', lastNameLabel: 'Nazwisko (łacińskie litery)', lastNamePh: 'Petrenko', phoneLabel: 'Telefon kontaktowy', phonePh: '+48 123 456 789', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności PayU', cancel: 'Anuluj', loading: 'Przekierowanie...', errFirstName: 'Wpisz imię łacińskimi literami (np. Ivan)', errLastName: 'Wpisz nazwisko łacińskimi literami (np. Petrenko)', errPhone: 'Wpisz numer telefonu kontaktowego', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
+  ru: { btn: 'Оплатить через PayU', firstNameLabel: 'Имя (латиницей)', firstNamePh: 'Ivan', lastNameLabel: 'Фамилия (латиницей)', lastNamePh: 'Petrenko', phoneLabel: 'Контактный телефон', phonePh: '+48 123 456 789', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате PayU', cancel: 'Отмена', loading: 'Перенаправление...', errFirstName: 'Введите имя латиницей (напр. Ivan)', errLastName: 'Введите фамилию латиницей (напр. Petrenko)', errPhone: 'Введите контактный номер телефона', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
+  en: { btn: 'Pay via PayU', firstNameLabel: 'First name (Latin)', firstNamePh: 'Ivan', lastNameLabel: 'Last name (Latin)', lastNamePh: 'Petrenko', phoneLabel: 'Contact phone', phonePh: '+48 123 456 789', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to PayU payment', cancel: 'Cancel', loading: 'Redirecting...', errFirstName: 'Enter first name in Latin (e.g. Ivan)', errLastName: 'Enter last name in Latin (e.g. Petrenko)', errPhone: 'Enter your contact phone number', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
 };
 
 function Tag({ color, children }: { color: string; children: React.ReactNode }) {
@@ -586,14 +586,14 @@ export default function KartaPage(): React.JSX.Element {
 
         </div>
 
-        {/* Przelewy24 payment steps */}
+        {/* PayU payment steps */}
         <div style={{ margin: '0 -24px' }}>
           <P24PaymentSteps
             title={locale === 'ua' ? 'Як працює процес оплати' : locale === 'ru' ? 'Как работает процесс оплаты' : 'Jak działa proces płatności'}
             steps={[
               { n:'01', icon:<span style={{fontSize:28}}>🛒</span>, title: locale === 'ua' ? 'Вибір послуги' : 'Wybór usługi',        desc: locale === 'ua' ? 'Обери пакет Прискорення або Резидент і натисни «Замовити».' : 'Wybierz pakiet Przyspieszenie lub Rezydent i kliknij «Zamów».' },
               { n:'02', icon:<span style={{fontSize:28}}>👤</span>, title: locale === 'ua' ? 'Дані клієнта' : 'Dane klienta',          desc: locale === 'ua' ? 'Вкажи ім\'я, телефон та email — для квитанції та зв\'язку.' : 'Podaj imię, telefon i email — do rachunku i kontaktu.' },
-              { n:'03', icon:<span style={{fontSize:28}}>💳</span>, title: locale === 'ua' ? 'Оплата Przelewy24' : 'Płatność Przelewy24', desc: locale === 'ua' ? 'Безпечна оплата через Przelewy24 — картка, BLIK, переказ. SSL 256-bit.' : 'Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. SSL 256-bit.' },
+              { n:'03', icon:<span style={{fontSize:28}}>💳</span>, title: locale === 'ua' ? 'Оплата PayU' : 'Płatność PayU', desc: locale === 'ua' ? 'Безпечна оплата через PayU — картка, BLIK, переказ. SSL 256-bit.' : 'Bezpieczna płatność przez PayU — karta, BLIK, przelew. SSL 256-bit.' },
               { n:'04', icon:<span style={{fontSize:28}}>✅</span>, title: locale === 'ua' ? 'Підтвердження' : 'Potwierdzenie',        desc: locale === 'ua' ? 'Отримуєш квитанцію, фахівець зв\'язується протягом 2 годин.' : 'Otrzymujesz paragon, specjalista kontaktuje się w ciągu 2 godzin.' },
             ]}
           />
@@ -652,7 +652,10 @@ export default function KartaPage(): React.JSX.Element {
       {payStep && (
         <div onClick={closePay} style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.55)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 16, padding: '32px 28px', width: '100%', maxWidth: 420, fontFamily: "'Inter', system-ui, sans-serif" }}>
-            <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: ORANGE, textTransform: 'uppercase', margin: '0 0 8px' }}>Przelewy24</p>
+            <svg width="90" height="28" viewBox="0 0 90 28" fill="none" aria-label="PayU" style={{ marginBottom: 8 }}>
+              <rect width="90" height="28" rx="5" fill="#00AEEF"/>
+              <text x="45" y="20" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.5">PayU</text>
+            </svg>
             <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '0 0 4px' }}>{payStep.desc}</p>
             <p style={{ fontSize: 26, fontWeight: 900, color: payStep.pkg === 'p1' ? ORANGE : '#1e293b', margin: '0 0 24px', letterSpacing: '-0.02em' }}>
               {payStep.pkg === 'p1' ? '450 PLN' : '900 PLN'}
@@ -708,7 +711,7 @@ export default function KartaPage(): React.JSX.Element {
             >
               {pt.cancel}
             </button>
-            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '14px 0 0' }}>🔒 Безпечна оплата · Przelewy24 · SSL</p>
+            <p style={{ fontSize: 10, color: '#94a3b8', textAlign: 'center', margin: '14px 0 0' }}>🔒 Безпечна оплата · PayU · SSL</p>
           </div>
         </div>
       )}

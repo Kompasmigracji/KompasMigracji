@@ -112,8 +112,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Wybierz plan Basic, Standard lub Premium i kliknij „Wybierz plan”.",
     p24Step2Title: "Dane klienta",
     p24Step2Desc: "Podaj imię, e-mail i telefon — potrzebne do rejestracji i faktury.",
-    p24Step3Title: "Płatność Przelewy24",
-    p24Step3Desc: "Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. SSL 256-bit.",
+    p24Step3Title: "Płatność PayU",
+    p24Step3Desc: "Bezpieczna płatność przez PayU — karta, BLIK, przelew. SSL 256-bit.",
     p24Step4Title: "Dostęp natychmiastowy",
     p24Step4Desc: "Po płatności doradca skontaktuje się w ciągu 2 godzin. Subskrypcja jest aktywna.",
     faqTitle: "Najczęściej zadawane pytania",
@@ -130,7 +130,7 @@ const T: Record<string, any> = {
     inputPhone: "Telefon (opcjonalnie)",
     agreeRODO: "Zapoznałem/am się z Regulaminem Sklepu i akceptuję jego warunki",
     subscribing: "Przekierowujemy do płatności...",
-    footerDisclaimer: "Bezpieczna płatność przez Przelewy24 • Można anulować w dowolnym momencie",
+    footerDisclaimer: "Bezpieczna płatność przez PayU • Można anulować w dowolnym momencie",
     serverError: "Błąd serwera",
     networkError: "Błąd sieci"
   },
@@ -152,8 +152,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Оберіть тариф Basic, Standard або Premium та натисніть «Обрати тариф».",
     p24Step2Title: "Дані клієнта",
     p24Step2Desc: "Вкажіть ім'я, e-mail та телефон — вони потрібні для реєстрації та виписки фактури.",
-    p24Step3Title: "Оплата Przelewy24",
-    p24Step3Desc: "Безпечна оплата через Przelewy24 — карткою, BLIK або переказом. SSL 256-біт.",
+    p24Step3Title: "Оплата PayU",
+    p24Step3Desc: "Безпечна оплата через PayU — карткою, BLIK або переказом. SSL 256-біт.",
     p24Step4Title: "Миттєвий доступ",
     p24Step4Desc: "Після оплати спеціаліст зв'яжеться з вами протягом 2 годин. Підписка активована.",
     faqTitle: "Часті запитання",
@@ -170,7 +170,7 @@ const T: Record<string, any> = {
     inputPhone: "Телефон (необов'язково)",
     agreeRODO: "Я ознайомився(-лася) з Регламентом магазину та приймаю його умови",
     subscribing: "Перенаправляємо на сторінку оплати...",
-    footerDisclaimer: "Безпечна оплата через Przelewy24 • Можна скасувати в будь-який момент",
+    footerDisclaimer: "Безпечна оплата через PayU • Можна скасувати в будь-який момент",
     serverError: "Помилка сервера",
     networkError: "Помилка мережі"
   },
@@ -192,8 +192,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Выберите тариф Basic, Standard или Premium и нажмите «Выбрать тариф».",
     p24Step2Title: "Данные клиента",
     p24Step2Desc: "Укажите имя, e-mail и телефон — это нужно для регистрации и выставления счета.",
-    p24Step3Title: "Оплата Przelewy24",
-    p24Step3Desc: "Безопасный платеж через Przelewy24 — карта, BLIK, перевод. SSL 256-бит.",
+    p24Step3Title: "Оплата PayU",
+    p24Step3Desc: "Безопасный платеж через PayU — карта, BLIK, перевод. SSL 256-бит.",
     p24Step4Title: "Мгновенный доступ",
     p24Step4Desc: "После оплаты специалист свяжется с вами в течение 2 часов. Подписка активна.",
     faqTitle: "Часто задаваемые вопросы",
@@ -210,7 +210,7 @@ const T: Record<string, any> = {
     inputPhone: "Телефон (необязательно)",
     agreeRODO: "Я ознакомился(-лась) с Регламентом магазина и принимаю его условия",
     subscribing: "Перенаправляем на страницу оплаты...",
-    footerDisclaimer: "Безопасная оплата через Przelewy24 • Можно отменить в любой момент",
+    footerDisclaimer: "Безопасная оплата через PayU • Можно отменить в любой момент",
     serverError: "Ошибка сервера",
     networkError: "Ошибка сети"
   },
@@ -232,8 +232,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Choose Basic, Standard, or Premium plan and click 'Choose Plan'.",
     p24Step2Title: "Client details",
     p24Step2Desc: "Enter name, email, and phone — required for registration and invoice.",
-    p24Step3Title: "Przelewy24 Payment",
-    p24Step3Desc: "Secure payment via Przelewy24 — card, BLIK, bank transfer. 256-bit SSL.",
+    p24Step3Title: "PayU Payment",
+    p24Step3Desc: "Secure payment via PayU — card, BLIK, bank transfer. 256-bit SSL.",
     p24Step4Title: "Immediate access",
     p24Step4Desc: "A specialist will contact you within 2 hours. Your subscription is active.",
     faqTitle: "Frequently Asked Questions",
@@ -250,7 +250,7 @@ const T: Record<string, any> = {
     inputPhone: "Phone (optional)",
     agreeRODO: "I have read the Store Regulations and accept its terms",
     subscribing: "Redirecting to payment...",
-    footerDisclaimer: "Secure payment via Przelewy24 • Cancel at any time",
+    footerDisclaimer: "Secure payment via PayU • Cancel at any time",
     serverError: "Server error",
     networkError: "Network error"
   }
@@ -564,7 +564,7 @@ export default function PlansPage() {
           </div>
         </section>
 
-        {/* Przelewy24 payment steps */}
+        {/* PayU payment steps */}
         <P24PaymentSteps
           title={t.p24Title}
           steps={[
