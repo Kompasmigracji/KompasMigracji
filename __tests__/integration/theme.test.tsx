@@ -1,4 +1,6 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+// @ts-ignore
+import { fireEvent } from '@testing-library/dom';
 import ThemeToggle from '@/components/ThemeToggle';
 
 test('toggles dark mode', () => {

@@ -1,17 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion, AnimatePresence } from "framer-motion";
 
 const MOCK_COMMS = [
-  { id: 1, name: "Viber основной", channel: "Viber Номерной", icon: "phone", iconColor: "#7360F2", account: "+48729417050", paidUntil: "Оплачен до 24.07", status: true },
-  { id: 2, name: "Фейсбук", channel: "Facebook Messenger", icon: "facebook", iconColor: "#1877F2", account: "Kompas Migracji", status: true },
-  { id: 3, name: "Телеграм", channel: "Telegram Номерной", icon: "send", iconColor: "#229ED9", account: "+48729417050", paidUntil: "Оплачен до 02.07", status: true },
-  { id: 4, name: "Марьяна (співробітник)", channel: "Telegram Bot", icon: "bot", iconColor: "#229ED9", account: "—", status: false },
-  { id: 5, name: "Пошта", channel: "Email", icon: "mail", iconColor: "#f59e0b", account: "info@kompasmigracji.app", status: true },
-  { id: 6, name: "Телеграм", channel: "Telegram Bot", icon: "bot", iconColor: "#229ED9", account: "—", status: false },
-  { id: 7, name: "Inst", channel: "Instagram", icon: "camera", iconColor: "#e1306c", account: "Kompas Migracji", status: true },
-  { id: 8, name: "Chatbot", channel: "Telegram Bot", icon: "bot", iconColor: "#229ED9", account: "—", status: true },
-  { id: 9, name: "Телеграм", channel: "Telegram Bot", icon: "bot", iconColor: "#229ED9", account: "—", status: true },
+  { id: 1, name: "Viber основной", channel: "Viber Номерной", icon: "phone", iconColor: "purple", account: "+48729417050", paidUntil: "Оплачен до 24.07", status: true },
+  { id: 2, name: "Фейсбук", channel: "Facebook Messenger", icon: "facebook", iconColor: "blue", account: "Kompas Migracji", status: true },
+  { id: 3, name: "Телеграм", channel: "Telegram Номерной", icon: "send", iconColor: "sky", account: "+48729417050", paidUntil: "Оплачен до 02.07", status: true },
+  { id: 4, name: "Марьяна (співробітник)", channel: "Telegram Bot", icon: "bot", iconColor: "sky", account: "—", status: false },
+  { id: 5, name: "Пошта", channel: "Email", icon: "mail", iconColor: "amber", account: "info@kompasmigracji.app", status: true },
+  { id: 6, name: "Телеграм", channel: "Telegram Bot", icon: "bot", iconColor: "sky", account: "—", status: false },
+  { id: 7, name: "Inst", channel: "camera", icon: "camera", iconColor: "pink", account: "Kompas Migracji", status: true },
+  { id: 8, name: "Chatbot", channel: "Telegram Bot", icon: "bot", iconColor: "sky", account: "—", status: true },
 ];
 
 const MOCK_TEMPLATES = [
@@ -20,180 +21,174 @@ const MOCK_TEMPLATES = [
   { name: "Інструкція трансферго", context: "Общее", status: true },
   { name: "Алімп", context: "Общее", status: true },
   { name: "Апостиль", context: "Общее", status: true },
-  { name: "Бланкетість після безкоштовної консультації", context: "Общее", status: false },
-  { name: "Бланкетість...", context: "Общее", status: true },
-  { name: "Бухгалтер Зміни", context: "Общее", status: true },
-  { name: "Бухгалтерія", context: "Общее", status: true },
-  { name: "Витяг з реєстру боржників...", context: "Общее", status: true },
-  { name: "Вхид КАРТА ПОБИТУ 100+", context: "Общее", status: true },
-  { name: "Вхид на Юридичний аудит", context: "Общее", status: true },
-  { name: "Вхид на отримання ПЕЧАТКИ...", context: "Общее", status: true },
-  { name: "Вхид на супроводження", context: "Общее", status: true },
-  { name: "Відгуки", context: "Общее", status: true },
-  { name: "Відмова з'ясувати...", context: "Общее", status: false },
-  { name: "Відмова у співпраці", context: "Общее", status: true },
-  { name: "Відхилення 100+", context: "Общее", status: true },
-  { name: "ГОТІВКА", context: "Общее", status: true },
-  { name: "Громадянство", context: "Общее", status: true },
-  { name: "Громадянство крок 1.1", context: "Общее", status: true },
-  { name: "Карта крок 3.1", context: "Общее", status: true },
-  { name: "Консультація крок 1", context: "Общее", status: true },
-  { name: "Нотаріус", context: "Общее", status: true },
-  { name: "Повернення коштів", context: "Общее", status: false },
-  { name: "Сертифікат мови", context: "Общее", status: true },
+  { name: "Відмова у співпраці", context: "Общее", status: false },
 ];
 
 export default function CommunicationsSettingsPage() {
   const [activeTab, setActiveTab] = useState("chats");
 
   return (
-    <div style={{ padding: "24px", background: "var(--bg-color)", minHeight: "100vh", color: "var(--text)" }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200 p-8">
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, color: "var(--text)", fontSize: 14 }}>
-        <span style={{ fontWeight: 600 }}>Настройки</span>
-        <Icon name="chevron-right" size={14} color="var(--faint)" />
-        <span style={{ fontWeight: 600 }}>Коммуникации</span>
+      <div className="flex items-center gap-2 mb-8 text-sm font-semibold text-gray-400">
+        <span>Настройки</span>
+        <Icon name="chevron-right" size={14} className="text-gray-600" />
+        <span className="text-white">Коммуникации</span>
       </div>
 
       {/* Main Panel */}
-      <div style={{ background: "var(--panel)", borderRadius: 8, border: "1px solid var(--border)", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden" }}>
-        
-        {/* Tabs */}
-        <div style={{ display: "flex", borderBottom: "1px solid var(--border)", padding: "0 20px" }}>
-          {[
-            { id: "chats", label: "Чаты / SMS / Email", icon: "message-circle" },
-            { id: "telephony", label: "Телефония", icon: "phone-call" },
-            { id: "widgets", label: "Виджеты", icon: "layout" },
-            { id: "templates", label: "Шаблоны сообщений", icon: "file-text" },
-          ].map(tab => (
-            <button 
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                display: "flex", alignItems: "center", gap: 8,
-                background: "none", border: "none",
-                borderBottom: activeTab === tab.id ? "2px solid #3b82f6" : "2px solid transparent",
-                color: activeTab === tab.id ? "#3b82f6" : "var(--faint)",
-                padding: "16px 20px", cursor: "pointer", fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 500,
-                transition: "all 0.2s"
-              }}
-            >
-              <Icon name={tab.icon} size={14} />
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col">
+        <SpotlightCard className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col h-full">
+          
+          {/* Tabs */}
+          <div className="flex overflow-x-auto border-b border-white/10 bg-black/40">
+            {[
+              { id: "chats", label: "Чаты / SMS / Email", icon: "message-circle" },
+              { id: "telephony", label: "Телефония", icon: "phone-call" },
+              { id: "widgets", label: "Виджеты", icon: "layout" },
+              { id: "templates", label: "Шаблоны", icon: "file-text" },
+            ].map(tab => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-6 py-5 text-sm transition-all whitespace-nowrap border-b-2 ${
+                  activeTab === tab.id 
+                    ? "border-blue-500 text-blue-400 font-bold bg-blue-500/5" 
+                    : "border-transparent text-gray-500 hover:text-gray-300 font-medium hover:bg-white/5"
+                }`}
+              >
+                <Icon name={tab.icon} size={16} />
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-        <div style={{ overflowX: "auto" }}>
-          {activeTab === "chats" && (
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--border)", fontSize: 11, color: "var(--faint)", textTransform: "uppercase" }}>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Название</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Канал</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Аккаунт</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}></th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Статус</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600, width: 80 }}>Действия</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MOCK_COMMS.map((item, i) => (
-                  <tr key={item.id} style={{ borderBottom: i === MOCK_COMMS.length - 1 ? "none" : "1px solid var(--border)", opacity: item.status ? 1 : 0.6 }}>
-                    <td style={{ padding: "16px 20px", fontSize: 13, fontWeight: 500 }}>
-                      {item.name}
-                    </td>
-                    <td style={{ padding: "16px 20px", fontSize: 13 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <Icon name={item.icon === "bot" ? "cpu" : item.icon} size={16} color={item.iconColor} />
-                        {item.channel}
-                      </div>
-                    </td>
-                    <td style={{ padding: "16px 20px", fontSize: 13 }}>{item.account}</td>
-                    <td style={{ padding: "16px 20px", fontSize: 11 }}>
-                      {item.paidUntil && (
-                        <span style={{ color: "#d97706", background: "#fef3c7", padding: "4px 8px", borderRadius: 4, fontWeight: 600 }}>
-                          {item.paidUntil}
-                        </span>
-                      )}
-                    </td>
-                    <td style={{ padding: "16px 20px" }}>
-                      {/* Toggle Switch */}
-                      <div style={{ width: 34, height: 20, background: item.status ? "#3b82f6" : "#cbd5e1", borderRadius: 20, position: "relative", cursor: "pointer" }}>
-                        <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: item.status ? 16 : 2, transition: "left 0.2s" }}></div>
-                      </div>
-                    </td>
-                    <td style={{ padding: "16px 20px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                          <Icon name="edit-2" size={14} />
-                        </button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                          <Icon name="trash-2" size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <div className="flex-1 overflow-auto p-6 relative">
+            <AnimatePresence mode="wait">
+              {activeTab === "chats" && (
+                <motion.div 
+                  key="chats"
+                  initial={{ opacity: 0, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(10px)" }}
+                  className="w-full"
+                >
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-white/10">
+                        <th className="pb-4 font-bold">Название</th>
+                        <th className="pb-4 font-bold">Канал</th>
+                        <th className="pb-4 font-bold">Аккаунт</th>
+                        <th className="pb-4 font-bold text-center">Статус</th>
+                        <th className="pb-4 font-bold text-right">Действия</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {MOCK_COMMS.map((c, i) => (
+                        <motion.tr 
+                          key={c.id} 
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                        >
+                          <td className="py-4 font-bold text-white flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl bg-${c.iconColor}-500/20 text-${c.iconColor}-400 flex items-center justify-center border border-${c.iconColor}-500/30`}>
+                              <Icon name={c.icon} size={18} />
+                            </div>
+                            {c.name}
+                          </td>
+                          <td className="py-4 text-gray-400 text-sm font-medium">{c.channel}</td>
+                          <td className="py-4 text-gray-300 text-sm">{c.account}</td>
+                          <td className="py-4 text-center">
+                            {c.status ? (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                Включен
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-400 border border-gray-500/20">
+                                Выключен
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-4 text-right">
+                            <button className="text-gray-500 hover:text-white transition-colors p-2 opacity-0 group-hover:opacity-100">
+                              <Icon name="more-horizontal" size={18} />
+                            </button>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </motion.div>
+              )}
 
-          {activeTab === "templates" && (
-            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--border)", fontSize: 11, color: "var(--faint)", textTransform: "uppercase" }}>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Название</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Контекст</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600 }}>Статус</th>
-                  <th style={{ padding: "16px 20px", fontWeight: 600, width: 80 }}>Действия</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MOCK_TEMPLATES.map((item, i) => (
-                  <tr key={i} style={{ borderBottom: i === MOCK_TEMPLATES.length - 1 ? "none" : "1px solid var(--border)" }}>
-                    <td style={{ padding: "16px 20px", fontSize: 13, color: "var(--text)" }}>
-                      {item.name}
-                    </td>
-                    <td style={{ padding: "16px 20px", fontSize: 13, color: "var(--faint)" }}>
-                      {item.context}
-                    </td>
-                    <td style={{ padding: "16px 20px" }}>
-                      <div style={{ width: 34, height: 20, background: item.status ? "#3b82f6" : "#cbd5e1", borderRadius: 20, position: "relative", cursor: "pointer" }}>
-                        <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: item.status ? 16 : 2, transition: "left 0.2s" }}></div>
-                      </div>
-                    </td>
-                    <td style={{ padding: "16px 20px" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                          <Icon name="edit-2" size={14} />
-                        </button>
-                        <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                          <Icon name="trash-2" size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+              {activeTab === "templates" && (
+                <motion.div 
+                  key="templates"
+                  initial={{ opacity: 0, filter: "blur(10px)" }}
+                  animate={{ opacity: 1, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, filter: "blur(10px)" }}
+                  className="w-full"
+                >
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-white/10">
+                        <th className="pb-4 font-bold">Название</th>
+                        <th className="pb-4 font-bold">Контекст</th>
+                        <th className="pb-4 font-bold text-center">Статус</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {MOCK_TEMPLATES.map((t, i) => (
+                        <motion.tr 
+                          key={i} 
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                        >
+                          <td className="py-4 font-bold text-white flex items-center gap-3">
+                            <Icon name="file-text" size={16} className="text-blue-500" />
+                            {t.name}
+                          </td>
+                          <td className="py-4 text-gray-400 text-sm">{t.context}</td>
+                          <td className="py-4 text-center">
+                            {t.status ? (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                Включен
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20">
+                                Отключен
+                              </span>
+                            )}
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </motion.div>
+              )}
 
-        {/* Footer Add Button */}
-        <div style={{ padding: "20px", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "center" }}>
-          {activeTab === "chats" && (
-            <button style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 4, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-              <Icon name="plus" size={16} /> Добавить новый канал
-            </button>
-          )}
-          {activeTab === "templates" && (
-            <button style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 4, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
-              <Icon name="plus" size={16} /> Добавить шаблон сообщений
-            </button>
-          )}
-        </div>
-      </div>
+              {(activeTab === "telephony" || activeTab === "widgets") && (
+                <motion.div 
+                  key="other"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex flex-col items-center justify-center h-64 text-center"
+                >
+                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 mb-4">
+                    <Icon name={activeTab === "telephony" ? "phone" : "layout"} size={32} />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Модуль в разработке</h3>
+                  <p className="text-gray-400 text-sm max-w-sm">Настройки для этого раздела скоро появятся в новом Spatial UI.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </SpotlightCard>
+      </motion.div>
     </div>
   );
 }

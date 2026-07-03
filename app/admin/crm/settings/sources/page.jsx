@@ -1,126 +1,37 @@
 "use client";
 import React from "react";
-import { Icon, Avatar } from "@/components/admin/ui";
-
-const MOCK_SOURCES = [
-  {
-    id: 1,
-    name: "Привлечение лидов O",
-    currency: "PLN",
-    managers: [{ name: "Alexander Besson...", id: 1 }],
-    access: "Все пользователи",
-    ordersCount: "312",
-    status: true,
-  },
-  {
-    id: 2,
-    name: "test O",
-    currency: "PLN",
-    managers: [{ name: "Max Valteris", id: 2 }],
-    access: "Все пользователи",
-    ordersCount: "-",
-    status: true,
-  },
-  {
-    id: 3,
-    name: "Telegram O",
-    currency: "PLN",
-    managers: [{ name: "Alexander Besson...", id: 1 }, { name: "Max Valteris", id: 2 }],
-    access: "Выбранные пользователи (2)",
-    ordersCount: "-",
-    status: true,
-  },
-  {
-    id: 4,
-    icon: "facebook",
-    name: "Facebook O",
-    currency: "PLN",
-    managers: [{ name: "Alexander Besson...", id: 1 }],
-    access: "Все пользователи",
-    ordersCount: "-",
-    status: true,
-  }
-];
+import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion } from "framer-motion";
 
 export default function SourcesSettingsPage() {
   return (
-    <div style={{ padding: "24px", background: "var(--bg-color)", minHeight: "100vh", color: "var(--text)" }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200 p-8">
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, color: "var(--text)", fontSize: 14 }}>
-        <span style={{ fontWeight: 600 }}>Настройки</span>
-        <Icon name="chevron-right" size={14} color="var(--faint)" />
-        <span style={{ fontWeight: 600 }}>Источники</span>
+      <div className="flex items-center gap-2 mb-8 text-sm font-semibold text-gray-400">
+        <span>Настройки</span>
+        <Icon name="chevron-right" size={14} className="text-gray-600" />
+        <span className="text-white">Источники</span>
       </div>
 
-      {/* Main Panel */}
-      <div style={{ background: "var(--panel)", borderRadius: 8, border: "1px solid var(--border)", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden" }}>
-        
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-            <thead>
-              <tr style={{ borderBottom: "1px solid var(--border)", fontSize: 11, color: "var(--faint)", textTransform: "uppercase" }}>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Название</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Валюта</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Менеджер</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Доступ пользователей</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Кол-во заказов за текущий месяц</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600 }}>Статус</th>
-                <th style={{ padding: "16px 20px", fontWeight: 600, width: 80 }}>Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {MOCK_SOURCES.map((source, i) => (
-                <tr key={source.id} style={{ borderBottom: i === MOCK_SOURCES.length - 1 ? "none" : "1px solid var(--border)" }}>
-                  <td style={{ padding: "16px 20px", fontSize: 13, fontWeight: 500 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      {source.icon && <Icon name={source.icon} size={14} color="#3b82f6" />}
-                      {source.name}
-                    </div>
-                  </td>
-                  <td style={{ padding: "16px 20px", fontSize: 13 }}>{source.currency}</td>
-                  <td style={{ padding: "16px 20px" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      {source.managers.map((m, idx) => (
-                        <div key={idx} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--text)" }}>
-                          <Avatar name={m.name} size={20} />
-                          {m.name}
-                        </div>
-                      ))}
-                    </div>
-                  </td>
-                  <td style={{ padding: "16px 20px", fontSize: 13 }}>
-                    <a href="#" style={{ color: "#3b82f6", textDecoration: "none" }}>{source.access}</a>
-                  </td>
-                  <td style={{ padding: "16px 20px", fontSize: 13 }}>{source.ordersCount}</td>
-                  <td style={{ padding: "16px 20px" }}>
-                    {/* Toggle Switch */}
-                    <div style={{ width: 34, height: 20, background: source.status ? "#3b82f6" : "#cbd5e1", borderRadius: 20, position: "relative", cursor: "pointer" }}>
-                      <div style={{ width: 16, height: 16, background: "#fff", borderRadius: "50%", position: "absolute", top: 2, left: source.status ? 16 : 2, transition: "left 0.2s" }}></div>
-                    </div>
-                  </td>
-                  <td style={{ padding: "16px 20px" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                        <Icon name="edit-2" size={14} />
-                      </button>
-                      <button style={{ background: "none", border: "none", cursor: "pointer", color: "var(--faint)" }}>
-                        <Icon name="trash-2" size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col items-center justify-center">
+        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/5 border border-white/10 rounded-3xl relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[200px] bg-indigo-500/20 blur-[60px] rounded-full pointer-events-none" />
+          
+          <div className="w-20 h-20 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(99,102,241,0.15)] text-indigo-400 relative z-10">
+            <Icon name="share-2" size={40} />
+          </div>
+          
+          <h3 className="text-2xl font-bold text-white mb-3 relative z-10">Источники лидов</h3>
+          <p className="text-gray-400 text-sm leading-relaxed relative z-10 mb-6">
+            Настройте источники трафика, UTM метки и формы захвата для сбора лидов с вашего сайта и соц. сетей.
+          </p>
 
-        {/* Footer Add Button */}
-        <div style={{ padding: "20px", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "center" }}>
-          <button style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 4, fontSize: 13, fontWeight: 600, display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }}>
+          <button className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-6 py-2.5 rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(99,102,241,0.15)] hover:bg-indigo-500/30 transition-all flex items-center gap-2 relative z-10">
             <Icon name="plus" size={16} /> Добавить источник
           </button>
-        </div>
-      </div>
+        </SpotlightCard>
+      </motion.div>
     </div>
   );
 }

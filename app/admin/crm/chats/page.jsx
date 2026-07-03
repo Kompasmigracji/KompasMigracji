@@ -35,6 +35,7 @@ export default function ChatsDemoPage() {
     };
 
     fetchChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 2. Fetch Messages for Active Chat

@@ -49,13 +49,14 @@ export default function Reviews() {
     setCurrent((idx + REVIEWS.length) % REVIEWS.length);
   }, [current, REVIEWS.length]);
 
-  const handleNext = () => go(current + 1);
-  const handlePrev = () => go(current - 1);
+  const handleNext = useCallback(() => go(current + 1), [go, current]);
+  const handlePrev = useCallback(() => go(current - 1), [go, current]);
 
   useEffect(() => {
     if (paused) return;
     const id = setInterval(handleNext, 6000);
     return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paused, handleNext]);
 
   const r = REVIEWS[current];

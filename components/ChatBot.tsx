@@ -59,6 +59,7 @@ export default function ChatBot() {
     }, 4500);
     
     return () => clearTimeout(tBadge);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

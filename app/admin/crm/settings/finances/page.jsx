@@ -1,72 +1,37 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
+import { motion } from "framer-motion";
 
 export default function FinancesSettingsPage() {
-  const [activeTab, setActiveTab] = useState("currencies");
-
   return (
-    <div style={{ padding: "24px", background: "var(--bg-color)", minHeight: "100vh", color: "var(--text)" }}>
+    <div className="flex flex-col h-full bg-[#050505] text-gray-200 p-8">
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, color: "var(--text)", fontSize: 14 }}>
-        <span style={{ fontWeight: 600 }}>Настройки</span>
-        <Icon name="chevron-right" size={14} color="var(--faint)" />
-        <span style={{ fontWeight: 600 }}>Финансы</span>
+      <div className="flex items-center gap-2 mb-8 text-sm font-semibold text-gray-400">
+        <span>Настройки</span>
+        <Icon name="chevron-right" size={14} className="text-gray-600" />
+        <span className="text-white">Финансы</span>
       </div>
 
-      <div style={{ background: "var(--panel)", borderRadius: 8, padding: "32px", border: "1px solid var(--border)", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>
-        
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: 24, borderBottom: "1px solid var(--border)", marginBottom: 32 }}>
-          {[
-            { id: "currencies", label: "Валюты" },
-            { id: "taxes", label: "Налоги" },
-            { id: "requisites", label: "Реквизиты" },
-            { id: "payment_methods", label: "Способы оплаты" }
-          ].map(t => (
-            <div 
-              key={t.id}
-              onClick={() => setActiveTab(t.id)}
-              style={{ 
-                padding: "0 0 12px 0", 
-                cursor: "pointer", 
-                fontSize: 13, 
-                fontWeight: activeTab === t.id ? 600 : 500,
-                color: activeTab === t.id ? "#3b82f6" : "var(--faint)",
-                borderBottom: activeTab === t.id ? "2px solid #3b82f6" : "2px solid transparent",
-                marginBottom: -1
-              }}
-            >
-              {t.label}
-            </div>
-          ))}
-        </div>
-
-        {activeTab === "currencies" && (
-          <div style={{ maxWidth: 800 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Базовая валюта</h3>
-            <p style={{ fontSize: 13, color: "var(--faint)", marginBottom: 24 }}>Выберите основную валюту для ведения учета в CRM.</p>
-            
-            <div style={{ display: "flex", alignItems: "center", gap: 32, marginBottom: 16 }}>
-              <div style={{ width: 250, flexShrink: 0, fontSize: 13, fontWeight: 500 }}>Валюта</div>
-              <div style={{ flex: 1 }}>
-                <select style={{ width: "200px", padding: "8px 12px", borderRadius: 4, border: "1px solid #bae6fd", background: "#f0f9ff", outline: "none", fontSize: 13 }}>
-                  <option>USD - Доллар США</option>
-                  <option>EUR - Евро</option>
-                  <option>PLN - Польский злотый</option>
-                  <option>UAH - Украинская гривна</option>
-                </select>
-              </div>
-            </div>
-
-            <div style={{ marginLeft: 282, marginTop: 32 }}>
-              <button style={{ background: "#3b82f6", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 4, fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
-                Сохранить
-              </button>
-            </div>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col items-center justify-center">
+        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/5 border border-white/10 rounded-3xl relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[200px] bg-amber-500/20 blur-[60px] rounded-full pointer-events-none" />
+          
+          <div className="w-20 h-20 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(245,158,11,0.15)] text-amber-400 relative z-10">
+            <Icon name="dollar-sign" size={40} />
           </div>
-        )}
-      </div>
+          
+          <h3 className="text-2xl font-bold text-white mb-3 relative z-10">Финансы</h3>
+          <p className="text-gray-400 text-sm leading-relaxed relative z-10 mb-6">
+            Настройки платежных шлюзов, валют, налогов и интеграций с банками.
+          </p>
+
+          <button className="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-6 py-2.5 rounded-xl text-sm font-bold shadow-[0_0_15px_rgba(245,158,11,0.15)] hover:bg-amber-500/30 transition-all flex items-center gap-2 relative z-10">
+            <Icon name="plus" size={16} /> Добавить интеграцию
+          </button>
+        </SpotlightCard>
+      </motion.div>
     </div>
   );
 }

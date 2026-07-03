@@ -9,6 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
       <head>
+        {/* eslint-disable-next-line @next/next/no-css-tags */}
         <link rel="stylesheet" href="/design-system/tokens.css" />
         <script dangerouslySetInnerHTML={{ __html: `
           // PostHog Mock Initialization
