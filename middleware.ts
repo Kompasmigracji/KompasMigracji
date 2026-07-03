@@ -45,7 +45,7 @@ if (!jwtSecret && process.env.NODE_ENV === "production") {
 const SECRET = new TextEncoder().encode(jwtSecret || "dev-secret-change-me-in-production");
 
 const intlMiddleware = createMiddleware({
-  locales: ["uk", "pl", "en", "ru"],
+  locales: ["uk", "pl", "en", "ru", "rom"],
   defaultLocale: "pl",
   localePrefix: "always",
   localeDetection: true,
@@ -87,7 +87,7 @@ export async function middleware(req: NextRequest) {
 
   // ── Strip locale prefix from admin routes: /uk/admin → /admin ────────────
   // Prevents 404 when a user navigates to /uk/admin (locale-prefixed URL)
-  const localeAdminMatch = pathname.match(/^\/(uk|pl|en|ru)(\/admin.*)$/);
+  const localeAdminMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/admin.*)$/);
   if (localeAdminMatch) {
     const url = req.nextUrl.clone();
     url.pathname = localeAdminMatch[2];
@@ -97,7 +97,7 @@ export async function middleware(req: NextRequest) {
   // ── Strip locale prefix from payment routes: /uk/payment → /payment ───────
   // Payment pages live in app/payment/ (not in app/[locale]/), so they must
   // be accessed WITHOUT a locale prefix.
-  const localePaymentMatch = pathname.match(/^\/(uk|pl|en|ru)(\/payment\/.*)$/);
+  const localePaymentMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/payment\/.*)$/);
   if (localePaymentMatch) {
     const url = req.nextUrl.clone();
     url.pathname = localePaymentMatch[2];
@@ -111,7 +111,7 @@ export async function middleware(req: NextRequest) {
 
   // ── Strip locale prefix from portal routes: /uk/portal → /portal ─────────
   // Portal lives in app/portal/ (not in app/[locale]/), no locale prefix needed.
-  const localePortalMatch = pathname.match(/^\/(uk|pl|en|ru)(\/portal.*)$/);
+  const localePortalMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/portal.*)$/);
   if (localePortalMatch) {
     const url = req.nextUrl.clone();
     url.pathname = localePortalMatch[2];
@@ -124,7 +124,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // ── Strip locale prefix from architect routes: /uk/architect → /architect ──
-  const localeArchitectMatch = pathname.match(/^\/(uk|pl|en|ru)(\/architect.*)$/);
+  const localeArchitectMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/architect.*)$/);
   if (localeArchitectMatch) {
     const url = req.nextUrl.clone();
     url.pathname = localeArchitectMatch[2];
