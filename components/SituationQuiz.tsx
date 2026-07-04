@@ -24,7 +24,7 @@ export default function SituationQuiz() {
   ];
 
   return (
-    <section className="py-24 relative overflow-hidden bg-[#0a0a0a] text-white">
+    <section className="py-24 relative overflow-hidden bg-white text-gray-900">
       {/* Glows */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-red-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -38,14 +38,14 @@ export default function SituationQuiz() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
-              className="text-center bg-white/5 border border-white/10 p-10 rounded-[2.5rem] backdrop-blur-2xl shadow-2xl"
+              className="text-center bg-white/60 border border-black/10 p-10 rounded-[2.5rem] backdrop-blur-2xl shadow-2xl"
             >
               <div className="text-6xl mb-6 drop-shadow-xl">{ICONS[selected]}</div>
-              <h3 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white mb-4">
+              <h3 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 mb-4">
                 {t('sq_result_title').split('—')[0]}—{' '}
                 <em className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 not-italic">{t('sq_result_title').split('—')[1]?.trim()}</em>
               </h3>
-              <p className="text-gray-400 mb-10 text-lg leading-relaxed max-w-xl mx-auto">
+              <p className="text-gray-500 mb-10 text-lg leading-relaxed max-w-xl mx-auto">
                 {t('sq_result_sub')}<br />
                 <span className="text-sm text-gray-500 mt-2 block">{t('sq_result_note')}</span>
               </p>
@@ -64,7 +64,7 @@ export default function SituationQuiz() {
                 </a>
                 <a
                   href="tel:+48729271848"
-                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-white font-semibold no-underline border border-white/20 hover:bg-white/10 transition-colors"
+                  className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full text-gray-900 font-semibold no-underline border border-black/20 hover:bg-white/80 transition-colors"
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.03 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
@@ -88,7 +88,7 @@ export default function SituationQuiz() {
               transition={{ duration: 0.4 }}
             >
               <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                   {t('sq_tag')}
                 </div>
@@ -97,7 +97,7 @@ export default function SituationQuiz() {
                   <em className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 not-italic">{t('sq_title_em')}</em>
                   {t('sq_title').split(t('sq_title_em'))[1]}
                 </h2>
-                <p className="text-gray-400 text-base sm:text-lg mt-4 max-w-lg mx-auto">{t('sq_desc')}</p>
+                <p className="text-gray-500 text-base sm:text-lg mt-4 max-w-lg mx-auto">{t('sq_desc')}</p>
               </div>
               <div className="grid grid-cols-1 gap-4">
                 {labels.map((label, i) => (
@@ -106,17 +106,17 @@ export default function SituationQuiz() {
                     onClick={() => setSelected(i)}
                     whileHover={{ scale: 1.02, x: 5 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`flex items-center gap-6 text-left p-6 rounded-2xl bg-white/5 border backdrop-blur-md cursor-pointer transition-colors group ${
+                    className={`flex items-center gap-6 text-left p-6 rounded-2xl bg-white/60 border backdrop-blur-md cursor-pointer transition-colors group ${
                       URGENT[i] 
                         ? 'border-red-500/20 hover:bg-red-500/10 hover:border-red-500/40' 
-                        : 'border-white/10 hover:bg-white/10 hover:border-blue-500/30'
+                        : 'border-black/10 hover:bg-white/80 hover:border-blue-500/30'
                     }`}
                   >
-                    <div className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center text-3xl bg-white/5 shadow-inner ${URGENT[i] ? 'shadow-red-500/20' : 'shadow-white/10'}`}>
+                    <div className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center text-3xl bg-white/60 shadow-inner ${URGENT[i] ? 'shadow-red-500/20' : 'shadow-white/10'}`}>
                       {ICONS[i]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-semibold text-lg transition-colors ${URGENT[i] ? 'text-red-400 group-hover:text-red-300' : 'text-gray-200 group-hover:text-white'}`}>
+                      <div className={`font-semibold text-lg transition-colors ${URGENT[i] ? 'text-red-400 group-hover:text-red-300' : 'text-gray-800 group-hover:text-white'}`}>
                         {label}
                       </div>
                     </div>

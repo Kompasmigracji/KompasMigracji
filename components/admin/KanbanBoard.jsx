@@ -57,18 +57,18 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
         return (
           <div 
             key={col.id}
-            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/5 border transition-all duration-300
-              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass}` : 'border border-white/10'}
+            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/60 border transition-all duration-300
+              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass}` : 'border border-black/10'}
               shadow-[0_8px_30px_rgba(0,0,0,0.12)]`}
             onDragOver={(e) => handleDragOver(e, col.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, col.id)}
           >
             {/* Column Header */}
-            <div className={`p-5 border-b border-white/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-black/20`}>
+            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-black/20`}>
               <div className="flex justify-between items-center mb-1">
-                <h3 className="m-0 text-lg font-bold tracking-tight text-gray-200">{col.title}</h3>
-                <span className="bg-white/10 px-2.5 py-0.5 rounded-full text-xs text-gray-400 font-bold">
+                <h3 className="m-0 text-lg font-bold tracking-tight text-gray-800">{col.title}</h3>
+                <span className="bg-white/80 px-2.5 py-0.5 rounded-full text-xs text-gray-500 font-bold">
                   {colCards.length}
                 </span>
               </div>
@@ -83,7 +83,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             <div className="flex-1 p-4 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
               {colCards.map(card => {
                 let sourceIcon = "message-circle";
-                let sourceColor = "text-gray-400";
+                let sourceColor = "text-gray-500";
                 const sLower = (card.tags?.[0] || "").toLowerCase();
                 if (sLower.includes("telegram")) { sourceIcon = "send"; sourceColor = "text-blue-400"; }
                 else if (sLower.includes("viber")) { sourceIcon = "phone"; sourceColor = "text-purple-400"; }
@@ -107,16 +107,16 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       onDragStart={(e) => handleDragStart(e, String(card.id))}
                       onDragEnd={handleDragEnd}
                       onClick={() => onCardClick && onCardClick(card)}
-                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-[#0f0f0f] border border-white/10 shadow-lg group transition-colors hover:border-white/20"
+                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-[#0f0f0f] border border-black/10 shadow-lg group transition-colors hover:border-black/20"
                     >
                       {/* Left color bar */}
                       <div className={`absolute left-0 top-0 bottom-0 w-1 ${col.color?.split(' ').find(c => c.startsWith('bg-')) || 'bg-gray-500'}`} />
                       
                       {/* Top right subtle glow */}
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-bl-full pointer-events-none" />
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-white/60 rounded-bl-full pointer-events-none" />
 
                       {/* Title */}
-                      <div className="text-sm font-bold text-gray-200 break-words pr-4 leading-snug">
+                      <div className="text-sm font-bold text-gray-800 break-words pr-4 leading-snug">
                         {card.title}
                       </div>
                       
@@ -124,7 +124,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       {card.subtitle && (
                         <div className="flex items-center gap-2 mt-1">
                           <div className={`flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded border font-bold
-                            ${card.isUrgent ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-white/5 text-gray-400 border-white/10'}`}>
+                            ${card.isUrgent ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-white/60 text-gray-500 border-black/10'}`}>
                             <Icon name="clock" size={10} />
                             {card.subtitle}
                           </div>
@@ -139,7 +139,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       </div>
 
                       {/* Footer */}
-                      <div className="flex justify-between items-center pt-3 mt-2 border-t border-white/10">
+                      <div className="flex justify-between items-center pt-3 mt-2 border-t border-black/10">
                         <div className="flex items-center gap-2">
                           <Avatar name={card.assignee?.name || "Unassigned"} size={20} />
                           <span className="text-xs text-gray-500 font-medium">{card.assignee?.name || "Не призначено"}</span>
@@ -156,7 +156,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
               })}
               
               {colCards.length === 0 && (
-                <div className="text-center p-8 text-gray-600 text-xs font-semibold border-2 border-dashed border-white/5 rounded-xl uppercase tracking-wider">
+                <div className="text-center p-8 text-gray-600 text-xs font-semibold border-2 border-dashed border-black/5 rounded-xl uppercase tracking-wider">
                   Перетягніть сюди
                 </div>
               )}

@@ -77,28 +77,28 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
         {/* Left sidebar - Branding & Instructions */}
         <div className={`${asModal ? 'hidden' : 'hidden lg:flex'} flex-col w-1/3 p-10 relative overflow-hidden bg-[#0f172a]`}>
           <div className="absolute inset-0 bg-gradient-to-br from-[#0f172a] to-blue-900 opacity-90 z-0"></div>
-          <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none z-0 text-white">
+          <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none z-0 text-gray-900">
             <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13.5h-13L12 6.5z"/>
             </svg>
           </div>
           
-          <div className="relative z-10 flex flex-col h-full text-white">
+          <div className="relative z-10 flex flex-col h-full text-gray-900">
             <div className="flex items-center gap-3 mb-12">
               <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center p-1">
                 <Image src="/logo.svg" alt="Kompas Migracji" width={32} height={32} className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-xl font-bold tracking-tight m-0 text-white">Kompas Migracji</h2>
+                <h2 className="text-xl font-bold tracking-tight m-0 text-gray-900">Kompas Migracji</h2>
                 <span className="text-blue-300 text-xs font-semibold uppercase tracking-wider">AI Intake System</span>
               </div>
             </div>
 
             <div className="flex-1">
-              <h1 className="text-3xl font-serif font-light mb-6 leading-tight text-white">
+              <h1 className="text-3xl font-serif font-light mb-6 leading-tight text-gray-900">
                 {t('ai_title_1')} <span className="text-orange-400 font-medium">{t('ai_title_2')}</span>
               </h1>
-              <p className="text-gray-300 mb-8 leading-relaxed text-sm">
+              <p className="text-gray-700 mb-8 leading-relaxed text-sm">
                 {t('ai_desc')}
               </p>
               
@@ -108,26 +108,26 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
                   { icon: '⚡', title: t('ai_f2_title'), desc: t('ai_f2_desc') },
                   { icon: '⚖️', title: t('ai_f3_title'), desc: t('ai_f3_desc') }
                 ].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm transition-all hover:bg-white/10">
+                  <li key={i} className="flex items-start gap-4 p-4 rounded-2xl bg-white/60 border border-black/10 backdrop-blur-sm transition-all hover:bg-white/80">
                     <span className="text-2xl mt-1">{feature.icon}</span>
                     <div>
-                      <h4 className="font-semibold text-white mb-1">{feature.title}</h4>
-                      <p className="text-gray-400 text-xs leading-relaxed">{feature.desc}</p>
+                      <h4 className="font-semibold text-gray-900 mb-1">{feature.title}</h4>
+                      <p className="text-gray-500 text-xs leading-relaxed">{feature.desc}</p>
                     </div>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="mt-8 pt-8 border-t border-white/10">
+            <div className="mt-8 pt-8 border-t border-black/10">
               <div className="flex items-center gap-4">
                 <div className="flex -space-x-3">
                   <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-200 overflow-hidden"><Image src="/team/user1.jpg" alt="" fill className="object-cover" /></div>
                   <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-300 overflow-hidden"><Image src="/team/user2.jpg" alt="" fill className="object-cover" /></div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-xs font-bold text-white">+3k</div>
+                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-xs font-bold text-gray-900">+3k</div>
                 </div>
-                <div className="text-xs text-gray-300">
-                  <strong className="text-white block text-sm">{t('ai_stat_1')}</strong>
+                <div className="text-xs text-gray-700">
+                  <strong className="text-gray-900 block text-sm">{t('ai_stat_1')}</strong>
                   {t('ai_stat_2')}
                 </div>
               </div>
@@ -141,7 +141,7 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
           {/* Header Mobile / Chat Header */}
           <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white z-10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-white text-xl shadow-md">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-gray-900 text-xl shadow-md">
                 🧭
               </div>
               <div>
@@ -175,7 +175,7 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
               return (
                 <div key={i} className={`flex items-end gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
                   {!isUser && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-white text-sm shrink-0 shadow-sm">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-gray-900 text-sm shrink-0 shadow-sm">
                       🧭
                     </div>
                   )}
@@ -193,7 +193,7 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
             
             {loading && (
               <div className="flex items-end gap-3 justify-start">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-white text-sm shrink-0 shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-orange-400 flex items-center justify-center text-gray-900 text-sm shrink-0 shadow-sm">
                   🧭
                 </div>
                 <div className="bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 px-5 py-4 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
@@ -236,13 +236,13 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
                 }}
                 disabled={loading || leadCreated}
                 placeholder={leadCreated ? t('ai_sent') : t('ai_placeholder')}
-                className="w-full bg-transparent border-0 focus:ring-0 resize-none py-3 px-4 text-gray-700 dark:text-gray-200 text-base max-h-32 min-h-[56px] disabled:opacity-50 outline-none"
+                className="w-full bg-transparent border-0 focus:ring-0 resize-none py-3 px-4 text-gray-700 dark:text-gray-800 text-base max-h-32 min-h-[56px] disabled:opacity-50 outline-none"
                 rows={1}
               />
               <button
                 onClick={() => handleSend(input)}
                 disabled={!input.trim() || loading || leadCreated}
-                className="absolute right-2.5 bottom-2.5 w-10 h-10 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-400 text-white flex items-center justify-center transition-colors cursor-pointer disabled:cursor-not-allowed border-0"
+                className="absolute right-2.5 bottom-2.5 w-10 h-10 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:bg-gray-200 disabled:text-gray-500 text-gray-900 flex items-center justify-center transition-colors cursor-pointer disabled:cursor-not-allowed border-0"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -250,7 +250,7 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
                 </svg>
               </button>
             </div>
-            <div className="text-center mt-3 text-xs text-gray-400">
+            <div className="text-center mt-3 text-xs text-gray-500">
               {t('ai_policy')}
             </div>
           </div>

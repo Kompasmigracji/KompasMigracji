@@ -44,7 +44,7 @@ export default function FirstSteps() {
   ];
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#050505] border-y border-white/5">
+    <section className="relative py-32 overflow-hidden bg-[#f5f5f7] border-y border-black/5">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
 
@@ -64,7 +64,7 @@ export default function FirstSteps() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl font-bold text-white tracking-tight"
+            className="font-display text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight"
           >
             {t('first_steps_title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">{t('first_steps_highlight')}</span>
           </motion.h2>
@@ -74,7 +74,7 @@ export default function FirstSteps() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-6 max-w-2xl mx-auto text-lg text-gray-400"
+            className="mt-6 max-w-2xl mx-auto text-lg text-gray-500"
           >
             {t('first_steps_desc')}
           </motion.p>
@@ -92,7 +92,7 @@ export default function FirstSteps() {
             >
               <SpotlightCard className={`h-full flex flex-col p-8 sm:p-10 ${step.highlight ? 'ring-1 ring-blue-500/30 bg-blue-900/10' : ''}`}>
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl border ${step.highlight ? 'bg-blue-500/20 border-blue-500/30' : 'bg-white/5 border-white/10'}`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl border ${step.highlight ? 'bg-blue-500/20 border-blue-500/30' : 'bg-white/60 border-black/10'}`}>
                     {step.icon}
                   </div>
                   <div className="flex flex-col">
@@ -107,8 +107,8 @@ export default function FirstSteps() {
                   </div>
                 </div>
                 
-                <h3 className="font-display font-bold text-white text-xl sm:text-2xl mb-4">{step.title}</h3>
-                <p className="text-gray-400 leading-relaxed text-sm sm:text-base flex-1">{step.desc}</p>
+                <h3 className="font-display font-bold text-gray-900 text-xl sm:text-2xl mb-4">{step.title}</h3>
+                <p className="text-gray-500 leading-relaxed text-sm sm:text-base flex-1">{step.desc}</p>
               </SpotlightCard>
             </motion.div>
           ))}
@@ -124,7 +124,7 @@ export default function FirstSteps() {
             href="https://wa.me/48729271848?text=Я+щойно+приїхав+до+Польщі+і+потребую+допомоги+з+міграційним+питанням"
             target="_blank"
             rel="noreferrer"
-            className="group relative inline-flex items-center gap-3 px-8 py-5 rounded-full text-white font-bold text-lg bg-[#25D366] overflow-hidden no-underline hover:scale-105 transition-transform"
+            className="group relative inline-flex items-center gap-3 px-8 py-5 rounded-full text-gray-900 font-bold text-lg bg-[#25D366] overflow-hidden no-underline hover:scale-105 transition-transform"
           >
             <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="relative z-10 drop-shadow-md">

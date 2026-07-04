@@ -33,9 +33,9 @@ export default function WhatsAppFloat() {
                 initial={{ opacity: 0, x: -20, scale: 0.9 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
                 exit={{ opacity: 0, x: -10, scale: 0.9 }}
-                className="bg-[#0f1115]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-2xl pointer-events-auto"
+                className="bg-[#0f1115]/90 backdrop-blur-xl border border-black/10 rounded-2xl p-3 shadow-2xl pointer-events-auto"
               >
-                <div className="font-bold text-white text-sm whitespace-nowrap">Потрібна допомога?</div>
+                <div className="font-bold text-gray-900 text-sm whitespace-nowrap">Потрібна допомога?</div>
                 <div className="text-xs text-green-400 mt-0.5">Відповідаємо протягом 2 год</div>
               </motion.div>
             )}
@@ -48,10 +48,10 @@ export default function WhatsAppFloat() {
             target="_blank"
             rel="noreferrer"
             aria-label="Написати нам у WhatsApp"
-            className="group relative flex items-center gap-2.5 bg-[#25D366] text-white rounded-full px-5 py-3 shadow-[0_0_20px_rgba(37,211,102,0.3)] pointer-events-auto overflow-hidden no-underline"
+            className="group relative flex items-center gap-2.5 bg-[#25D366] text-gray-900 rounded-full px-5 py-3 shadow-[0_0_20px_rgba(37,211,102,0.3)] pointer-events-auto overflow-hidden no-underline"
           >
             {/* Glow ring */}
-            <div className="absolute inset-0 rounded-full border-2 border-white/20 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
+            <div className="absolute inset-0 rounded-full border-2 border-black/20 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" />
             
             {/* Shimmer */}
             <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_3s_infinite]" />

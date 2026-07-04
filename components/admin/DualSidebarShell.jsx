@@ -124,7 +124,7 @@ export default function DualSidebarShell({ children }) {
   const currentNav = NAV_DATA.find(n => n.id === activeMenu) || NAV_DATA[0];
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#050505] text-gray-300 font-sans selection:bg-blue-500/30 relative">
+    <div className="flex h-screen overflow-hidden bg-[#f5f5f7] text-gray-700 font-sans selection:bg-blue-500/30 relative">
       
       {/* IP WATERMARK */}
       <div className="fixed bottom-2 right-2 z-[9999] pointer-events-none text-[10px] font-mono text-white/10 text-right">
@@ -133,7 +133,7 @@ export default function DualSidebarShell({ children }) {
       </div>
 
       {/* Primary Sidebar (Icons) */}
-      <aside className="w-16 border-r border-white/5 bg-white/5 backdrop-blur-xl flex flex-col items-center py-4 shrink-0 z-50 relative">
+      <aside className="w-16 border-r border-black/5 bg-white/60 backdrop-blur-xl flex flex-col items-center py-4 shrink-0 z-50 relative">
         {/* Brand Lock/Compass Logo */}
         <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center justify-center mb-8 cursor-pointer transition-transform hover:scale-110">
           <Icon name="compass" size={20} color="#60a5fa" />
@@ -149,7 +149,7 @@ export default function DualSidebarShell({ children }) {
                 onClick={() => { setActiveMenu(nav.id); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); }}
                 title={nav.label}
                 className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300 relative group
-                  ${isActive ? 'bg-blue-500/20 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
+                  ${isActive ? 'bg-blue-500/20 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.2)]' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
               >
                 <Icon name={nav.icon} size={22} />
                 {isActive && (
@@ -166,7 +166,7 @@ export default function DualSidebarShell({ children }) {
             <button 
               onClick={handleOpenNotifications}
               className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
-                ${isNotificationsOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
+                ${isNotificationsOpen ? 'bg-white/80 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
             >
               <Icon name="bell" size={20} />
               {unreadCount > 0 && (
@@ -177,21 +177,21 @@ export default function DualSidebarShell({ children }) {
           <button 
             onClick={() => { setIsHelpOpen(!isHelpOpen); setIsNotificationsOpen(false); setIsSettingsOpen(false); }}
             className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isHelpOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
+              ${isHelpOpen ? 'bg-white/80 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
           >
             <Icon name="help-circle" size={20} />
           </button>
           <button 
             onClick={() => { setIsSettingsOpen(!isSettingsOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); }}
             className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isSettingsOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
+              ${isSettingsOpen ? 'bg-white/80 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
           >
             <Icon name="settings" size={20} />
           </button>
           <button 
             onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsProfileOpen(false); }}
             className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
-              ${isBillingOpen ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-200 hover:bg-white/5'}`}
+              ${isBillingOpen ? 'bg-white/80 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 hover:text-gray-800 hover:bg-white/60'}`}
           >
             <Icon name="briefcase" size={20} />
           </button>
@@ -211,18 +211,18 @@ export default function DualSidebarShell({ children }) {
         {isNotificationsOpen && (
           <motion.div 
             initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white"
+            className="absolute top-0 w-[350px] h-screen bg-white/95 backdrop-blur-3xl border-r border-black/5 z-40 shadow-2xl flex flex-col text-gray-900"
           >
-            <div className="p-6 pb-4 flex items-center justify-between border-b border-white/10">
+            <div className="p-6 pb-4 flex items-center justify-between border-b border-black/10">
               <div className="flex items-center gap-3">
                 <Icon name="bell" size={18} color="#94a3b8" />
                 <span className="font-bold text-lg">Уведомления <span className="text-sm text-gray-500 font-normal">({notifications.length})</span></span>
               </div>
               <Icon name="settings" size={16} className="text-gray-500 hover:text-white cursor-pointer transition-colors" />
             </div>
-            <div className="flex px-5 border-b border-white/10">
-              <button className="border-b-2 border-white text-white px-4 py-3 text-sm font-semibold">События</button>
-              <button className="border-b-2 border-transparent text-gray-500 hover:text-gray-300 px-4 py-3 text-sm transition-colors">Системные</button>
+            <div className="flex px-5 border-b border-black/10">
+              <button className="border-b-2 border-white text-gray-900 px-4 py-3 text-sm font-semibold">События</button>
+              <button className="border-b-2 border-transparent text-gray-500 hover:text-gray-700 px-4 py-3 text-sm transition-colors">Системные</button>
             </div>
             
             <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -230,13 +230,13 @@ export default function DualSidebarShell({ children }) {
                 <div className="h-full flex items-center justify-center text-gray-500 text-sm">Уведомлений нет</div>
               ) : (
                 notifications.map((notif, i) => (
-                  <div key={notif.id || i} className={`p-4 border-b border-white/5 flex flex-col gap-1.5 relative transition-colors hover:bg-white/5 ${notif.is_read ? 'bg-transparent' : 'bg-blue-900/10'}`}>
+                  <div key={notif.id || i} className={`p-4 border-b border-black/5 flex flex-col gap-1.5 relative transition-colors hover:bg-white/60 ${notif.is_read ? 'bg-transparent' : 'bg-blue-900/10'}`}>
                     {!notif.is_read && <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500"></div>}
                     <div className="flex items-center gap-2">
-                      <Icon name={notif.type === "telegram" ? "send" : notif.type === "viber" ? "phone" : "info"} size={14} className="text-gray-400" />
-                      <span className="text-sm font-semibold text-gray-200">{notif.title}</span>
+                      <Icon name={notif.type === "telegram" ? "send" : notif.type === "viber" ? "phone" : "info"} size={14} className="text-gray-500" />
+                      <span className="text-sm font-semibold text-gray-800">{notif.title}</span>
                     </div>
-                    {notif.message && <div className="text-sm text-gray-400 leading-relaxed">{notif.message}</div>}
+                    {notif.message && <div className="text-sm text-gray-500 leading-relaxed">{notif.message}</div>}
                     <div className="text-xs text-gray-500 mt-1">
                       {new Date(notif.created_at || Date.now()).toLocaleString("ru-RU", { day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' })}
                     </div>
@@ -251,7 +251,7 @@ export default function DualSidebarShell({ children }) {
         {isHelpOpen && (
           <motion.div 
             initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white p-6"
+            className="absolute top-0 w-[350px] h-screen bg-white/95 backdrop-blur-3xl border-r border-black/5 z-40 shadow-2xl flex flex-col text-gray-900 p-6"
           >
             <div className="flex items-center gap-3 mb-8">
               <Icon name="help-circle" size={20} className="text-blue-400" />
@@ -260,7 +260,7 @@ export default function DualSidebarShell({ children }) {
             
             <div className="flex items-center gap-3 mb-4">
               <span className="text-xs font-bold text-gray-500 tracking-wider">ЗАДАТЬ ВОПРОС</span>
-              <div className="flex-1 h-px bg-white/10"></div>
+              <div className="flex-1 h-px bg-white/80"></div>
             </div>
             
             <div className="flex flex-col gap-3">
@@ -278,7 +278,7 @@ export default function DualSidebarShell({ children }) {
         {isSettingsOpen && (
           <motion.div 
             initial={{ x: -400 }} animate={{ x: 64 }} exit={{ x: -400 }} transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute top-0 w-[350px] h-screen bg-[#0a0a0a]/95 backdrop-blur-3xl border-r border-white/5 z-40 shadow-2xl flex flex-col text-white"
+            className="absolute top-0 w-[350px] h-screen bg-white/95 backdrop-blur-3xl border-r border-black/5 z-40 shadow-2xl flex flex-col text-gray-900"
           >
             <div className="p-6 flex items-center gap-3">
               <Icon name="settings" size={20} className="text-blue-400" />
@@ -301,7 +301,7 @@ export default function DualSidebarShell({ children }) {
                   key={item.label} 
                   href={item.path} 
                   onClick={() => setIsSettingsOpen(false)}
-                  className="px-6 py-3 text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                  className="px-6 py-3 text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -312,8 +312,8 @@ export default function DualSidebarShell({ children }) {
       </AnimatePresence>
 
       {/* Secondary Sidebar (Menu Items) */}
-      <aside className="w-[240px] border-r border-white/5 bg-[#050505] flex flex-col shrink-0 z-10">
-        <div className="h-16 flex items-center px-6 gap-3 font-bold text-lg text-white">
+      <aside className="w-[240px] border-r border-black/5 bg-[#f5f5f7] flex flex-col shrink-0 z-10">
+        <div className="h-16 flex items-center px-6 gap-3 font-bold text-lg text-gray-900">
           <Icon name={currentNav.icon} size={20} className="text-blue-400" />
           {currentNav.label}
         </div>
@@ -336,7 +336,7 @@ export default function DualSidebarShell({ children }) {
                       className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-3
                         ${isItemActive 
                           ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' 
-                          : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border border-transparent'}`}
+                          : 'text-gray-500 hover:text-gray-800 hover:bg-white/60 border border-transparent'}`}
                     >
                       {item.label}
                     </Link>
@@ -349,18 +349,18 @@ export default function DualSidebarShell({ children }) {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#050505]">
+      <main className="flex-1 flex flex-col relative overflow-hidden bg-[#f5f5f7]">
         {/* Subtle top glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none opacity-50 mix-blend-screen" />
         
         {/* Top Header Bar */}
-        <header className="h-16 flex items-center justify-end px-8 border-b border-white/5 shrink-0 relative z-10 backdrop-blur-sm">
+        <header className="h-16 flex items-center justify-end px-8 border-b border-black/5 shrink-0 relative z-10 backdrop-blur-sm">
           <div className="flex items-center gap-4">
-            <div className="text-sm font-medium text-gray-400 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
-              Workspace: <span className="text-white font-bold ml-1">Kompas Migracji</span>
+            <div className="text-sm font-medium text-gray-500 bg-white/60 px-3 py-1.5 rounded-full border border-black/10">
+              Workspace: <span className="text-gray-900 font-bold ml-1">Kompas Migracji</span>
             </div>
-            <div className="w-px h-6 bg-white/10 mx-2"></div>
-            <Link href="/" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+            <div className="w-px h-6 bg-white/80 mx-2"></div>
+            <Link href="/" className="text-sm font-medium text-gray-500 hover:text-white transition-colors">
               Перейти на сайт
             </Link>
           </div>

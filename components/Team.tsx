@@ -25,7 +25,7 @@ export default function Team() {
   }
 
   return (
-    <section className="py-24 sm:py-32 relative bg-[#050505] overflow-hidden text-white">
+    <section className="py-24 sm:py-32 relative bg-[#f5f5f7] overflow-hidden text-gray-900">
       {/* Glow backgrounds */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none -translate-x-1/4 translate-y-1/4" />
@@ -38,7 +38,7 @@ export default function Team() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-purple-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-purple-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
             {t('team_tag')}
           </div>
@@ -54,7 +54,7 @@ export default function Team() {
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.8 }}
             onMouseMove={handleMouseMove}
-            className="group relative overflow-hidden flex flex-col md:flex-row rounded-[2rem] bg-white/5 border border-white/10 shadow-2xl backdrop-blur-2xl"
+            className="group relative overflow-hidden flex flex-col md:flex-row rounded-[2rem] bg-white/60 border border-black/10 shadow-2xl backdrop-blur-2xl"
           >
             <motion.div
               className="pointer-events-none absolute -inset-px rounded-[2rem] opacity-0 transition duration-300 group-hover:opacity-100 z-20"
@@ -90,13 +90,13 @@ export default function Team() {
             <div className="p-8 md:p-12 flex flex-col justify-between relative z-30">
               <div>
                 <div className="text-xs font-semibold uppercase tracking-widest text-purple-400 mb-3">{t('team_founder_title')}</div>
-                <h3 className="text-3xl sm:text-4xl font-display font-bold tracking-tight text-white mb-6 leading-tight">{t('team_name')}</h3>
-                <p className="text-gray-400 leading-relaxed mb-8 text-sm sm:text-base">
+                <h3 className="text-3xl sm:text-4xl font-display font-bold tracking-tight text-gray-900 mb-6 leading-tight">{t('team_name')}</h3>
+                <p className="text-gray-500 leading-relaxed mb-8 text-sm sm:text-base">
                   {t('team_bio_1')}
                   <br /><br />
                   {t('team_bio_2')}
                 </p>
-                <div className="grid grid-cols-3 gap-6 border-t border-white/10 pt-8 mb-10">
+                <div className="grid grid-cols-3 gap-6 border-t border-black/10 pt-8 mb-10">
                   {STATS.map((s, i) => (
                     <motion.div 
                       key={s.label}

@@ -28,20 +28,20 @@ export default function CommunicationsSettingsPage() {
   const [activeTab, setActiveTab] = useState("chats");
 
   return (
-    <div className="flex flex-col h-full bg-[#050505] text-gray-200 p-8">
+    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800 p-8">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-8 text-sm font-semibold text-gray-400">
+      <div className="flex items-center gap-2 mb-8 text-sm font-semibold text-gray-500">
         <span>Настройки</span>
         <Icon name="chevron-right" size={14} className="text-gray-600" />
-        <span className="text-white">Коммуникации</span>
+        <span className="text-gray-900">Коммуникации</span>
       </div>
 
       {/* Main Panel */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col">
-        <SpotlightCard className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden flex flex-col h-full">
+        <SpotlightCard className="bg-white/60 border border-black/10 rounded-3xl overflow-hidden flex flex-col h-full">
           
           {/* Tabs */}
-          <div className="flex overflow-x-auto border-b border-white/10 bg-black/40">
+          <div className="flex overflow-x-auto border-b border-black/10 bg-black/40">
             {[
               { id: "chats", label: "Чаты / SMS / Email", icon: "message-circle" },
               { id: "telephony", label: "Телефония", icon: "phone-call" },
@@ -54,7 +54,7 @@ export default function CommunicationsSettingsPage() {
                 className={`flex items-center gap-2 px-6 py-5 text-sm transition-all whitespace-nowrap border-b-2 ${
                   activeTab === tab.id 
                     ? "border-blue-500 text-blue-400 font-bold bg-blue-500/5" 
-                    : "border-transparent text-gray-500 hover:text-gray-300 font-medium hover:bg-white/5"
+                    : "border-transparent text-gray-500 hover:text-gray-700 font-medium hover:bg-white/60"
                 }`}
               >
                 <Icon name={tab.icon} size={16} />
@@ -75,7 +75,7 @@ export default function CommunicationsSettingsPage() {
                 >
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-white/10">
+                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-black/10">
                         <th className="pb-4 font-bold">Название</th>
                         <th className="pb-4 font-bold">Канал</th>
                         <th className="pb-4 font-bold">Аккаунт</th>
@@ -90,23 +90,23 @@ export default function CommunicationsSettingsPage() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                          className="border-b border-black/5 hover:bg-white/60 transition-colors group"
                         >
-                          <td className="py-4 font-bold text-white flex items-center gap-3">
+                          <td className="py-4 font-bold text-gray-900 flex items-center gap-3">
                             <div className={`w-10 h-10 rounded-xl bg-${c.iconColor}-500/20 text-${c.iconColor}-400 flex items-center justify-center border border-${c.iconColor}-500/30`}>
                               <Icon name={c.icon} size={18} />
                             </div>
                             {c.name}
                           </td>
-                          <td className="py-4 text-gray-400 text-sm font-medium">{c.channel}</td>
-                          <td className="py-4 text-gray-300 text-sm">{c.account}</td>
+                          <td className="py-4 text-gray-500 text-sm font-medium">{c.channel}</td>
+                          <td className="py-4 text-gray-700 text-sm">{c.account}</td>
                           <td className="py-4 text-center">
                             {c.status ? (
                               <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                 Включен
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-400 border border-gray-500/20">
+                              <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-gray-500/10 text-gray-500 border border-gray-500/20">
                                 Выключен
                               </span>
                             )}
@@ -133,7 +133,7 @@ export default function CommunicationsSettingsPage() {
                 >
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-white/10">
+                      <tr className="text-xs uppercase tracking-wider text-gray-500 border-b border-black/10">
                         <th className="pb-4 font-bold">Название</th>
                         <th className="pb-4 font-bold">Контекст</th>
                         <th className="pb-4 font-bold text-center">Статус</th>
@@ -146,13 +146,13 @@ export default function CommunicationsSettingsPage() {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className="border-b border-white/5 hover:bg-white/5 transition-colors"
+                          className="border-b border-black/5 hover:bg-white/60 transition-colors"
                         >
-                          <td className="py-4 font-bold text-white flex items-center gap-3">
+                          <td className="py-4 font-bold text-gray-900 flex items-center gap-3">
                             <Icon name="file-text" size={16} className="text-blue-500" />
                             {t.name}
                           </td>
-                          <td className="py-4 text-gray-400 text-sm">{t.context}</td>
+                          <td className="py-4 text-gray-500 text-sm">{t.context}</td>
                           <td className="py-4 text-center">
                             {t.status ? (
                               <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -178,11 +178,11 @@ export default function CommunicationsSettingsPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center justify-center h-64 text-center"
                 >
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 mb-4">
+                  <div className="w-16 h-16 rounded-2xl bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 mb-4">
                     <Icon name={activeTab === "telephony" ? "phone" : "layout"} size={32} />
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Модуль в разработке</h3>
-                  <p className="text-gray-400 text-sm max-w-sm">Настройки для этого раздела скоро появятся в новом Spatial UI.</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Модуль в разработке</h3>
+                  <p className="text-gray-500 text-sm max-w-sm">Настройки для этого раздела скоро появятся в новом Spatial UI.</p>
                 </motion.div>
               )}
             </AnimatePresence>

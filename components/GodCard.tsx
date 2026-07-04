@@ -23,7 +23,7 @@ export const GodCard: React.FC<GodCardProps> = ({ god }) => {
       <h2 className="text-2xl font-bold text-godGold mb-1 relative z-10">
         👑 {god.name}
       </h2>
-      <p className="text-sm text-gray-300 mb-4 relative z-10">
+      <p className="text-sm text-gray-700 mb-4 relative z-10">
         Главный оркестратор системы · God Agent
       </p>
       <button

@@ -35,7 +35,7 @@ function VideoCard({
   const src = VIDEOS[id][quality];
 
   return (
-    <article className="rounded-2xl overflow-hidden border border-white/10"
+    <article className="rounded-2xl overflow-hidden border border-black/10"
       style={{ background: 'linear-gradient(160deg, rgba(255,255,255,0.05), rgba(0,0,0,0.4))' }}>
       <div className="relative aspect-video bg-black">
         <video
@@ -52,15 +52,15 @@ function VideoCard({
       <div className="p-6 md:p-8">
         <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-1">{title}</h2>
-            <p className="text-gray-400 text-sm">{subtitle}</p>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-1">{title}</h2>
+            <p className="text-gray-500 text-sm">{subtitle}</p>
           </div>
           <span className="text-xs font-semibold text-amber-400/80 px-3 py-1 rounded-full border border-amber-400/20">
             {duration}
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex rounded-lg overflow-hidden border border-white/10">
+          <div className="flex rounded-lg overflow-hidden border border-black/10">
             {(['1080', '4k'] as Quality[]).map((q) => (
               <button
                 key={q}
@@ -104,10 +104,10 @@ export default function VideosPageContent() {
             <span className="inline-block text-xs font-bold uppercase tracking-[0.35em] text-amber-400/80 mb-6">
               {t('videos_page_badge')}
             </span>
-            <h1 className="font-serif text-4xl md:text-6xl font-light text-white mb-6 leading-tight">
+            <h1 className="font-serif text-4xl md:text-6xl font-light text-gray-900 mb-6 leading-tight">
               {t('videos_page_title')}
             </h1>
-            <p className="text-gray-400 text-lg leading-relaxed">
+            <p className="text-gray-500 text-lg leading-relaxed">
               {t('videos_page_desc')}
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function VideosPageContent() {
 
         {/* Credits */}
         <section className="px-6 pb-20 max-w-3xl mx-auto text-center">
-          <div className="rounded-xl border border-white/10 p-8" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="rounded-xl border border-black/10 p-8" style={{ background: 'rgba(255,255,255,0.03)' }}>
             <p className="text-gray-500 text-sm leading-relaxed">
               {t('videos_credits')}
             </p>

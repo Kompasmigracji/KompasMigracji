@@ -28,7 +28,7 @@ function StepCard({ step, i, t }: { step: any, i: number, t: any }) {
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
       onMouseMove={handleMouseMove}
-      className="group relative flex flex-col items-center text-center gap-4 z-10 p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl overflow-hidden hover:bg-white/10 transition-colors"
+      className="group relative flex flex-col items-center text-center gap-4 z-10 p-6 rounded-3xl bg-white/60 border border-black/10 backdrop-blur-xl overflow-hidden hover:bg-white/80 transition-colors"
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
@@ -43,15 +43,15 @@ function StepCard({ step, i, t }: { step: any, i: number, t: any }) {
         }}
       />
 
-      <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-2xl flex-shrink-0 relative z-10" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%)' }}>
+      <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-gray-900 shadow-2xl flex-shrink-0 relative z-10" style={{ background: 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #10b981 100%)' }}>
         <div className="absolute inset-0 bg-white/20 rounded-2xl animate-pulse" style={{ animationDuration: '3s' }} />
         {step.icon}
       </div>
       
       <div className="relative z-10">
         <div className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('how_step_label')} {i + 1}</div>
-        <div className="font-bold text-white text-lg leading-snug mb-3">{step.name}</div>
-        <div className="text-sm text-gray-400 leading-relaxed">{step.desc}</div>
+        <div className="font-bold text-gray-900 text-lg leading-snug mb-3">{step.name}</div>
+        <div className="text-sm text-gray-500 leading-relaxed">{step.desc}</div>
       </div>
     </motion.div>
   );
@@ -78,7 +78,7 @@ export default function HowItWorks() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('how_tag')}
           </div>
@@ -89,7 +89,7 @@ export default function HowItWorks() {
 
         <div className="relative">
           {/* Animated glowing connecting line */}
-          <div className="hidden md:block absolute top-[68px] left-12 right-12 h-[2px] bg-white/5 z-0">
+          <div className="hidden md:block absolute top-[68px] left-12 right-12 h-[2px] bg-white/60 z-0">
             <motion.div 
               className="h-full bg-gradient-to-r from-transparent via-blue-500 to-transparent w-1/3"
               animate={{ x: ['-100%', '300%'] }}
@@ -115,7 +115,7 @@ export default function HowItWorks() {
             href="https://wa.me/48729271848"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25 border border-white/10"
+            className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-gray-900 overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25 border border-black/10"
             style={{ background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.8), rgba(59, 130, 246, 0.5))', backdropFilter: 'blur(10px)' }}
           >
             <span className="relative z-10 flex items-center gap-3">

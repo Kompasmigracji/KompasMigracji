@@ -27,7 +27,7 @@ export default function SpotlightCard({
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5 }}
       onMouseMove={handleMouseMove}
-      className={`group relative rounded-3xl border border-white/10 bg-white/5 overflow-hidden shadow-2xl transition-all hover:scale-[1.02] ${className}`}
+      className={`group relative rounded-3xl border border-black/10 bg-white/60 overflow-hidden shadow-2xl transition-all hover:scale-[1.02] ${className}`}
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"

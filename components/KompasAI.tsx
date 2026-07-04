@@ -132,10 +132,10 @@ export default function KompasAI() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-[60] w-[calc(100vw-40px)] sm:w-[380px] h-[600px] max-h-[calc(100vh-40px)] flex flex-col rounded-3xl overflow-hidden bg-[#0f1115]/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
+            className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-[60] w-[calc(100vw-40px)] sm:w-[380px] h-[600px] max-h-[calc(100vh-40px)] flex flex-col rounded-3xl overflow-hidden bg-[#0f1115]/90 backdrop-blur-2xl border border-black/10 shadow-[0_20px_60px_rgba(0,0,0,0.1)]"
           >
             {/* Header */}
-            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-white/10 bg-white/5">
+            <div className="p-4 sm:p-5 flex items-center justify-between border-b border-black/10 bg-white/60">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
@@ -144,13 +144,13 @@ export default function KompasAI() {
                   <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-[#0f1115]" />
                 </div>
                 <div>
-                  <div className="font-bold text-white text-sm">Kompas AI</div>
+                  <div className="font-bold text-gray-900 text-sm">Kompas AI</div>
                   <div className="text-xs text-blue-400 font-medium tracking-wide uppercase mt-0.5 animate-pulse">Online</div>
                 </div>
               </div>
               <button
                 onClick={() => setOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full bg-white/60 hover:bg-white/80 flex items-center justify-center text-gray-500 hover:text-white transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
@@ -168,7 +168,7 @@ export default function KompasAI() {
                   <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                     m.role === 'user' 
                       ? 'bg-blue-600 text-white rounded-br-sm shadow-lg' 
-                      : 'bg-white/10 text-gray-100 rounded-bl-sm border border-white/5'
+                      : 'bg-white/80 text-gray-100 rounded-bl-sm border border-black/5'
                   }`}>
                     {m.content.split('\n').map((line, j) => (
                       <span key={j}>
@@ -182,7 +182,7 @@ export default function KompasAI() {
               
               {loading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                  <div className="bg-white/5 border border-white/5 rounded-2xl rounded-bl-sm px-4 py-4 flex gap-1.5 items-center">
+                  <div className="bg-white/60 border border-black/5 rounded-2xl rounded-bl-sm px-4 py-4 flex gap-1.5 items-center">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -208,10 +208,10 @@ export default function KompasAI() {
             )}
 
             {/* Input */}
-            <div className="p-4 bg-[#0a0a0a] border-t border-white/10">
+            <div className="p-4 bg-white border-t border-black/10">
               <form
                 onSubmit={e => { e.preventDefault(); doSend(input); }}
-                className="relative flex items-center bg-white/5 border border-white/10 rounded-full px-2 py-1 focus-within:border-blue-500/50 focus-within:bg-white/10 transition-all"
+                className="relative flex items-center bg-white/60 border border-black/10 rounded-full px-2 py-1 focus-within:border-blue-500/50 focus-within:bg-white/80 transition-all"
               >
                 <textarea
                   ref={inputRef}
@@ -221,7 +221,7 @@ export default function KompasAI() {
                     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(input); }
                   }}
                   placeholder="Напишіть повідомлення..."
-                  className="flex-1 bg-transparent border-none text-white text-sm px-3 py-2.5 resize-none max-h-32 focus:outline-none focus:ring-0 placeholder-gray-500"
+                  className="flex-1 bg-transparent border-none text-gray-900 text-sm px-3 py-2.5 resize-none max-h-32 focus:outline-none focus:ring-0 placeholder-gray-500"
                   rows={1}
                   style={{ minHeight: '40px', scrollbarWidth: 'none' }}
                 />

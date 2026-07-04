@@ -20,7 +20,7 @@ function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: 'prev' | 'next' 
     <button
       onClick={onClick}
       aria-label={dir === 'prev' ? 'Попередній' : 'Наступний'}
-      className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:bg-white/10 hover:text-white transition-all bg-white/5 backdrop-blur-md"
+      className="w-12 h-12 rounded-full border border-black/10 flex items-center justify-center text-white/50 hover:bg-white/80 hover:text-white transition-all bg-white/60 backdrop-blur-md"
     >
       {dir === 'prev'
         ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -62,7 +62,7 @@ export default function Reviews() {
   const r = REVIEWS[current];
 
   return (
-    <section className="py-24 sm:py-32 relative bg-[#030303] overflow-hidden text-white">
+    <section className="py-24 sm:py-32 relative bg-[#030303] overflow-hidden text-gray-900">
       {/* Background Orbs */}
       <div className="absolute top-1/4 -right-1/4 w-[500px] h-[500px] bg-green-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -left-1/4 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[150px] pointer-events-none" />
@@ -75,21 +75,21 @@ export default function Reviews() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-green-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
             {t('reviews_tag')}
           </div>
           <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('reviews_title')}
           </h2>
-          <p className="text-gray-400 mt-4 text-lg">
+          <p className="text-gray-500 mt-4 text-lg">
             {t('rev_real_text')} {' '}
             <a href="https://www.gowork.pl/opinie_czytaj,24275530" target="_blank" rel="noreferrer" className="text-green-400 hover:text-green-300 transition-colors underline underline-offset-4">GoWork.pl</a>
           </p>
         </motion.div>
 
         <div className="max-w-4xl mx-auto" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-          <div className="relative overflow-hidden rounded-[2.5rem] bg-white/5 border border-white/10 shadow-2xl backdrop-blur-2xl p-8 sm:p-12 min-h-[320px] sm:min-h-[280px]">
+          <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 border border-black/10 shadow-2xl backdrop-blur-2xl p-8 sm:p-12 min-h-[320px] sm:min-h-[280px]">
             <div className="absolute top-8 left-8 font-display font-bold text-9xl leading-none select-none text-white/5 -z-10">&ldquo;</div>
             
             <AnimatePresence mode="wait" custom={direction}>
@@ -103,13 +103,13 @@ export default function Reviews() {
                 className="flex flex-col h-full relative z-10"
               >
                 <Stars n={r.rating} />
-                <p className="text-lg sm:text-2xl text-gray-200 leading-relaxed font-medium mt-6 mb-8 flex-grow">{r.text}</p>
-                <div className="flex items-center gap-4 border-t border-white/10 pt-6 mt-auto">
+                <p className="text-lg sm:text-2xl text-gray-800 leading-relaxed font-medium mt-6 mb-8 flex-grow">{r.text}</p>
+                <div className="flex items-center gap-4 border-t border-black/10 pt-6 mt-auto">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-black font-bold text-lg">
                     {r.author.charAt(0)}
                   </div>
                   <div>
-                    <div className="font-bold text-white text-base">{r.author}</div>
+                    <div className="font-bold text-gray-900 text-base">{r.author}</div>
                     <div className="text-sm text-gray-500">{r.date}</div>
                   </div>
                 </div>

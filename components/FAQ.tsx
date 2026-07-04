@@ -25,7 +25,7 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 relative bg-[#030303] text-white overflow-hidden">
+    <section className="py-24 sm:py-32 relative bg-[#030303] text-gray-900 overflow-hidden">
       {/* Glows */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
@@ -38,7 +38,7 @@ export default function FAQ() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('faq_tag')}
           </div>
@@ -60,7 +60,7 @@ export default function FAQ() {
                 className={`overflow-hidden rounded-2xl border backdrop-blur-xl transition-all duration-300 ${
                   it.panic 
                     ? 'bg-red-500/5 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.05)]' 
-                    : 'bg-white/5 border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/10'
+                    : 'bg-white/60 border-black/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/80'
                 }`}
               >
                 <button
@@ -73,7 +73,7 @@ export default function FAQ() {
                         ⚡
                       </span>
                     )}
-                    <span className={`font-semibold text-base md:text-lg transition-colors ${it.panic ? 'text-red-300' : 'text-gray-200'}`}>
+                    <span className={`font-semibold text-base md:text-lg transition-colors ${it.panic ? 'text-red-300' : 'text-gray-800'}`}>
                       {it.q}
                     </span>
                   </div>
@@ -81,7 +81,7 @@ export default function FAQ() {
                     animate={{ rotate: isOpen ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                     className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full border ${
-                      it.panic ? 'border-red-500/30 text-red-400' : 'border-white/10 text-blue-400'
+                      it.panic ? 'border-red-500/30 text-red-400' : 'border-black/10 text-blue-400'
                     }`}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -99,7 +99,7 @@ export default function FAQ() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
                       <div className={`px-6 pb-6 pt-2 text-base leading-relaxed border-t ${
-                        it.panic ? 'border-red-500/20 text-red-200/80 bg-red-500/5' : 'border-white/10 text-gray-400'
+                        it.panic ? 'border-red-500/20 text-red-200/80 bg-red-500/5' : 'border-black/10 text-gray-500'
                       }`}>
                         {it.a}
                         
@@ -119,7 +119,7 @@ export default function FAQ() {
                             </a>
                             <a
                               href="tel:+48729271848"
-                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-sm font-bold no-underline border border-red-500/30 hover:bg-red-500/10 transition-colors"
+                              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-gray-900 text-sm font-bold no-underline border border-red-500/30 hover:bg-red-500/10 transition-colors"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                                 <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.03 1.18 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />

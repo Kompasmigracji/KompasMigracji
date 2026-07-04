@@ -123,7 +123,7 @@ export default function Hero() {
               href="https://wa.me/48729271848"
               target="_blank"
               rel="noreferrer"
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-gray-900 overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25"
               style={{ background: 'linear-gradient(135deg, #2563eb, #3b82f6)' }}
             >
               <span className="relative z-10 flex items-center gap-3">
@@ -157,13 +157,13 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 0.8, z: -100 }}
                 animate={{ opacity: 1, scale: 1, z: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="col-span-2 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-[32px] shadow-2xl flex items-center gap-4 hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
+                className="col-span-2 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/20 dark:border-black/10 p-6 rounded-[32px] shadow-2xl flex items-center gap-4 hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
                 style={{ transform: 'translateZ(40px)' }}
               >
                 <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-3xl shrink-0">🛂</div>
                 <div>
                   <h3 className="font-bold text-xl text-gray-900 dark:text-white">Wizy i zaproszenia</h3>
-                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">Повний супровід візових питань для іноземців до Польщі</p>
+                  <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">Повний супровід візових питань для іноземців до Польщі</p>
                 </div>
               </motion.div>
 
@@ -172,12 +172,12 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 0.8, z: -100 }}
                 animate={{ opacity: 1, scale: 1, z: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="col-span-1 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-white/20 dark:border-white/10 p-6 rounded-[32px] shadow-2xl hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
+                className="col-span-1 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/20 dark:border-black/10 p-6 rounded-[32px] shadow-2xl hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
                 style={{ transform: 'translateZ(70px)' }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-2xl mb-4">🏠</div>
                 <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Karta Pobytu</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Отримання посвідки на проживання</p>
+                <p className="text-gray-500 dark:text-gray-500 text-sm">Отримання посвідки на проживання</p>
               </motion.div>
 
               {/* Card 3 */}
@@ -185,7 +185,7 @@ export default function Hero() {
                 initial={{ opacity: 0, scale: 0.8, z: -100 }}
                 animate={{ opacity: 1, scale: 1, z: 0 }}
                 transition={{ duration: 0.8, delay: 0.8 }}
-                className="col-span-1 bg-gradient-to-br from-blue-600 to-indigo-600 border border-white/20 p-6 rounded-[32px] shadow-2xl shadow-blue-500/30 text-white"
+                className="col-span-1 bg-gradient-to-br from-blue-600 to-indigo-600 border border-black/20 p-6 rounded-[32px] shadow-2xl shadow-blue-500/30 text-gray-900"
                 style={{ transform: 'translateZ(90px)' }}
               >
                 <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl mb-4">💼</div>
@@ -197,7 +197,7 @@ export default function Hero() {
               <motion.div 
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -right-4 top-12 bg-white/80 dark:bg-black/80 backdrop-blur-md border border-white/20 dark:border-white/10 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3"
+                className="absolute -right-4 top-12 bg-white/80 dark:bg-black/80 backdrop-blur-md border border-black/20 dark:border-black/10 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3"
                 style={{ transform: 'translateZ(120px)' }}
               >
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -250,7 +250,7 @@ export default function Hero() {
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
                   
                   <span className="text-4xl mb-3 relative z-10">{svc.icon}</span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 relative z-10">{svc.title}</h3>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 relative z-10">{svc.title}</h3>
                   <p className="text-sm text-white/80 leading-relaxed relative z-10">{svc.desc}</p>
                 </div>
               </Reveal>
@@ -303,7 +303,7 @@ export default function Hero() {
         <div className="absolute inset-0 -z-10" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0066FF 150%)' }} />
         <div className="max-w-3xl mx-auto text-center">
           <Reveal>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white mb-6" style={{ letterSpacing: '-0.03em' }}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6" style={{ letterSpacing: '-0.03em' }}>
               Готові почати?
             </h2>
             <p className="text-lg text-white/60 mb-10 max-w-lg mx-auto">

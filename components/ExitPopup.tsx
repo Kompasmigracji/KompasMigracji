@@ -79,7 +79,7 @@ export default function ExitPopup() {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             onMouseMove={handleMouseMove}
-            className="relative w-full max-w-md bg-[#0a0a0a] rounded-3xl overflow-hidden border border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.8)]"
+            className="relative w-full max-w-md bg-white rounded-3xl overflow-hidden border border-black/10 shadow-[0_30px_100px_rgba(0,0,0,0.1)]"
           >
             {/* Spotlight */}
             <motion.div
@@ -92,7 +92,7 @@ export default function ExitPopup() {
             <div className="relative z-10 p-8">
               <button
                 onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/80 transition-colors"
                 aria-label="Закрити"
               >
                 ✕
@@ -101,13 +101,13 @@ export default function ExitPopup() {
               {!sent ? (
                 <>
                   <div className="text-center mb-6">
-                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center mb-4 border border-white/5">
+                    <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center mb-4 border border-black/5">
                       <span className="text-3xl">🤝</span>
                     </div>
-                    <h2 className="text-2xl font-display font-bold text-white mb-2 tracking-tight">
+                    <h2 className="text-2xl font-display font-bold text-gray-900 mb-2 tracking-tight">
                       {t('title')}
                     </h2>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-gray-500">
                       {t('subtitle')}
                     </p>
                   </div>
@@ -118,7 +118,7 @@ export default function ExitPopup() {
                       placeholder={t('name')}
                       value={name}
                       onChange={e => setName(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
+                      className="w-full bg-white/60 border border-black/10 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                     />
                     <input
                       type="text"
@@ -126,7 +126,7 @@ export default function ExitPopup() {
                       required
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
+                      className="w-full bg-white/60 border border-black/10 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm"
                     />
                     <button
                       type="submit"
@@ -150,11 +150,11 @@ export default function ExitPopup() {
                       <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{t('success_title')}</h3>
-                  <p className="text-gray-400 text-sm">{t('success_desc')}</p>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('success_title')}</h3>
+                  <p className="text-gray-500 text-sm">{t('success_desc')}</p>
                   <button
                     onClick={() => setOpen(false)}
-                    className="mt-8 px-6 py-2.5 rounded-full bg-white/10 text-white font-medium hover:bg-white/20 transition-colors text-sm"
+                    className="mt-8 px-6 py-2.5 rounded-full bg-white/80 text-gray-900 font-medium hover:bg-white/20 transition-colors text-sm"
                   >
                     Закрити
                   </button>

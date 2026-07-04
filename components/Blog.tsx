@@ -58,7 +58,7 @@ function VideoModal({ videoId, onClose }: { videoId: string; onClose: () => void
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.9, y: 20 }}
           onClick={e => e.stopPropagation()}
-          className="relative w-full max-w-[400px] aspect-[9/16] rounded-3xl overflow-hidden bg-[#111] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+          className="relative w-full max-w-[400px] aspect-[9/16] rounded-3xl overflow-hidden bg-[#111] border border-black/10 shadow-[0_0_50px_rgba(0,0,0,0.05)]"
         >
           <iframe
             src={`https://www.instagram.com/reel/${videoId}/embed/`}
@@ -69,7 +69,7 @@ function VideoModal({ videoId, onClose }: { videoId: string; onClose: () => void
           />
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-md border border-white/20 hover:bg-black/70 hover:scale-105 transition-all"
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-gray-900 backdrop-blur-md border border-black/20 hover:bg-black/70 hover:scale-105 transition-all"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
@@ -97,7 +97,7 @@ function BlogCard({ v, i, t, onClick }: { v: any, i: number, t: any, onClick: ()
       transition={{ duration: 0.6, delay: i * 0.1 }}
       onMouseMove={handleMouseMove}
       onClick={onClick}
-      className={`group cursor-pointer relative overflow-hidden rounded-[2rem] bg-white/5 border border-white/10 backdrop-blur-xl hover:border-white/20 transition-colors flex flex-col ${v.spanClass}`}
+      className={`group cursor-pointer relative overflow-hidden rounded-[2rem] bg-white/60 border border-black/10 backdrop-blur-xl hover:border-black/20 transition-colors flex flex-col ${v.spanClass}`}
     >
       <motion.div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-20"
@@ -112,7 +112,7 @@ function BlogCard({ v, i, t, onClick }: { v: any, i: number, t: any, onClick: ()
         }}
       />
       
-      <div className={`relative flex-shrink-0 w-full bg-gradient-to-br ${v.color} flex items-center justify-center overflow-hidden border-b border-white/10`} 
+      <div className={`relative flex-shrink-0 w-full bg-gradient-to-br ${v.color} flex items-center justify-center overflow-hidden border-b border-black/10`} 
            style={{ aspectRatio: v.spanClass.includes('row-span-2') ? '16/10' : '16/9' }}>
         
         {/* Abstract Background pattern for video placeholder */}
@@ -121,7 +121,7 @@ function BlogCard({ v, i, t, onClick }: { v: any, i: number, t: any, onClick: ()
         <PlayIcon />
         
         <div className="absolute bottom-4 left-4">
-          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white bg-black/40 backdrop-blur-md rounded-full border border-white/20">
+          <span className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-900 bg-black/40 backdrop-blur-md rounded-full border border-black/20">
             Instagram Reels
           </span>
         </div>
@@ -132,7 +132,7 @@ function BlogCard({ v, i, t, onClick }: { v: any, i: number, t: any, onClick: ()
         <h3 className={`font-display font-semibold text-white mb-3 ${v.spanClass.includes('col-span-2') ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
           {t(v.titleKey)}
         </h3>
-        <p className="text-sm text-gray-400 leading-relaxed flex-grow">
+        <p className="text-sm text-gray-500 leading-relaxed flex-grow">
           {t(v.descKey)}
         </p>
       </div>
@@ -145,7 +145,7 @@ export default function Blog() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <section id="blog" className="py-24 sm:py-32 relative bg-[#050505] text-white overflow-hidden">
+    <section id="blog" className="py-24 sm:py-32 relative bg-[#f5f5f7] text-gray-900 overflow-hidden">
       {/* Glows */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
       
@@ -157,14 +157,14 @@ export default function Blog() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('blog_section')}
           </div>
           <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('blog_title')}
           </h2>
-          <p className="text-gray-400 text-base sm:text-lg mt-4 max-w-xl mx-auto">
+          <p className="text-gray-500 text-base sm:text-lg mt-4 max-w-xl mx-auto">
             {t('blog_desc')}
           </p>
         </motion.div>

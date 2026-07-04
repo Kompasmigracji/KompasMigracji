@@ -62,9 +62,9 @@ export default function FunnelsPage() {
   });
 
   return (
-    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
-      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center justify-between sticky top-0 z-20">
-        <h2 className="m-0 text-xl font-bold text-white tracking-tight">Воронка продажів</h2>
+    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
+      <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center justify-between sticky top-0 z-20">
+        <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Воронка продажів</h2>
       </div>
       
       <div className="flex-1 p-8 overflow-hidden flex flex-col">

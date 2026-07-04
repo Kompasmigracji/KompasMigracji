@@ -26,7 +26,7 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       className={`group relative p-8 sm:p-10 flex flex-col rounded-[2.5rem] bg-[#0f1115]/80 border backdrop-blur-2xl overflow-hidden transition-transform duration-300 ${
         card.featured 
           ? 'border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.15)] md:-translate-y-4 md:hover:-translate-y-6' 
-          : 'border-white/10 shadow-2xl md:hover:-translate-y-2'
+          : 'border-black/10 shadow-2xl md:hover:-translate-y-2'
       }`}
     >
       <motion.div
@@ -43,13 +43,13 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       />
       
       {card.badge && (
-        <span className="absolute top-6 right-8 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg" 
+        <span className="absolute top-6 right-8 text-gray-900 text-[10px] sm:text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg" 
               style={{ background: card.oldAmount ? 'linear-gradient(135deg, #f97316, #dc2626)' : 'linear-gradient(135deg, #2563eb, #8b5cf6)' }}>
           {card.badge}
         </span>
       )}
       
-      <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 relative z-10">{card.label}</div>
+      <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 relative z-10">{card.label}</div>
       <div className="mb-4 relative z-10 flex flex-wrap items-baseline gap-2">
         {card.oldAmount && (
           <span className="text-lg text-gray-500 line-through">{card.oldAmount} {card.currency}</span>
@@ -57,13 +57,13 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
         <span className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tighter" style={{ fontSize: 'clamp(40px, 4vw, 56px)' }}>
           {card.amount}
         </span>
-        {card.currency && <span className="text-2xl text-gray-400 font-medium">{card.currency}</span>}
+        {card.currency && <span className="text-2xl text-gray-500 font-medium">{card.currency}</span>}
       </div>
-      <p className="text-sm text-gray-400 leading-relaxed mb-8 min-h-[40px] relative z-10">{card.desc}</p>
+      <p className="text-sm text-gray-500 leading-relaxed mb-8 min-h-[40px] relative z-10">{card.desc}</p>
       
       <ul className="flex flex-col gap-4 mb-10 flex-grow relative z-10">
         {card.features.map((f: string, idx: number) => (
-          <li key={idx} className="flex items-start text-sm text-gray-300 leading-relaxed">
+          <li key={idx} className="flex items-start text-sm text-gray-700 leading-relaxed">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-blue-400 shrink-0 mr-3 mt-0.5">
               <polyline points="20 6 9 17 4 12" />
             </svg>
@@ -77,7 +77,7 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
         className={`relative z-10 w-full py-4 rounded-full font-bold text-sm transition-all duration-300 shadow-lg ${
           card.featured
             ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]'
-            : 'bg-white/5 text-white border border-white/10 hover:bg-white/10 hover:border-white/30'
+            : 'bg-white/60 text-white border border-black/10 hover:bg-white/80 hover:border-white/30'
         }`}
       >
         {card.cta}
@@ -126,7 +126,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 relative bg-[#030303] text-white overflow-hidden">
+    <section id="pricing" className="py-24 sm:py-32 relative bg-[#030303] text-gray-900 overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
@@ -139,7 +139,7 @@ export default function Pricing() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('pricing_tag')}
           </div>
@@ -157,17 +157,17 @@ export default function Pricing() {
           className="mb-12 relative overflow-hidden rounded-[2rem] p-[1px]"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-20" />
-          <div className="relative bg-[#0a0a0a]/90 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="relative bg-white/90 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <div className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2 flex items-center gap-2">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 {t('pricing_sub_tag')}
               </div>
-              <p className="text-gray-200 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
+              <p className="text-gray-800 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
             </div>
             <a
               href="/plans"
-              className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-white bg-white/10 hover:bg-white/20 border border-white/10 transition-all duration-300 no-underline"
+              className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-gray-900 bg-white/80 hover:bg-white/20 border border-black/10 transition-all duration-300 no-underline"
             >
               {t('pricing_sub_cta')}
             </a>
@@ -197,11 +197,11 @@ export default function Pricing() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="border-t border-white/10 pt-16 mt-16 max-w-4xl mx-auto"
+          className="border-t border-black/10 pt-16 mt-16 max-w-4xl mx-auto"
         >
           <div className="text-center mb-8">
-            <h3 className="font-display text-2xl font-semibold text-white mb-3 tracking-tight">{t('p24_how_title')}</h3>
-            <p className="text-gray-400 text-sm max-w-lg mx-auto">{t('p24_how_subtitle')}</p>
+            <h3 className="font-display text-2xl font-semibold text-gray-900 mb-3 tracking-tight">{t('p24_how_title')}</h3>
+            <p className="text-gray-500 text-sm max-w-lg mx-auto">{t('p24_how_subtitle')}</p>
           </div>
           <P24PaymentSteps />
         </motion.div>
@@ -221,7 +221,7 @@ export default function Pricing() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#111] border border-white/10 p-8 rounded-3xl max-w-sm w-full shadow-2xl relative"
+            className="bg-[#111] border border-black/10 p-8 rounded-3xl max-w-sm w-full shadow-2xl relative"
           >
             <button onClick={() => setContactOpen(null)} className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -229,8 +229,8 @@ export default function Pricing() {
             <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 mb-6 mx-auto">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
-            <h4 className="font-display text-xl font-bold text-white mb-2 text-center">{t('free_modal_title')}</h4>
-            <p className="text-sm text-gray-400 text-center mb-8">{t('free_modal_desc')}</p>
+            <h4 className="font-display text-xl font-bold text-gray-900 mb-2 text-center">{t('free_modal_title')}</h4>
+            <p className="text-sm text-gray-500 text-center mb-8">{t('free_modal_desc')}</p>
             <a
               href={`https://wa.me/48729271848?text=Отримати+безкоштовну+консультацію`}
               target="_blank"

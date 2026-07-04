@@ -30,15 +30,15 @@ export default function ReturnVisitor() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className="fixed top-4 left-1/2 -translate-x-1/2 z-[99990] w-[95%] max-w-lg rounded-2xl bg-[#0a0a0a]/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="fixed top-4 left-1/2 -translate-x-1/2 z-[99990] w-[95%] max-w-lg rounded-2xl bg-white/90 backdrop-blur-2xl border border-black/10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-4 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <div className="flex items-center gap-3 w-full sm:w-auto text-center sm:text-left">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center shrink-0 border border-white/5">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center shrink-0 border border-black/5">
               <span className="text-xl animate-[wave_2s_infinite_transform-origin-bottom-right]">👋</span>
             </div>
             <div>
-              <div className="text-sm font-bold text-white mb-0.5">З поверненням!</div>
-              <div className="text-xs text-gray-400">Ваша справа ще актуальна — ми готові допомогти.</div>
+              <div className="text-sm font-bold text-gray-900 mb-0.5">З поверненням!</div>
+              <div className="text-xs text-gray-500">Ваша справа ще актуальна — ми готові допомогти.</div>
             </div>
           </div>
           
@@ -47,7 +47,7 @@ export default function ReturnVisitor() {
               href="https://wa.me/48729271848?text=Повертаюся+до+питання+міграційної+допомоги"
               target="_blank"
               rel="noreferrer"
-              className="text-xs font-bold no-underline px-5 py-2.5 rounded-full text-white hover:scale-105 transition-transform flex items-center gap-2 relative overflow-hidden group"
+              className="text-xs font-bold no-underline px-5 py-2.5 rounded-full text-gray-900 hover:scale-105 transition-transform flex items-center gap-2 relative overflow-hidden group"
               style={{ background: '#25D366' }}
             >
               <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
@@ -56,7 +56,7 @@ export default function ReturnVisitor() {
             </a>
             <button
               onClick={() => setShow(false)}
-              className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+              className="w-8 h-8 rounded-full bg-white/60 hover:bg-white/80 border border-black/5 flex items-center justify-center text-gray-500 hover:text-white transition-colors"
               aria-label="Закрити"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>

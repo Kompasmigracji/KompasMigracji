@@ -21,13 +21,13 @@ export default function MobileCTABar() {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className="md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-[#050505]/95 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.8)]"
+          className="md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-[#f5f5f7]/95 backdrop-blur-2xl border-t border-black/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <div className="grid grid-cols-3 h-16 sm:h-20">
             <a
               href="tel:+48729271848"
-              className="group flex flex-col items-center justify-center gap-1 no-underline text-gray-400 active:bg-white/5 transition-colors relative"
+              className="group flex flex-col items-center justify-center gap-1 no-underline text-gray-500 active:bg-white/60 transition-colors relative"
             >
               <div className="absolute inset-x-0 top-0 h-[2px] bg-blue-500 opacity-0 group-active:opacity-100 transition-opacity" />
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="group-active:scale-95 transition-transform group-active:text-blue-400">
@@ -40,7 +40,7 @@ export default function MobileCTABar() {
               href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
               target="_blank"
               rel="noreferrer"
-              className="flex flex-col items-center justify-center gap-1 no-underline text-white active:scale-95 transition-all relative overflow-hidden"
+              className="flex flex-col items-center justify-center gap-1 no-underline text-gray-900 active:scale-95 transition-all relative overflow-hidden"
               style={{ background: 'linear-gradient(135deg, #128C7E, #25D366)' }}
             >
               <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_3s_infinite]" />
@@ -52,7 +52,7 @@ export default function MobileCTABar() {
 
             <button
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="group flex flex-col items-center justify-center gap-1 bg-transparent border-0 cursor-pointer active:bg-white/5 transition-colors relative"
+              className="group flex flex-col items-center justify-center gap-1 bg-transparent border-0 cursor-pointer active:bg-white/60 transition-colors relative"
             >
               <div className="absolute inset-x-0 top-0 h-[2px] bg-orange-500 opacity-0 group-active:opacity-100 transition-opacity" />
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-orange-500 group-active:scale-95 transition-transform group-active:text-orange-400">

@@ -35,7 +35,7 @@ export default function ServicesGrid() {
   }));
 
   return (
-    <section id="services" className="py-24 sm:py-32 relative overflow-hidden bg-[#050505] text-white">
+    <section id="services" className="py-24 sm:py-32 relative overflow-hidden bg-[#f5f5f7] text-gray-900">
       {/* Background Glows */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none translate-y-1/2" />
@@ -48,14 +48,14 @@ export default function ServicesGrid() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('services_tag')}
           </div>
           <h2 className="font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('services_title')}
           </h2>
-          <p className="mt-4 text-gray-400 max-w-2xl mx-auto text-lg">
+          <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-lg">
             Інноваційний підхід до кожної справи. Оберіть послугу, і ми знайдемо найкраще рішення для вас.
           </p>
         </motion.div>
@@ -79,7 +79,7 @@ export default function ServicesGrid() {
               )}
               
               <div className="mb-6 mt-2">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/5 border border-white/10 text-3xl shadow-inner shadow-white/5">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/60 border border-black/10 text-3xl shadow-inner shadow-white/5">
                   {s.icon}
                 </div>
               </div>
@@ -88,12 +88,12 @@ export default function ServicesGrid() {
                 {s.title}
               </h3>
               
-              <p className="text-gray-400 leading-relaxed flex-grow text-sm sm:text-base">
+              <p className="text-gray-500 leading-relaxed flex-grow text-sm sm:text-base">
                 {s.desc}
               </p>
               
-              <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-opacity">
-                <span className={`text-sm font-medium ${s.urgentIdx >= 0 ? 'text-blue-400' : 'text-gray-300'}`}>
+              <div className="mt-8 pt-4 border-t border-black/10 flex items-center justify-between opacity-60 group-hover:opacity-100 transition-opacity">
+                <span className={`text-sm font-medium ${s.urgentIdx >= 0 ? 'text-blue-400' : 'text-gray-700'}`}>
                   {s.urgentIdx === 0 ? t('service_get_help') : t('services_more')}
                 </span>
                 <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

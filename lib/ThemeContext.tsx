@@ -7,8 +7,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Стартове значення береться з data-theme, який інлайн-скрипт у app/layout.tsx
   // виставив до першого рендеру (SSR-фолбек — dark, як і скрипт за замовчуванням).
   const [dark, setDark] = useState(() => {
-    if (typeof document === 'undefined') return true;
-    return document.documentElement.getAttribute('data-theme') !== 'light';
+    if (typeof document === 'undefined') return false; // Default to light on SSR
+    return document.documentElement.getAttribute('data-theme') === 'dark';
   });
 
   useEffect(() => {

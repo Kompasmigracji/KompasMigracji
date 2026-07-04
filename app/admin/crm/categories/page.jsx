@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 
 export default function CategoriesPage() {
   return (
-    <div className="flex flex-col h-full bg-[#050505] text-gray-200">
-      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 px-8 py-5 flex items-center gap-4 sticky top-0 z-20">
-        <h2 className="m-0 text-xl font-bold text-white tracking-tight">Категории</h2>
+    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
+      <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center gap-4 sticky top-0 z-20">
+        <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Категории</h2>
       </div>
 
       <motion.div 
@@ -16,15 +16,15 @@ export default function CategoriesPage() {
         animate={{ opacity: 1, y: 0 }}
         className="p-8 flex-1 flex flex-col items-center justify-center"
       >
-        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/5 border border-white/10 rounded-3xl relative overflow-hidden">
+        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/60 border border-black/10 rounded-3xl relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[200px] bg-purple-500/20 blur-[60px] rounded-full pointer-events-none" />
           
           <div className="w-20 h-20 bg-purple-500/10 border border-purple-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(168,85,247,0.15)] text-purple-400 relative z-10">
             <Icon name="grid" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-white mb-3 relative z-10">Модуль в разработке</h3>
-          <p className="text-gray-400 text-sm leading-relaxed relative z-10">
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10">Модуль в разработке</h3>
+          <p className="text-gray-500 text-sm leading-relaxed relative z-10">
             Управление категориями для товаров, услуг и статей скоро появится в системе.
           </p>
         </SpotlightCard>

@@ -37,14 +37,14 @@ export const AgentsDashboard: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 min-h-screen">
-      <h1 className="text-3xl font-bold text-white mb-2">
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">
         {t('admin_title')}
       </h1>
 
       <GodCard god={god} />
 
       {agents.length === 0 ? (
-        <div className="text-gray-400 text-center py-12">
+        <div className="text-gray-500 text-center py-12">
           {statusData ? t('admin_no_agents') : t('admin_loading')}
         </div>
       ) : (

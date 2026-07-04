@@ -40,8 +40,8 @@ export function ActionHistory() {
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col gap-6">
       {/* Filter Button */}
-      <SpotlightCard className="w-full p-4 rounded-xl flex justify-center items-center gap-2 text-sm font-bold text-white bg-white/5 border border-white/10 hover:border-white/20 transition-colors cursor-pointer shadow-sm">
-        <Icon name="filter" size={16} className="text-gray-400" /> Фильтр
+      <SpotlightCard className="w-full p-4 rounded-xl flex justify-center items-center gap-2 text-sm font-bold text-gray-900 bg-white/60 border border-black/10 hover:border-black/20 transition-colors cursor-pointer shadow-sm">
+        <Icon name="filter" size={16} className="text-gray-500" /> Фильтр
       </SpotlightCard>
 
       {/* Timeline */}
@@ -72,24 +72,24 @@ export function ActionHistory() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <SpotlightCard className="p-5 bg-white/5 border border-white/10 rounded-2xl">
+                <SpotlightCard className="p-5 bg-white/60 border border-black/10 rounded-2xl">
                   {/* Header */}
                   <div className="flex items-center gap-3 mb-5">
-                    <Avatar name={userName} size={32} className="border border-white/10 shadow-inner" />
+                    <Avatar name={userName} size={32} className="border border-black/10 shadow-inner" />
                     <div className="text-sm">
-                      <span className="font-bold text-white mr-1.5">{userName}</span> 
-                      <span className="text-gray-400 font-medium">{item.action}</span>
+                      <span className="font-bold text-gray-900 mr-1.5">{userName}</span> 
+                      <span className="text-gray-500 font-medium">{item.action}</span>
                     </div>
                   </div>
 
                   {/* Changes */}
                   {changes.length > 0 && (
-                    <div className="flex flex-col gap-4 bg-black/40 rounded-xl p-4 border border-white/5">
+                    <div className="flex flex-col gap-4 bg-black/40 rounded-xl p-4 border border-black/5">
                       {changes.map((change, i) => (
                         <div key={i} className="flex flex-col sm:flex-row sm:items-start text-xs gap-2 sm:gap-4">
                           <div className="w-full sm:w-2/5 text-gray-500 font-bold uppercase tracking-wider mt-0.5">{change.label}</div>
                           <div className="w-full sm:w-3/5 flex flex-wrap items-center gap-2">
-                            <span className="text-gray-400 bg-white/5 px-2 py-1 rounded-md border border-white/5 line-through">{change.from}</span>
+                            <span className="text-gray-500 bg-white/60 px-2 py-1 rounded-md border border-black/5 line-through">{change.from}</span>
                             <Icon name="arrow-right" size={14} className="text-blue-500" />
                             
                             {change.isPill ? (
@@ -98,7 +98,7 @@ export function ActionHistory() {
                                 {change.to}
                               </span>
                             ) : (
-                              <span className="text-white font-bold bg-white/10 px-2.5 py-1 rounded-md border border-white/10 shadow-sm">{change.to}</span>
+                              <span className="text-gray-900 font-bold bg-white/80 px-2.5 py-1 rounded-md border border-black/10 shadow-sm">{change.to}</span>
                             )}
                           </div>
                         </div>

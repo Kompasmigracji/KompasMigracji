@@ -187,7 +187,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-24 right-6 z-[60] w-[calc(100vw-48px)] sm:w-[350px] h-[500px] max-h-[calc(100vh-120px)] flex flex-col rounded-3xl overflow-hidden bg-[#0a0a0a]/95 backdrop-blur-3xl border border-orange-500/20 shadow-[0_20px_60px_rgba(0,0,0,0.8)]"
+            className="fixed bottom-24 right-6 z-[60] w-[calc(100vw-48px)] sm:w-[350px] h-[500px] max-h-[calc(100vh-120px)] flex flex-col rounded-3xl overflow-hidden bg-white/95 backdrop-blur-3xl border border-orange-500/20 shadow-[0_20px_60px_rgba(0,0,0,0.1)]"
           >
             {/* Header */}
             <div className="p-4 flex items-center justify-between bg-gradient-to-r from-orange-600/10 to-transparent border-b border-orange-500/20">
@@ -199,13 +199,13 @@ export default function ChatBot() {
                   <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-[#0a0a0a]" />
                 </div>
                 <div>
-                  <div className="font-bold text-white text-sm">Konsultant AI</div>
+                  <div className="font-bold text-gray-900 text-sm">Konsultant AI</div>
                   <div className="text-[10px] text-green-400 font-medium tracking-wide uppercase mt-0.5 animate-pulse">{t('chat_online')}</div>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                className="w-8 h-8 rounded-full bg-white/60 hover:bg-white/80 flex items-center justify-center text-gray-500 hover:text-white transition-colors"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
@@ -223,7 +223,7 @@ export default function ChatBot() {
                   <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                     m.role === 'user' 
                       ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-br-sm shadow-lg' 
-                      : 'bg-white/10 text-gray-100 rounded-bl-sm border border-white/5'
+                      : 'bg-white/80 text-gray-100 rounded-bl-sm border border-black/5'
                   }`}>
                     {m.content.split('\n').map((line, j) => (
                       <span key={j}>
@@ -237,7 +237,7 @@ export default function ChatBot() {
               
               {isLoading && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                  <div className="bg-white/5 border border-white/5 rounded-2xl rounded-bl-sm px-4 py-4 flex gap-1.5 items-center">
+                  <div className="bg-white/60 border border-black/5 rounded-2xl rounded-bl-sm px-4 py-4 flex gap-1.5 items-center">
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -248,10 +248,10 @@ export default function ChatBot() {
             </div>
 
             {/* Input */}
-            <div className="p-3 bg-[#0a0a0a] border-t border-white/10">
+            <div className="p-3 bg-white border-t border-black/10">
               <form
                 onSubmit={e => { e.preventDefault(); handleSend(); }}
-                className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl px-2 py-1.5 focus-within:border-orange-500/50 focus-within:bg-white/10 transition-all"
+                className="relative flex items-center bg-white/60 border border-black/10 rounded-2xl px-2 py-1.5 focus-within:border-orange-500/50 focus-within:bg-white/80 transition-all"
               >
                 <textarea
                   ref={inputRef}
@@ -259,14 +259,14 @@ export default function ChatBot() {
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={t('chat_input_ph')}
-                  className="flex-1 bg-transparent border-none text-white text-sm px-3 py-2 resize-none max-h-24 focus:outline-none focus:ring-0 placeholder-gray-500"
+                  className="flex-1 bg-transparent border-none text-gray-900 text-sm px-3 py-2 resize-none max-h-24 focus:outline-none focus:ring-0 placeholder-gray-500"
                   rows={1}
                   style={{ minHeight: '36px', scrollbarWidth: 'none' }}
                 />
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  className="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-white disabled:opacity-50 disabled:bg-gray-700 transition-all ml-1 shrink-0 hover:bg-orange-500"
+                  className="w-9 h-9 rounded-xl bg-orange-600 flex items-center justify-center text-gray-900 disabled:opacity-50 disabled:bg-gray-700 transition-all ml-1 shrink-0 hover:bg-orange-500"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                 </button>

@@ -20,7 +20,7 @@ function GuaranteeCard({ item, i }: { item: any, i: number }) {
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: i * 0.1 }}
       onMouseMove={handleMouseMove}
-      className="group relative flex items-start gap-5 p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl overflow-hidden"
+      className="group relative flex items-start gap-5 p-8 rounded-3xl bg-white/60 border border-black/10 backdrop-blur-xl overflow-hidden"
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
@@ -34,12 +34,12 @@ function GuaranteeCard({ item, i }: { item: any, i: number }) {
           `,
         }}
       />
-      <div className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center text-3xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 shadow-inner shadow-white/10 border border-white/10 relative z-10">
+      <div className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center text-3xl bg-gradient-to-br from-purple-500/20 to-blue-500/20 shadow-inner shadow-white/10 border border-black/10 relative z-10">
         <span className="drop-shadow-lg">{item.icon}</span>
       </div>
       <div className="relative z-10">
-        <h3 className="font-display font-semibold text-xl text-white mb-2">{item.title}</h3>
-        <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+        <h3 className="font-display font-semibold text-xl text-gray-900 mb-2">{item.title}</h3>
+        <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
       </div>
     </motion.div>
   );
@@ -55,7 +55,7 @@ export default function GuaranteeSection() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 relative bg-[#050505] text-white overflow-hidden">
+    <section className="py-24 sm:py-32 relative bg-[#f5f5f7] text-gray-900 overflow-hidden">
       {/* Glows */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none -translate-x-1/4 translate-y-1/4" />
@@ -68,7 +68,7 @@ export default function GuaranteeSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold uppercase tracking-widest text-purple-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-purple-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
             {t('guarantee_tag')}
           </div>
@@ -93,12 +93,12 @@ export default function GuaranteeSection() {
           {/* Animated gradient border */}
           <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 opacity-30" />
           
-          <div className="relative rounded-[2.5rem] bg-[#0a0a0a]/90 backdrop-blur-2xl p-10 sm:p-16 text-center shadow-2xl">
+          <div className="relative rounded-[2.5rem] bg-white/90 backdrop-blur-2xl p-10 sm:p-16 text-center shadow-2xl">
             <div className="text-5xl mb-6 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">🤝</div>
-            <h3 className="font-display tracking-tight text-3xl sm:text-4xl font-bold mb-4 text-white">
+            <h3 className="font-display tracking-tight text-3xl sm:text-4xl font-bold mb-4 text-gray-900">
               {t('guar_fail_title')}
             </h3>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
               {t('guar_fail_desc')}
             </p>
             <a

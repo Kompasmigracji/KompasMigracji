@@ -76,22 +76,22 @@ export default function Header() {
       <div className={`mx-auto transition-all duration-500 ${scrolled ? 'max-w-5xl px-4' : 'max-w-7xl px-0'}`}>
         <div className={`relative flex items-center justify-between h-[72px] transition-all duration-500 ${
           scrolled 
-            ? 'px-6 rounded-full bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
+            ? 'px-6 rounded-full bg-white/80 backdrop-blur-xl border border-black/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
             : 'px-6 bg-transparent'
         }`}>
 
           <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-1.5 backdrop-blur-md transition-all group-hover:scale-105 group-hover:border-white/20">
+            <div className="w-10 h-10 rounded-xl bg-white/60 border border-black/10 flex items-center justify-center p-1.5 backdrop-blur-md transition-all group-hover:scale-105 group-hover:border-black/20">
               <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-full h-full object-contain spin-slow" />
             </div>
-            <span className="font-display font-bold text-white text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
+            <span className="font-display font-bold text-gray-900 text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
             <div className="relative" ref={dropRef}>
               <button
                 onClick={() => setDropOpen(!dropOpen)}
-                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold transition-all ${dropOpen ? 'bg-white/10 text-white' : 'text-gray-300 hover:text-white hover:bg-white/5'}`}
+                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold transition-all ${dropOpen ? 'bg-white/80 text-white' : 'text-gray-700 hover:text-white hover:bg-white/60'}`}
               >
                 {t('nav_services')}
                 <svg className={`w-4 h-4 transition-transform duration-300 ${dropOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -104,7 +104,7 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden"
+                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 backdrop-blur-2xl border border-black/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden"
                   >
                     <div className="p-3 grid grid-cols-1 gap-1">
                       {SERVICES.map((s, i) => (
@@ -113,7 +113,7 @@ export default function Header() {
                           className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all group no-underline ${
                             s.accent 
                               ? 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20' 
-                              : 'text-gray-300 hover:text-white hover:bg-white/10'
+                              : 'text-gray-700 hover:text-white hover:bg-white/80'
                           }`}
                         >
                           <span className="text-xl group-hover:scale-110 transition-transform">{s.icon}</span>
@@ -125,12 +125,12 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
-            <Link href="/test/pricing" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all no-underline">{t('nav_pricing')}</Link>
-            <Link href="/plans" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all no-underline">{t('nav_subscriptions')}</Link>
-            <Link href="/portal" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all no-underline">{t('nav_portal')}</Link>
+            <Link href="/test/pricing" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">{t('nav_pricing')}</Link>
+            <Link href="/plans" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">{t('nav_subscriptions')}</Link>
+            <Link href="/portal" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">{t('nav_portal')}</Link>
             <button 
               onClick={() => setShowAIModal(true)}
-              className="px-4 py-2.5 rounded-full text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:bg-white/5 transition-all flex items-center gap-2"
+              className="px-4 py-2.5 rounded-full text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:bg-white/60 transition-all flex items-center gap-2"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
               Kompas AI
@@ -138,24 +138,24 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/5 border border-white/10 rounded-full px-2 py-1">
+            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/60 border border-black/10 rounded-full px-2 py-1">
               {SOCIAL.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-white/10 transition-all ${s.color}`}>
+                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-white/80 transition-all ${s.color}`}>
                   {s.icon}
                 </a>
               ))}
             </div>
 
             <div className="relative group">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-white hover:bg-white/10 transition-all">
+              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 border border-black/10 text-xs font-bold text-gray-900 hover:bg-white/80 transition-all">
                 {LANG_LABELS[locale] || 'PL'}
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
               </button>
-              <div className="absolute top-full right-0 mt-2 w-32 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all origin-top-right transform scale-95 group-hover:scale-100">
+              <div className="absolute top-full right-0 mt-2 w-32 bg-white/95 backdrop-blur-xl border border-black/10 rounded-2xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all origin-top-right transform scale-95 group-hover:scale-100">
                 {Object.entries(LANG_LABELS).map(([code, label]) => (
                   <button
                     key={code} onClick={() => changeLang(code)}
-                    className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${locale === code ? 'bg-blue-500/10 text-blue-400' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+                    className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${locale === code ? 'bg-blue-500/10 text-blue-400' : 'text-gray-700 hover:text-white hover:bg-white/80'}`}
                   >
                     {label}
                   </button>
@@ -163,7 +163,7 @@ export default function Header() {
               </div>
             </div>
 
-            <button className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/5 border border-white/10 text-white" onClick={() => setMobileOpen(true)}>
+            <button className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/60 border border-black/10 text-gray-900" onClick={() => setMobileOpen(true)}>
               <span className="w-5 h-0.5 bg-current rounded-full" />
               <span className="w-5 h-0.5 bg-current rounded-full" />
             </button>
@@ -179,26 +179,26 @@ export default function Header() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex flex-col md:hidden"
           >
-            <div className="flex items-center justify-between px-6 h-[72px] border-b border-white/10">
-              <span className="font-display font-bold text-lg text-white">Menu</span>
-              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
+            <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10">
+              <span className="font-display font-bold text-lg text-gray-900">Menu</span>
+              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-gray-900">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-8">
               <div className="flex flex-col gap-2">
-                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-white no-underline py-2">{t('nav_home')}</Link>
-                <div className="h-px bg-white/10 my-4" />
+                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 no-underline py-2">{t('nav_home')}</Link>
+                <div className="h-px bg-white/80 my-4" />
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</span>
                 {SERVICES.map((s, i) => (
-                  <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-300'}`}>
+                  <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-700'}`}>
                     <span>{s.icon}</span> {s.label}
                   </Link>
                 ))}
-                <div className="h-px bg-white/10 my-4" />
-                <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-300 py-2 no-underline">{t('nav_pricing')}</Link>
-                <Link href="/plans" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-300 py-2 no-underline">{t('nav_subscriptions')}</Link>
-                <Link href="/portal" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-300 py-2 no-underline">{t('nav_portal')}</Link>
+                <div className="h-px bg-white/80 my-4" />
+                <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_pricing')}</Link>
+                <Link href="/plans" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_subscriptions')}</Link>
+                <Link href="/portal" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_portal')}</Link>
                 <button 
                   onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
                   className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4"
@@ -207,11 +207,11 @@ export default function Header() {
                 </button>
               </div>
             </div>
-            <div className="p-6 border-t border-white/10 bg-[#0a0a0a]">
-              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-white/10 text-white font-bold mb-4">{PHONE}</a>
+            <div className="p-6 border-t border-black/10 bg-white">
+              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-white/80 text-gray-900 font-bold mb-4">{PHONE}</a>
               <div className="flex justify-center gap-4">
                 {SOCIAL.map((s, i) => (
-                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-gray-300">
+                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-white/60 flex items-center justify-center text-gray-700">
                     {s.icon}
                   </a>
                 ))}

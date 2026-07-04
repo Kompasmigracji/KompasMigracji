@@ -28,10 +28,10 @@ export function ArchitectCharts({ revenueData, energyData }: ChartProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
       {/* Revenue Chart */}
-      <div className="bg-slate-900/50 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      <div className="bg-slate-900/50 backdrop-blur-md border border-black/5 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium text-white tracking-wide">Financial Flow <span className="text-emerald-400/50 text-xs ml-2 font-mono">CFO-CORE</span></h3>
+          <h3 className="text-lg font-medium text-gray-900 tracking-wide">Financial Flow <span className="text-emerald-400/50 text-xs ml-2 font-mono">CFO-CORE</span></h3>
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -57,10 +57,10 @@ export function ArchitectCharts({ revenueData, energyData }: ChartProps) {
       </div>
 
       {/* Energy/Soul Chart */}
-      <div className="bg-slate-900/50 backdrop-blur-md border border-white/5 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+      <div className="bg-slate-900/50 backdrop-blur-md border border-black/5 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium text-white tracking-wide">System Energy <span className="text-purple-400/50 text-xs ml-2 font-mono">SOUL-SYNC</span></h3>
+          <h3 className="text-lg font-medium text-gray-900 tracking-wide">System Energy <span className="text-purple-400/50 text-xs ml-2 font-mono">SOUL-SYNC</span></h3>
           <span className="flex h-2 w-2 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
