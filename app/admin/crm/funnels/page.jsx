@@ -15,6 +15,8 @@ const FUNNEL_COLUMNS = [
 export default function FunnelsPage() {
   const [leads, setLeads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newLeadForm, setNewLeadForm] = useState({ name: '', phone: '', source: 'direct' });
 
   const loadLeads = useCallback(async () => {
     setIsLoading(true);
@@ -43,6 +45,27 @@ export default function FunnelsPage() {
     }
   };
 
+  const handleCreateLead = async (e) => {
+    e.preventDefault();
+    if (!supabase) return;
+    try {
+      const { data, error } = await supabase.from('leads').insert([{
+        name: newLeadForm.name,
+        phone: newLeadForm.phone,
+        source: newLeadForm.source,
+        funnel_step: 'Новый'
+      }]).select().single();
+      
+      if (!error && data) {
+        setLeads(prev => [data, ...prev]);
+        setIsModalOpen(false);
+        setNewLeadForm({ name: '', phone: '', source: 'direct' });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const cards = leads.map(l => {
     const createdDate = new Date(l.created_at);
     const timeFormatted = createdDate.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -65,6 +88,12 @@ export default function FunnelsPage() {
     <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
       <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center justify-between sticky top-0 z-20">
         <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Воронка продажів</h2>
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+        >
+          <Icon name="plus" size={16} /> Додати ліда
+        </button>
       </div>
       
       <div className="flex-1 p-8 overflow-hidden flex flex-col">
@@ -80,6 +109,64 @@ export default function FunnelsPage() {
           />
         )}
       </div>
+
+      {/* New Lead Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-slide-down">
+            <div className="flex justify-between items-center p-5 border-b border-black/10">
+              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Новий Лід</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors">
+                <Icon name="x" size={20} />
+              </button>
+            </div>
+            <form onSubmit={handleCreateLead} className="p-5 flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Ім'я або Нікнейм</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newLeadForm.name}
+                  onChange={(e) => setNewLeadForm({...newLeadForm, name: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all"
+                  placeholder="Олексій"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Телефон або Telegram</label>
+                <input 
+                  type="text" 
+                  value={newLeadForm.phone}
+                  onChange={(e) => setNewLeadForm({...newLeadForm, phone: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all"
+                  placeholder="+48 111 222 333"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Джерело</label>
+                <select 
+                  value={newLeadForm.source}
+                  onChange={(e) => setNewLeadForm({...newLeadForm, source: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all"
+                >
+                  <option value="direct">Direct (Сайт)</option>
+                  <option value="telegram">Telegram</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="viber">Viber</option>
+                </select>
+              </div>
+              <div className="flex justify-end gap-3 mt-4">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
+                  Скасувати
+                </button>
+                <button type="submit" className="px-5 py-2.5 rounded-xl font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] transition-all">
+                  Створити Ліда
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,7 +1,9 @@
 {
-  "hero_title": "Твой компас в новой стране Европы",
-  "hero_sub": "Юридическая, психологическая и практическая помощь мигрантам — от документов до интеграции",
-  "hero_badge": "Юридическая помощь · Польша и ЕС · Никакой коррупции",
+  "hero_title": "Busola ta într-o nouă țară europeană",
+  "hero_sub": "Sprijin juridic, psihologic și practic pentru migranți — de la documente la integrare",
+  "hero_badge": "Asistență juridică · Polonia și UE · Zero corupție",
+  "hero_ready_title": "Gata să începi?",
+  "hero_ready_sub": "Scrie-ne pe WhatsApp — prima consultație este gratuită. Te vom ajuta să găsești cea mai bună cale spre legalizare.",
   "cta_consult": "Бесплатная консультация →",
   "contact_whatsapp": "Написать в WhatsApp",
   "services_title": "Наши услуги",

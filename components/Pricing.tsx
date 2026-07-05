@@ -5,6 +5,7 @@ import P24PaymentSteps from '@/components/P24PaymentSteps';
 import PayModal, { PayService } from '@/components/PayModal';
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 import { MouseEvent } from 'react';
+import { Link } from '@/lib/navigation';
 
 function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: () => void }) {
   const mouseX = useMotionValue(0);
@@ -165,12 +166,12 @@ export default function Pricing() {
               </div>
               <p className="text-gray-800 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
             </div>
-            <a
-              href="/plans"
+            <Link
+              href="/test/plans"
               className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-gray-900 bg-white/80 hover:bg-white/20 border border-black/10 transition-all duration-300 no-underline"
             >
               {t('pricing_sub_cta')}
-            </a>
+            </Link>
           </div>
         </motion.div>
 

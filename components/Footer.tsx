@@ -37,8 +37,8 @@ export default function Footer() {
               <li><Link href="/test/pricing#legal" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_legal')}</Link></li>
               <li><Link href="/test/pricing#translations" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_documents')}</Link></li>
               <li><Link href="/test/pricing#legalization" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_support')}</Link></li>
-              <li><Link href="/plans" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Subskrypcje miesięczne</Link></li>
-              <li><Link href="/book" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Zapisz się na konsultację</Link></li>
+              <li><Link href="/test/plans" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Subskrypcje miesięczne</Link></li>
+              <li><Link href="/test/book" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Zapisz się na konsultację</Link></li>
               <li><Link href="/portal" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Portal klienta</Link></li>
             </ul>
           </div>

@@ -7,18 +7,47 @@ export default function OrdersDemoPage() {
   const [activeFilter, setActiveFilter] = useState("новый");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newOrderForm, setNewOrderForm] = useState({ buyer_name: '', total_amount: '', notes: '' });
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/crm/orders');
+      const json = await res.json();
+      setOrders(json.data || []);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/admin/crm/orders');
-        const json = await res.json();
-        setOrders(json.data || []);
-      } catch (e) { console.error(e); }
-      setLoading(false);
-    };
-    fetchData();
+    fetchOrders();
   }, []);
+
+  const handleCreateOrder = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/admin/crm/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_number: `ORD-${Math.floor(Math.random() * 100000)}`,
+          status: 'новый',
+          total_amount: Number(newOrderForm.total_amount) || 0,
+          notes: newOrderForm.notes
+          // Would typically create buyer first, but for demo we just pass basic fields
+        })
+      });
+      if (res.ok) {
+        setIsModalOpen(false);
+        setNewOrderForm({ buyer_name: '', total_amount: '', notes: '' });
+        fetchOrders();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
 
   const filters = [
     { id: "all", label: "ФИЛЬТР СТАТУСОВ", color: "text-gray-500 border-gray-600", outline: true },
@@ -47,9 +76,12 @@ export default function OrdersDemoPage() {
           />
         </div>
 
-        <button className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all">
+        <button 
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+        >
           <Icon name="plus" size={16} />
-          Добавить заказ
+          Додати замовлення
         </button>
       </div>
 
@@ -160,6 +192,61 @@ export default function OrdersDemoPage() {
           </div>
         </SpotlightCard>
       </div>
+
+      {/* New Order Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white/80 backdrop-blur-xl border border-black/10 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-slide-down">
+            <div className="flex justify-between items-center p-5 border-b border-black/10">
+              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Нове замовлення</h3>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-800 transition-colors">
+                <Icon name="x" size={20} />
+              </button>
+            </div>
+            <form onSubmit={handleCreateOrder} className="p-5 flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Ім'я клієнта</label>
+                <input 
+                  type="text" 
+                  required
+                  value={newOrderForm.buyer_name}
+                  onChange={(e) => setNewOrderForm({...newOrderForm, buyer_name: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all"
+                  placeholder="Іван Іванов"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Сума (zł)</label>
+                <input 
+                  type="number" 
+                  required
+                  value={newOrderForm.total_amount}
+                  onChange={(e) => setNewOrderForm({...newOrderForm, total_amount: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all"
+                  placeholder="150"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-gray-600 uppercase tracking-wider">Коментар</label>
+                <textarea 
+                  value={newOrderForm.notes}
+                  onChange={(e) => setNewOrderForm({...newOrderForm, notes: e.target.value})}
+                  className="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all min-h-[80px]"
+                  placeholder="Особливі побажання..."
+                />
+              </div>
+              <div className="flex justify-end gap-3 mt-4">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors">
+                  Скасувати
+                </button>
+                <button type="submit" className="px-5 py-2.5 rounded-xl font-semibold bg-blue-500 hover:bg-blue-600 text-white shadow-[0_4px_15px_rgba(59,130,246,0.3)] transition-all">
+                  Створити
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -16,6 +16,30 @@ const mockData = [
 ];
 
 export default function CrmDemoPage() {
+  const [metrics, setMetrics] = useState({
+    newLeads: 0,
+    activeOrders: 0,
+    successfulDeals: 0,
+    revenue: 0
+  });
+  const [chartData, setChartData] = useState(mockData);
+
+  React.useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch('/api/admin/crm/dashboard');
+        const json = await res.json();
+        if (json.data) {
+          setMetrics(json.data.metrics);
+          setChartData(json.data.chartData);
+        }
+      } catch (e) {
+        console.error('Failed to load dashboard data', e);
+      }
+    }
+    loadData();
+  }, []);
+
   return (
     <div className="flex flex-col gap-8 p-8 bg-[#f5f5f7] text-gray-800 h-full max-w-5xl mx-auto">
       
@@ -38,10 +62,10 @@ export default function CrmDemoPage() {
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Новых лидов", val: "14", icon: "user-plus", bg: "bg-blue-500/20", border: "border-blue-500/30", text: "text-blue-500", shadow: "shadow-[0_0_15px_rgba(59,130,246,0.2)]" },
-          { label: "Заказов в работе", val: "38", icon: "shopping-bag", bg: "bg-amber-500/20", border: "border-amber-500/30", text: "text-amber-500", shadow: "shadow-[0_0_15px_rgba(245,158,11,0.2)]" },
-          { label: "Успешных сделок", val: "12", icon: "check-circle", bg: "bg-emerald-500/20", border: "border-emerald-500/30", text: "text-emerald-500", shadow: "shadow-[0_0_15px_rgba(16,185,129,0.2)]" },
-          { label: "Выручка", val: "48,500 zł", icon: "dollar-sign", bg: "bg-indigo-500/20", border: "border-indigo-500/30", text: "text-indigo-500", shadow: "shadow-[0_0_15px_rgba(99,102,241,0.2)]" },
+          { label: "Нових лідів", val: metrics.newLeads.toString(), icon: "user-plus", bg: "bg-blue-500/20", border: "border-blue-500/30", text: "text-blue-500", shadow: "shadow-[0_0_15px_rgba(59,130,246,0.2)]" },
+          { label: "Замовлень у роботі", val: metrics.activeOrders.toString(), icon: "shopping-bag", bg: "bg-amber-500/20", border: "border-amber-500/30", text: "text-amber-500", shadow: "shadow-[0_0_15px_rgba(245,158,11,0.2)]" },
+          { label: "Успішних угод", val: metrics.successfulDeals.toString(), icon: "check-circle", bg: "bg-emerald-500/20", border: "border-emerald-500/30", text: "text-emerald-500", shadow: "shadow-[0_0_15px_rgba(16,185,129,0.2)]" },
+          { label: "Виручка", val: `${metrics.revenue} ₴`, icon: "dollar-sign", bg: "bg-indigo-500/20", border: "border-indigo-500/30", text: "text-indigo-500", shadow: "shadow-[0_0_15px_rgba(99,102,241,0.2)]" },
         ].map((m, i) => (
           <motion.div
             key={m.label}
@@ -76,7 +100,7 @@ export default function CrmDemoPage() {
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -107,7 +131,7 @@ export default function CrmDemoPage() {
           </div>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />

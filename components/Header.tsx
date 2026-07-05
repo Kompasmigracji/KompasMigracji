@@ -41,7 +41,9 @@ export default function Header() {
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   const SERVICES = [
     { label: t('pcat_legalization'), href: '/test/pricing#legalization', icon: '🏠' },
@@ -67,6 +69,7 @@ export default function Header() {
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false);
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
@@ -148,21 +151,36 @@ export default function Header() {
 
             <div className="flex items-center gap-2">
               <ThemeSwitch />
-              <div className="relative group">
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 border border-black/10 text-xs font-bold text-gray-900 hover:bg-white/80 transition-all">
-                {LANG_LABELS[locale] || 'PL'}
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              <div className="absolute top-full right-0 mt-2 w-32 bg-white/95 backdrop-blur-xl border border-black/10 rounded-2xl p-2 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all origin-top-right transform scale-95 group-hover:scale-100">
-                {Object.entries(LANG_LABELS).map(([code, label]) => (
-                  <button
-                    key={code} onClick={() => changeLang(code)}
-                    className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${locale === code ? 'bg-blue-500/10 text-blue-400' : 'text-gray-700 hover:text-white hover:bg-white/80'}`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
+              <div className="relative" ref={langRef}>
+                <button 
+                  onClick={() => setLangOpen(!langOpen)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 text-xs font-bold text-gray-900 dark:text-white hover:bg-white/80 dark:hover:bg-white/20 transition-all"
+                >
+                  {LANG_LABELS[locale] || 'PL'}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className={`transition-transform duration-300 ${langOpen ? 'rotate-180' : ''}`}><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <AnimatePresence>
+                  {langOpen && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-[calc(100%+0.5rem)] right-0 w-32 bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-2 shadow-2xl origin-top-right"
+                    >
+                      {Object.entries(LANG_LABELS).map(([code, label]) => (
+                        <a
+                          key={code} 
+                          href={`/${code}${pathname === '/' ? '' : pathname}`}
+                          onClick={() => setLangOpen(false)}
+                          className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors no-underline ${locale === code ? 'bg-blue-500/10 text-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
+                        >
+                          {label}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -180,27 +198,27 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 backdrop-blur-xl flex flex-col md:hidden"
+            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 dark:bg-[#111111]/95 backdrop-blur-xl flex flex-col md:hidden"
           >
-            <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10">
-              <span className="font-display font-bold text-lg text-gray-900">Menu</span>
-              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-gray-900">
+            <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10 dark:border-white/10">
+              <span className="font-display font-bold text-lg text-gray-900 dark:text-white">Menu</span>
+              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-8">
               <div className="flex flex-col gap-2">
-                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 no-underline py-2">{t('nav_home')}</Link>
-                <div className="h-px bg-black/5 my-4" />
+                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 dark:text-white no-underline py-2">{t('nav_home')}</Link>
+                <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</span>
                 {SERVICES.map((s, i) => (
-                  <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-700'}`}>
+                  <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}>
                     <span>{s.icon}</span> {s.label}
                   </Link>
                 ))}
-                <div className="h-px bg-black/5 my-4" />
-                <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_pricing')}</Link>
-                <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">iPhoenixCRM</Link>
+                <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
+                <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">{t('nav_pricing')}</Link>
+                <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">iPhoenixCRM</Link>
                 <button 
                   onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
                   className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4"
@@ -209,11 +227,11 @@ export default function Header() {
                 </button>
               </div>
             </div>
-            <div className="p-6 border-t border-black/10 bg-white">
-              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-white/80 text-gray-900 font-bold mb-4">{PHONE}</a>
+            <div className="p-6 border-t border-black/10 dark:border-white/10 bg-white dark:bg-[#1a1a1a]">
+              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-bold mb-4">{PHONE}</a>
               <div className="flex justify-center gap-4">
                 {SOCIAL.map((s, i) => (
-                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-white/60 flex items-center justify-center text-gray-700">
+                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300">
                     {s.icon}
                   </a>
                 ))}
