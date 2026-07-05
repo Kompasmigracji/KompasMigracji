@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '@/lib/db';
+import { q } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -8,7 +8,7 @@ export async function GET() {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
-    const res = await db.query(`
+    const res = await q(`
       SELECT b.id, b.full_name, b.phone, b.email, b.created_at, s.name as source_name 
       FROM buyers b
       LEFT JOIN sources s ON b.source_id = s.id
@@ -45,7 +45,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Name and either email or phone are required.' }, { status: 400 });
     }
 
-    const result = await db.query(
+    const result = await q(
       `INSERT INTO buyers (full_name, email, phone) VALUES ($1, $2, $3) RETURNING *`,
       [full_name, email || null, phone || null]
     );
