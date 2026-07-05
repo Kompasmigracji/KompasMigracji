@@ -231,10 +231,10 @@ export default function ChatsDemoPage() {
                         {!isManager && <Avatar name={activeChat.name} size={32} className="border border-black/10 self-end mb-5" />}
                         <div className={`flex flex-col gap-1 ${isManager ? "items-end" : "items-start"}`}>
                           <div className={`
-                            px-4 py-3 text-sm leading-relaxed whitespace-pre-line shadow-lg
+                            px-4 py-2.5 text-[15px] leading-relaxed whitespace-pre-line shadow-sm
                             ${isManager 
-                              ? "bg-blue-500 text-white rounded-2xl rounded-br-sm shadow-[0_5px_20px_rgba(59,130,246,0.3)]" 
-                              : "bg-white/80 border border-black/10 text-gray-800 rounded-2xl rounded-bl-sm backdrop-blur-md"}
+                              ? "bg-blue-500 text-white rounded-2xl rounded-br-[4px]" 
+                              : "bg-[#e5e5ea] border border-black/5 text-gray-900 rounded-2xl rounded-bl-[4px]"}
                           `}>
                             {msg.text}
                           </div>
@@ -252,8 +252,8 @@ export default function ChatsDemoPage() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white/60 backdrop-blur-xl border-t border-black/10 z-10">
-              <div className="bg-black/40 border border-black/10 rounded-2xl p-3 flex flex-col gap-3 focus-within:border-blue-500/50 transition-colors shadow-inner">
+            <div className="p-4 bg-white/80 backdrop-blur-2xl border-t border-black/10 z-10 sticky bottom-0">
+              <div className="bg-black/5 border border-black/10 rounded-full py-2 px-4 flex flex-col gap-2 focus-within:bg-white focus-within:border-blue-500/50 focus-within:shadow-[0_0_20px_rgba(59,130,246,0.15)] transition-all">
                 <textarea 
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
@@ -263,8 +263,8 @@ export default function ChatsDemoPage() {
                       handleSendMessage();
                     }
                   }}
-                  placeholder="Введите сообщение..." 
-                  className="w-full min-h-[60px] max-h-[200px] bg-transparent border-none outline-none resize-none text-gray-800 text-sm placeholder:text-gray-600 custom-scrollbar"
+                  placeholder="iMessage..." 
+                  className="w-full min-h-[40px] max-h-[150px] bg-transparent border-none outline-none resize-none text-gray-900 font-medium text-[15px] placeholder:text-gray-400 custom-scrollbar leading-relaxed"
                 />
                 <div className="flex justify-between items-center px-1">
                   <div className="flex gap-4">
@@ -276,13 +276,12 @@ export default function ChatsDemoPage() {
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim()}
                     className={`
-                      px-6 py-2.5 rounded-xl text-sm font-bold flex items-center gap-2 transition-all
+                      w-8 h-8 rounded-full flex items-center justify-center transition-all flex-shrink-0
                       ${newMessage.trim() 
-                        ? 'bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)] hover:bg-blue-600 cursor-pointer' 
-                        : 'bg-white/80 text-gray-500 cursor-not-allowed'}
+                        ? 'bg-blue-500 text-white shadow-[0_2px_10px_rgba(59,130,246,0.5)] hover:scale-105 cursor-pointer' 
+                        : 'bg-black/10 text-gray-400 cursor-not-allowed'}
                     `}>
-                    <Icon name="send" size={16} /> 
-                    <span>Відправити</span>
+                    <Icon name="arrow-up" size={16} strokeWidth={3} /> 
                   </button>
                 </div>
               </div>

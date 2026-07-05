@@ -73,7 +73,7 @@ export default function OrdersDemoPage() {
         {/* Data Table */}
         <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl overflow-x-auto p-0">
           <table className="w-full min-w-[1200px] text-sm text-left">
-            <thead className="bg-black/20 text-xs text-gray-500 uppercase font-semibold border-b border-black/10">
+            <thead className="bg-white/80 backdrop-blur-md text-xs text-gray-500 uppercase font-semibold border-b border-black/10 sticky top-0 z-10 shadow-sm">
               <tr>
                 <th className="px-6 py-4 w-10"><input type="checkbox" className="accent-blue-500 cursor-pointer" /></th>
                 <th className="px-4 py-4 font-semibold tracking-wider">№ заказа</th>
