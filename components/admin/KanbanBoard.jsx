@@ -65,7 +65,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             onDrop={(e) => handleDrop(e, col.id)}
           >
             {/* Column Header */}
-            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-black/20`}>
+            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-white/80`}>
               <div className="flex justify-between items-center mb-1">
                 <h3 className="m-0 text-lg font-bold tracking-tight text-gray-800">{col.title}</h3>
                 <span className="bg-white/80 px-2.5 py-0.5 rounded-full text-xs text-gray-500 font-bold">
@@ -100,20 +100,17 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       whileHover={{ 
                         scale: 1.02, 
                         y: -4,
-                        boxShadow: "0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)",
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.08)",
                       }}
                       whileTap={{ scale: 0.98 }}
                       draggable
                       onDragStart={(e) => handleDragStart(e, String(card.id))}
                       onDragEnd={handleDragEnd}
                       onClick={() => onCardClick && onCardClick(card)}
-                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-[#0f0f0f] border border-black/10 shadow-lg group transition-colors hover:border-black/20"
+                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-white border border-black/10 shadow-sm group transition-colors hover:border-black/20"
                     >
                       {/* Left color bar */}
                       <div className={`absolute left-0 top-0 bottom-0 w-1 ${col.color?.split(' ').find(c => c.startsWith('bg-')) || 'bg-gray-500'}`} />
-                      
-                      {/* Top right subtle glow */}
-                      <div className="absolute top-0 right-0 w-16 h-16 bg-white/60 rounded-bl-full pointer-events-none" />
 
                       {/* Title */}
                       <div className="text-sm font-bold text-gray-800 break-words pr-4 leading-snug">
@@ -124,7 +121,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       {card.subtitle && (
                         <div className="flex items-center gap-2 mt-1">
                           <div className={`flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded border font-bold
-                            ${card.isUrgent ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-white/60 text-gray-500 border-black/10'}`}>
+                            ${card.isUrgent ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-gray-100 text-gray-600 border-black/5'}`}>
                             <Icon name="clock" size={10} />
                             {card.subtitle}
                           </div>
