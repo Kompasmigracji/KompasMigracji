@@ -176,7 +176,7 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex flex-col md:hidden"
+            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 backdrop-blur-xl flex flex-col md:hidden"
           >
             <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10">
               <span className="font-display font-bold text-lg text-gray-900">Menu</span>
@@ -187,14 +187,14 @@ export default function Header() {
             <div className="flex-1 overflow-y-auto px-6 py-8">
               <div className="flex flex-col gap-2">
                 <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 no-underline py-2">{t('nav_home')}</Link>
-                <div className="h-px bg-white/80 my-4" />
+                <div className="h-px bg-black/5 my-4" />
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</span>
                 {SERVICES.map((s, i) => (
                   <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-700'}`}>
                     <span>{s.icon}</span> {s.label}
                   </Link>
                 ))}
-                <div className="h-px bg-white/80 my-4" />
+                <div className="h-px bg-black/5 my-4" />
                 <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_pricing')}</Link>
                 <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">iphoenixCRM</Link>
                 <button 
