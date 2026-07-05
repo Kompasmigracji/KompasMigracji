@@ -57,15 +57,15 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
         return (
           <div 
             key={col.id}
-            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/60 border transition-all duration-300
-              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass}` : 'border border-black/10'}
-              shadow-[0_8px_30px_rgba(0,0,0,0.12)]`}
+            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/40 backdrop-blur-xl border transition-all duration-300
+              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass} shadow-[0_0_30px_rgba(59,130,246,0.2)]` : 'border-black/10'}
+              shadow-[0_8px_30px_rgba(0,0,0,0.05)]`}
             onDragOver={(e) => handleDragOver(e, col.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, col.id)}
           >
             {/* Column Header */}
-            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-white/80`}>
+            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-white/60 backdrop-blur-md`}>
               <div className="flex justify-between items-center mb-1">
                 <h3 className="m-0 text-lg font-bold tracking-tight text-gray-800">{col.title}</h3>
                 <span className="bg-white/80 px-2.5 py-0.5 rounded-full text-xs text-gray-500 font-bold">
@@ -107,7 +107,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       onDragStart={(e) => handleDragStart(e, String(card.id))}
                       onDragEnd={handleDragEnd}
                       onClick={() => onCardClick && onCardClick(card)}
-                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-white border border-black/10 shadow-sm group transition-colors hover:border-black/20"
+                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-white/80 backdrop-blur-md border border-black/10 shadow-[0_5px_15px_rgba(0,0,0,0.03)] group transition-colors hover:bg-white hover:border-black/20"
                     >
                       {/* Left color bar */}
                       <div className={`absolute left-0 top-0 bottom-0 w-1 ${col.color?.split(' ').find(c => c.startsWith('bg-')) || 'bg-gray-500'}`} />

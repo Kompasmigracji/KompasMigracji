@@ -23,10 +23,18 @@ export default function SettingsPage() {
             <Icon name="settings" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10">Модуль настроек</h3>
-          <p className="text-gray-500 text-sm leading-relaxed relative z-10">
-            Здесь вы можете управлять общими параметрами, ролями, доступами и другими настройками системы. Выберите раздел слева.
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10 tracking-tight">Налаштування Системи</h3>
+          <p className="text-gray-500 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
+            Тут ви зможете керувати доступами, ролями працівників та системними інтеграціями.
           </p>
+          <div className="relative z-10 flex gap-4 w-full">
+            <button className="flex-1 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-4 py-3 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow-md cursor-pointer flex items-center justify-center gap-2">
+              <Icon name="users" size={16} /> Ролі
+            </button>
+            <button className="flex-1 bg-gray-900 hover:bg-black text-white border-none px-4 py-3 rounded-xl font-bold text-sm shadow-[0_5px_15px_rgba(0,0,0,0.2)] transition-all hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2">
+              <Icon name="shield" size={16} /> Безпека
+            </button>
+          </div>
         </SpotlightCard>
       </motion.div>
     </div>

@@ -23,10 +23,13 @@ export default function EfficiencyPage() {
             <Icon name="activity" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10">Модуль в разработке</h3>
-          <p className="text-gray-500 text-sm leading-relaxed relative z-10">
-            Раздел аналитики эффективности менеджеров скоро будет доступен. Мы работаем над крутыми графиками и KPI метриками.
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10 tracking-tight">Модуль Аналітики</h3>
+          <p className="text-gray-500 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
+            Розділ розширеної аналітики та KPI менеджерів знаходиться в стадії інтеграції з базою даних.
           </p>
+          <button className="relative z-10 bg-blue-500 hover:bg-blue-600 text-white border-none px-6 py-3 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all hover:scale-105 cursor-pointer flex items-center gap-2">
+            <Icon name="bell" size={16} /> Повідомити про реліз
+          </button>
         </SpotlightCard>
       </motion.div>
     </div>
