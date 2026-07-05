@@ -7,9 +7,9 @@ export default function Footer() {
   const t = useTranslations();
 
   return (
-    <footer className="relative bg-[#030303] text-gray-900 pt-24 pb-12 mt-0 overflow-hidden border-t border-black/5">
+    <footer className="relative bg-[#fbfbfd] text-gray-900 pt-24 pb-12 mt-0 overflow-hidden border-t border-black/5">
       {/* Glows */}
-      <div className="absolute bottom-0 left-1/2 w-[800px] h-[400px] bg-blue-600/10 rounded-[100%] blur-[120px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
+      <div className="absolute bottom-0 left-1/2 w-[800px] h-[400px] bg-blue-500/5 rounded-[100%] blur-[120px] pointer-events-none -translate-x-1/2 translate-y-1/2" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
@@ -18,43 +18,43 @@ export default function Footer() {
               <div className="w-12 h-12 rounded-2xl bg-white/60 border border-black/10 flex items-center justify-center p-2 backdrop-blur-xl">
                 <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-full h-full object-contain" />
               </div>
-              <span className="font-display font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">Kompas Migracji</span>
+              <span className="font-display font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">Kompas Migracji</span>
             </div>
-            <p className="text-sm text-gray-500 leading-relaxed max-w-sm mb-8">{t('footer_about_text')}</p>
+            <p className="text-sm text-gray-600 leading-relaxed max-w-sm mb-8">{t('footer_about_text')}</p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/80 transition-colors">
+              <a href="#" className="w-10 h-10 rounded-full bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white transition-colors shadow-sm">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg>
               </a>
-              <a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/80 transition-colors">
+              <a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white transition-colors shadow-sm">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z"/></svg>
               </a>
             </div>
           </div>
 
           <div>
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-white/90">{t('footer_services_col')}</h4>
+            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-gray-900">{t('footer_services_col')}</h4>
             <ul className="flex flex-col gap-3">
-              <li><Link href="/test/pricing#legal" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_legal')}</Link></li>
-              <li><Link href="/test/pricing#translations" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_documents')}</Link></li>
-              <li><Link href="/test/pricing#legalization" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_support')}</Link></li>
-              <li><Link href="/plans" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Subskrypcje miesięczne</Link></li>
-              <li><Link href="/book" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Zapisz się na konsultację</Link></li>
-              <li><Link href="/portal" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Portal klienta</Link></li>
+              <li><Link href="/test/pricing#legal" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_legal')}</Link></li>
+              <li><Link href="/test/pricing#translations" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_documents')}</Link></li>
+              <li><Link href="/test/pricing#legalization" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>{t('footer_support')}</Link></li>
+              <li><Link href="/plans" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Subskrypcje miesięczne</Link></li>
+              <li><Link href="/book" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Zapisz się na konsultację</Link></li>
+              <li><Link href="/portal" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-blue-500"/>Portal klienta</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-white/90">{t('footer_contact_col')}</h4>
+            <h4 className="font-bold mb-6 text-sm uppercase tracking-widest text-gray-900">{t('footer_contact_col')}</h4>
             <ul className="flex flex-col gap-4">
-              <li><a href="https://wa.me/48729271848" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-3"><span className="text-green-500 text-lg">💬</span> +48 729 271 848</a></li>
-              <li><a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-3"><span className="text-blue-400 text-lg">✈️</span> @kompasmigracji</a></li>
-              <li><a href="viber://chat?number=48729271848" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-3"><span className="text-purple-500 text-lg">📳</span> +48 729 271 848</a></li>
-              <li><a href="mailto:info@kompasmigracji.com" className="text-sm text-gray-500 hover:text-white transition-colors no-underline flex items-center gap-3"><span className="text-orange-400 text-lg">📧</span> info@kompasmigracji.com</a></li>
+              <li><a href="https://wa.me/48729271848" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-3"><span className="text-green-500 text-lg">💬</span> +48 729 271 848</a></li>
+              <li><a href="https://t.me/kompasmigracji" target="_blank" rel="noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-3"><span className="text-blue-500 text-lg">✈️</span> @kompasmigracji</a></li>
+              <li><a href="viber://chat?number=48729271848" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-3"><span className="text-purple-500 text-lg">📳</span> +48 729 271 848</a></li>
+              <li><a href="mailto:info@kompasmigracji.com" className="text-sm text-gray-600 hover:text-gray-900 transition-colors no-underline flex items-center gap-3"><span className="text-orange-500 text-lg">📧</span> info@kompasmigracji.com</a></li>
             </ul>
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/60 border border-black/10 backdrop-blur-md mb-8">
+        <div className="p-6 rounded-3xl bg-white shadow-sm border border-black/5 mb-8">
           <div className="flex flex-wrap gap-x-8 gap-y-3 text-xs text-gray-500">
             <span className="font-semibold text-gray-800">DOMUS V Sp. z o.o.</span>
             <span>NIP: <span className="text-gray-700">5223350030</span></span>
@@ -67,9 +67,9 @@ export default function Footer() {
         <div className="border-t border-black/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <span className="text-sm text-gray-500">{t('footer_copyright')}</span>
           <div className="flex gap-6">
-            <Link href="/manual" className="text-sm text-gray-500 hover:text-white transition-colors no-underline">{t('footer_manual') || 'Інструкція'}</Link>
-            <Link href="/regulamin" className="text-sm text-gray-500 hover:text-white transition-colors no-underline">{t('footer_terms')}</Link>
-            <Link href="/privacy" className="text-sm text-gray-500 hover:text-white transition-colors no-underline">{t('footer_privacy')}</Link>
+            <Link href="/manual" className="text-sm text-gray-500 hover:text-gray-900 transition-colors no-underline">{t('footer_manual') || 'Інструкція'}</Link>
+            <Link href="/regulamin" className="text-sm text-gray-500 hover:text-gray-900 transition-colors no-underline">{t('footer_terms')}</Link>
+            <Link href="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors no-underline">{t('footer_privacy')}</Link>
           </div>
         </div>
 
