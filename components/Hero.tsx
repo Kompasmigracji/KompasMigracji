@@ -65,13 +65,13 @@ export default function Hero() {
           <div className="hero-mesh-3" />
         </div>
 
-        {/* Left side: Text Content */}
-        <div className="w-full lg:w-1/2 flex flex-col justify-center relative z-10 pt-32 lg:pt-0 pb-16 lg:pb-0 pr-0 lg:pr-12 text-center lg:text-left">
+        {/* Text Content */}
+        <div className="w-full max-w-4xl mx-auto flex flex-col justify-center items-center relative z-10 pt-32 pb-16 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge mx-auto lg:mx-0"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge mx-auto"
           >
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Ваш шлях до легалізації починається тут
@@ -91,7 +91,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg sm:text-xl md:text-2xl font-medium max-w-xl mx-auto lg:mx-0 mb-12"
+            className="text-lg sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12"
             style={{ color: 'var(--dim)', lineHeight: 1.5 }}
           >
             {t('hero_sub')}
@@ -101,7 +101,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <a
               href="https://wa.me/48729271848"
@@ -126,70 +126,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Right side: Spatial UI / Bento Grid */}
-        <div className="w-full lg:w-1/2 relative h-[500px] lg:h-[700px] hidden md:block" style={{ perspective: 1000 }}>
-          <motion.div 
-            className="absolute inset-0 flex items-center justify-center transform-style-3d"
-            style={{ 
-              rotateX: useTransform(springY, [-40, 40], [10, -10]), 
-              rotateY: useTransform(springX, [-40, 40], [-10, 10]) 
-            }}
-          >
-            <div className="grid grid-cols-2 gap-4 w-full max-w-[600px] p-8">
-              {/* Card 1 */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8, z: -100 }}
-                animate={{ opacity: 1, scale: 1, z: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="col-span-2 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/20 dark:border-black/10 p-6 rounded-[32px] shadow-2xl flex items-center gap-4 hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
-                style={{ transform: 'translateZ(40px)' }}
-              >
-                <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center text-3xl shrink-0">🛂</div>
-                <div>
-                  <h3 className="font-bold text-xl text-gray-900 dark:text-white">Wizy i zaproszenia</h3>
-                  <p className="text-gray-500 dark:text-gray-500 text-sm leading-relaxed">Повний супровід візових питань для іноземців до Польщі</p>
-                </div>
-              </motion.div>
-
-              {/* Card 2 */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8, z: -100 }}
-                animate={{ opacity: 1, scale: 1, z: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="col-span-1 bg-white/60 dark:bg-black/60 backdrop-blur-xl border border-black/20 dark:border-black/10 p-6 rounded-[32px] shadow-2xl hover:bg-white/80 dark:hover:bg-black/80 transition-colors"
-                style={{ transform: 'translateZ(70px)' }}
-              >
-                <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center text-2xl mb-4">🏠</div>
-                <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">Karta Pobytu</h3>
-                <p className="text-gray-500 dark:text-gray-500 text-sm">Отримання посвідки на проживання</p>
-              </motion.div>
-
-              {/* Card 3 */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8, z: -100 }}
-                animate={{ opacity: 1, scale: 1, z: 0 }}
-                transition={{ duration: 0.8, delay: 0.8 }}
-                className="col-span-1 bg-gradient-to-br from-blue-600 to-indigo-600 border border-black/20 p-6 rounded-[32px] shadow-2xl shadow-blue-500/30 text-gray-900"
-                style={{ transform: 'translateZ(90px)' }}
-              >
-                <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl mb-4">💼</div>
-                <h3 className="font-bold text-lg mb-2">Prawo pracy</h3>
-                <p className="text-white/80 text-sm">Дозволи на роботу та легалізація праці</p>
-              </motion.div>
-
-              {/* Card 4 (Floatie) */}
-              <motion.div 
-                animate={{ y: [-10, 10, -10] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -right-4 top-12 bg-white/80 dark:bg-black/80 backdrop-blur-md border border-black/20 dark:border-black/10 px-6 py-4 rounded-full shadow-2xl flex items-center gap-3"
-                style={{ transform: 'translateZ(120px)' }}
-              >
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="font-semibold text-sm">24/7 Wsparcie клієнтів</span>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
 
       </section>
 
