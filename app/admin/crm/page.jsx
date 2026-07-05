@@ -1,8 +1,19 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "@/components/admin/ui";
 import SpotlightCard from "@/components/SpotlightCard";
 import { motion } from "framer-motion";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
+
+const mockData = [
+  { name: 'Jan', revenue: 4000, leads: 24 },
+  { name: 'Feb', revenue: 3000, leads: 13 },
+  { name: 'Mar', revenue: 2000, leads: 98 },
+  { name: 'Apr', revenue: 2780, leads: 39 },
+  { name: 'May', revenue: 1890, leads: 48 },
+  { name: 'Jun', revenue: 2390, leads: 38 },
+  { name: 'Jul', revenue: 3490, leads: 43 },
+];
 
 export default function CrmDemoPage() {
   return (
@@ -51,18 +62,65 @@ export default function CrmDemoPage() {
         ))}
       </div>
       
-      {/* Recent Activity Table Placeholder */}
-      <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl overflow-hidden p-0">
-        <div className="p-6 border-b border-black/10 flex items-center justify-between bg-black/5">
-          <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Последние заказы</h3>
-          <button className="bg-transparent border-none text-blue-400 hover:text-blue-300 transition-colors text-sm font-semibold cursor-pointer flex items-center gap-2">
-            Смотреть все <Icon name="arrow-right" size={14} />
-          </button>
-        </div>
-        <div className="p-12 text-center text-gray-500 text-sm font-medium">
-          Выберите раздел слева, чтобы просмотреть данные.
-        </div>
-      </SpotlightCard>
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Динамика выручки</h3>
+              <p className="text-sm text-gray-500 m-0">За последние 7 месяцев</p>
+            </div>
+            <button className="bg-white/60 border border-black/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-white/80 transition-colors">
+              Подробнее
+            </button>
+          </div>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={mockData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip 
+                  contentStyle={{ borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}
+                />
+                <Area type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </SpotlightCard>
+
+        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Новые лиды</h3>
+              <p className="text-sm text-gray-500 m-0">Прирост клиентской базы</p>
+            </div>
+            <button className="bg-white/60 border border-black/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-white/80 transition-colors">
+              Источники
+            </button>
+          </div>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={mockData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip 
+                  cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(10px)' }}
+                />
+                <Bar dataKey="leads" fill="#10b981" radius={[4, 4, 0, 0]} barSize={30} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </SpotlightCard>
+      </div>
     </div>
   );
 }
