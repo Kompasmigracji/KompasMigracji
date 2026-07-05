@@ -23,10 +23,13 @@ export default function InventoryPage() {
             <Icon name="archive" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10">Модуль в разработке</h3>
-          <p className="text-gray-500 text-sm leading-relaxed relative z-10">
-            Управление складскими запасами, приходными и расходными накладными скоро появится в системе.
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10 tracking-tight">Модуль Інвентаризації</h3>
+          <p className="text-gray-500 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
+            Розділ управління складськими запасами та відстеження наявності товарів знаходиться на стадії розробки.
           </p>
+          <button className="relative z-10 bg-orange-500 hover:bg-orange-600 text-white border-none px-6 py-3 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(249,115,22,0.4)] transition-all hover:scale-105 cursor-pointer flex items-center gap-2">
+            <Icon name="bell" size={16} /> Повідомити про готовність
+          </button>
         </SpotlightCard>
       </motion.div>
     </div>

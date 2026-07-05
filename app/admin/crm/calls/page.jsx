@@ -23,10 +23,13 @@ export default function CallsPage() {
             <Icon name="phone-call" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10">Модуль в разработке</h3>
-          <p className="text-gray-500 text-sm leading-relaxed relative z-10">
-            Интеграция с телефонией (IP-телефония) скоро будет доступна. Здесь вы сможете совершать звонки, прослушивать записи и анализировать разговоры.
+          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10 tracking-tight">Модуль Телефонії</h3>
+          <p className="text-gray-500 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
+            Інтеграція з IP-телефонією для здійснення дзвінків та запису розмов скоро буде доступна.
           </p>
+          <button className="relative z-10 bg-green-500 hover:bg-green-600 text-white border-none px-6 py-3 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(34,197,94,0.4)] transition-all hover:scale-105 cursor-pointer flex items-center gap-2">
+            <Icon name="bell" size={16} /> Повідомити про готовність
+          </button>
         </SpotlightCard>
       </motion.div>
     </div>
