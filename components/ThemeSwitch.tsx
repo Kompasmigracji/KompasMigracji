@@ -6,11 +6,10 @@ type Theme = 'light' | 'dark';
 
 export default function ThemeSwitch() {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'dark';
+    if (typeof window === 'undefined') return 'light';
     const stored = (localStorage.getItem('theme') as Theme | null) || null;
     if (stored === 'light' || stored === 'dark') return stored;
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-    return 'light';
+    return 'light'; // Завжди світла тема за замовчуванням
   });
 
   useEffect(() => {
