@@ -221,7 +221,25 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      <AIAssistantIntake asModal={showAIModal} onClose={() => setShowAIModal(false)} />
+      <AnimatePresence>
+        {showAIModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/50 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative w-full max-w-6xl bg-transparent"
+            >
+              <AIAssistantIntake asModal={true} onClose={() => setShowAIModal(false)} />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
