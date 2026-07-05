@@ -126,6 +126,7 @@ export default function Header() {
               </AnimatePresence>
             </div>
             <Link href="/test/pricing" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">{t('nav_pricing')}</Link>
+            <Link href="/crm" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">iphoenixCRM</Link>
             <button 
               onClick={() => setShowAIModal(true)}
               className="px-4 py-2.5 rounded-full text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:bg-white/60 transition-all flex items-center gap-2"
@@ -195,6 +196,7 @@ export default function Header() {
                 ))}
                 <div className="h-px bg-white/80 my-4" />
                 <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">{t('nav_pricing')}</Link>
+                <Link href="/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 py-2 no-underline">iphoenixCRM</Link>
                 <button 
                   onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
                   className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4"
