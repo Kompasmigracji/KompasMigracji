@@ -23,7 +23,7 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
 /* ════════════════════════════════════════════════════════════ */
 /*                     MAIN HERO COMPONENT                     */
 /* ════════════════════════════════════════════════════════════ */
-export default function Hero() {
+export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
   const t = useTranslations();
   
   // Mouse parallax state
@@ -115,14 +115,13 @@ export default function Hero() {
                 {t('cta_consult')}
               </span>
             </a>
-            <a
-              href="/test"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-[1.03]"
+            <button
+              onClick={onShowMore}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-[1.03] cursor-pointer"
               style={{ border: '2px solid var(--border)', color: 'var(--text)', background: 'transparent' }}
             >
               {t('services_more') || 'Więcej'}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="8" x2="13" y2="8"/><polyline points="9 4 13 8 9 12"/></svg>
-            </a>
+            </button>
           </motion.div>
         </div>
 

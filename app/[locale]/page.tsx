@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
@@ -30,6 +33,8 @@ const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false }
 const MobileCTABar = dynamic(() => import('@/components/MobileCTABar'), { ssr: false });
 
 export default function HomePage() {
+  const [showMore, setShowMore] = useState(false);
+
   return (
     <>
       <ScrollProgress />
@@ -37,20 +42,24 @@ export default function HomePage() {
       <StarField />
       <Header />
       <main>
-        <Hero />
-        <VideosShowcase />
-        <SituationQuiz />
-        <Team />
-        <Reviews />
-        <SocialProof />
-        <ServicesGrid />
-        <HowItWorks />
-        <FirstSteps />
-        <Pricing />
-        <GuaranteeSection />
-        <FAQ />
-        <Blog />
-        <ContactForm />
+        <Hero onShowMore={() => setShowMore(true)} />
+        {showMore && (
+          <>
+            <VideosShowcase />
+            <SituationQuiz />
+            <Team />
+            <Reviews />
+            <SocialProof />
+            <ServicesGrid />
+            <HowItWorks />
+            <FirstSteps />
+            <Pricing />
+            <GuaranteeSection />
+            <FAQ />
+            <Blog />
+            <ContactForm />
+          </>
+        )}
       </main>
       <Footer />
       <CookieBanner />
