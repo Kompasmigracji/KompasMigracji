@@ -27,7 +27,6 @@ const Footer = dynamic(() => import('@/components/Footer'));
 const ReturnVisitor = dynamic(() => import('@/components/ReturnVisitor'), { ssr: false });
 const CookieBanner = dynamic(() => import('@/components/CookieBanner'), { ssr: false });
 const ChatBot = dynamic(() => import('@/components/ChatBot'), { ssr: false });
-const KompasAI = dynamic(() => import('@/components/KompasAI'), { ssr: false });
 const WhatsAppFloat = dynamic(() => import('@/components/WhatsAppFloat'), { ssr: false });
 const ExitPopup = dynamic(() => import('@/components/ExitPopup'), { ssr: false });
 const MobileCTABar = dynamic(() => import('@/components/MobileCTABar'), { ssr: false });
@@ -64,7 +63,6 @@ export default function HomePage() {
       <Footer />
       <CookieBanner />
       <ChatBot />
-      <KompasAI />
       <WhatsAppFloat />
       <ExitPopup />
       <MobileCTABar />
