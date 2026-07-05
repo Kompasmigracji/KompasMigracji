@@ -19,22 +19,6 @@ function Reveal({ children, delay = 0, className = '' }: { children: React.React
   );
 }
 
-/* ─── Services data ───────────────────────────────────────── */
-const SERVICES = [
-  { icon: '🛂', title: 'Wizy i zaproszenia', desc: 'Робочі, студентські, бізнес-візи та запрошення для іноземців до Польщі', gradient: 'linear-gradient(135deg, #0066FF 0%, #00AAFF 100%)', span: 'md:col-span-2 md:row-span-2', delay: 0.1 },
-  { icon: '🏠', title: 'Legalizacja pobytu', desc: 'Карта побуту, побут тимчасовий та сталий, резидент ЄС', gradient: 'linear-gradient(135deg, #FF6B35 0%, #FF3366 100%)', span: 'md:col-span-1', delay: 0.2 },
-  { icon: '⚖️', title: 'Prawo pracy', desc: 'Дозволи на роботу, oświadczenia, зміна роботодавця', gradient: 'linear-gradient(135deg, #7C3AED 0%, #DB2777 100%)', span: 'md:col-span-1', delay: 0.3 },
-  { icon: '📄', title: 'Tłumaczenia', desc: 'Присяжні переклади документів з/на польську, українську, англійську', gradient: 'linear-gradient(135deg, #059669 0%, #10B981 100%)', span: 'md:col-span-1', delay: 0.4 },
-  { icon: '💍', title: 'Ślub w Polsce', desc: 'Повний супровід шлюбу для іноземців — документи, USC, apostille', gradient: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)', span: 'md:col-span-1', delay: 0.5 },
-  { icon: '🔐', title: 'Pomoc prawna', desc: 'Юридичні консультації, оскарження відмов, представництво в уженді', gradient: 'linear-gradient(135deg, #1E40AF 0%, #6366F1 100%)', span: 'md:col-span-2', delay: 0.6 },
-];
-
-/* ─── Process steps ───────────────────────────────────────── */
-const STEPS = [
-  { num: '01', title: 'Konsultacja', desc: 'Безкоштовний аналіз вашої ситуації та підбір оптимальної стратегії легалізації' },
-  { num: '02', title: 'Dokumenty', desc: 'Підготовка повного пакету документів, переклади, заповнення анкет та форм' },
-  { num: '03', title: 'Decyzja', desc: 'Супровід до отримання позитивного рішення — карти побуту, візи або дозволу' },
-];
 
 /* ════════════════════════════════════════════════════════════ */
 /*                     MAIN HERO COMPONENT                     */
@@ -207,96 +191,8 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        >
-          <div className="w-6 h-10 rounded-full border-2 flex justify-center pt-2" style={{ borderColor: 'var(--dim)' }}>
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: 'var(--dim)' }}
-            />
-          </div>
-        </motion.div>
       </section>
 
-      {/* ─── SERVICES BENTO GRID ──────────────────────────── */}
-      <section className="py-20 sm:py-28 px-6">
-        <div className="max-w-6xl mx-auto">
-          <Reveal>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4" style={{ color: 'var(--text)', letterSpacing: '-0.03em' }}>
-                Наші послуги
-              </h2>
-              <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--dim)' }}>
-                Повний спектр міграційних послуг — від консультації до отримання документів
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {SERVICES.map((svc, i) => (
-              <Reveal key={i} delay={i * 0.08} className={svc.span}>
-                <div
-                  className="relative group h-full min-h-[200px] md:min-h-[220px] rounded-3xl p-8 flex flex-col justify-end cursor-pointer overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl"
-                  style={{ background: svc.gradient }}
-                >
-                  {/* Hover glow overlay */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 70%)' }} />
-                  
-                  <span className="text-4xl mb-3 relative z-10">{svc.icon}</span>
-                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 relative z-10">{svc.title}</h3>
-                  <p className="text-sm text-white/80 leading-relaxed relative z-10">{svc.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── PROCESS STEPS ────────────────────────────────── */}
-      <section className="py-20 sm:py-28 px-6" style={{ background: 'var(--bg)' }}>
-        <div className="max-w-5xl mx-auto">
-          <Reveal>
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4" style={{ color: 'var(--text)', letterSpacing: '-0.03em' }}>
-                Як це працює
-              </h2>
-              <p className="text-lg max-w-xl mx-auto" style={{ color: 'var(--dim)' }}>
-                Три простих кроки до вашої легалізації в Польщі
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 relative">
-            {/* Connecting line (desktop) */}
-            <div className="hidden md:block absolute top-1/2 left-[16%] right-[16%] h-px -translate-y-1/2" style={{ background: 'linear-gradient(90deg, var(--border), var(--dim), var(--border))' }} />
-
-            {STEPS.map((step, i) => (
-              <Reveal key={i} delay={i * 0.15}>
-                <div
-                  className="relative rounded-3xl p-8 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-xl"
-                  style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', backdropFilter: 'blur(20px)' }}
-                >
-                  <div
-                    className="inline-flex items-center justify-center w-16 h-16 rounded-2xl text-2xl font-black mb-6 mx-auto"
-                    style={{ background: 'linear-gradient(135deg, #0066FF, #00AAFF)', color: '#fff' }}
-                  >
-                    {step.num}
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-bold mb-3" style={{ color: 'var(--text)' }}>{step.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--dim)' }}>{step.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ─── BOTTOM CTA ───────────────────────────────────── */}
       <section className="py-24 sm:py-32 px-6 relative overflow-hidden">
