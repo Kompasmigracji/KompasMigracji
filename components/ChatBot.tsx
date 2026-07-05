@@ -223,7 +223,7 @@ export default function ChatBot() {
                   <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                     m.role === 'user' 
                       ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-br-sm shadow-lg' 
-                      : 'bg-white/80 text-gray-100 rounded-bl-sm border border-black/5'
+                      : 'bg-white/80 text-gray-800 rounded-bl-sm border border-black/5'
                   }`}>
                     {m.content.split('\n').map((line, j) => (
                       <span key={j}>
@@ -258,7 +258,7 @@ export default function ChatBot() {
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={t('chat_input_ph')}
+                  placeholder={t('ai_placeholder') || 'Напишіть повідомлення...'}
                   className="flex-1 bg-transparent border-none text-gray-900 text-sm px-3 py-2 resize-none max-h-24 focus:outline-none focus:ring-0 placeholder-gray-500"
                   rows={1}
                   style={{ minHeight: '36px', scrollbarWidth: 'none' }}
