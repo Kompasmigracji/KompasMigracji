@@ -7,6 +7,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import type { Locale } from '@/i18n';
 import AIAssistantIntake from '@/components/AIAssistantIntake';
 import { motion, AnimatePresence } from 'framer-motion';
+import ThemeSwitch from '@/components/ThemeSwitch';
 
 const PHONE = '+48 729 271 848';
 const WA_LINK = 'https://wa.me/48729271848';
@@ -145,7 +146,9 @@ export default function Header() {
               ))}
             </div>
 
-            <div className="relative group">
+            <div className="flex items-center gap-2">
+              <ThemeSwitch />
+              <div className="relative group">
               <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/60 border border-black/10 text-xs font-bold text-gray-900 hover:bg-white/80 transition-all">
                 {LANG_LABELS[locale] || 'PL'}
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
@@ -159,6 +162,7 @@ export default function Header() {
                     {label}
                   </button>
                 ))}
+              </div>
               </div>
             </div>
 

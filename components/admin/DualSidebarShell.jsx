@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Icon, Avatar } from "@/components/admin/ui";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 const NAV_DATA = [
   {
@@ -72,6 +73,7 @@ export default function DualSidebarShell({ children }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isBillingOpen, setIsBillingOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Fetch notifications logic
   const [notifications, setNotifications] = useState([]);
@@ -133,7 +135,7 @@ export default function DualSidebarShell({ children }) {
       </div>
 
       {/* Primary Sidebar (Icons) */}
-      <aside className="w-16 border-r border-black/5 bg-white/60 backdrop-blur-xl flex flex-col items-center py-4 shrink-0 z-50 relative">
+      <aside className="hidden md:flex w-16 border-r border-black/5 bg-white/60 backdrop-blur-xl flex-col items-center py-4 shrink-0 z-50 relative">
         {/* Brand Lock/Compass Logo */}
         <div className="w-10 h-10 rounded-full bg-blue-500/20 border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] flex items-center justify-center mb-8 cursor-pointer transition-transform hover:scale-110">
           <Icon name="compass" size={20} color="#60a5fa" />
@@ -312,7 +314,7 @@ export default function DualSidebarShell({ children }) {
       </AnimatePresence>
 
       {/* Secondary Sidebar (Menu Items) */}
-      <aside className="w-[240px] border-r border-black/5 bg-[#f5f5f7] flex flex-col shrink-0 z-10">
+      <aside className="hidden md:flex w-[240px] border-r border-black/5 bg-[#f5f5f7] flex-col shrink-0 z-10">
         <div className="h-16 flex items-center px-6 gap-3 font-bold text-lg text-gray-900">
           <Icon name={currentNav.icon} size={20} className="text-blue-400" />
           {currentNav.label}
@@ -354,23 +356,74 @@ export default function DualSidebarShell({ children }) {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none opacity-50 mix-blend-screen" />
         
         {/* Top Header Bar */}
-        <header className="h-16 flex items-center justify-end px-8 border-b border-black/5 shrink-0 relative z-10 backdrop-blur-sm">
-          <div className="flex items-center gap-4">
-            <div className="text-sm font-medium text-gray-500 bg-white/60 px-3 py-1.5 rounded-full border border-black/10">
+        <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-black/5 shrink-0 relative z-10 backdrop-blur-sm">
+          <button 
+            className="md:hidden w-10 h-10 rounded-xl bg-white/60 border border-black/10 flex items-center justify-center text-gray-900"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Icon name="menu" size={20} />
+          </button>
+          <div className="flex items-center gap-4 ml-auto">
+            <ThemeSwitch />
+            <div className="hidden md:block text-sm font-medium text-gray-500 bg-white/60 px-3 py-1.5 rounded-full border border-black/10">
               Workspace: <span className="text-gray-900 font-bold ml-1">Kompas Migracji</span>
             </div>
-            <div className="w-px h-6 bg-white/80 mx-2"></div>
-            <Link href="/" className="text-sm font-medium text-gray-500 hover:text-white transition-colors">
+            <div className="hidden md:block w-px h-6 bg-white/80 mx-2"></div>
+            <Link href="/" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
               Перейти на сайт
             </Link>
           </div>
         </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-8 relative z-10 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 relative z-10 custom-scrollbar">
           {children}
         </div>
       </main>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            className="fixed inset-0 z-[9999] flex"
+          >
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+            <div className="relative w-[280px] bg-[#f5f5f7] h-full flex flex-col shadow-2xl">
+              <div className="h-16 flex items-center justify-between px-4 border-b border-black/5 bg-white/60">
+                <span className="font-bold text-lg text-gray-900">iPhoenixCRM</span>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-gray-500 hover:text-gray-900">
+                  <Icon name="x" size={24} />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                {NAV_DATA.map((nav) => (
+                  <div key={nav.id}>
+                    <div className="flex items-center gap-2 font-bold text-gray-900 mb-3">
+                      <Icon name={nav.icon} size={18} className="text-blue-500" />
+                      {nav.label}
+                    </div>
+                    <div className="flex flex-col gap-1 pl-6 border-l-2 border-black/5 ml-2">
+                      {nav.groups.flatMap(g => g.items).map(item => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`py-2 text-sm font-medium ${pathname === item.href ? 'text-blue-500 font-bold' : 'text-gray-600 hover:text-gray-900'}`}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
