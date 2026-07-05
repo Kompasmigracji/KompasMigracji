@@ -49,24 +49,24 @@ export default function BuyersDemoPage() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
+    <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
       
       {/* Top Header */}
-      <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
-        <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Покупатели</h2>
+      <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
+        <h2 className="m-0 text-xl font-bold text-gray-900 dark:text-white tracking-tight">Покупатели</h2>
         
         {/* Search Bar */}
-        <div className="flex-1 flex items-center bg-black/40 border border-black/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
-          <Icon name="search" size={16} className="text-gray-500" />
+        <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
+          <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
-            className="bg-transparent border-none outline-none text-gray-800 w-full text-sm placeholder:text-gray-600"
+            className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
 
-        <button className="bg-white/60 border border-black/10 p-2.5 rounded-xl hover:bg-white/80 transition-colors">
-          <Icon name="sliders" size={16} className="text-gray-500" />
+        <button className="bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 p-2.5 rounded-xl hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
+          <Icon name="sliders" size={16} className="text-gray-500 dark:text-gray-400" />
         </button>
 
         <button 
@@ -80,9 +80,9 @@ export default function BuyersDemoPage() {
 
       <div className="p-8">
         {/* Data Table */}
-        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl overflow-x-auto p-0">
+        <SpotlightCard className="bg-white/60 dark:bg-[#1a1a1a]/60 border border-black/10 dark:border-white/10 rounded-2xl overflow-x-auto p-0">
           <table className="w-full min-w-[1000px] text-sm text-left">
-            <thead className="bg-white/80 backdrop-blur-md text-xs text-gray-500 uppercase font-semibold border-b border-black/10 sticky top-0 z-10 shadow-sm">
+            <thead className="bg-white/80 dark:bg-[#222]/80 backdrop-blur-md text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold border-b border-black/10 dark:border-white/10 sticky top-0 z-10 shadow-sm">
               <tr>
                 <th className="px-6 py-4 w-10">
                   <input type="checkbox" className="accent-blue-500 cursor-pointer" />
@@ -101,36 +101,36 @@ export default function BuyersDemoPage() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="9" className="p-8 text-center text-gray-500">Загрузка данных из базы...</td></tr>
+                <tr><td colSpan="9" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка данных из базы...</td></tr>
               ) : buyers.length === 0 ? (
-                <tr><td colSpan="9" className="p-8 text-center text-gray-500">Нет покупателей</td></tr>
+                <tr><td colSpan="9" className="p-8 text-center text-gray-500 dark:text-gray-400">Нет покупателей</td></tr>
               ) : buyers.map((buyer, index) => (
-                <tr key={buyer.id} className={`transition-colors hover:bg-white/60 border-black/5 ${index !== buyers.length - 1 ? 'border-b' : ''}`}>
+                <tr key={buyer.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== buyers.length - 1 ? 'border-b' : ''}`}>
                   <td className="px-6 py-4">
                     <input type="checkbox" className="accent-blue-500 cursor-pointer" />
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-white/60 flex items-center justify-center border border-black/10 shadow-inner">
-                        <Icon name="user" size={14} className="text-gray-500" />
+                      <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center border border-black/10 dark:border-white/10 shadow-inner">
+                        <Icon name="user" size={14} className="text-gray-500 dark:text-gray-400" />
                       </div>
-                      <span className="text-blue-400 font-medium">{buyer.full_name || "Без имени"}</span>
+                      <span className="text-blue-500 dark:text-blue-400 font-medium">{buyer.full_name || "Без имени"}</span>
                     </div>
                   </td>
-                  <td className={`px-4 py-4 ${buyer.email ? 'text-gray-700 font-medium' : 'text-blue-400/50'}`}>
+                  <td className={`px-4 py-4 ${buyer.email ? 'text-gray-700 dark:text-gray-300 font-medium' : 'text-blue-500/50 dark:text-blue-400/50'}`}>
                     {buyer.email || "[пусто]"}
                   </td>
-                  <td className={`px-4 py-4 whitespace-pre-line ${buyer.phone ? 'text-gray-700' : 'text-blue-400/50'}`}>
+                  <td className={`px-4 py-4 whitespace-pre-line ${buyer.phone ? 'text-gray-700 dark:text-gray-300' : 'text-blue-500/50 dark:text-blue-400/50'}`}>
                     {buyer.phone || "[пусто]"}
                   </td>
-                  <td className="px-4 py-4 text-center text-gray-500">-</td>
-                  <td className="px-4 py-4 text-center text-gray-500">-</td>
-                  <td className="px-4 py-4 text-gray-700">
+                  <td className="px-4 py-4 text-center text-gray-500 dark:text-gray-400">-</td>
+                  <td className="px-4 py-4 text-center text-gray-500 dark:text-gray-400">-</td>
+                  <td className="px-4 py-4 text-gray-700 dark:text-gray-300">
                     {new Date(buyer.created_at).toLocaleString('ru-RU')}
                   </td>
-                  <td className="px-4 py-4 text-gray-500">-</td>
+                  <td className="px-4 py-4 text-gray-500 dark:text-gray-400">-</td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-3 text-gray-500">
+                    <div className="flex items-center justify-end gap-3 text-gray-500 dark:text-gray-400">
                       <Icon name="edit-2" size={16} className="cursor-pointer hover:text-blue-400 transition-colors" />
                       <Icon name="trash-2" size={16} className="cursor-pointer hover:text-red-400 transition-colors" />
                     </div>
@@ -141,17 +141,17 @@ export default function BuyersDemoPage() {
           </table>
           
           {/* Pagination Footer */}
-          <div className="p-4 flex justify-between items-center text-xs text-gray-500 border-t border-black/10 bg-black/20">
+          <div className="p-4 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 border-t border-black/10 dark:border-white/10 bg-black/5 dark:bg-black/20">
             <div className="flex items-center gap-1.5">
-              <button className="px-3 py-1.5 bg-white/60 hover:bg-white/80 border border-black/10 rounded-md cursor-pointer transition-colors">&lt;</button>
+              <button className="px-3 py-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-black/10 dark:border-white/10 rounded-md cursor-pointer transition-colors">&lt;</button>
               <button className="px-3 py-1.5 bg-blue-500 text-white border border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] rounded-md cursor-pointer font-bold">1</button>
-              <button className="px-3 py-1.5 bg-white/60 hover:bg-white/80 border border-black/10 rounded-md cursor-pointer text-gray-700 transition-colors">2</button>
-              <button className="px-3 py-1.5 bg-white/60 hover:bg-white/80 border border-black/10 rounded-md cursor-pointer transition-colors">&gt;</button>
+              <button className="px-3 py-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-black/10 dark:border-white/10 rounded-md cursor-pointer text-gray-700 dark:text-gray-300 transition-colors">2</button>
+              <button className="px-3 py-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-black/10 dark:border-white/10 rounded-md cursor-pointer transition-colors">&gt;</button>
             </div>
             <div className="flex items-center gap-6">
               <span>Показано 1 - 10 из 25 записей</span>
               <div className="flex items-center gap-2">
-                <select className="bg-white/60 border border-black/10 text-gray-700 px-2 py-1 rounded-md outline-none">
+                <select className="bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md outline-none">
                   <option>15</option>
                   <option>25</option>
                   <option>50</option>
@@ -176,41 +176,41 @@ export default function BuyersDemoPage() {
               initial={{ scale: 0.95, opacity: 0 }} 
               animate={{ scale: 1, opacity: 1 }} 
               exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-white border border-black/10 p-8 rounded-2xl w-[400px] shadow-2xl relative overflow-hidden"
+              className="bg-white dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 p-8 rounded-2xl w-[400px] shadow-2xl relative overflow-hidden"
             >
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 blur-[50px] rounded-full pointer-events-none" />
               
-              <h3 className="m-0 mb-6 text-gray-900 font-bold text-xl relative z-10">Новый покупатель</h3>
+              <h3 className="m-0 mb-6 text-gray-900 dark:text-white font-bold text-xl relative z-10">Новый покупатель</h3>
               
               <form onSubmit={handleAddBuyer} className="flex flex-col gap-4 relative z-10">
                 <div>
-                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">ФИО *</label>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">ФИО *</label>
                   <input 
                     required 
                     placeholder="Иван Иванов" 
                     value={newBuyer.full_name} 
                     onChange={e => setNewBuyer({...newBuyer, full_name: e.target.value})} 
-                    className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/60 text-gray-900 outline-none focus:border-blue-500/50 transition-colors" 
+                    className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" 
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">Email</label>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Email</label>
                   <input 
                     type="email" 
                     placeholder="email@example.com" 
                     value={newBuyer.email} 
                     onChange={e => setNewBuyer({...newBuyer, email: e.target.value})} 
-                    className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/60 text-gray-900 outline-none focus:border-blue-500/50 transition-colors" 
+                    className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" 
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 font-bold mb-1 block uppercase tracking-wider">Телефон</label>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Телефон</label>
                   <input 
                     type="tel" 
                     placeholder="+48 000 000 000" 
                     value={newBuyer.phone} 
                     onChange={e => setNewBuyer({...newBuyer, phone: e.target.value})} 
-                    className="w-full px-4 py-3 rounded-xl border border-black/10 bg-white/60 text-gray-900 outline-none focus:border-blue-500/50 transition-colors" 
+                    className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" 
                   />
                 </div>
                 
@@ -218,7 +218,7 @@ export default function BuyersDemoPage() {
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)} 
-                    className="px-5 py-2.5 rounded-xl border border-black/10 bg-transparent hover:bg-white/60 text-gray-700 font-semibold cursor-pointer transition-colors"
+                    className="px-5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 font-semibold cursor-pointer transition-colors"
                   >
                     Отмена
                   </button>

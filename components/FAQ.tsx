@@ -25,7 +25,7 @@ export default function FAQ() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 relative bg-[#030303] text-gray-900 overflow-hidden">
+    <section className="py-24 sm:py-32 relative bg-white dark:bg-[#020617] text-gray-900 dark:text-white overflow-hidden">
       {/* Glows */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
@@ -38,11 +38,11 @@ export default function FAQ() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('faq_tag')}
           </div>
-          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
+          <h2 className="font-display tracking-tight font-bold text-gray-900 dark:text-white" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
             {t('faq_title')}
           </h2>
         </motion.div>
@@ -60,7 +60,7 @@ export default function FAQ() {
                 className={`overflow-hidden rounded-2xl border backdrop-blur-xl transition-all duration-300 ${
                   it.panic 
                     ? 'bg-red-500/5 border-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.05)]' 
-                    : 'bg-white/60 border-black/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/80'
+                    : 'bg-white/60 dark:bg-white/5 border-black/10 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4)] hover:bg-white/80 dark:hover:bg-white/10'
                 }`}
               >
                 <button
@@ -73,7 +73,7 @@ export default function FAQ() {
                         ⚡
                       </span>
                     )}
-                    <span className={`font-semibold text-base md:text-lg transition-colors ${it.panic ? 'text-red-300' : 'text-gray-800'}`}>
+                    <span className={`font-semibold text-base md:text-lg transition-colors ${it.panic ? 'text-red-600 dark:text-red-300' : 'text-gray-900 dark:text-white'}`}>
                       {it.q}
                     </span>
                   </div>
@@ -99,7 +99,7 @@ export default function FAQ() {
                       transition={{ duration: 0.3, ease: 'easeInOut' }}
                     >
                       <div className={`px-6 pb-6 pt-2 text-base leading-relaxed border-t ${
-                        it.panic ? 'border-red-500/20 text-red-200/80 bg-red-500/5' : 'border-black/10 text-gray-500'
+                        it.panic ? 'border-red-500/20 text-red-700/80 dark:text-red-200/80 bg-red-500/5' : 'border-black/10 dark:border-white/10 text-gray-600 dark:text-gray-400'
                       }`}>
                         {it.a}
                         

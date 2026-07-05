@@ -57,23 +57,23 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
         return (
           <div 
             key={col.id}
-            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/40 backdrop-blur-xl border transition-all duration-300
-              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass} shadow-[0_0_30px_rgba(59,130,246,0.2)]` : 'border-black/10'}
-              shadow-[0_8px_30px_rgba(0,0,0,0.05)]`}
+            className={`flex-none w-[340px] rounded-2xl flex flex-col bg-white/40 dark:bg-white/5 backdrop-blur-xl border transition-all duration-300
+              ${isDraggedOver ? `border-2 border-dashed ${borderColorClass} shadow-[0_0_30px_rgba(59,130,246,0.2)]` : 'border-black/10 dark:border-white/10'}
+              shadow-[0_8px_30px_rgba(0,0,0,0.05)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.2)]`}
             onDragOver={(e) => handleDragOver(e, col.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, col.id)}
           >
             {/* Column Header */}
-            <div className={`p-5 border-b border-black/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-white/60 backdrop-blur-md`}>
+            <div className={`p-5 border-b border-black/10 dark:border-white/10 border-t-[4px] rounded-t-2xl ${borderColorClass} bg-white/60 dark:bg-white/5 backdrop-blur-md`}>
               <div className="flex justify-between items-center mb-1">
-                <h3 className="m-0 text-lg font-bold tracking-tight text-gray-800">{col.title}</h3>
-                <span className="bg-white/80 px-2.5 py-0.5 rounded-full text-xs text-gray-500 font-bold">
+                <h3 className="m-0 text-lg font-bold tracking-tight text-gray-800 dark:text-white">{col.title}</h3>
+                <span className="bg-white/80 dark:bg-white/20 px-2.5 py-0.5 rounded-full text-xs text-gray-500 dark:text-gray-300 font-bold">
                   {colCards.length}
                 </span>
               </div>
               {totalAmount > 0 && (
-                <div className="text-xs text-gray-500 font-medium">
+                <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">
                   {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalAmount)}
                 </div>
               )}
@@ -83,12 +83,12 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             <div className="flex-1 p-4 flex flex-col gap-4 overflow-y-auto custom-scrollbar">
               {colCards.map(card => {
                 let sourceIcon = "message-circle";
-                let sourceColor = "text-gray-500";
+                let sourceColor = "text-gray-500 dark:text-gray-400";
                 const sLower = (card.tags?.[0] || "").toLowerCase();
-                if (sLower.includes("telegram")) { sourceIcon = "send"; sourceColor = "text-blue-400"; }
-                else if (sLower.includes("viber")) { sourceIcon = "phone"; sourceColor = "text-purple-400"; }
-                else if (sLower.includes("facebook") || sLower.includes("fb")) { sourceIcon = "facebook"; sourceColor = "text-blue-600"; }
-                else if (sLower.includes("instagram") || sLower.includes("ig")) { sourceIcon = "instagram"; sourceColor = "text-pink-500"; }
+                if (sLower.includes("telegram")) { sourceIcon = "send"; sourceColor = "text-blue-500 dark:text-blue-400"; }
+                else if (sLower.includes("viber")) { sourceIcon = "phone"; sourceColor = "text-purple-500 dark:text-purple-400"; }
+                else if (sLower.includes("facebook") || sLower.includes("fb")) { sourceIcon = "facebook"; sourceColor = "text-blue-600 dark:text-blue-500"; }
+                else if (sLower.includes("instagram") || sLower.includes("ig")) { sourceIcon = "instagram"; sourceColor = "text-pink-500 dark:text-pink-400"; }
 
                 return (
                   <div key={card.id} className="perspective-1000">
@@ -107,13 +107,13 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       onDragStart={(e) => handleDragStart(e, String(card.id))}
                       onDragEnd={handleDragEnd}
                       onClick={() => onCardClick && onCardClick(card)}
-                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-white/80 backdrop-blur-md border border-black/10 shadow-[0_5px_15px_rgba(0,0,0,0.03)] group transition-colors hover:bg-white hover:border-black/20"
+                      className="rounded-xl p-5 cursor-grab flex flex-col gap-3 relative overflow-hidden bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-md border border-black/10 dark:border-white/10 shadow-[0_5px_15px_rgba(0,0,0,0.03)] dark:shadow-[0_5px_15px_rgba(0,0,0,0.2)] group transition-colors hover:bg-white dark:hover:bg-[#222] hover:border-black/20 dark:hover:border-white/20"
                     >
                       {/* Left color bar */}
                       <div className={`absolute left-0 top-0 bottom-0 w-1 ${col.color?.split(' ').find(c => c.startsWith('bg-')) || 'bg-gray-500'}`} />
 
                       {/* Title */}
-                      <div className="text-sm font-bold text-gray-800 break-words pr-4 leading-snug">
+                      <div className="text-sm font-bold text-gray-800 dark:text-gray-200 break-words pr-4 leading-snug">
                         {card.title}
                       </div>
                       
@@ -121,28 +121,28 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                       {card.subtitle && (
                         <div className="flex items-center gap-2 mt-1">
                           <div className={`flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded border font-bold
-                            ${card.isUrgent ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-gray-100 text-gray-600 border-black/5'}`}>
+                            ${card.isUrgent ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 border-black/5 dark:border-white/5'}`}>
                             <Icon name="clock" size={10} />
                             {card.subtitle}
                           </div>
-                          <span className="text-[10px] text-gray-500 font-medium">{card.timeAgo}</span>
+                          <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">{card.timeAgo}</span>
                         </div>
                       )}
 
                       {/* Source */}
-                      <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mt-1">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 font-medium mt-1">
                         <Icon name={sourceIcon} size={12} className={sourceColor} />
                         <span>{card.tags?.[0] || "Direct"}</span>
                       </div>
 
                       {/* Footer */}
-                      <div className="flex justify-between items-center pt-3 mt-2 border-t border-black/10">
+                      <div className="flex justify-between items-center pt-3 mt-2 border-t border-black/10 dark:border-white/10">
                         <div className="flex items-center gap-2">
                           <Avatar name={card.assignee?.name || "Unassigned"} size={20} />
-                          <span className="text-xs text-gray-500 font-medium">{card.assignee?.name || "Не призначено"}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{card.assignee?.name || "Не призначено"}</span>
                         </div>
                         {card.amount > 0 && (
-                          <div className="text-xs font-bold text-blue-400">
+                          <div className="text-xs font-bold text-blue-500 dark:text-blue-400">
                             {card.amount} zł
                           </div>
                         )}
@@ -153,7 +153,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
               })}
               
               {colCards.length === 0 && (
-                <div className="text-center p-8 text-gray-600 text-xs font-semibold border-2 border-dashed border-black/5 rounded-xl uppercase tracking-wider">
+                <div className="text-center p-8 text-gray-600 dark:text-gray-400 text-xs font-semibold border-2 border-dashed border-black/5 dark:border-white/5 rounded-xl uppercase tracking-wider">
                   Перетягніть сюди
                 </div>
               )}

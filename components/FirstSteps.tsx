@@ -44,7 +44,7 @@ export default function FirstSteps() {
   ];
 
   return (
-    <section className="relative py-32 overflow-hidden bg-[#f5f5f7] border-y border-black/5">
+    <section className="relative py-32 overflow-hidden bg-[#fbfbfd] dark:bg-[#0a0a0a] border-y border-black/5 dark:border-white/5">
       {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
 
@@ -54,7 +54,7 @@ export default function FirstSteps() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-xs font-bold uppercase tracking-widest text-blue-500 mb-4"
+            className="text-xs font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4"
           >
             {t('first_steps_tag')}
           </motion.div>
@@ -64,9 +64,9 @@ export default function FirstSteps() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight"
+            className="font-display text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight"
           >
-            {t('first_steps_title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">{t('first_steps_highlight')}</span>
+            {t('first_steps_title')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400">{t('first_steps_highlight')}</span>
           </motion.h2>
           
           <motion.p
@@ -74,7 +74,7 @@ export default function FirstSteps() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-6 max-w-2xl mx-auto text-lg text-gray-500"
+            className="mt-6 max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400"
           >
             {t('first_steps_desc')}
           </motion.p>
@@ -92,23 +92,23 @@ export default function FirstSteps() {
             >
               <SpotlightCard className={`h-full flex flex-col p-8 sm:p-10 ${step.highlight ? 'ring-1 ring-blue-500/30 bg-blue-900/10' : ''}`}>
                 <div className="flex flex-wrap items-center gap-3 mb-6">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl border ${step.highlight ? 'bg-blue-500/20 border-blue-500/30' : 'bg-white/60 border-black/10'}`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl border ${step.highlight ? 'bg-blue-500/20 border-blue-500/30' : 'bg-white/60 dark:bg-white/10 border-black/10 dark:border-white/10'}`}>
                     {step.icon}
                   </div>
                   <div className="flex flex-col">
-                    <span className={`text-sm font-bold uppercase tracking-wider ${step.highlight ? 'text-blue-400' : 'text-gray-500'}`}>
+                    <span className={`text-sm font-bold uppercase tracking-wider ${step.highlight ? 'text-blue-500 dark:text-blue-400' : 'text-gray-600 dark:text-gray-400'}`}>
                       {t('fs_step_label')} {step.num}
                     </span>
                     {step.highlight && (
-                      <span className="text-[10px] font-semibold text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded-full mt-1 w-fit">
+                      <span className="text-[10px] font-semibold text-blue-500 dark:text-blue-400 bg-blue-500/20 px-2 py-0.5 rounded-full mt-1 w-fit">
                         {t('fs_now_label')}
                       </span>
                     )}
                   </div>
                 </div>
                 
-                <h3 className="font-display font-bold text-gray-900 text-xl sm:text-2xl mb-4">{step.title}</h3>
-                <p className="text-gray-500 leading-relaxed text-sm sm:text-base flex-1">{step.desc}</p>
+                <h3 className="font-display font-bold text-gray-900 dark:text-white text-xl sm:text-2xl mb-4">{step.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm sm:text-base flex-1">{step.desc}</p>
               </SpotlightCard>
             </motion.div>
           ))}

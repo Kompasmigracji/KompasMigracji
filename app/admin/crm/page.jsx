@@ -41,15 +41,15 @@ export default function CrmDemoPage() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 p-8 bg-[#f5f5f7] text-gray-800 h-full max-w-5xl mx-auto">
+    <div className="flex flex-col gap-8 p-8 bg-transparent text-gray-800 h-full max-w-5xl mx-auto">
       
       {/* Welcome Banner */}
-      <SpotlightCard className="bg-white/60 border border-black/10 p-8 rounded-3xl relative overflow-hidden flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.05)]">
+      <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 p-8 rounded-3xl relative overflow-hidden flex items-center justify-between shadow-[0_10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_10px_40px_rgba(0,0,0,0.2)]">
         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 blur-[80px] rounded-full pointer-events-none" />
         
         <div className="relative z-10 flex flex-col gap-3">
-          <h2 className="text-3xl font-bold text-gray-900 m-0 tracking-tight">Добро пожаловать в iPhoenixCRM</h2>
-          <p className="text-gray-500 text-base leading-relaxed max-w-lg m-0">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white m-0 tracking-tight">Добро пожаловать в iPhoenixCRM</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed max-w-lg m-0">
             Это новая концепция админ-панели с двухколоночным сайдбаром, адаптированная под дизайн-систему Spatial UI.
           </p>
         </div>
@@ -73,14 +73,14 @@ export default function CrmDemoPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <SpotlightCard className="bg-white/60 border border-black/10 p-6 rounded-2xl flex flex-col gap-4">
+            <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 rounded-2xl flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl ${m.bg} border ${m.border} ${m.text} flex items-center justify-center ${m.shadow}`}>
                   <Icon name={m.icon} size={18} />
                 </div>
-                <span className="text-sm font-semibold text-gray-500">{m.label}</span>
+                <span className="text-sm font-semibold text-gray-500 dark:text-gray-400">{m.label}</span>
               </div>
-              <div className="text-3xl font-bold text-gray-900 tracking-tight">{m.val}</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{m.val}</div>
             </SpotlightCard>
           </motion.div>
         ))}
@@ -88,13 +88,13 @@ export default function CrmDemoPage() {
       
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+        <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Динамика выручки</h3>
-              <p className="text-sm text-gray-500 m-0">За последние 7 месяцев</p>
+              <h3 className="m-0 text-lg font-bold text-gray-900 dark:text-white tracking-tight">Динамика выручки</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 m-0">За последние 7 месяцев</p>
             </div>
-            <button className="bg-white/60 border border-black/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-white/80 transition-colors">
+            <button className="bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
               Подробнее
             </button>
           </div>
@@ -119,13 +119,13 @@ export default function CrmDemoPage() {
           </div>
         </SpotlightCard>
 
-        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+        <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-[0_10px_30px_rgba(0,0,0,0.03)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.2)]">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="m-0 text-lg font-bold text-gray-900 tracking-tight">Новые лиды</h3>
-              <p className="text-sm text-gray-500 m-0">Прирост клиентской базы</p>
+              <h3 className="m-0 text-lg font-bold text-gray-900 dark:text-white tracking-tight">Новые лиды</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 m-0">Прирост клиентской базы</p>
             </div>
-            <button className="bg-white/60 border border-black/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-white/80 transition-colors">
+            <button className="bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-xl px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
               Источники
             </button>
           </div>

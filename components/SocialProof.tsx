@@ -52,7 +52,7 @@ function StatCard({ value, suffix = "", label, icon, delay = 0 }: { value: numbe
       transition={{ duration: 0.8, delay }}
       onViewportEnter={() => setActive(true)}
       onMouseMove={handleMouseMove}
-      className="group relative flex flex-col items-center text-center p-8 rounded-3xl bg-white/60 border border-black/10 overflow-hidden backdrop-blur-xl"
+      className="group relative flex flex-col items-center text-center p-8 rounded-3xl bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 overflow-hidden backdrop-blur-xl"
     >
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
@@ -66,13 +66,13 @@ function StatCard({ value, suffix = "", label, icon, delay = 0 }: { value: numbe
           `,
         }}
       />
-      <div className="mb-4 text-blue-400 group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] relative z-10">
+      <div className="mb-4 text-blue-500 dark:text-blue-400 group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] relative z-10">
         {icon}
       </div>
-      <div className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400 mb-2 font-display relative z-10">
+      <div className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-2 font-display relative z-10">
         {animated}{suffix}
       </div>
-      <div className="text-sm uppercase tracking-widest text-gray-500 font-semibold relative z-10">
+      <div className="text-sm uppercase tracking-widest text-gray-600 dark:text-gray-400 font-semibold relative z-10">
         {label}
       </div>
     </motion.div>
@@ -91,7 +91,7 @@ export default function SocialProof() {
   ];
 
   return (
-    <section className="py-24 sm:py-32 bg-[#f5f5f7] text-gray-900 relative overflow-hidden">
+    <section className="py-24 sm:py-32 bg-[#fbfbfd] dark:bg-[#0a0a0a] text-gray-900 dark:text-white relative overflow-hidden">
       {/* Glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-4xl bg-blue-600/5 rounded-full blur-[150px] pointer-events-none" />
 
@@ -103,11 +103,11 @@ export default function SocialProof() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('proof_tag')}
           </div>
-          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
+          <h2 className="font-display tracking-tight font-bold text-gray-900 dark:text-white" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('proof_title')}
           </h2>
         </motion.div>

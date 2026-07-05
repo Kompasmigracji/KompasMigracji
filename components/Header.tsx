@@ -58,6 +58,7 @@ export default function Header() {
 
   const changeLang = (lng: string) => {
     router.replace(pathname, { locale: lng as Locale });
+    setLangOpen(false);
   };
 
   useEffect(() => {
@@ -80,22 +81,22 @@ export default function Header() {
       <div className={`mx-auto transition-all duration-500 ${scrolled ? 'max-w-5xl px-4' : 'max-w-7xl px-0'}`}>
         <div className={`relative flex items-center justify-between h-[72px] transition-all duration-500 ${
           scrolled 
-            ? 'px-6 rounded-full bg-white/80 backdrop-blur-xl border border-black/10 shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
+            ? 'px-6 rounded-full bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
             : 'px-6 bg-transparent'
         }`}>
 
           <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-white/60 border border-black/10 flex items-center justify-center p-1.5 backdrop-blur-md transition-all group-hover:scale-105 group-hover:border-black/20">
+            <div className="w-10 h-10 rounded-xl bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center p-1.5 backdrop-blur-md transition-all group-hover:scale-105 group-hover:border-black/20 dark:group-hover:border-white/20">
               <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-full h-full object-contain spin-slow" />
             </div>
-            <span className="font-display font-bold text-gray-900 text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
+            <span className="font-display font-bold text-gray-900 dark:text-white text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
             <div className="relative" ref={dropRef}>
               <button
                 onClick={() => setDropOpen(!dropOpen)}
-                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold transition-all ${dropOpen ? 'bg-white/80 text-white' : 'text-gray-700 hover:text-white hover:bg-white/60'}`}
+                className={`premium-btn !border-transparent !bg-transparent !shadow-none ${dropOpen ? '!bg-white/80 dark:!bg-white/20' : 'hover:!bg-white/60 dark:hover:!bg-white/10'}`}
               >
                 {t('nav_services')}
                 <svg className={`w-4 h-4 transition-transform duration-300 ${dropOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -108,7 +109,7 @@ export default function Header() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 backdrop-blur-2xl border border-black/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden"
+                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-2xl border border-black/10 dark:border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden"
                   >
                     <div className="p-3 grid grid-cols-1 gap-1">
                       {SERVICES.map((s, i) => (
@@ -116,8 +117,8 @@ export default function Header() {
                           key={i} href={s.href} onClick={() => setDropOpen(false)}
                           className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all group no-underline ${
                             s.accent 
-                              ? 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20' 
-                              : 'text-gray-700 hover:text-white hover:bg-white/80'
+                              ? 'bg-blue-500/10 text-blue-500 dark:text-blue-400 hover:bg-blue-500/20' 
+                              : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
                           }`}
                         >
                           <span className="text-xl group-hover:scale-110 transition-transform">{s.icon}</span>
@@ -129,21 +130,21 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
-            <Link href="/test/pricing" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">{t('nav_pricing')}</Link>
-            <Link href="/admin/crm" className="px-4 py-2.5 rounded-full text-sm font-semibold text-gray-700 hover:text-white hover:bg-white/60 transition-all no-underline">iPhoenixCRM</Link>
+            <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">{t('nav_pricing')}</Link>
+            <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">iPhoenixCRM</Link>
             <button 
               onClick={() => setShowAIModal(true)}
-              className="px-4 py-2.5 rounded-full text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 hover:bg-white/60 transition-all flex items-center gap-2"
+              className="premium-btn overflow-hidden"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Kompas AI
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-blue-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Kompas AI</span>
             </button>
           </nav>
 
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/60 border border-black/10 rounded-full px-2 py-1">
+            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full px-2 py-1">
               {SOCIAL.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-white/80 transition-all ${s.color}`}>
+                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-black/5 dark:hover:bg-white/10 transition-all ${s.color}`}>
                   {s.icon}
                 </a>
               ))}
@@ -169,14 +170,13 @@ export default function Header() {
                       className="absolute top-[calc(100%+0.5rem)] right-0 w-32 bg-white/95 dark:bg-[#111111]/95 backdrop-blur-xl border border-black/10 dark:border-white/10 rounded-2xl p-2 shadow-2xl origin-top-right"
                     >
                       {Object.entries(LANG_LABELS).map(([code, label]) => (
-                        <a
+                        <button
                           key={code} 
-                          href={`/${code}${pathname === '/' ? '' : pathname}`}
-                          onClick={() => setLangOpen(false)}
-                          className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors no-underline ${locale === code ? 'bg-blue-500/10 text-blue-500' : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
+                          onClick={() => changeLang(code)}
+                          className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors border-none cursor-pointer ${locale === code ? 'bg-blue-500/10 text-blue-500' : 'bg-transparent text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'}`}
                         >
                           {label}
-                        </a>
+                        </button>
                       ))}
                     </motion.div>
                   )}

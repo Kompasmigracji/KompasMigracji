@@ -24,10 +24,10 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: i * 0.1 }}
       onMouseMove={handleMouseMove}
-      className={`group relative p-8 sm:p-10 flex flex-col rounded-[2.5rem] bg-[#0f1115]/80 border backdrop-blur-2xl overflow-hidden transition-transform duration-300 ${
+      className={`group relative p-8 sm:p-10 flex flex-col rounded-[2.5rem] bg-white/60 dark:bg-white/5 border backdrop-blur-2xl overflow-hidden transition-transform duration-300 ${
         card.featured 
           ? 'border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.15)] md:-translate-y-4 md:hover:-translate-y-6' 
-          : 'border-black/10 shadow-2xl md:hover:-translate-y-2'
+          : 'border-black/10 dark:border-white/10 shadow-2xl md:hover:-translate-y-2'
       }`}
     >
       <motion.div
@@ -50,17 +50,17 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
         </span>
       )}
       
-      <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 relative z-10">{card.label}</div>
+      <div className="text-sm font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest mb-4 relative z-10">{card.label}</div>
       <div className="mb-4 relative z-10 flex flex-wrap items-baseline gap-2">
         {card.oldAmount && (
           <span className="text-lg text-gray-500 line-through">{card.oldAmount} {card.currency}</span>
         )}
-        <span className="font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400 tracking-tighter" style={{ fontSize: 'clamp(40px, 4vw, 56px)' }}>
+        <span className="font-display font-bold text-gray-900 dark:text-white tracking-tighter" style={{ fontSize: 'clamp(40px, 4vw, 56px)' }}>
           {card.amount}
         </span>
         {card.currency && <span className="text-2xl text-gray-500 font-medium">{card.currency}</span>}
       </div>
-      <p className="text-sm text-gray-500 leading-relaxed mb-8 min-h-[40px] relative z-10">{card.desc}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-8 min-h-[40px] relative z-10">{card.desc}</p>
       
       <ul className="flex flex-col gap-4 mb-10 flex-grow relative z-10">
         {card.features.map((f: string, idx: number) => (
@@ -75,10 +75,10 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       
       <button
         onClick={onSelect}
-        className={`relative z-10 w-full py-4 rounded-full font-bold text-sm transition-all duration-300 shadow-lg ${
+        className={`premium-btn w-full !py-4 text-sm ${
           card.featured
-            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]'
-            : 'bg-white/60 text-white border border-black/10 hover:bg-white/80 hover:border-white/30'
+            ? 'premium-btn-primary'
+            : ''
         }`}
       >
         {card.cta}
@@ -127,7 +127,7 @@ export default function Pricing() {
   ];
 
   return (
-    <section id="pricing" className="py-24 sm:py-32 relative bg-[#030303] text-gray-900 overflow-hidden">
+    <section id="pricing" className="py-24 sm:py-32 relative bg-[#fbfbfd] dark:bg-[#0a0a0a] text-gray-900 dark:text-white overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
       <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
@@ -140,11 +140,11 @@ export default function Pricing() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('pricing_tag')}
           </div>
-          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
+          <h2 className="font-display tracking-tight font-bold text-gray-900 dark:text-white" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('pricing_title')}
           </h2>
         </motion.div>

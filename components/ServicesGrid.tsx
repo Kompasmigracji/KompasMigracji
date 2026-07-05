@@ -35,7 +35,7 @@ export default function ServicesGrid() {
   }));
 
   return (
-    <section id="services" className="py-24 sm:py-32 relative overflow-hidden bg-[#f5f5f7] text-gray-900">
+    <section id="services" className="py-24 sm:py-32 relative overflow-hidden bg-[#fbfbfd] dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
       {/* Background Glows */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none translate-y-1/2" />
@@ -48,14 +48,14 @@ export default function ServicesGrid() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16 sm:mb-24"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('services_tag')}
           </div>
-          <h2 className="font-display font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
+          <h2 className="font-display font-bold tracking-tight text-gray-900 dark:text-white" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('services_title')}
           </h2>
-          <p className="mt-4 text-gray-500 max-w-2xl mx-auto text-lg">
+          <p className="mt-4 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
             Інноваційний підхід до кожної справи. Оберіть послугу, і ми знайдемо найкраще рішення для вас.
           </p>
         </motion.div>
@@ -79,16 +79,16 @@ export default function ServicesGrid() {
               )}
               
               <div className="mb-6 mt-2">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/60 border border-black/10 text-3xl shadow-inner shadow-white/5">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 text-3xl shadow-inner dark:shadow-white/5">
                   {s.icon}
                 </div>
               </div>
               
-              <h3 className={`font-display font-semibold text-white mb-3 ${s.spanClass.includes('row-span-2') ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
+              <h3 className={`font-display font-semibold text-gray-900 dark:text-white mb-3 ${s.spanClass.includes('row-span-2') ? 'text-2xl sm:text-3xl' : 'text-xl'}`}>
                 {s.title}
               </h3>
               
-              <p className="text-gray-500 leading-relaxed flex-grow text-sm sm:text-base">
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed flex-grow text-sm sm:text-base">
                 {s.desc}
               </p>
               
