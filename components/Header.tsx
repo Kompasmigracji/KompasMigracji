@@ -211,7 +211,9 @@ export default function Header() {
             </div>
             <div className="flex-1 overflow-y-auto px-6 py-8">
               <div className="flex flex-col gap-2">
-                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 dark:text-white no-underline py-2">{t('nav_home')}</Link>
+                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 dark:text-white no-underline py-2">
+                  {{ uk: 'Головна', ru: 'Главная', pl: 'Główna', en: 'Home', rom: 'Acasă' }[locale] || 'Головна'}
+                </Link>
                 <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
                 <span className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</span>
                 {SERVICES.map((s, i) => (

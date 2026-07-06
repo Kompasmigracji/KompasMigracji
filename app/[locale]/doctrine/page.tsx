@@ -1,5 +1,6 @@
 "use client";
 import React, { useMemo } from 'react';
+import { useLocale } from 'next-intl';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { motion } from 'framer-motion';
@@ -209,7 +210,8 @@ const TRANSLATIONS = {
   }
 };
 
-export default function DoctrinePage({ params: { locale } }: { params: { locale: string } }) {
+export default function DoctrinePage() {
+  const locale = useLocale();
   const t = TRANSLATIONS[locale as keyof typeof TRANSLATIONS] || TRANSLATIONS['uk'];
 
   return (
