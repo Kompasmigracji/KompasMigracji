@@ -55,11 +55,11 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const inputCls = 'w-full px-5 py-4 border border-black/10 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white/60 backdrop-blur-md placeholder-gray-500';
-  const labelCls = 'block text-sm font-semibold text-gray-700 mb-2';
+  const inputCls = 'w-full px-5 py-4 border border-black/10 dark:border-white/10 rounded-xl text-sm text-gray-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all bg-white/60 dark:bg-white/5 backdrop-blur-md placeholder-gray-500 dark:placeholder-gray-400';
+  const labelCls = 'block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2';
 
   return (
-    <section id="contact" className="py-24 sm:py-32 relative bg-[#f5f5f7] overflow-hidden text-gray-900">
+    <section id="contact" className="py-24 sm:py-32 relative bg-[#f5f5f7] dark:bg-[#0a0a0a] overflow-hidden text-gray-900 dark:text-white">
       {/* Glows */}
       <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
       <div className="absolute bottom-1/4 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
@@ -87,7 +87,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.8 }}
           onMouseMove={handleMouseMove}
-          className="max-w-xl mx-auto relative group rounded-[2rem] bg-white/60 border border-black/10 backdrop-blur-2xl shadow-2xl p-[1px] overflow-hidden"
+          className="max-w-xl mx-auto relative group rounded-[2rem] bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 backdrop-blur-2xl shadow-2xl p-[1px] overflow-hidden"
         >
           <motion.div
             className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100 z-0"
@@ -102,7 +102,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             }}
           />
 
-          <form onSubmit={handleSubmit} className="relative z-10 p-8 sm:p-12 bg-white/80 backdrop-blur-md rounded-[2rem]">
+          <form onSubmit={handleSubmit} className="relative z-10 p-8 sm:p-12 bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-md rounded-[2rem]">
             {/* Urgency selector */}
             <div className="mb-8">
               <label className={labelCls}>{t('urgency_label')}</label>
@@ -110,7 +110,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                 {getUrgencyOptions(t).map((opt: any) => (
                   <label
                     key={opt.value}
-                    className="flex items-center gap-4 p-4 rounded-xl border border-black/10 cursor-pointer transition-all hover:bg-white/60"
+                    className="flex items-center gap-4 p-4 rounded-xl border border-black/10 dark:border-white/10 cursor-pointer transition-all hover:bg-white/60 dark:hover:bg-white/5"
                     style={urgency === opt.value ? { borderColor: opt.color, background: `rgba(${opt.value === 'critical' ? '239,68,68' : opt.value === 'urgent' ? '245,158,11' : '59,130,246'}, 0.1)` } : {}}
                   >
                     <input
@@ -128,7 +128,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                       {urgency === opt.value && <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: opt.color }} />}
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-gray-900 text-sm mb-1" style={urgency === opt.value ? { color: opt.color } : {}}>
+                      <div className="font-semibold text-gray-900 dark:text-white text-sm mb-1" style={urgency === opt.value ? { color: opt.color } : {}}>
                         {opt.label}
                       </div>
                       <div className="text-xs text-gray-500">{opt.desc}</div>
@@ -181,14 +181,14 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             
             <label className="flex items-start gap-3 mb-8 text-sm text-gray-500 cursor-pointer group">
               <input type="checkbox" required className="mt-1 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/50" />
-              <span className="group-hover:text-gray-700 transition-colors">{t('form_rodo')}</span>
+              <span className="group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">{t('form_rodo')}</span>
             </label>
             
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full text-gray-900 font-bold py-4 rounded-xl text-sm transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] relative overflow-hidden"
+              className="w-full text-white font-bold py-4 rounded-xl text-sm transition-all shadow-[0_0_20px_rgba(59,130,246,0.3)] relative overflow-hidden"
               style={urgency === 'critical' ? { background: 'linear-gradient(135deg, #dc2626, #991b1b)', boxShadow: '0 0 20px rgba(220,38,38,0.4)' } : { background: 'linear-gradient(135deg, #2563eb, #1d4ed8)' }}
             >
               {/* Highlight sweep effect */}

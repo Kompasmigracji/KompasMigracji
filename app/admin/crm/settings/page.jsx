@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 
 export default function SettingsPage() {
   return (
-    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
-      <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center gap-4 sticky top-0 z-20">
-        <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Настройки CRM</h2>
+    <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
+      <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-8 py-5 flex items-center gap-4 sticky top-0 z-20">
+        <h2 className="m-0 text-xl font-bold text-gray-900 dark:text-white tracking-tight">Настройки CRM</h2>
       </div>
 
       <motion.div 
@@ -16,22 +16,22 @@ export default function SettingsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="p-8 flex-1 flex flex-col items-center justify-center"
       >
-        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/60 border border-black/10 rounded-3xl relative overflow-hidden">
+        <SpotlightCard className="flex flex-col items-center justify-center p-12 text-center max-w-md w-full bg-white/60 dark:bg-[#1a1a1a]/60 border border-black/10 dark:border-white/10 rounded-3xl relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[200px] bg-gray-500/20 blur-[60px] rounded-full pointer-events-none" />
           
-          <div className="w-20 h-20 bg-gray-500/10 border border-gray-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(107,114,128,0.15)] text-gray-500 relative z-10">
+          <div className="w-20 h-20 bg-gray-500/10 border border-gray-500/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(107,114,128,0.15)] text-gray-500 dark:text-gray-400 relative z-10">
             <Icon name="settings" size={40} />
           </div>
           
-          <h3 className="text-2xl font-bold text-gray-900 mb-3 relative z-10 tracking-tight">Налаштування Системи</h3>
-          <p className="text-gray-500 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 relative z-10 tracking-tight">Налаштування Системи</h3>
+          <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed relative z-10 mb-8 max-w-sm">
             Тут ви зможете керувати доступами, ролями працівників та системними інтеграціями.
           </p>
           <div className="relative z-10 flex gap-4 w-full">
-            <button className="flex-1 bg-white border border-gray-200 hover:border-gray-300 text-gray-700 px-4 py-3 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow-md cursor-pointer flex items-center justify-center gap-2">
+            <button className="flex-1 bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 hover:border-gray-300 dark:hover:border-white/20 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-xl font-bold text-sm shadow-sm transition-all hover:shadow-md cursor-pointer flex items-center justify-center gap-2">
               <Icon name="users" size={16} /> Ролі
             </button>
-            <button className="flex-1 bg-gray-900 hover:bg-black text-white border-none px-4 py-3 rounded-xl font-bold text-sm shadow-[0_5px_15px_rgba(0,0,0,0.2)] transition-all hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2">
+            <button className="flex-1 bg-gray-900 dark:bg-white hover:bg-black dark:hover:bg-gray-200 text-white dark:text-black border-none px-4 py-3 rounded-xl font-bold text-sm shadow-[0_5px_15px_rgba(0,0,0,0.2)] dark:shadow-[0_5px_15px_rgba(255,255,255,0.2)] transition-all hover:scale-[1.02] cursor-pointer flex items-center justify-center gap-2">
               <Icon name="shield" size={16} /> Безпека
             </button>
           </div>

@@ -115,8 +115,7 @@ export default function HowItWorks() {
             href="https://wa.me/48729271848"
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-blue-500/25 border border-black/10 dark:border-white/10"
-            style={{ background: 'linear-gradient(135deg, #1e3a8a, #3b82f6)', backdropFilter: 'blur(10px)' }}
+            className="premium-btn"
           >
             <span className="relative z-10 flex items-center gap-3">
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-green-400">
