@@ -130,6 +130,9 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
+            <Link href="/doctrine" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">
+              {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
+            </Link>
             <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">{t('nav_pricing')}</Link>
             <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">iPhoenixCRM</Link>
             <button 
@@ -217,6 +220,9 @@ export default function Header() {
                   </Link>
                 ))}
                 <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
+                <Link href="/doctrine" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">
+                  {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
+                </Link>
                 <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">{t('nav_pricing')}</Link>
                 <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">iPhoenixCRM</Link>
                 <button 

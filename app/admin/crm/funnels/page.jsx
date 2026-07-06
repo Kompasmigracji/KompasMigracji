@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
 import { supabase } from "@/lib/supabase";
+import { Plus, X } from "lucide-react";
 
 const FUNNEL_COLUMNS = [
   { id: "Новый", title: "Новый", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
@@ -92,7 +93,7 @@ export default function FunnelsPage() {
           onClick={() => setIsModalOpen(true)}
           className="bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
         >
-          <Icon name="plus" size={16} /> Додати ліда
+          <Plus size={16} /> Додати ліда
         </button>
       </div>
       
@@ -117,7 +118,7 @@ export default function FunnelsPage() {
             <div className="flex justify-between items-center p-5 border-b border-black/10 dark:border-white/10">
               <h3 className="m-0 text-lg font-bold text-gray-900 dark:text-white tracking-tight">Новий Лід</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors">
-                <Icon name="x" size={20} />
+                <X size={20} />
               </button>
             </div>
             <form onSubmit={handleCreateLead} className="p-5 flex flex-col gap-4">
