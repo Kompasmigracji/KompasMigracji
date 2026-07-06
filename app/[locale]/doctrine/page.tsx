@@ -214,7 +214,7 @@ export default function DoctrinePage({ params: { locale } }: { params: { locale:
 
   return (
     <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#050505] text-gray-900 dark:text-gray-100 font-sans selection:bg-blue-500/30">
-      <Header locale={locale} />
+      <Header />
       
       <main className="pt-32 pb-24 px-4 sm:px-8 max-w-4xl mx-auto relative z-10">
         
@@ -297,7 +297,7 @@ export default function DoctrinePage({ params: { locale } }: { params: { locale:
         </div>
       </main>
 
-      <Footer locale={locale} />
+      <Footer />
     </div>
   );
 }
