@@ -40,8 +40,8 @@ export function ActionHistory() {
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col gap-6">
       {/* Filter Button */}
-      <SpotlightCard className="w-full p-4 rounded-xl flex justify-center items-center gap-2 text-sm font-bold text-gray-900 bg-white/60 border border-black/10 hover:border-black/20 transition-colors cursor-pointer shadow-sm">
-        <Icon name="filter" size={16} className="text-gray-500" /> Фильтр
+      <SpotlightCard className="w-full p-4 rounded-xl flex justify-center items-center gap-2 text-sm font-bold text-gray-900 dark:text-white bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-colors cursor-pointer shadow-sm">
+        <Icon name="filter" size={16} className="text-gray-500 dark:text-gray-400" /> Фильтр
       </SpotlightCard>
 
       {/* Timeline */}
@@ -50,9 +50,9 @@ export function ActionHistory() {
         <div className="absolute top-3 bottom-0 left-[7px] w-0.5 bg-blue-500/20 z-0 shadow-[0_0_10px_rgba(59,130,246,0.3)]"></div>
 
         {loading ? (
-          <div className="text-gray-500 text-sm text-center p-8 font-medium">Загрузка истории...</div>
+          <div className="text-gray-500 dark:text-gray-400 text-sm text-center p-8 font-medium">Загрузка истории...</div>
         ) : history.length === 0 ? (
-          <div className="text-gray-500 text-sm text-center p-8 font-medium">История пуста</div>
+          <div className="text-gray-500 dark:text-gray-400 text-sm text-center p-8 font-medium">История пуста</div>
         ) : history.map((item, index) => {
           const userName = item.kompas_users?.full_name || "Система";
           const timeFormatted = new Date(item.created_at).toLocaleString('ru-RU', {
@@ -63,33 +63,33 @@ export function ActionHistory() {
           return (
             <div key={item.id} className="relative mb-8 z-10">
               {/* Timeline Dot */}
-              <div className="absolute top-1.5 -left-[23px] w-3 h-3 bg-blue-500 rounded-full border-[3px] border-[#050505] shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+              <div className="absolute top-1.5 -left-[23px] w-3 h-3 bg-blue-500 rounded-full border-[3px] border-[#f5f5f7] dark:border-[#050505] shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
 
-              <div className="text-xs text-gray-500 mb-3 font-bold uppercase tracking-wider">{timeFormatted}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 font-bold uppercase tracking-wider">{timeFormatted}</div>
 
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <SpotlightCard className="p-5 bg-white/60 border border-black/10 rounded-2xl">
+                <SpotlightCard className="p-5 bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl">
                   {/* Header */}
                   <div className="flex items-center gap-3 mb-5">
-                    <Avatar name={userName} size={32} className="border border-black/10 shadow-inner" />
+                    <Avatar name={userName} size={32} className="border border-black/10 dark:border-white/10 shadow-inner" />
                     <div className="text-sm">
-                      <span className="font-bold text-gray-900 mr-1.5">{userName}</span> 
-                      <span className="text-gray-500 font-medium">{item.action}</span>
+                      <span className="font-bold text-gray-900 dark:text-white mr-1.5">{userName}</span> 
+                      <span className="text-gray-500 dark:text-gray-400 font-medium">{item.action}</span>
                     </div>
                   </div>
 
                   {/* Changes */}
                   {changes.length > 0 && (
-                    <div className="flex flex-col gap-4 bg-black/40 rounded-xl p-4 border border-black/5">
+                    <div className="flex flex-col gap-4 bg-black/5 dark:bg-black/40 rounded-xl p-4 border border-black/5 dark:border-white/5">
                       {changes.map((change, i) => (
                         <div key={i} className="flex flex-col sm:flex-row sm:items-start text-xs gap-2 sm:gap-4">
-                          <div className="w-full sm:w-2/5 text-gray-500 font-bold uppercase tracking-wider mt-0.5">{change.label}</div>
+                          <div className="w-full sm:w-2/5 text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-0.5">{change.label}</div>
                           <div className="w-full sm:w-3/5 flex flex-wrap items-center gap-2">
-                            <span className="text-gray-500 bg-white/60 px-2 py-1 rounded-md border border-black/5 line-through">{change.from}</span>
+                            <span className="text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-white/5 px-2 py-1 rounded-md border border-black/5 dark:border-white/5 line-through">{change.from}</span>
                             <Icon name="arrow-right" size={14} className="text-blue-500" />
                             
                             {change.isPill ? (
@@ -98,7 +98,7 @@ export function ActionHistory() {
                                 {change.to}
                               </span>
                             ) : (
-                              <span className="text-gray-900 font-bold bg-white/80 px-2.5 py-1 rounded-md border border-black/10 shadow-sm">{change.to}</span>
+                              <span className="text-gray-900 dark:text-white font-bold bg-white/80 dark:bg-white/10 px-2.5 py-1 rounded-md border border-black/10 dark:border-white/10 shadow-sm">{change.to}</span>
                             )}
                           </div>
                         </div>

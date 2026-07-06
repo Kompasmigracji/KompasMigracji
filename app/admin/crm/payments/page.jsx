@@ -21,28 +21,28 @@ export default function PaymentsDemoPage() {
   }, []);
 
   return (
-    <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
+    <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
       
       {/* Top Header */}
-      <div className="bg-white/60 backdrop-blur-xl border-b border-black/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
+      <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-8 py-5 flex items-center gap-6 sticky top-0 z-20">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
             <Icon name="credit-card" size={16} />
           </div>
-          <h2 className="m-0 text-xl font-bold text-gray-900 tracking-tight">Журнал платежів</h2>
+          <h2 className="m-0 text-xl font-bold text-gray-900 dark:text-white tracking-tight">Журнал платежів</h2>
         </div>
         
         {/* Search Bar */}
-        <div className="flex-1 flex items-center bg-black/40 border border-black/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-emerald-500/50">
-          <Icon name="search" size={16} className="text-gray-500" />
+        <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-emerald-500/50">
+          <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
           <input 
             type="text" 
             placeholder="Быстрый поиск" 
-            className="bg-transparent border-none outline-none text-gray-800 w-full text-sm placeholder:text-gray-600"
+            className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
 
-        <button className="w-10 h-10 rounded-xl bg-white/60 border border-black/10 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/80 transition-colors">
+        <button className="w-10 h-10 rounded-xl bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
           <Icon name="sliders" size={16} />
         </button>
 
@@ -54,9 +54,9 @@ export default function PaymentsDemoPage() {
 
       <div className="p-8">
         {/* Data Table */}
-        <SpotlightCard className="bg-white/60 border border-black/10 rounded-2xl overflow-x-auto p-0">
+        <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl overflow-x-auto p-0 shadow-[0_4px_20px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.2)]">
           <table className="w-full min-w-[1000px] text-sm text-left">
-            <thead className="bg-white/80 backdrop-blur-md text-xs text-gray-500 uppercase font-semibold border-b border-black/10 sticky top-0 z-10 shadow-sm">
+            <thead className="bg-white/80 dark:bg-[#1a1a1a]/80 backdrop-blur-md text-xs text-gray-500 dark:text-gray-400 uppercase font-semibold border-b border-black/10 dark:border-white/10 sticky top-0 z-10 shadow-sm">
               <tr>
                 <th className="px-6 py-4 font-semibold tracking-wider flex items-center gap-2">
                   Дата и время <Icon name="arrow-down" size={12} className="text-emerald-500" />
@@ -69,9 +69,9 @@ export default function PaymentsDemoPage() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="5" className="p-8 text-center text-gray-500">Загрузка платежей...</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка платежей...</td></tr>
               ) : payments.length === 0 ? (
-                <tr><td colSpan="5" className="p-8 text-center text-gray-500">Журнал пуст</td></tr>
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">Журнал пуст</td></tr>
               ) : payments.map((pay, index) => {
                 const isIncome = pay.type === "income";
                 const isCancelled = pay.status === "cancelled";
@@ -84,9 +84,9 @@ export default function PaymentsDemoPage() {
                     key={pay.id} 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`transition-colors hover:bg-white/60 border-black/5 cursor-pointer ${index !== payments.length - 1 ? 'border-b' : ''}`}
+                    className={`transition-colors hover:bg-black/5 dark:hover:bg-white/10 border-black/5 dark:border-white/5 cursor-pointer ${index !== payments.length - 1 ? 'border-b' : ''}`}
                   >
-                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap font-medium">
+                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap font-medium">
                       {dateStr}
                     </td>
                     <td className="px-4 py-4">
@@ -102,10 +102,10 @@ export default function PaymentsDemoPage() {
                     </td>
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-3">
-                        <Avatar name={pay.manager} size={32} className="border border-black/10" />
+                        <Avatar name={pay.manager} size={32} className="border border-black/10 dark:border-white/10" />
                         <div className="flex flex-col">
-                          <span className="text-gray-800 font-bold">{pay.manager}</span>
-                          <span className="text-xs text-gray-500 font-medium">Administrator</span>
+                          <span className="text-gray-800 dark:text-gray-200 font-bold">{pay.manager}</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Administrator</span>
                         </div>
                       </div>
                     </td>
