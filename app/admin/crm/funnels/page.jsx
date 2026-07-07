@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
 import { supabase } from "@/lib/supabase";
+import LeadDetailsModal from "@/components/admin/LeadDetailsModal";
 
 const FUNNEL_COLUMNS = [
   { id: "Новый", title: "Новый", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
@@ -17,6 +18,7 @@ export default function FunnelsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newLeadForm, setNewLeadForm] = useState({ name: '', phone: '', source: 'direct' });
+  const [selectedLead, setSelectedLead] = useState(null);
 
   const loadLeads = useCallback(async () => {
     setIsLoading(true);
@@ -80,7 +82,8 @@ export default function FunnelsPage() {
       amount: 0,
       tags: [l.source || "direct"],
       assignee: { name: "Олександр" }, 
-      isUrgent: isUrgent
+      isUrgent: isUrgent,
+      originalLead: l
     };
   });
 
@@ -106,6 +109,7 @@ export default function FunnelsPage() {
             columns={FUNNEL_COLUMNS} 
             cards={cards} 
             onCardMove={handleStatusChange} 
+            onCardClick={(card) => setSelectedLead(card.originalLead)}
           />
         )}
       </div>
@@ -167,6 +171,15 @@ export default function FunnelsPage() {
           </div>
         </div>
       )}
+
+      {/* Lead Details Modal */}
+      <LeadDetailsModal 
+        lead={selectedLead}
+        onClose={() => setSelectedLead(null)}
+        onUpdate={(updatedLead) => {
+          setLeads(prev => prev.map(l => String(l.id) === String(updatedLead.id) ? updatedLead : l));
+        }}
+      />
     </div>
   );
 }
