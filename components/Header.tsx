@@ -34,14 +34,16 @@ const SOCIAL = [
 
 export default function Header() {
   const t = useTranslations();
-  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
+  const locale = useLocale();
   const [langOpen, setLangOpen] = useState(false);
+  console.log('HEADER SSR LOCALE:', locale);
+  const [activeLang, setActiveLang] = useState(locale.toUpperCase());
   const dropRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 

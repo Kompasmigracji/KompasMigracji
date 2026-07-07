@@ -5,12 +5,16 @@ import { useEffect, useState } from 'react';
 type Theme = 'light' | 'dark';
 
 export default function ThemeSwitch() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
+  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<Theme>('light'); // Default to light on server
+
+  useEffect(() => {
+    setMounted(true);
     const stored = (localStorage.getItem('theme') as Theme | null) || null;
-    if (stored === 'light' || stored === 'dark') return stored;
-    return 'light'; // Завжди світла тема за замовчуванням
-  });
+    if (stored === 'light' || stored === 'dark') {
+      setTheme(stored);
+    }
+  }, []);
 
   useEffect(() => {
     try {
@@ -37,8 +41,9 @@ export default function ThemeSwitch() {
       aria-label="Toggle theme"
       title={theme === 'dark' ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
     >
-      <span style={{ display: 'inline-block', width: 40, height: 24, borderRadius: 999, padding: 3, boxSizing: 'border-box', background: theme === 'dark' ? '#111827' : '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
-        <span style={{ display: 'block', width: 18, height: 18, borderRadius: '50%', background: theme === 'dark' ? '#fff' : '#111827', transform: theme === 'dark' ? 'translateX(16px)' : 'translateX(0)', transition: 'transform .18s ease' }} />
+    >
+      <span style={{ display: 'inline-block', width: 40, height: 24, borderRadius: 999, padding: 3, boxSizing: 'border-box', background: (mounted && theme === 'dark') ? '#111827' : '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
+        <span style={{ display: 'block', width: 18, height: 18, borderRadius: '50%', background: (mounted && theme === 'dark') ? '#fff' : '#111827', transform: (mounted && theme === 'dark') ? 'translateX(16px)' : 'translateX(0)', transition: 'transform .18s ease' }} />
       </span>
     </button>
   );

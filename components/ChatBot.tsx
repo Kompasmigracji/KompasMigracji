@@ -4,6 +4,13 @@ import { supabase } from '@/lib/supabase';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+};
+
 const LEAD_RE = /\[\[LEAD:(\{[^}]*\})\]\]/;
 
 interface Msg { 
@@ -33,7 +40,7 @@ export default function ChatBot() {
   };
 
   useEffect(() => {
-    const sid = localStorage.getItem('km_chat_session') || crypto.randomUUID();
+    const sid = localStorage.getItem('km_chat_session') || generateUUID();
     if (!localStorage.getItem('km_chat_session')) {
       localStorage.setItem('km_chat_session', sid);
     }
@@ -101,7 +108,7 @@ export default function ChatBot() {
     const userText = input.trim();
     setInput('');
     
-    const userMsg: Msg = { id: crypto.randomUUID(), role: 'user', content: userText };
+    const userMsg: Msg = { id: generateUUID(), role: 'user', content: userText };
     const newMsgs = [...messages, userMsg];
     setMessages(newMsgs);
     setIsLoading(true);
@@ -134,12 +141,12 @@ export default function ChatBot() {
         }
       }
       
-      const botMsg: Msg = { id: crypto.randomUUID(), role: 'assistant', content: assistantContent };
+      const botMsg: Msg = { id: generateUUID(), role: 'assistant', content: assistantContent };
       setMessages(prev => [...prev, botMsg]);
       await saveMessageToDb(botMsg);
       
     } catch (err) {
-      const errMsg: Msg = { id: crypto.randomUUID(), role: 'assistant', content: t('chat_error') };
+      const errMsg: Msg = { id: generateUUID(), role: 'assistant', content: t('chat_error') };
       setMessages(prev => [...prev, errMsg]);
     } finally {
       setIsLoading(false);

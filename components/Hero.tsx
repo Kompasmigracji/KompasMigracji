@@ -156,7 +156,7 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
       </section>
 
       {/* ─── Scoped CSS ───────────────────────────────────── */}
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         /* Gradient mesh blobs */
         .hero-mesh-1, .hero-mesh-2, .hero-mesh-3 {
           position: absolute;
@@ -207,7 +207,7 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
         .transform-style-3d {
           transform-style: preserve-3d;
         }
-      `}</style>
+      `}} />
     </>
   );
 }
