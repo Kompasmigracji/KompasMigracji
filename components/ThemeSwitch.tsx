@@ -41,7 +41,6 @@ export default function ThemeSwitch() {
       aria-label="Toggle theme"
       title={theme === 'dark' ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
     >
-    >
       <span style={{ display: 'inline-block', width: 40, height: 24, borderRadius: 999, padding: 3, boxSizing: 'border-box', background: (mounted && theme === 'dark') ? '#111827' : '#ffffff', border: '1px solid rgba(0,0,0,0.06)' }}>
         <span style={{ display: 'block', width: 18, height: 18, borderRadius: '50%', background: (mounted && theme === 'dark') ? '#fff' : '#111827', transform: (mounted && theme === 'dark') ? 'translateX(16px)' : 'translateX(0)', transition: 'transform .18s ease' }} />
       </span>
