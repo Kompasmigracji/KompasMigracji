@@ -19,6 +19,8 @@
   --color-union-blue: #0066cc;
 }
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --color-navy: #1a1a2e;
   --color-primary: #d97706; /* Make gold the primary accent for a premium feel */
