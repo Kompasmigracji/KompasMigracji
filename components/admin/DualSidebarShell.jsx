@@ -6,6 +6,8 @@ import { Icon, Avatar } from "@/components/admin/ui";
 import { supabase } from "@/lib/supabase";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import CommandPalette from "./CommandPalette";
+import AiCopilotSidebar from "./AiCopilotSidebar";
 
 const NAV_DATA = [
   {
@@ -74,6 +76,7 @@ export default function DualSidebarShell({ children }) {
   const [isBillingOpen, setIsBillingOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   // Fetch notifications logic
   const [notifications, setNotifications] = useState([]);
@@ -191,7 +194,7 @@ export default function DualSidebarShell({ children }) {
             <Icon name="settings" size={20} />
           </button>
           <button 
-            onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsProfileOpen(false); }}
+            onClick={() => { setIsBillingOpen(!isBillingOpen); setIsNotificationsOpen(false); setIsHelpOpen(false); setIsSettingsOpen(false); setIsProfileOpen(false); setIsCopilotOpen(false); }}
             className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-300
               ${isBillingOpen ? 'bg-white/80 dark:bg-white/20 text-gray-900 dark:text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]' : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10'}`}
           >
@@ -368,7 +371,13 @@ export default function DualSidebarShell({ children }) {
             <div className="hidden md:block text-sm font-medium text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-white/10 px-3 py-1.5 rounded-full border border-black/10 dark:border-white/10">
               Workspace: <span className="text-gray-900 dark:text-white font-bold ml-1">Kompas Migracji</span>
             </div>
-            <div className="hidden md:block w-px h-6 bg-black/10 dark:bg-white/10 mx-2"></div>
+            <button 
+              onClick={() => setIsCopilotOpen(true)}
+              className="hidden lg:flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-[0_5px_20px_rgba(168,85,247,0.4)] hover:shadow-[0_8px_30px_rgba(168,85,247,0.6)] hover:scale-105 transition-all"
+            >
+              <Icon name="cpu" size={16} /> Copilot
+            </button>
+            <div className="hidden lg:block w-px h-6 bg-black/10 dark:bg-white/10 mx-2"></div>
             <Link href="/" className="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
               Перейти на сайт
             </Link>
@@ -424,6 +433,8 @@ export default function DualSidebarShell({ children }) {
           </motion.div>
         )}
       </AnimatePresence>
+      <CommandPalette />
+      <AiCopilotSidebar isOpen={isCopilotOpen} onClose={() => setIsCopilotOpen(false)} />
     </div>
   );
 }

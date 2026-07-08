@@ -125,7 +125,16 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                             <Icon name="clock" size={10} />
                             {card.subtitle}
                           </div>
-                          <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">{card.timeAgo}</span>
+                          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
+                            (card.timeAgo && (card.timeAgo.includes('3 д') || card.timeAgo.includes('4 д') || card.timeAgo.includes('5 д'))) 
+                              ? 'bg-red-500/10 text-red-500 border border-red-500/20' 
+                              : 'text-gray-500 dark:text-gray-400'
+                          }`}>
+                            {card.timeAgo}
+                            {(card.timeAgo && (card.timeAgo.includes('3 д') || card.timeAgo.includes('4 д') || card.timeAgo.includes('5 д'))) && (
+                              <span className="ml-1 animate-pulse">⚠️ Зависло</span>
+                            )}
+                          </span>
                         </div>
                       )}
 
