@@ -5,17 +5,13 @@ import { chromium } from 'playwright';
   const context = await browser.newContext();
   const page = await context.newPage();
   
-  await page.goto('http://localhost:3000/pl');
+  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+  page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
   
-  // wait for nextjs error overlay
-  try {
-    await page.waitForSelector('nextjs-portal', { timeout: 10000 });
-    const shadowHost = await page.$('nextjs-portal');
-    const html = await page.evaluate(el => el.shadowRoot.innerHTML, shadowHost);
-    console.log('Error overlay HTML:', html);
-  } catch(e) {
-    console.log('No error overlay found');
-  }
+  await page.goto('http://localhost:3001/ru');
+  
+  // wait 15 seconds
+  await page.waitForTimeout(15000);
   
   await browser.close();
 })();

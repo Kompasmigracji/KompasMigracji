@@ -13,8 +13,7 @@ export default function WhatsAppFloat() {
       setVisible(true);
       setShowTooltip(true);
     }, 4000);
-    const t2 = setTimeout(() => setShowTooltip(false), 10000);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    return () => { clearTimeout(t1); };
   }, []);
 
   return (

@@ -19,7 +19,7 @@
   --color-union-blue: #0066cc;
 }
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant dark (.dark &);
 
 :root {
   --color-navy: #1a1a2e;

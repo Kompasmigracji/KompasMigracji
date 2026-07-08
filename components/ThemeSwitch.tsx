@@ -19,6 +19,8 @@ export default function ThemeSwitch() {
   useEffect(() => {
     try {
       document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark');
       localStorage.setItem('theme', theme);
     } catch (e) { /* ignore */ }
   }, [theme]);
@@ -35,7 +37,7 @@ export default function ThemeSwitch() {
 
   return (
     <button
-      className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none flex items-center justify-center"
+      className="w-11 h-11 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none flex items-center justify-center"
       data-testid="theme-toggle"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       aria-label="Toggle theme"
