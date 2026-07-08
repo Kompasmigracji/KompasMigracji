@@ -4,7 +4,11 @@ import React, { useState } from "react";
 import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function LegalCasesPage() {
-  const [cases] = useState([]);
+  const [cases] = useState([
+    { id: "case-101", client: "Олександр Коваленко", type: "Karta Pobytu", urzad: "Warszawa", stage: "Awaiting Fingerprints", status: "success", deadline: "2026-06-20" },
+    { id: "case-102", client: "Марія Мельник", type: "Zezwolenie na pracę", urzad: "Kraków", stage: "Awaiting Decision", status: "success", deadline: "2026-07-15" },
+    { id: "case-103", client: "Іван Петренко", type: "Obywatelstwo", urzad: "Wrocław", stage: "Missing Documents", status: "blocked", deadline: "2026-07-10" }
+  ]);
 
   const columns = [
     { header: "Case ID", cell: (row) => (

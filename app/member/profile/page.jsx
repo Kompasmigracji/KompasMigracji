@@ -99,8 +99,12 @@ export default function DigitalProfilePage() {
           
           <div className="my-6 border-t border-slate-100 dark:border-white/10 pt-4">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">Агенти (Федерація)</p>
-            <NavItem href="/member/jobs" icon={Briefcase} label="Агент Працевлаштування" />
-            <NavItem icon={Shield} label="Агент Легалізації" locked />
+            <Link href="/member/jobs" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <NavItem icon={Briefcase} label="Агент Працевлаштування" />
+            </Link>
+            <Link href="/member/legal" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <NavItem icon={Shield} label="Агент Легалізації" badge="1" />
+            </Link>
           </div>
         </nav>
       </aside>
