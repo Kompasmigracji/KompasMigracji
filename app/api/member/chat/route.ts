@@ -28,6 +28,27 @@ ${profile?.documents?.map(d => `- ${d.type} (${d.number}), Дійсний до: 
       model: openai('gpt-4o-mini'),
       messages,
       system: systemPrompt,
+      onFinish: async ({ text, finishReason }) => {
+        // Save the interaction to the database (memory)
+        if (profile?.user_id) {
+          try {
+            const { getSupabaseAdmin } = require('@/lib/supabase');
+            const supabase = getSupabaseAdmin();
+            if (supabase) {
+              const lastUserMessage = messages[messages.length - 1];
+              await supabase.from('kompas_agent_interactions').insert({
+                user_id: profile.user_id,
+                agent_type: 'coordinator',
+                prompt_text: lastUserMessage.content,
+                response_text: text,
+                metadata: { finishReason }
+              });
+            }
+          } catch (err) {
+            console.error('Error saving agent memory:', err);
+          }
+        }
+      }
     });
 
     return result.toDataStreamResponse();

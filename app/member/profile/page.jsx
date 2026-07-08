@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Briefcase, GraduationCap, FileText, Bot, Plus, Edit2, Shield, Settings, Menu, X, ArrowRight, CheckCircle2, ChevronRight, Upload, Search } from 'lucide-react';
 import { useChat } from '@ai-sdk/react';
+import Link from 'next/link';
 
 const MOCK_PROFILE = {
   name: "Іван Петренко",
@@ -98,7 +99,7 @@ export default function DigitalProfilePage() {
           
           <div className="my-6 border-t border-slate-100 dark:border-white/10 pt-4">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-3">Агенти (Федерація)</p>
-            <NavItem icon={Briefcase} label="Агент Працевлаштування" locked />
+            <NavItem href="/member/jobs" icon={Briefcase} label="Агент Працевлаштування" />
             <NavItem icon={Shield} label="Агент Легалізації" locked />
           </div>
         </nav>
@@ -279,14 +280,24 @@ export default function DigitalProfilePage() {
   );
 }
 
-function NavItem({ active, icon: Icon, label, badge, locked, onClick }) {
-  return (
-    <button onClick={onClick} disabled={locked} className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${active ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5'} ${locked ? 'opacity-50 cursor-not-allowed' : ''}`}>
+function NavItem({ active, icon: Icon, label, badge, locked, onClick, href }) {
+  const content = (
+    <div className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${active ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 font-semibold' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-white/5'} ${locked ? 'opacity-50 cursor-not-allowed' : ''}`}>
       <div className="flex items-center gap-3">
         <Icon className={`w-5 h-5 ${active ? 'text-blue-600 dark:text-blue-400' : ''}`} />
         <span>{label}</span>
       </div>
       {badge && <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 text-xs font-bold">{badge}</span>}
+    </div>
+  );
+
+  if (href && !locked) {
+    return <Link href={href} className="block w-full">{content}</Link>;
+  }
+
+  return (
+    <button onClick={onClick} disabled={locked} className="w-full text-left">
+      {content}
     </button>
   );
 }
