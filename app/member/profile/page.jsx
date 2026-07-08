@@ -1,7 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Briefcase, GraduationCap, FileText, Bot, Plus, Edit2, Shield, Settings, Menu, X, ArrowRight, CheckCircle2, ChevronRight, Upload, Search } from 'lucide-react';
+import { useChat } from '@ai-sdk/react';
 
 const MOCK_PROFILE = {
   name: "Іван Петренко",
@@ -33,9 +34,17 @@ export default function DigitalProfilePage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const [showAiChat, setShowAiChat] = useState(false);
-  const [aiMessages, setAiMessages] = useState([
-    { role: 'assistant', text: 'Вітаю! Я ваш AI-координатор. Ваша Карта Побиту дійсна ще 2 роки, але раджу оновити сертифікат TUV, він скоро може втратити актуальність. Бажаєте, я знайду найближчі курси?' }
-  ]);
+  const messagesEndRef = useRef(null);
+
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    api: '/api/member/chat',
+    body: {
+      profile: profile 
+    },
+    initialMessages: [
+      { id: '1', role: 'assistant', content: 'Вітаю! Я ваш AI-координатор. Ваша Карта Побиту дійсна ще 2 роки, але раджу оновити сертифікат TUV, він скоро може втратити актуальність. Чим можу допомогти?' }
+    ]
+  });
 
   useEffect(() => {
     async function fetchProfile() {
@@ -237,20 +246,31 @@ export default function DigitalProfilePage() {
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {aiMessages.map((msg, idx) => (
-                <div key={idx} className="flex gap-3">
-                  <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
-                    <Bot className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+              {messages.map((msg, idx) => (
+                <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-indigo-100 dark:bg-indigo-900/30' : 'bg-blue-100 dark:bg-blue-900/30'}`}>
+                    {msg.role === 'user' ? <User className="w-3 h-3 text-indigo-600 dark:text-indigo-400" /> : <Bot className="w-3 h-3 text-blue-600 dark:text-blue-400" />}
                   </div>
-                  <div className="bg-slate-100 dark:bg-slate-800 p-3 rounded-2xl rounded-tl-sm text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
-                    {msg.text}
+                  <div className={`p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-sm'}`}>
+                    {msg.content}
                   </div>
                 </div>
               ))}
+              <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t border-slate-100 dark:border-white/10">
-              <input type="text" placeholder="Попросити AI оновити профіль..." className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50" />
-            </div>
+            <form onSubmit={handleSubmit} className="p-4 border-t border-slate-100 dark:border-white/10 flex gap-2">
+              <input 
+                value={input} 
+                onChange={handleInputChange} 
+                type="text" 
+                placeholder="Напишіть AI-координатору..." 
+                className="w-full px-4 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50" 
+                disabled={isLoading}
+              />
+              <button type="submit" disabled={isLoading || !input.trim()} className="px-4 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-50 transition-colors">
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>
