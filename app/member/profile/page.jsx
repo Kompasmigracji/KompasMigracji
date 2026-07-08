@@ -105,6 +105,9 @@ export default function DigitalProfilePage() {
             <Link href="/member/legal" style={{ textDecoration: 'none', color: 'inherit' }}>
               <NavItem icon={Shield} label="Агент Легалізації" badge="1" />
             </Link>
+            <Link href="/member/marketplace" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <NavItem icon={User} label="Партнерські Знижки" />
+            </Link>
           </div>
         </nav>
       </aside>

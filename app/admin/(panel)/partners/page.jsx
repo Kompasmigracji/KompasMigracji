@@ -1,102 +1,146 @@
 "use client";
-/* KompasCRM — Partners & B2B Referrals */
+/* KompasCRM — Partner Marketplace Management */
 import React, { useState } from "react";
-import { Icon, Avatar, Badge, DataTable } from "@/components/admin/ui";
+import { Icon, Badge, DataTable, Avatar } from "@/components/admin/ui";
 
 export default function PartnersPage() {
-  const [partners] = useState([]);
+  const [activeTab, setActiveTab] = useState("partners");
 
-  const columns = [
+  const [partners] = useState([
+    { id: "p-1", name: "Lex Secure Poland", category: "Юриспруденція", rating: 4.9, status: "Verified", offers: 2 },
+    { id: "p-2", name: "HomeRentals Warszawa", category: "Житло", rating: 4.7, status: "Verified", offers: 1 },
+    { id: "p-3", name: "Language Master", category: "Освіта", rating: 4.2, status: "Pending", offers: 0 }
+  ]);
+
+  const [offers] = useState([
+    { id: "o-1", title: "-20% на консультацію", partner: "Lex Secure Poland", type: "Percentage", code: "KOMPAS-LEX-20", status: "Active" },
+    { id: "o-2", title: "Безкоштовний аудит", partner: "Lex Secure Poland", type: "Free Tier", code: "KOMPAS-AUDIT", status: "Active" },
+    { id: "o-3", title: "-50% комісії", partner: "HomeRentals Warszawa", type: "Percentage", code: "KOMPAS-HOME50", status: "Active" }
+  ]);
+
+  const partnerColumns = [
     { header: "Partner Name", cell: (row) => (
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
-        <div style={{ width: 40, height: 40, borderRadius: 8, background: "var(--panel-2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Icon name={row.type === "Education" ? "book" : row.type === "Real Estate" ? "home" : "briefcase"} size={20} color="var(--color-primary)" />
-        </div>
-        <div>
-          <div style={{ fontWeight: 600 }}>{row.name}</div>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>{row.contact} • {row.type}</div>
-        </div>
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
+        <Avatar name={row.name} size={32} />
+        <div style={{ fontWeight: 600 }}>{row.name}</div>
       </div>
     )},
-    { header: "Referred Leads", cell: (row) => <span style={{ fontWeight: 600 }}>{row.referredLeads}</span> },
-    { header: "Deals Won", cell: (row) => <span style={{ color: "var(--color-success)", fontWeight: 600 }}>{row.dealsWon}</span> },
-    { header: "Conversion", cell: (row) => {
-      const rate = row.referredLeads > 0 ? Math.round((row.dealsWon / row.referredLeads) * 100) : 0;
-      return <span style={{ fontSize: "var(--text-sm)", color: "var(--dim)" }}>{rate}%</span>;
-    }},
-    { header: "Revenue Gen.", cell: (row) => <span style={{ fontWeight: 600 }}>{row.revGenerated}</span> },
-    { header: "Comm. Rate", cell: (row) => <Badge status="primary" text={row.commRate} /> },
-    { header: "Unpaid Comm.", cell: (row) => (
-      <span style={{ fontWeight: 700, color: row.unpaidComm !== "€0" ? "var(--color-warning)" : "var(--dim)" }}>
-        {row.unpaidComm}
-      </span>
+    { header: "Category", cell: (row) => <span style={{ fontWeight: 500 }}>{row.category}</span> },
+    { header: "Rating", cell: (row) => (
+      <span style={{ color: "var(--color-warning)", fontWeight: 600 }}>★ {row.rating}</span>
     )},
     { header: "Status", cell: (row) => (
-      <Badge status={row.status === "active" ? "success" : "default"} text={row.status.toUpperCase()} />
+      <Badge status={row.status === "Verified" ? "success" : "warning"} text={row.status.toUpperCase()} />
     )},
-    { header: "", cell: (row) => (
+    { header: "Active Offers", cell: (row) => (
+      <span style={{ fontWeight: 600 }}>{row.offers}</span>
+    )},
+    { header: "", cell: () => (
       <div style={{ display: "flex", gap: 8 }}>
-        {row.unpaidComm !== "€0" && (
-          <button className="kc-btn kc-btn-ghost" title="Pay Commission"><Icon name="dollar-sign" size={16} color="var(--color-success)" /></button>
-        )}
-        <button className="kc-btn kc-btn-ghost"><Icon name="edit-2" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="trash" size={16} /></button>
+      </div>
+    )}
+  ];
+
+  const offerColumns = [
+    { header: "Offer Title", cell: (row) => <span style={{ fontWeight: 600 }}>{row.title}</span> },
+    { header: "Partner", cell: (row) => <span style={{ fontWeight: 500 }}>{row.partner}</span> },
+    { header: "Type", cell: (row) => <span style={{ color: "var(--dim)" }}>{row.type}</span> },
+    { header: "Promo Code", cell: (row) => (
+      <code style={{ background: "var(--panel-2)", padding: "4px 8px", borderRadius: 4, fontFamily: "monospace", fontSize: "12px", color: "var(--color-primary)" }}>
+        {row.code}
+      </code>
+    )},
+    { header: "Status", cell: (row) => (
+      <Badge status={row.status === "Active" ? "success" : "default"} text={row.status.toUpperCase()} />
+    )},
+    { header: "", cell: () => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <button className="kc-btn kc-btn-ghost"><Icon name="edit" size={16} /></button>
+        <button className="kc-btn kc-btn-ghost"><Icon name="trash" size={16} /></button>
       </div>
     )}
   ];
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-lg)" }}>
         <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>Partners & B2B Referrals</h2>
+          <h2 className="kc-h2" style={{ margin: 0 }}>Partners & Marketplace</h2>
           <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Track leads generated by partners and calculate their commissions.
+            Manage verified partners, discounts, and exclusive offers for union members.
           </p>
         </div>
         <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-secondary"><Icon name="download" size={16} /> Export Payouts</button>
+          <button className="kc-btn kc-btn-secondary"><Icon name="tag" size={16} /> New Offer</button>
           <button className="kc-btn kc-btn-primary"><Icon name="plus" size={16} /> Add Partner</button>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)", flexShrink: 0 }}>
+      <div style={{ display: "flex", gap: "var(--space-md)", marginBottom: "var(--space-lg)" }}>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-primary)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Partners</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>14</div>
-          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Bringing leads this month.</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Verified Partners</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>24</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-success)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Partner Revenue (YTD)</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-success)" }}>€44,400</div>
-          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Total revenue from partner leads.</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Active Offers</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>56</div>
         </div>
         <div className="kc-card" style={{ flex: 1, borderTop: "3px solid var(--color-warning)" }}>
-          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Unpaid Commissions</div>
-          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)", color: "var(--color-warning)" }}>€690</div>
-          <div style={{ fontSize: "10px", color: "var(--dim)", marginTop: 4 }}>Awaiting payout to partners.</div>
+          <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)", textTransform: "uppercase", fontWeight: 600 }}>Codes Redeemed (30d)</div>
+          <div style={{ fontSize: 32, fontWeight: 700, marginTop: "var(--space-xs)" }}>1,204</div>
         </div>
       </div>
 
       <div className="kc-card" style={{ padding: 0, overflow: "hidden", flex: 1, display: "flex", flexDirection: "column" }}>
+        
+        {/* Tabs */}
+        <div style={{ display: "flex", borderBottom: "1px solid var(--border)", background: "var(--panel-2)" }}>
+          <button 
+            onClick={() => setActiveTab("partners")}
+            style={{ 
+              padding: "16px 24px", 
+              background: "transparent", 
+              border: "none", 
+              borderBottom: activeTab === "partners" ? "2px solid var(--color-primary)" : "2px solid transparent",
+              color: activeTab === "partners" ? "var(--fg)" : "var(--dim)",
+              fontWeight: activeTab === "partners" ? 600 : 500,
+              cursor: "pointer"
+            }}
+          >
+            Partners Directory
+          </button>
+          <button 
+            onClick={() => setActiveTab("offers")}
+            style={{ 
+              padding: "16px 24px", 
+              background: "transparent", 
+              border: "none", 
+              borderBottom: activeTab === "offers" ? "2px solid var(--color-primary)" : "2px solid transparent",
+              color: activeTab === "offers" ? "var(--fg)" : "var(--dim)",
+              fontWeight: activeTab === "offers" ? 600 : 500,
+              cursor: "pointer"
+            }}
+          >
+            Offers & Discounts
+          </button>
+        </div>
+
         <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", display: "flex", gap: "var(--space-md)", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, background: "var(--panel-2)", padding: "8px 12px", borderRadius: 8, flex: 1 }}>
             <Icon name="search" size={16} color="var(--dim)" />
-            <input type="text" placeholder="Search by partner name or contact..." style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
+            <input type="text" placeholder={`Search ${activeTab}...`} style={{ background: "transparent", border: "none", color: "var(--fg)", width: "100%", outline: "none", fontSize: "var(--text-sm)" }} />
           </div>
-          <select className="kc-input" style={{ width: 160 }}>
-            <option>All Types</option>
-            <option>Real Estate</option>
-            <option>Education</option>
-            <option>Recruitment</option>
-            <option>Individual</option>
-          </select>
-          <select className="kc-input" style={{ width: 160 }}>
-            <option>All Partners</option>
-            <option>With Unpaid Comm.</option>
-          </select>
+          <button className="kc-btn kc-btn-secondary"><Icon name="filter" size={16} /> Filter</button>
         </div>
-        <div style={{ flex: 1, overflowY: "auto" }}>
-          <DataTable columns={columns} data={partners} />
+        
+        <div style={{ flex: 1, overflow: "auto" }}>
+          {activeTab === "partners" ? (
+            <DataTable columns={partnerColumns} data={partners} />
+          ) : (
+            <DataTable columns={offerColumns} data={offers} />
+          )}
         </div>
       </div>
     </div>
