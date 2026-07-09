@@ -73,20 +73,20 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
           </div>
 
           <h1
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6 animate-slide-down-1"
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6 animate-slide-down"
             style={{ letterSpacing: '-0.04em', lineHeight: 1.05, color: 'var(--text)' }}
           >
             {t('hero_title')}
           </h1>
 
           <p
-            className="text-base sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12 animate-slide-down-2"
+            className="text-base sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12 animate-slide-down"
             style={{ color: 'var(--dim)', lineHeight: 1.5 }}
           >
             {t('hero_sub')}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-down-3">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-down">
             <a
               href="https://wa.me/48729271848"
               target="_blank"
