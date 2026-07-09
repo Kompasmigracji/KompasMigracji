@@ -72,11 +72,11 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 border border-black/10 text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs font-semibold uppercase tracking-widest text-blue-500 dark:text-blue-400 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             {t('contact_tag')}
           </div>
-          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
+          <h2 className="font-display tracking-tight font-bold text-gray-900 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-white dark:to-white/70" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
             {t('contact_title')}
           </h2>
         </motion.div>
@@ -111,7 +111,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                   <label
                     key={opt.value}
                     className="flex items-center gap-4 p-4 rounded-xl border border-black/10 dark:border-white/10 cursor-pointer transition-all hover:bg-white/60 dark:hover:bg-white/5"
-                    style={urgency === opt.value ? { borderColor: opt.color, background: `rgba(${opt.value === 'critical' ? '239,68,68' : opt.value === 'urgent' ? '245,158,11' : '59,130,246'}, 0.1)` } : {}}
+                    style={urgency === opt.value ? { borderColor: opt.color, background: `rgba(${opt.value === 'critical' ? '239,68,68' : opt.value === 'urgent' ? '245,158,11' : '59,130,246'}, 0.05)` } : {}}
                   >
                     <input
                       type="radio"
@@ -123,7 +123,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
                     />
                     <div
                       className="w-5 h-5 rounded-full border-2 shrink-0 transition-all flex items-center justify-center"
-                      style={urgency === opt.value ? { borderColor: opt.color } : { borderColor: 'rgba(255,255,255,0.2)' }}
+                      style={urgency === opt.value ? { borderColor: opt.color } : { borderColor: 'rgba(156,163,175,0.4)' }}
                     >
                       {urgency === opt.value && <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: opt.color }} />}
                     </div>
@@ -152,25 +152,25 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             <div className="mb-5">
               <label className={labelCls}>{t('form_service')}</label>
               <select value={service} onChange={e => setService(e.target.value)} className={`${inputCls} appearance-none bg-no-repeat`} style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%239ca3af\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")', backgroundPosition: 'right 1rem center', backgroundSize: '1.2em' }}>
-                <option value="" className="bg-[#111]">{t('form_service_ph')}</option>
-                <optgroup label={t('form_consult_group')} className="bg-[#111]">
-                  <option className="bg-[#111]">{t('form_consult_free')}</option>
-                  <option className="bg-[#111]">{t('form_consult_phone')}</option>
-                  <option className="bg-[#111]">{t('form_consult_full')}</option>
-                  <option className="bg-[#111]">{t('form_consult_hour')}</option>
+                <option value="" className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_service_ph')}</option>
+                <optgroup label={t('form_consult_group')} className="bg-white text-black dark:bg-[#111] dark:text-white">
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_consult_free')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_consult_phone')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_consult_full')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_consult_hour')}</option>
                 </optgroup>
-                <optgroup label={t('form_notary_group')} className="bg-[#111]">
-                  <option className="bg-[#111]">{t('form_notary_poa1')}</option>
-                  <option className="bg-[#111]">{t('form_notary_poa2')}</option>
-                  <option className="bg-[#111]">{t('form_notary_poa3')}</option>
-                  <option className="bg-[#111]">{t('form_notary_poa4')}</option>
-                  <option className="bg-[#111]">{t('form_notary_stmt')}</option>
-                  <option className="bg-[#111]">{t('form_notary_inherit')}</option>
+                <optgroup label={t('form_notary_group')} className="bg-white text-black dark:bg-[#111] dark:text-white">
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_poa1')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_poa2')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_poa3')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_poa4')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_stmt')}</option>
+                  <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_notary_inherit')}</option>
                 </optgroup>
-                <option className="bg-[#111]">{t('form_express1')}</option>
-                <option className="bg-[#111]">{t('form_express2')}</option>
-                <option className="bg-[#111]">{t('form_express3')}</option>
-                <option className="bg-[#111]">{t('form_other')}</option>
+                <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_express1')}</option>
+                <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_express2')}</option>
+                <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_express3')}</option>
+                <option className="bg-white text-black dark:bg-[#111] dark:text-white">{t('form_other')}</option>
               </select>
             </div>
             
@@ -180,7 +180,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
             </div>
             
             <label className="flex items-start gap-3 mb-8 text-sm text-gray-500 cursor-pointer group">
-              <input type="checkbox" required className="mt-1 w-4 h-4 rounded border-gray-600 text-blue-500 focus:ring-blue-500 bg-black/50" />
+              <input type="checkbox" required className="mt-1 w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-500 focus:ring-blue-500 bg-white dark:bg-black/50" />
               <span className="group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">{t('form_rodo')}</span>
             </label>
             

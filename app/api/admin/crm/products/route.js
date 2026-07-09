@@ -1,16 +1,45 @@
 import { NextResponse } from 'next/server';
+import { q, one } from '@/lib/db';
 
 export async function GET() {
-  return NextResponse.json({ data: [
-  {
-    "id": 1,
-    "name": "Consultation",
-    "price": 100,
-    "stock": 10
+  try {
+    const rows = await q(`
+      SELECT * FROM crm_products
+      ORDER BY created_at DESC
+    `);
+    return NextResponse.json({ data: rows });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    if (error.code === '42P01') {
+      return NextResponse.json({ data: [] });
+    }
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-] });
 }
+
 export async function POST(req) {
-  const body = await req.json();
-  return NextResponse.json({ ok: true, data: body });
+  try {
+    const body = await req.json();
+    const { name, price, stock } = body;
+    
+    await q(`
+      CREATE TABLE IF NOT EXISTS crm_products (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        price NUMERIC DEFAULT 0,
+        stock INTEGER DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `);
+
+    const result = await one(
+      `INSERT INTO crm_products (name, price, stock) VALUES ($1, $2, $3) RETURNING *`,
+      [name || 'New Product', price || 0, stock || 0]
+    );
+
+    return NextResponse.json({ ok: true, data: result });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
 }

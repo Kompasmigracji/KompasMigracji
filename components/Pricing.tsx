@@ -44,7 +44,7 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       />
       
       {card.badge && (
-        <span className="absolute top-6 right-8 text-gray-900 text-[10px] sm:text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg" 
+        <span className="absolute top-6 right-8 text-white text-[10px] sm:text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg" 
               style={{ background: card.oldAmount ? 'linear-gradient(135deg, #f97316, #dc2626)' : 'linear-gradient(135deg, #2563eb, #8b5cf6)' }}>
           {card.badge}
         </span>
@@ -64,8 +64,8 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       
       <ul className="flex flex-col gap-4 mb-10 flex-grow relative z-10">
         {card.features.map((f: string, idx: number) => (
-          <li key={idx} className="flex items-start text-sm text-gray-700 leading-relaxed">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-blue-400 shrink-0 mr-3 mt-0.5">
+          <li key={idx} className="flex items-start text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-blue-500 dark:text-blue-400 shrink-0 mr-3 mt-0.5">
               <polyline points="20 6 9 17 4 12" />
             </svg>
             {f}
@@ -158,17 +158,17 @@ export default function Pricing() {
           className="mb-12 relative overflow-hidden rounded-[2rem] p-[1px]"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-20" />
-          <div className="relative bg-white/90 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="relative bg-white/90 dark:bg-[#111]/90 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-black/5 dark:border-white/10">
             <div>
-              <div className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2 flex items-center gap-2">
+              <div className="text-xs font-bold uppercase tracking-widest text-purple-600 dark:text-purple-400 mb-2 flex items-center gap-2">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 {t('pricing_sub_tag')}
               </div>
-              <p className="text-gray-800 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
+              <p className="text-gray-800 dark:text-gray-200 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
             </div>
             <Link
               href="/test/plans"
-              className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-gray-900 bg-white/80 hover:bg-white/20 border border-black/10 transition-all duration-300 no-underline"
+              className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-gray-900 bg-white hover:bg-gray-50 border border-black/10 transition-all duration-300 no-underline shadow-sm"
             >
               {t('pricing_sub_cta')}
             </Link>
@@ -198,10 +198,10 @@ export default function Pricing() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="border-t border-black/10 pt-16 mt-16 max-w-4xl mx-auto"
+          className="border-t border-black/10 dark:border-white/10 pt-16 mt-16 max-w-4xl mx-auto"
         >
           <div className="text-center mb-8">
-            <h3 className="font-display text-2xl font-semibold text-gray-900 mb-3 tracking-tight">{t('p24_how_title')}</h3>
+            <h3 className="font-display text-2xl font-semibold text-gray-900 dark:text-white mb-3 tracking-tight">{t('p24_how_title')}</h3>
             <p className="text-gray-500 text-sm max-w-lg mx-auto">{t('p24_how_subtitle')}</p>
           </div>
           <P24PaymentSteps />
@@ -222,16 +222,16 @@ export default function Pricing() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#111] border border-black/10 p-8 rounded-3xl max-w-sm w-full shadow-2xl relative"
+            className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 p-8 rounded-3xl max-w-sm w-full shadow-2xl relative"
           >
-            <button onClick={() => setContactOpen(null)} className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors">
+            <button onClick={() => setContactOpen(null)} className="absolute top-4 right-4 text-gray-500 hover:text-black dark:hover:text-white transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
-            <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center text-green-400 mb-6 mx-auto">
+            <div className="w-12 h-12 bg-green-500/10 dark:bg-green-500/20 rounded-full flex items-center justify-center text-green-500 dark:text-green-400 mb-6 mx-auto">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
-            <h4 className="font-display text-xl font-bold text-gray-900 mb-2 text-center">{t('free_modal_title')}</h4>
-            <p className="text-sm text-gray-500 text-center mb-8">{t('free_modal_desc')}</p>
+            <h4 className="font-display text-xl font-bold text-gray-900 dark:text-white mb-2 text-center">{t('free_modal_title')}</h4>
+            <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-8">{t('free_modal_desc')}</p>
             <a
               href={`https://wa.me/48729271848?text=Отримати+безкоштовну+консультацію`}
               target="_blank"
