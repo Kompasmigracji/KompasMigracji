@@ -36,12 +36,12 @@ export async function GET() {
     // Calculate from sum of completed orders or just all orders
     const { data: revenueData, error: revenueError } = await supabase
       .from('orders')
-      .select('total_amount')
+      .select('amount')
       .eq('status', 'выполнено');
 
     if (revenueError) throw revenueError;
     
-    const totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.total_amount) || 0), 0);
+    const totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
 
     // Dynamic Chart Data (mocked months, but using real logic if available)
     // Here we can aggregate by month, but for simplicity we will just return mock data for charts or simple aggregated counts.

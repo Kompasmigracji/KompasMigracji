@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const newOrder = {
       order_number: body.order_number || `ORD-${Date.now().toString().slice(-6)}`,
       status: body.status || 'новый',
-      total_amount: body.total_amount || 0,
+      amount: body.total_amount || body.amount || 0,
       buyer_id: body.buyer_id || null, // Could create buyer first if needed
       notes: body.notes || ''
     };

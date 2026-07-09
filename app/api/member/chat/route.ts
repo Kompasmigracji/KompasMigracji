@@ -32,7 +32,7 @@ ${profile?.documents?.map(d => `- ${d.type} (${d.number}), Дійсний до: 
         // Save the interaction to the database (memory)
         if (profile?.user_id) {
           try {
-            const { getSupabaseAdmin } = require('@/lib/supabase');
+            const { getSupabaseAdmin } = await import('@/lib/supabase');
             const supabase = getSupabaseAdmin();
             if (supabase) {
               const lastUserMessage = messages[messages.length - 1];
