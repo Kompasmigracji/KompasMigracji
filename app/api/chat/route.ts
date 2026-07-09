@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           const { data, error } = await supabase
             .from('kompas_jobs_v2')
             .select('*')
-            .ilike('title', \`%\${keyword}%\`)
+            .ilike('title', `%${keyword}%`)
             .limit(3);
             
           if (error) return { error: error.message };
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
             query = query.eq('id', caseId);
           } else {
             // For demo purposes, we will return a case if they provide a case_type (like 'Karta Pobytu')
-            query = query.ilike('case_type', \`%\${caseId}%\`).limit(1);
+            query = query.ilike('case_type', `%${caseId}%`).limit(1);
           }
           
           const { data, error } = await query.single();
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
           const { data, error } = await supabase
             .from('kompas_partners')
             .select('*')
-            .ilike('category', \`%\${category}%\`);
+            .ilike('category', `%${category}%`);
             
           if (error) return { error: error.message };
           
@@ -115,7 +115,7 @@ export async function POST(req: Request) {
           
           return {
             partners: data,
-            message: \`Знайдено партнерів у категорії \${category}. Перейдіть у розділ "Партнерські Знижки", щоб отримати промокод.\`
+            message: `Знайдено партнерів у категорії ${category}. Перейдіть у розділ "Партнерські Знижки", щоб отримати промокод.`
           };
         },
       }),
@@ -129,7 +129,7 @@ export async function POST(req: Request) {
         execute: async ({ name, phone, issue }) => {
           return {
             success: true,
-            message: \`Заявку створено для \${name}. Менеджер зв'яжеться за номером \${phone} протягом 2 годин.\`
+            message: `Заявку створено для ${name}. Менеджер зв'яжеться за номером ${phone} протягом 2 годин.`
           };
         },
       }),
