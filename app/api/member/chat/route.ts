@@ -1,7 +1,7 @@
 import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
     const { messages, profile } = await req.json();
 
@@ -16,11 +16,11 @@ export async function POST(req) {
 AI Summary: ${profile?.ai_summary || ''}
 
 ДОКУМЕНТИ:
-${profile?.documents?.map(d => `- ${d.type} (${d.number}), Дійсний до: ${d.expires} ${d.expired ? '[ПРОСТРОЧЕНО]' : ''}`).join('\n')}
+${profile?.documents?.map((d: any) => `- ${d.type} (${d.number}), Дійсний до: ${d.expires} ${d.expired ? '[ПРОСТРОЧЕНО]' : ''}`).join('\n')}
 
 ОСВІТА ТА ДОСВІД:
-Досвід: ${profile?.experience?.map(e => `${e.title} в ${e.company} (${e.start} - ${e.end})`).join('; ')}
-Освіта: ${profile?.education?.map(e => `${e.degree} в ${e.institution}`).join('; ')}
+Досвід: ${profile?.experience?.map((e: any) => `${e.title} в ${e.company} (${e.start} - ${e.end})`).join('; ')}
+Освіта: ${profile?.education?.map((e: any) => `${e.degree} в ${e.institution}`).join('; ')}
 
 Будь корисним, пропонуй допомогу з оновленням документів, якщо вони прострочені, або пропонуй нові кар'єрні можливості.`;
 
@@ -51,8 +51,9 @@ ${profile?.documents?.map(d => `- ${d.type} (${d.number}), Дійсний до: 
       }
     });
 
-    return result.toDataStreamResponse();
-  } catch (error) {
+    // @ts-ignore
+    return result.toDataStreamResponse ? result.toDataStreamResponse() : result.toTextStreamResponse();
+  } catch (error: any) {
     console.error('Chat API Error:', error);
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }

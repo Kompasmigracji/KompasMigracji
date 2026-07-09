@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 
-export async function GET(req) {
+export async function GET(req: Request) {
   try {
     // Attempt to fetch from Supabase if configured
     const supabase = getSupabase();
@@ -51,7 +51,7 @@ export async function GET(req) {
 
     return NextResponse.json({ partners: mappedPartners }, { status: 200 });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching partners:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
