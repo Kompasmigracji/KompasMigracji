@@ -26,6 +26,25 @@ const itemVariants = {
 
 export default function AnalyticsDashboardPage() {
   const [activeTab, setActiveTab] = useState("general");
+  const [statuses, setStatuses] = useState(MOCK_STATUSES);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/admin/crm/dashboard');
+        if (res.ok) {
+          const json = await res.json();
+          setStatuses(json.data || MOCK_STATUSES);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-[#f5f5f7] text-gray-800">
@@ -124,13 +143,13 @@ export default function AnalyticsDashboardPage() {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] bg-blue-500/10 blur-[60px] rounded-full pointer-events-none" />
                 
                 <div className="w-4/5 h-20 bg-gradient-to-b from-red-500/80 to-red-600/80 backdrop-blur-md border border-red-400/50 text-gray-900 font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(239,68,68,0.3)]" style={{ clipPath: "polygon(0 0, 100% 0, 85% 100%, 15% 100%)" }}>
-                  100% Новий
+                  {statuses.find(s => s.key === 'new')?.conv || '0%'} Новий
                 </div>
                 <div className="w-[68%] h-16 bg-gradient-to-b from-cyan-400/80 to-cyan-500/80 backdrop-blur-md border border-cyan-300/50 text-gray-900 font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.3)]" style={{ clipPath: "polygon(0 0, 100% 0, 85% 100%, 15% 100%)" }}>
-                  0% В роботі
+                  {statuses.find(s => s.key === 'contacted')?.conv || '0%'} В роботі
                 </div>
                 <div className="w-[58%] h-16 bg-gradient-to-b from-lime-500/80 to-lime-600/80 backdrop-blur-md border border-lime-400/50 rounded-b-xl text-gray-900 font-bold text-sm flex items-center justify-center shadow-[0_0_20px_rgba(132,204,22,0.3)]">
-                  0% Успішно
+                  {statuses.find(s => s.key === 'won')?.conv || '0%'} Успішно
                 </div>
               </div>
 
@@ -146,8 +165,10 @@ export default function AnalyticsDashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {MOCK_STATUSES.map((status, index) => (
-                      <tr key={status.id} className={`border-black/5 transition-colors hover:bg-white/60 ${index !== MOCK_STATUSES.length - 1 ? 'border-b' : ''}`}>
+                    {loading ? (
+                      <tr><td colSpan="4" className="text-center p-4">Завантаження...</td></tr>
+                    ) : statuses.map((status, index) => (
+                      <tr key={status.id} className={`border-black/5 transition-colors hover:bg-white/60 ${index !== statuses.length - 1 ? 'border-b' : ''}`}>
                         <td className="px-4 py-4">
                           <span className={`px-3 py-1.5 rounded-lg text-xs font-bold border ${status.color}`}>
                             {status.name}

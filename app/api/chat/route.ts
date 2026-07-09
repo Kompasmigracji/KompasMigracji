@@ -129,11 +129,25 @@ export async function POST(req: Request) {
           phone: z.string().describe('Номер телефону (WhatsApp/Viber)'),
           issue: z.string().describe('Короткий опис проблеми'),
         }),
-        // @ts-ignore
         execute: async ({ name, phone, issue }: { name: string; phone: string; issue: string }) => {
+          if (!supabase) return { error: 'Database not connected' };
+          
+          const { error } = await supabase.from('kompas_leads').insert({
+            name,
+            contact: phone,
+            message: issue,
+            source: 'ai_chatbot',
+            status: 'new'
+          });
+
+          if (error) {
+            console.error("AI Chatbot lead insert error:", error);
+            return { success: false, message: "Вибачте, сталася помилка при створенні заявки." };
+          }
+
           return {
             success: true,
-            message: `Заявку створено для ${name}. Менеджер зв'яжеться за номером ${phone} протягом 2 годин.`
+            message: `Заявку успішно створено для ${name}. Наш менеджер зв'яжеться з вами за номером ${phone} найближчим часом.`
           };
         },
       }),
