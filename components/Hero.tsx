@@ -114,8 +114,8 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
       {/* ─── BOTTOM CTA ───────────────────────────────────── */}
       <section className="py-24 sm:py-32 px-6 relative overflow-hidden flex justify-center">
         <div className="max-w-4xl w-full relative z-10 p-6 sm:p-20 rounded-3xl sm:rounded-[3rem] overflow-hidden border border-black/5 dark:border-white/10 shadow-2xl bg-white/70 dark:bg-white/5 backdrop-blur-3xl">
-          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 dark:bg-blue-500/20 rounded-full blur-[80px]" />
-          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[80px]" />
+          <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full transform-style-3d" style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(59,130,246,0) 70%)', transform: 'translateZ(0)' }} />
+          <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full transform-style-3d" style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.15) 0%, rgba(168,85,247,0) 70%)', transform: 'translateZ(0)' }} />
           
           <div className="relative z-20 text-center">
             <Reveal>
@@ -141,41 +141,41 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
 
       {/* ─── Scoped CSS ───────────────────────────────────── */}
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Gradient mesh blobs */
+        /* Gradient mesh blobs (optimized for Safari WebKit without filter: blur) */
         .hero-mesh-1, .hero-mesh-2, .hero-mesh-3 {
           position: absolute;
           border-radius: 50%;
-          filter: blur(120px);
-          opacity: 0.25;
+          opacity: 0.4;
           will-change: transform;
+          transform: translateZ(0);
         }
         .hero-mesh-1 {
-          width: 600px; height: 600px;
-          background: #0066FF;
-          top: -200px; right: -100px;
+          width: 800px; height: 800px;
+          background: radial-gradient(circle, rgba(0,102,255,0.8) 0%, rgba(0,102,255,0) 65%);
+          top: -300px; right: -200px;
           animation: mesh-float 15s ease-in-out infinite;
         }
         .hero-mesh-2 {
-          width: 500px; height: 500px;
-          background: #FF6B35;
-          bottom: -150px; left: -100px;
+          width: 700px; height: 700px;
+          background: radial-gradient(circle, rgba(255,107,53,0.8) 0%, rgba(255,107,53,0) 65%);
+          bottom: -250px; left: -200px;
           animation: mesh-float 18s ease-in-out infinite reverse;
         }
         .hero-mesh-3 {
-          width: 400px; height: 400px;
-          background: #7C3AED;
-          top: 30%; left: 50%;
+          width: 600px; height: 600px;
+          background: radial-gradient(circle, rgba(124,58,237,0.8) 0%, rgba(124,58,237,0) 65%);
+          top: 20%; left: 40%;
           animation: mesh-float 20s ease-in-out infinite 3s;
         }
         @keyframes mesh-float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.05); }
-          66% { transform: translate(-20px, 20px) scale(0.95); }
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          33% { transform: translate3d(30px, -30px, 0) scale(1.05); }
+          66% { transform: translate3d(-20px, 20px, 0) scale(0.95); }
         }
 
-        [data-theme="dark"] .hero-mesh-1 { opacity: 0.12; }
-        [data-theme="dark"] .hero-mesh-2 { opacity: 0.10; }
-        [data-theme="dark"] .hero-mesh-3 { opacity: 0.08; }
+        [data-theme="dark"] .hero-mesh-1 { opacity: 0.15; }
+        [data-theme="dark"] .hero-mesh-2 { opacity: 0.12; }
+        [data-theme="dark"] .hero-mesh-3 { opacity: 0.10; }
 
         .hero-badge {
           background: rgba(0, 102, 255, 0.08);
