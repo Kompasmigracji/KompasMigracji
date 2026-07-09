@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabase } from '@/lib/supabase';
 
 export async function GET() {
-  const supabase = getSupabaseAdmin();
+  const supabase = getSupabase();
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase admin client not configured' }, { status: 500 });
   }

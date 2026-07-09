@@ -1,7 +1,7 @@
 import { streamText, tool } from 'ai';
 import { google } from '@ai-sdk/google';
 import { z } from 'zod';
-import { getSupabaseAdmin } from '@/lib/supabase-admin';
+import { getSupabase } from '@/lib/supabase';
 
 // Оновлений промпт для Координатора
 const SYSTEM_PROMPT = `Ти — AI-Координатор компанії Kompas Migracji (Польща). Твоя задача — допомагати мігрантам, використовуючи свої інструменти (Tools) для доступу до інших агентів екосистеми.
@@ -20,12 +20,13 @@ WhatsApp: +48 729 271 848 | Telegram: @kompasmigracji | info@kompasmigracji.com
 1. Завжди відповідай мовою клієнта.
 2. Будь емпатичним, професійним та коротким.
 3. ЯКЩО клієнт просить знайти роботу, ОБОВ'ЯЗКОВО викликай find_jobs.
-4. ЯКЩО клієнт питає про статус своєї справи, ОБОВ'ЯЗКОВО викликай check_legal_status (попросивши case_id, якщо невідомо, для демо використовуй 'case-101' або 'case-102').
+4. ЯКЩО клієнт питає про статус своєї справи, ОБОВ'ЯЗКОВО викликай check_legal_status.
 5. ЯКЩО клієнту потрібен перекладач чи адвокат, ОБОВ'ЯЗКОВО викликай find_discounts.
 6. НЕ ПИШИ великі полотна тексту. Викликай інструменти, щоб надати точну інформацію.`;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
+  const supabase = getSupabase();
 
   const result = streamText({
     model: google('gemini-2.5-flash'),
@@ -38,13 +39,21 @@ export async function POST(req: Request) {
           keyword: z.string().describe('Професія або сфера, яку шукає клієнт (наприклад, "зварювальник", "IT", "водій")'),
         }),
         execute: async ({ keyword }) => {
-          // In a real app, query Supabase kompas_jobs
-          console.log(\`Finding jobs for: \${keyword}\`);
+          if (!supabase) return { error: 'Database not connected' };
+          const { data, error } = await supabase
+            .from('kompas_jobs_v2')
+            .select('*')
+            .ilike('title', \`%\${keyword}%\`)
+            .limit(3);
+            
+          if (error) return { error: error.message };
+          
+          if (!data || data.length === 0) {
+            return { message: 'На жаль, за цим запитом вакансій не знайдено. Спробуйте іншу професію.' };
+          }
+          
           return {
-            results: [
-              { id: 'job-1', title: \`\${keyword} (Senior)\`, company: 'TechPol Sp. z o.o.', salary: '8000 - 12000 PLN', match_score: 95 },
-              { id: 'job-2', title: \`\${keyword} (Junior)\`, company: 'Budowa Plus', salary: '5000 - 7000 PLN', match_score: 82 }
-            ],
+            results: data,
             message: 'Ось знайдені вакансії. Ви можете переглянути їх детальніше в розділі "Агент Працевлаштування".'
           };
         },
@@ -52,26 +61,36 @@ export async function POST(req: Request) {
       check_legal_status: tool({
         description: 'Перевіряє статус справи по легалізації (Карта Побиту, віза тощо).',
         parameters: z.object({
-          caseId: z.string().describe('ID справи (наприклад, case-101)'),
+          caseId: z.string().describe('ID справи (uuid)'),
         }),
         execute: async ({ caseId }) => {
-          // In a real app, query Supabase kompas_legal_cases
-          if (caseId === 'case-101') {
-            return {
-              status: 'success',
-              case_type: 'Karta Pobytu',
-              current_stage: 'Awaiting Fingerprints',
-              deadline: '2026-06-20',
-              message: 'Справа йде за планом. Вам потрібно здати відбитки пальців до 20 червня 2026 року.'
-            };
+          if (!supabase) return { error: 'Database not connected' };
+          
+          // Try to search by case_type just as a fallback if caseId isn't a UUID
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(caseId);
+          
+          let query = supabase.from('kompas_legal_cases_v2').select('*');
+          if (isUuid) {
+            query = query.eq('id', caseId);
           } else {
-            return {
-              status: 'blocked',
-              case_type: 'Zezwolenie na pracę',
-              current_stage: 'Missing Documents',
-              message: 'Справа призупинена. Будь ласка, донесіть відсутні документи до Уженду.'
-            };
+            // For demo purposes, we will return a case if they provide a case_type (like 'Karta Pobytu')
+            query = query.ilike('case_type', \`%\${caseId}%\`).limit(1);
           }
+          
+          const { data, error } = await query.single();
+            
+          if (error || !data) {
+             return { message: 'Справу не знайдено. Будь ласка, перевірте правильність введеного ID або типу.' };
+          }
+          
+          return {
+            status: data.status,
+            case_type: data.case_type,
+            current_stage: data.current_stage,
+            deadline: data.deadline,
+            notes: data.notes,
+            message: 'Дані по справі отримано з бази.'
+          };
         },
       }),
       find_discounts: tool({
@@ -80,12 +99,22 @@ export async function POST(req: Request) {
           category: z.string().describe('Категорія послуги: "Юриспруденція", "Житло", "Страхування", "Освіта" або "Медицина"'),
         }),
         execute: async ({ category }) => {
-          // Mock partners based on Stage 5
+          if (!supabase) return { error: 'Database not connected' };
+          const { data, error } = await supabase
+            .from('kompas_partners')
+            .select('*')
+            .ilike('category', \`%\${category}%\`);
+            
+          if (error) return { error: error.message };
+          
+          if (!data || data.length === 0) {
+            // Fallback to all partners if specific category not found
+            const { data: allData } = await supabase.from('kompas_partners').select('*').limit(3);
+            return { partners: allData, message: 'Ось деякі з наших партнерів.' };
+          }
+          
           return {
-            partners: [
-              { name: 'Lex Secure Poland', offer: '-20% на консультацію' },
-              { name: 'PZU Insurance', offer: '-10% на медичний поліс' }
-            ],
+            partners: data,
             message: \`Знайдено партнерів у категорії \${category}. Перейдіть у розділ "Партнерські Знижки", щоб отримати промокод.\`
           };
         },
@@ -105,7 +134,7 @@ export async function POST(req: Request) {
         },
       }),
     },
-    maxSteps: 5, // Allow the model to call tools and respond automatically
+    maxSteps: 5,
   });
 
   return result.toDataStreamResponse();

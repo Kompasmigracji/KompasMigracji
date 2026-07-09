@@ -2,6 +2,19 @@ import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
 
+export const metadata = {
+  title: "Kompas Migracji",
+  description: "Цифрова профспілка та персональний AI-помічник для мігрантів",
+  manifest: "/manifest.json",
+};
+
+export const viewport = {
+  themeColor: "#0ea5e9",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 /* Кореневий layout — обов'язковий html+body для Next.js App Router.
    suppressHydrationWarning дозволяє [locale]/layout та admin/layout
    додавати lang= та className через React merging без гідрація-помилок. */
