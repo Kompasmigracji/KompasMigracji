@@ -67,42 +67,26 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
 
         {/* Text Content */}
         <div className="w-full max-w-4xl mx-auto flex flex-col justify-center items-center relative z-10 pt-32 pb-16 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge mx-auto"
-          >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-8 hero-badge mx-auto animate-slide-down">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             Ваш шлях до легалізації починається тут
-          </motion.div>
+          </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6"
+          <h1
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6 animate-slide-down-1"
             style={{ letterSpacing: '-0.04em', lineHeight: 1.05, color: 'var(--text)' }}
           >
             {t('hero_title')}
-          </motion.h1>
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-base sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12"
+          <p
+            className="text-base sm:text-xl md:text-2xl font-medium max-w-2xl mx-auto mb-12 animate-slide-down-2"
             style={{ color: 'var(--dim)', lineHeight: 1.5 }}
           >
             {t('hero_sub')}
-          </motion.p>
+          </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-down-3">
             <a
               href="https://wa.me/48729271848"
               target="_blank"
@@ -120,7 +104,7 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
             >
               {t('services_more') || 'Więcej'}
             </button>
-          </motion.div>
+          </div>
         </div>
 
 
