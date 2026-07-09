@@ -2,32 +2,30 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
-import { supabase } from "@/lib/supabase";
 import LeadDetailsModal from "@/components/admin/LeadDetailsModal";
 
 const FUNNEL_COLUMNS = [
-  { id: "Новый", title: "Новый", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
-  { id: "Кваліфікація", title: "Квалификация", color: "border-blue-500 bg-blue-500/10 text-blue-400" },
-  { id: "Переговори", title: "Переговоры", color: "border-amber-500 bg-amber-500/10 text-amber-400" },
-  { id: "Оплата", title: "Оплата", color: "border-orange-500 bg-orange-500/10 text-orange-400" },
-  { id: "Реалізація", title: "Реализация", color: "border-purple-500 bg-purple-500/10 text-purple-400" },
+  { id: "new", title: "Нові", color: "border-blue-500 bg-blue-500/10 text-blue-400" },
+  { id: "contacted", title: "Взяті в роботу", color: "border-purple-500 bg-purple-500/10 text-purple-400" },
+  { id: "pending", title: "Думають", color: "border-amber-500 bg-amber-500/10 text-amber-400" },
+  { id: "won", title: "Успіх", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
+  { id: "lost", title: "Відмова", color: "border-red-500 bg-red-500/10 text-red-400" },
 ];
 
 export default function FunnelsPage() {
   const [leads, setLeads] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newLeadForm, setNewLeadForm] = useState({ name: '', phone: '', source: 'direct' });
+  const [newLeadForm, setNewLeadForm] = useState({ name: '', contact: '', source: 'manual' });
   const [selectedLead, setSelectedLead] = useState(null);
 
   const loadLeads = useCallback(async () => {
     setIsLoading(true);
     try {
-      if (supabase) {
-        const { data, error } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
-        if (!error && data) {
-          setLeads(data);
-        }
+      const res = await fetch('/api/admin/crm/leads');
+      const json = await res.json();
+      if (json.data) {
+        setLeads(json.data);
       }
     } catch (e) {
       console.error(e);
@@ -41,27 +39,37 @@ export default function FunnelsPage() {
   }, [loadLeads]);
 
   const handleStatusChange = async (leadId, newStatus) => {
-    setLeads(prev => prev.map(l => String(l.id) === String(leadId) ? { ...l, funnel_step: newStatus } : l));
-    if (supabase) {
-      await supabase.from('leads').update({ funnel_step: newStatus }).eq('id', leadId);
+    // Optimistic update
+    setLeads(prev => prev.map(l => String(l.id) === String(leadId) ? { ...l, status: newStatus } : l));
+    
+    try {
+      await fetch(`/api/admin/crm/leads/${leadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+    } catch (e) {
+      console.error(e);
+      // Revert if error
+      loadLeads();
     }
   };
 
   const handleCreateLead = async (e) => {
     e.preventDefault();
-    if (!supabase) return;
     try {
-      const { data, error } = await supabase.from('leads').insert([{
-        name: newLeadForm.name,
-        phone: newLeadForm.phone,
-        source: newLeadForm.source,
-        funnel_step: 'Новый'
-      }]).select().single();
-      
-      if (!error && data) {
-        setLeads(prev => [data, ...prev]);
+      const res = await fetch('/api/admin/crm/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newLeadForm, status: 'new' })
+      });
+      if (res.ok) {
+        await loadLeads();
         setIsModalOpen(false);
-        setNewLeadForm({ name: '', phone: '', source: 'direct' });
+        setNewLeadForm({ name: '', contact: '', source: 'manual' });
+      } else {
+        const data = await res.json();
+        alert(data.error || "Помилка");
       }
     } catch (e) {
       console.error(e);
@@ -71,17 +79,17 @@ export default function FunnelsPage() {
   const cards = leads.map(l => {
     const createdDate = new Date(l.created_at);
     const timeFormatted = createdDate.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-    const isUrgent = l.funnel_step === 'Новый' && (Date.now() - createdDate.getTime()) > 86400000; 
+    const isUrgent = l.status === 'new' && (Date.now() - createdDate.getTime()) > 86400000; 
     
     return {
       id: String(l.id),
-      title: l.title || l.name ? `Чат з ${l.name}` : "Новый лид",
+      title: l.name ? `Клієнт: ${l.name}` : "Новий лід",
       subtitle: timeFormatted,
-      timeAgo: l.phone || l.email || "", 
-      columnId: l.funnel_step || "Новый",
+      timeAgo: l.contact || l.email || "Без контактів", 
+      columnId: l.status || "new",
       amount: 0,
-      tags: [l.source || "direct"],
-      assignee: { name: "Олександр" }, 
+      tags: [l.source || "website"],
+      assignee: { name: "Менеджер" }, 
       isUrgent: isUrgent,
       originalLead: l
     };
@@ -126,7 +134,7 @@ export default function FunnelsPage() {
             </div>
             <form onSubmit={handleCreateLead} className="p-5 flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Ім'я або Нікнейм</label>
+                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Ім'я</label>
                 <input 
                   type="text" 
                   required
@@ -137,11 +145,12 @@ export default function FunnelsPage() {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Телефон або Telegram</label>
+                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Телефон / Контакт</label>
                 <input 
                   type="text" 
-                  value={newLeadForm.phone}
-                  onChange={(e) => setNewLeadForm({...newLeadForm, phone: e.target.value})}
+                  required
+                  value={newLeadForm.contact}
+                  onChange={(e) => setNewLeadForm({...newLeadForm, contact: e.target.value})}
                   className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all dark:text-white"
                   placeholder="+48 111 222 333"
                 />
@@ -153,7 +162,7 @@ export default function FunnelsPage() {
                   onChange={(e) => setNewLeadForm({...newLeadForm, source: e.target.value})}
                   className="w-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] transition-all dark:text-white"
                 >
-                  <option value="direct">Direct (Сайт)</option>
+                  <option value="manual">Додано вручну</option>
                   <option value="telegram">Telegram</option>
                   <option value="instagram">Instagram</option>
                   <option value="viber">Viber</option>
@@ -173,13 +182,15 @@ export default function FunnelsPage() {
       )}
 
       {/* Lead Details Modal */}
-      <LeadDetailsModal 
-        lead={selectedLead}
-        onClose={() => setSelectedLead(null)}
-        onUpdate={(updatedLead) => {
-          setLeads(prev => prev.map(l => String(l.id) === String(updatedLead.id) ? updatedLead : l));
-        }}
-      />
+      {selectedLead && (
+        <LeadDetailsModal 
+          lead={selectedLead}
+          onClose={() => setSelectedLead(null)}
+          onUpdate={(updatedLead) => {
+            setLeads(prev => prev.map(l => String(l.id) === String(updatedLead.id) ? updatedLead : l));
+          }}
+        />
+      )}
     </div>
   );
 }

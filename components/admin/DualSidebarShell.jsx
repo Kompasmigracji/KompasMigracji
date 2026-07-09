@@ -19,6 +19,7 @@ const NAV_DATA = [
         title: "",
         items: [
           { label: "Чаты", href: "/admin/crm/chats" },
+          { label: "Лиды", href: "/admin/crm/leads" },
           { label: "Воронки", href: "/admin/crm/funnels" },
           { label: "Заказы", href: "/admin/crm/orders" },
           { label: "Списки заказов", href: "/admin/crm/order-lists" },
