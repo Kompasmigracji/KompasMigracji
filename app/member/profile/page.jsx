@@ -255,13 +255,36 @@ export default function DigitalProfilePage() {
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg, idx) => (
-                <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-indigo-100 dark:bg-indigo-900/30' : 'bg-blue-100 dark:bg-blue-900/30'}`}>
-                    {msg.role === 'user' ? <User className="w-3 h-3 text-indigo-600 dark:text-indigo-400" /> : <Bot className="w-3 h-3 text-blue-600 dark:text-blue-400" />}
-                  </div>
-                  <div className={`p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-sm'}`}>
-                    {msg.content}
-                  </div>
+                <div key={idx} className={`flex flex-col gap-2`}>
+                  {msg.content && (
+                    <div className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-indigo-100 dark:bg-indigo-900/30' : 'bg-blue-100 dark:bg-blue-900/30'}`}>
+                        {msg.role === 'user' ? <User className="w-3 h-3 text-indigo-600 dark:text-indigo-400" /> : <Bot className="w-3 h-3 text-blue-600 dark:text-blue-400" />}
+                      </div>
+                      <div className={`p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-sm'}`}>
+                        {msg.content}
+                      </div>
+                    </div>
+                  )}
+                  {msg.toolInvocations?.map((toolInvocation, toolIdx) => (
+                    <div key={`tool-\${toolIdx}`} className="flex gap-3 ml-9">
+                      <div className="w-full bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30 rounded-xl p-3 text-sm">
+                        <div className="flex items-center gap-2 mb-2 text-blue-700 dark:text-blue-400 font-semibold text-xs uppercase tracking-wider">
+                          <Bot className="w-3 h-3" />
+                          Викликаю агента: {toolInvocation.toolName}
+                        </div>
+                        {toolInvocation.state === 'result' ? (
+                          <div className="text-slate-600 dark:text-slate-400 whitespace-pre-wrap font-mono text-xs overflow-auto max-h-40">
+                            {JSON.stringify(toolInvocation.result, null, 2)}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 text-slate-500">
+                            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" /> Очікування даних...
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ))}
               <div ref={messagesEndRef} />

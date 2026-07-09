@@ -16,6 +16,7 @@
     "video:narration": "python3 scripts/generate-narration.py"
   },
   "dependencies": {
+    "@ai-sdk/google": "^4.0.10",
     "@ai-sdk/openai": "^3.0.72",
     "@ai-sdk/react": "^4.0.17",
     "@anthropic-ai/sdk": "^0.100.1",

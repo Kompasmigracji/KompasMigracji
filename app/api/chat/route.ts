@@ -1,177 +1,112 @@
-export const dynamic = "force-dynamic";
-import { NextRequest, NextResponse } from 'next/server';
+import { streamText, tool } from 'ai';
+import { google } from '@ai-sdk/google';
+import { z } from 'zod';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
-const SYSTEM_PROMPT = `Ти — AI-консультант компанії Kompas Migracji (Польща). Твоя задача — допомогти мігранту розібратись у ситуації і записати його на платну послугу або консультацію.
+// Оновлений промпт для Координатора
+const SYSTEM_PROMPT = `Ти — AI-Координатор компанії Kompas Migracji (Польща). Твоя задача — допомагати мігрантам, використовуючи свої інструменти (Tools) для доступу до інших агентів екосистеми.
 
-=== КОМПАНІЯ ===
+ТИ МАЄШ ДОСТУП ДО ТАКИХ АГЕНТІВ (Tools):
+1. find_jobs: Шукає вакансії в базі даних (Агент Працевлаштування). Викликай, якщо клієнт шукає роботу.
+2. check_legal_status: Перевіряє статус справи про легалізацію (Агент Міграції). Викликай, якщо клієнт запитує про Карту Побиту або візу.
+3. find_discounts: Шукає партнерські знижки (Маркетплейс). Викликай, якщо клієнту потрібен адвокат, житло, страховка або нотаріус.
+4. record_lead: Записує клієнта на платну послугу, якщо він дав ім'я та телефон.
+
+КОМПАНІЯ:
 Kompas Migracji / DOMUS V Sp. z o.o. — юридичний супровід мігрантів у Польщі.
-97% справ закриваються позитивно. Понад 3200 задоволених клієнтів.
 WhatsApp: +48 729 271 848 | Telegram: @kompasmigracji | info@kompasmigracji.com
 
-=== ЦІНИ (актуальні, zł) ===
-КОНСУЛЬТАЦІЇ:
-• 5 хв — 50 zł
-• 10 хв — 100 zł
-• 15 хв — 150 zł
-• Консультація + узасаднення — 450 zł
-• Юридична година — 450 zł (🔥 Можлива знижка до 30% залежно від сезону (10%, 15%, 20%). Кажи клієнту, що можна отримати знижку до 30%, але не обіцяй точну цифру!)
+ПРАВИЛА:
+1. Завжди відповідай мовою клієнта.
+2. Будь емпатичним, професійним та коротким.
+3. ЯКЩО клієнт просить знайти роботу, ОБОВ'ЯЗКОВО викликай find_jobs.
+4. ЯКЩО клієнт питає про статус своєї справи, ОБОВ'ЯЗКОВО викликай check_legal_status (попросивши case_id, якщо невідомо, для демо використовуй 'case-101' або 'case-102').
+5. ЯКЩО клієнту потрібен перекладач чи адвокат, ОБОВ'ЯЗКОВО викликай find_discounts.
+6. НЕ ПИШИ великі полотна тексту. Викликай інструменти, щоб надати точну інформацію.`;
 
-ЛЕГАЛІЗАЦІЯ:
-• Часовий побут (Карта побуту) — 950 zł
-• Часовий побут (ускладнені обставини) — 1400 zł
-• Часовий побут для дітей — 800 zł
-• Прискорення карти побуту (апеляція) — 900 zł
-• Сталий побут — 1800 zł
-• Резидент ЄС — 1800 zł
-• Громадянство Польщі (Воєвода) — 2000 zł
-• Громадянство Польщі (Президент) — 2500 zł
-• Резидент + Громадянство (комплект) — 4000 zł
+export async function POST(req: Request) {
+  const { messages } = await req.json();
 
-НОТАРІАЛЬНІ:
-• Разова довіреність — 250 zł
-• Довіреність на транспортний засіб — 350 zł
-• Довіреність на нерухомість / представлення — 450 zł
-• Комплект «Спадщина» — 720 zł
-• Переклад (свідоцтва, права) — 100 zł
-
-ІНШЕ:
-• Відновлення 800+ — 800 zł
-• Розробка договору — 450 zł
-• Медіація, грошові спори — від 1 юридичної години
-• Міжнародний захист — 1600 zł
-
-=== ЗНАННЯ ===
-- Карта побуту: підстави (робота, навчання, сім'я, ТЗС), строки, документи, Urząd Wojewódzki
-- Карта резидента ЄС: 5 років легального побуту, безперервність, документи
-- PESEL UKR: дає доступ до NFZ, 800+, банків — оформлення 3 дні
-- Zezwolenie na pracę, oświadczenie, Blue Card
-- Апеляції: 89% виграних апеляцій
-- Захист від депортації, боротьба з шахраями
-- Пошук адвоката в Україні/Польщі
-
-=== ПРАВИЛА ===
-1. Відповідай тією мовою, якою пишуть (укр / пол / рос / eng)
-2. Будь конкретним і коротким — 2-3 абзаци. Після відповіді м'яко запропонуй записатись
-3. Не давай юридичних гарантій, складні ситуації направляй до спеціаліста
-4. Якщо людина хоче записатись або консультацію — попроси ім'я, потім номер WhatsApp (по черзі, не разом)
-5. Коли отримав і ім'я, і номер — ОБОВ'ЯЗКОВО вклади у відповідь рядок: [[LEAD:{"name":"ІМ'Я","phone":"ТЕЛЕФОН"}]]
-   Потім підтверди: "Заявку передано. Спеціаліст зв'яжеться протягом 2 годин."
-6. Не вкладай [[LEAD:...]] без реального імені та номера телефону
-7. Якщо запитують про ціни — давай конкретні цифри з таблиці вище, не ухиляйся`;
-
-
-const requestLimitStore = new Map<string, { count: number; reset: number }>();
-
-function getClientId(req: NextRequest): string {
-  return req.headers.get('x-forwarded-for') || req.headers.get('user-agent') || 'unknown';
-}
-
-function checkRateLimit(clientId: string): boolean {
-  const now = Date.now();
-  const limit = requestLimitStore.get(clientId);
-  
-  if (!limit || now > limit.reset) {
-    requestLimitStore.set(clientId, { count: 1, reset: now + 60000 });
-    return true;
-  }
-  
-  if (limit.count >= 10) {
-    return false;
-  }
-  
-  limit.count++;
-  return true;
-}
-
-
-export async function POST(req: NextRequest) {
-  const clientId = getClientId(req);
-  if (!checkRateLimit(clientId)) {
-    return NextResponse.json(
-      { error: 'Занадто багато запитів. Спробуйте через 1 хвилину.' },
-      { status: 429 }
-    );
-  }
-
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return NextResponse.json({ error: 'GEMINI_API_KEY не налаштований' }, { status: 500 });
-  }
-
-  let body: { messages?: { role: string; content: string }[] };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
-  }
-
-  const { messages } = body;
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return NextResponse.json({ error: 'messages required' }, { status: 400 });
-  }
-
-  try {
-    const useLocalLlm = process.env.USE_LOCAL_LLM === 'true';
-    const localUrl = process.env.LOCAL_LLM_URL || 'http://127.0.0.1:1234/v1';
-    const localModel = process.env.LOCAL_LLM_MODEL || 'local-model';
-
-    if (useLocalLlm) {
-      const openAiMessages = [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...messages.map((m: any) => ({ role: m.role, content: m.content }))
-      ];
-
-      const response = await fetch(`${localUrl}/chat/completions`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer local' },
-        body: JSON.stringify({
-          model: localModel,
-          messages: openAiMessages,
-          max_tokens: 600,
-        })
-      });
-
-      if (!response.ok) {
-        const text = await response.text();
-        return NextResponse.json({ error: text }, { status: 502 });
-      }
-
-      const data = await response.json();
-      const content = data.choices?.[0]?.message?.content || '';
-      return NextResponse.json({ content });
-    }
-
-    const geminiMessages = messages.map((m: any) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
-    }));
-
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: SYSTEM_PROMPT }]
+  const result = streamText({
+    model: google('gemini-2.5-flash'),
+    system: SYSTEM_PROMPT,
+    messages,
+    tools: {
+      find_jobs: tool({
+        description: 'Шукає актуальні вакансії для клієнта на основі ключового слова.',
+        parameters: z.object({
+          keyword: z.string().describe('Професія або сфера, яку шукає клієнт (наприклад, "зварювальник", "IT", "водій")'),
+        }),
+        execute: async ({ keyword }) => {
+          // In a real app, query Supabase kompas_jobs
+          console.log(\`Finding jobs for: \${keyword}\`);
+          return {
+            results: [
+              { id: 'job-1', title: \`\${keyword} (Senior)\`, company: 'TechPol Sp. z o.o.', salary: '8000 - 12000 PLN', match_score: 95 },
+              { id: 'job-2', title: \`\${keyword} (Junior)\`, company: 'Budowa Plus', salary: '5000 - 7000 PLN', match_score: 82 }
+            ],
+            message: 'Ось знайдені вакансії. Ви можете переглянути їх детальніше в розділі "Агент Працевлаштування".'
+          };
         },
-        contents: geminiMessages,
-        generationConfig: {
-          maxOutputTokens: 600,
-        }
       }),
-    });
+      check_legal_status: tool({
+        description: 'Перевіряє статус справи по легалізації (Карта Побиту, віза тощо).',
+        parameters: z.object({
+          caseId: z.string().describe('ID справи (наприклад, case-101)'),
+        }),
+        execute: async ({ caseId }) => {
+          // In a real app, query Supabase kompas_legal_cases
+          if (caseId === 'case-101') {
+            return {
+              status: 'success',
+              case_type: 'Karta Pobytu',
+              current_stage: 'Awaiting Fingerprints',
+              deadline: '2026-06-20',
+              message: 'Справа йде за планом. Вам потрібно здати відбитки пальців до 20 червня 2026 року.'
+            };
+          } else {
+            return {
+              status: 'blocked',
+              case_type: 'Zezwolenie na pracę',
+              current_stage: 'Missing Documents',
+              message: 'Справа призупинена. Будь ласка, донесіть відсутні документи до Уженду.'
+            };
+          }
+        },
+      }),
+      find_discounts: tool({
+        description: 'Шукає партнерів (нотаріус, житло, страхування) зі знижками для клієнта.',
+        parameters: z.object({
+          category: z.string().describe('Категорія послуги: "Юриспруденція", "Житло", "Страхування", "Освіта" або "Медицина"'),
+        }),
+        execute: async ({ category }) => {
+          // Mock partners based on Stage 5
+          return {
+            partners: [
+              { name: 'Lex Secure Poland', offer: '-20% на консультацію' },
+              { name: 'PZU Insurance', offer: '-10% на медичний поліс' }
+            ],
+            message: \`Знайдено партнерів у категорії \${category}. Перейдіть у розділ "Партнерські Знижки", щоб отримати промокод.\`
+          };
+        },
+      }),
+      record_lead: tool({
+        description: 'Записує клієнта на платну юридичну консультацію (запис у CRM).',
+        parameters: z.object({
+          name: z.string().describe("Ім'я клієнта"),
+          phone: z.string().describe('Номер телефону (WhatsApp/Viber)'),
+          issue: z.string().describe('Короткий опис проблеми'),
+        }),
+        execute: async ({ name, phone, issue }) => {
+          return {
+            success: true,
+            message: \`Заявку створено для \${name}. Менеджер зв'яжеться за номером \${phone} протягом 2 годин.\`
+          };
+        },
+      }),
+    },
+    maxSteps: 5, // Allow the model to call tools and respond automatically
+  });
 
-    if (!response.ok) {
-      const text = await response.text();
-      return NextResponse.json({ error: text }, { status: 502 });
-    }
-
-    const data = await response.json();
-    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    return NextResponse.json({ content });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unknown error';
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
+  return result.toDataStreamResponse();
 }
