@@ -29,15 +29,6 @@ const NAV_DATA = [
         ]
       },
       {
-        title: "ARCHITECTURE AI",
-        items: [
-          { label: "Модулі та Налаштування", href: "/architect/modules" },
-          { label: "AI Генератор Концептів", href: "/admin/crm/ai-prompter" },
-          { label: "AI Асистент (WhatsApp)", href: "/admin/crm/ai-automations" },
-          { label: "Фінанси (Оплата)", href: "/architect/finance" },
-        ]
-      },
-      {
         title: "ПРОДАЖІ ТА МАРКЕТИНГ",
         items: [
           { label: "Email Розсилки", href: "/admin/crm/emails" },
