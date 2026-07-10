@@ -8,40 +8,39 @@ export async function GET() {
   }
 
   try {
-    // Fetch total leads
-    const { count: leadsCount, error: leadsError } = await supabase
+    let leadsCount = 0;
+    const { count: fetchedLeads, error: leadsError } = await supabase
       .from('leads')
       .select('*', { count: 'exact', head: true });
-
-    if (leadsError) throw leadsError;
+    if (!leadsError) leadsCount = fetchedLeads || 0;
 
     // Fetch active orders
-    const { count: activeOrdersCount, error: ordersError } = await supabase
+    let activeOrdersCount = 0;
+    const { count: fetchedOrders, error: ordersError } = await supabase
       .from('orders')
       .select('*', { count: 'exact', head: true })
       .neq('status', 'выполнено')
       .neq('status', 'отменено');
-
-    if (ordersError) throw ordersError;
+    if (!ordersError) activeOrdersCount = fetchedOrders || 0;
 
     // Fetch successful deals (completed orders)
-    const { count: successDealsCount, error: successError } = await supabase
+    let successDealsCount = 0;
+    const { count: fetchedSuccess, error: successError } = await supabase
       .from('orders')
       .select('*', { count: 'exact', head: true })
       .eq('status', 'выполнено');
-
-    if (successError) throw successError;
+    if (!successError) successDealsCount = fetchedSuccess || 0;
 
     // Fetch total revenue
-    // Calculate from sum of completed orders or just all orders
+    let totalRevenue = 0;
     const { data: revenueData, error: revenueError } = await supabase
       .from('orders')
       .select('amount')
       .eq('status', 'выполнено');
-
-    if (revenueError) throw revenueError;
     
-    const totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+    if (!revenueError && revenueData) {
+      totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+    }
 
     // Dynamic Chart Data (mocked months, but using real logic if available)
     // Here we can aggregate by month, but for simplicity we will just return mock data for charts or simple aggregated counts.

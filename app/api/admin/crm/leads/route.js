@@ -8,21 +8,26 @@ export async function GET(req) {
     const user = await getUser(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const leads = await q(`
-      SELECT 
-        id, 
-        name, 
-        contact, 
-        email, 
-        source, 
-        message, 
-        situation, 
-        status, 
-        created_at 
-      FROM kompas_leads 
-      WHERE deleted_at IS NULL
-      ORDER BY created_at DESC
-    `);
+    let leads = [];
+    try {
+      leads = await q(`
+        SELECT 
+          id, 
+          name, 
+          contact, 
+          email, 
+          source, 
+          message, 
+          situation, 
+          status, 
+          created_at 
+        FROM kompas_leads 
+        WHERE deleted_at IS NULL
+        ORDER BY created_at DESC
+      `);
+    } catch (dbErr) {
+      console.warn("Table kompas_leads might be missing or DB error:", dbErr.message);
+    }
     
     return NextResponse.json({ data: leads });
   } catch (err) {
