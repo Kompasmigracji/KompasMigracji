@@ -18,10 +18,11 @@ const NAV_DATA = [
       {
         title: "",
         items: [
-          { label: "Чаты", href: "/admin/crm/chats" },
-          { label: "Лиды", href: "/admin/crm/leads" },
-          { label: "Воронки", href: "/admin/crm/funnels" },
-          { label: "Заказы", href: "/admin/crm/orders" },
+          { label: "Дашборд", href: "/admin/crm/dashboard" },
+          { label: "Ліди", href: "/admin/crm/leads" },
+          { label: "Воронка (Kanban)", href: "/admin/crm/funnels" },
+          { label: "Покупці", href: "/admin/crm/buyers" },
+          { label: "Автоматизація (E2E)", href: "/admin/crm/automation-test" },
           { label: "Списки заказов", href: "/admin/crm/order-lists" },
           { label: "Покупатели", href: "/admin/crm/buyers" },
           { label: "История звонков", href: "/admin/crm/calls" },
