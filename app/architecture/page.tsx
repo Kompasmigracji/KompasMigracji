@@ -17,7 +17,29 @@ export default function ArchitectureServicePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
       });
-      if (res.ok) setStatus('success');
+      if (res.ok) {
+        setStatus('success');
+        
+        // Find price
+        const priceMap: Record<string, number> = { 'Starter': 1500, 'Pro': 2500, 'Premium': 4500 };
+        const price = priceMap[form.package] || 2500;
+        
+        // Initiate Stripe Checkout
+        const stripeRes = await fetch('/api/stripe/checkout-architecture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            packageId: form.package, 
+            packageName: form.package, 
+            price 
+          })
+        });
+        
+        const stripeData = await stripeRes.json();
+        if (stripeData.url) {
+          window.location.href = stripeData.url;
+        }
+      }
       else setStatus('error');
     } catch (err) {
       setStatus('error');
