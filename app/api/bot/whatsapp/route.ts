@@ -65,30 +65,3 @@ export async function POST(request: Request) {
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
-
-// OUTBOUND MESSAGE INITIATOR
-export async function sendInitialMessage(phone: string, template: string = "hello_architecture") {
-  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
-    console.log(`[WHATSAPP MOCK OUTBOUND] Sent initial template to ${phone}`);
-    return true;
-  }
-
-  const res = await fetch(`https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_ID}/messages`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      messaging_product: "whatsapp",
-      to: phone,
-      type: "template",
-      template: {
-        name: template,
-        language: { code: "uk" }
-      }
-    })
-  });
-
-  return res.ok;
-}

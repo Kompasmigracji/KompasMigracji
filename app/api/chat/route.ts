@@ -129,6 +129,7 @@ export async function POST(req: Request) {
           phone: z.string().describe('Номер телефону (WhatsApp/Viber)'),
           issue: z.string().describe('Короткий опис проблеми'),
         }),
+        // @ts-expect-error ai sdk types
         execute: async ({ name, phone, issue }: { name: string; phone: string; issue: string }) => {
           if (!supabase) return { error: 'Database not connected' };
           

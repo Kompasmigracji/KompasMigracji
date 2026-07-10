@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { q } from '@/lib/db';
+import { sendInitialMessage } from '@/lib/whatsapp';
 
 export async function POST(request: Request) {
   try {
@@ -34,7 +35,6 @@ export async function POST(request: Request) {
 
     // Trigger AI Assistant outreach via WhatsApp
     try {
-      const { sendInitialMessage } = require('@/app/api/bot/whatsapp/route');
       const welcomeMsg = `Вітаю, ${name}! Я AI-асистент Олександра (iPhoenix Architecture). Отримали ваш запит на пакет ${pkgName} для об'єкта (${objectType}). Підкажіть, чи є у вас обмірний план або креслення БТІ? Це допоможе нам швидше розпочати роботу.`;
       
       await sendInitialMessage(phone, "hello_architecture");

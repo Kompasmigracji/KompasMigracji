@@ -15,7 +15,7 @@ export async function GET() {
     `);
     
     // Map to the format Supabase JS used: { ..., buyers: { full_name, phone, email } }
-    const mapped = rows.map(r => {
+    const mapped = rows.map((r: any) => {
       const { full_name, phone, email, ...orderData } = r;
       return {
         ...orderData,

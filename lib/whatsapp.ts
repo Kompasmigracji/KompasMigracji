@@ -39,3 +39,33 @@ export async function sendWhatsApp(phone: string, text: string): Promise<void> {
     console.error("sendWhatsApp: fetch failed", err);
   }
 }
+
+// OUTBOUND MESSAGE INITIATOR
+export async function sendInitialMessage(phone: string, template: string = "hello_architecture") {
+  const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
+  const WHATSAPP_PHONE_ID = process.env.WHATSAPP_PHONE_ID;
+
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
+    console.log(`[WHATSAPP MOCK OUTBOUND] Sent initial template to ${phone}`);
+    return true;
+  }
+
+  const res = await fetch(`https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_ID}/messages`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${WHATSAPP_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      messaging_product: "whatsapp",
+      to: phone,
+      type: "template",
+      template: {
+        name: template,
+        language: { code: "uk" }
+      }
+    })
+  });
+
+  return res.ok;
+}

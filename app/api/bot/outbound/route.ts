@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     // Log the outbound message to the database chat history
     try {
       // Create chat if it doesn't exist
-      let chatRes = await q('SELECT id FROM chats WHERE phone = $1', [phone]);
+      const chatRes = await q('SELECT id FROM chats WHERE phone = $1', [phone]);
       let chatId;
       if (chatRes.length === 0) {
         const newChat = await q('INSERT INTO chats (phone, platform, lead_id) VALUES ($1, $2, $3) RETURNING id', [phone, platform || 'whatsapp', leadId]);
