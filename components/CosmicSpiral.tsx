@@ -20,9 +20,8 @@ export default function CosmicSpiral() {
         style={{ rotate, scale, opacity }}
         className="relative w-[800px] h-[800px] md:w-[1200px] md:h-[1200px]"
       >
-        {/* Deep Parallax Spiral Layers */}
-        <div className="absolute inset-0 bg-[url('/spiral.svg')] bg-no-repeat bg-center bg-contain opacity-20 mix-blend-screen animate-pulse" />
-        
+        {/* Deep Parallax Spiral Layers - replaced SVG with CSS gradient to prevent 404 */}
+        <div className="absolute inset-0 bg-[conic-gradient(var(--tw-gradient-stops))] from-blue-500/10 via-purple-500/10 to-blue-500/10 opacity-30 mix-blend-screen animate-[spin_10s_linear_infinite] rounded-full blur-xl" />
         {/* Glow Effects */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-blue-600/30 rounded-full blur-[100px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[150px]" />
