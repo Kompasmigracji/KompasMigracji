@@ -51,7 +51,7 @@ ${profile?.documents?.map((d: any) => `- ${d.type} (${d.number}), Дійсний
       }
     });
 
-    // @ts-ignore
+    // @ts-expect-error ai sdk types
     return result.toDataStreamResponse ? result.toDataStreamResponse() : result.toTextStreamResponse();
   } catch (error: any) {
     console.error('Chat API Error:', error);

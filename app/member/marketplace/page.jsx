@@ -116,6 +116,7 @@ export default function MemberMarketplacePage() {
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex gap-4 items-center">
                       <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white/10 border border-white/10 p-1 flex-shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={partner.logo_url} alt={partner.name} className="w-full h-full object-cover rounded-xl" />
                       </div>
                       <div>

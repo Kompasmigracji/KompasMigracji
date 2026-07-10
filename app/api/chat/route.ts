@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         parameters: z.object({
           keyword: z.string().describe('Професія або сфера, яку шукає клієнт (наприклад, "зварювальник", "IT", "водій")'),
         }),
-        // @ts-ignore
+        // @ts-expect-error ai sdk types
         execute: async ({ keyword }: { keyword: string }) => {
           if (!supabase) return { error: 'Database not connected' };
           const { data, error } = await supabase
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
         parameters: z.object({
           caseId: z.string().describe('ID справи (uuid)'),
         }),
-        // @ts-ignore
+        // @ts-expect-error ai sdk types
         execute: async ({ caseId }: { caseId: string }) => {
           if (!supabase) return { error: 'Database not connected' };
           
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
         parameters: z.object({
           category: z.string().describe('Категорія послуги: "Юриспруденція", "Житло", "Страхування", "Освіта" або "Медицина"'),
         }),
-        // @ts-ignore
+        // @ts-expect-error ai sdk types
         execute: async ({ category }: { category: string }) => {
           if (!supabase) return { error: 'Database not connected' };
           const { data, error } = await supabase
@@ -152,10 +152,10 @@ export async function POST(req: Request) {
         },
       }),
     },
-    // @ts-ignore
+    // @ts-expect-error ai sdk types
     maxSteps: 5,
   });
 
-  // @ts-ignore
+  // @ts-expect-error ai sdk types
   return result.toDataStreamResponse ? result.toDataStreamResponse() : result.toTextStreamResponse();
 }
