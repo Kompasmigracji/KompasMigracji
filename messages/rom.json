@@ -459,5 +459,8 @@
     "success_subtitle": "Ожидайте сообщения в течение 2 часов в рабочее время",
     "whatsapp_now": "Написать в WhatsApp сейчас",
     "phone": "Телефон"
-  }
+  },
+  "chat_online": "Online",
+  "chat_greeting_msg": "Hello! I am the Kompas Migracji AI assistant 👋",
+  "chat_error": "Something went wrong. Please try again."
 }

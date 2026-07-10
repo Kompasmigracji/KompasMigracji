@@ -460,5 +460,7 @@
     "success_subtitle": "Очікуйте повідомлення протягом 2 годин у робочий час",
     "whatsapp_now": "Написати у WhatsApp зараз",
     "phone": "Телефон"
-  }
+  },
+  "chat_online": "В мережі",
+  "chat_error": "Something went wrong. Please try again."
 }

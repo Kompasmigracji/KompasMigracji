@@ -92,22 +92,22 @@ export default function Header() {
       <div className={`mx-auto transition-all duration-500 ${scrolled ? 'max-w-5xl px-4' : 'max-w-7xl px-0'}`}>
         <div className={`relative flex items-center justify-between h-[72px] transition-all duration-500 ${
           scrolled 
-            ? 'px-6 rounded-full bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
+            ? 'px-6 rounded-full bg-white/70 dark:bg-[#0a0a0a]/70 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
             : 'px-6 bg-transparent'
         }`}>
 
           <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center p-1.5 transition-all group-hover:scale-105 group-hover:border-black/20 dark:group-hover:border-white/20">
+            <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 group-active:scale-95 shadow-sm">
               <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-full h-full object-contain spin-slow" />
             </div>
             <span className="font-display font-bold text-gray-900 dark:text-white text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+          <nav className="hidden md:flex items-center gap-2 flex-1 justify-center">
             <div className="relative" ref={dropRef}>
               <button
                 onClick={() => setDropOpen(!dropOpen)}
-                className={`premium-btn !border-transparent !bg-transparent !shadow-none ${dropOpen ? '!bg-white/80 dark:!bg-white/20' : 'hover:!bg-white/60 dark:hover:!bg-white/10'}`}
+                className={`premium-btn !border-transparent !bg-transparent !shadow-none transition-transform duration-300 hover:scale-105 active:scale-95 ${dropOpen ? '!bg-black/5 dark:!bg-white/10' : 'hover:!bg-black/5 dark:hover:!bg-white/10'}`}
               >
                 {t('nav_services')}
                 <svg className={`w-4 h-4 transition-transform duration-300 ${dropOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -116,23 +116,23 @@ export default function Header() {
               <AnimatePresence>
                 {dropOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-white/95 dark:bg-[#0a0a0a]/95 backdrop-blur-2xl border border-black/10 dark:border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.5)] overflow-hidden"
+                    initial={{ opacity: 0, y: 15, scale: 0.95, filter: 'blur(10px)' }}
+                    animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95, filter: 'blur(5px)' }}
+                    transition={{ duration: 0.3, type: "spring", bounce: 0.4 }}
+                    className="absolute top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2 w-[320px] bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-3xl border border-white/50 dark:border-white/10 rounded-3xl shadow-[0_30px_60px_rgba(0,0,0,0.15)] dark:shadow-[0_30px_60px_rgba(0,0,0,0.6)] overflow-hidden"
                   >
                     <div className="p-3 grid grid-cols-1 gap-1">
                       {SERVICES.map((s, i) => (
                         <Link
                           key={i} href={s.href} onClick={() => setDropOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all group no-underline ${
+                          className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-300 group no-underline hover:scale-[1.02] active:scale-[0.98] ${
                             s.accent 
                               ? 'bg-blue-500/10 text-blue-500 dark:text-blue-400 hover:bg-blue-500/20' 
                               : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10'
                           }`}
                         >
-                          <span className="text-xl group-hover:scale-110 transition-transform">{s.icon}</span>
+                          <span className="text-xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">{s.icon}</span>
                           {s.label}
                         </Link>
                       ))}
@@ -141,24 +141,24 @@ export default function Header() {
                 )}
               </AnimatePresence>
             </div>
-            <Link href="/doctrine" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">
+            <Link href="/doctrine" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">
               {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
             </Link>
-            <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">{t('nav_pricing')}</Link>
-            <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-white/60 dark:hover:!bg-white/10 !shadow-none no-underline">iPhoenixCRM</Link>
+            <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
+            <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">iPhoenixCRM</Link>
             <button 
               onClick={() => setShowAIModal(true)}
-              className="premium-btn overflow-hidden"
+              className="premium-btn overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] dark:hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-blue-500"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">Kompas AI</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 font-bold">Kompas AI</span>
             </button>
           </nav>
 
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full px-2 py-1">
+            <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/40 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full px-2 py-1">
               {SOCIAL.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-black/5 dark:hover:bg-white/10 transition-all ${s.color}`}>
+                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 hover:scale-110 active:scale-95 ${s.color}`}>
                   {s.icon}
                 </a>
               ))}
@@ -209,53 +209,84 @@ export default function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#fbfbfd] dark:bg-[#111111] flex flex-col md:hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20, transition: { delay: 0.1 } }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 dark:bg-[#111111]/95 backdrop-blur-3xl flex flex-col md:hidden"
           >
             <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10 dark:border-white/10">
               <span className="font-display font-bold text-lg text-gray-900 dark:text-white">Menu</span>
-              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white">
+              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white transition-transform duration-300 hover:rotate-90">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-6 py-8">
+            <motion.div 
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              variants={{
+                hidden: { opacity: 0 },
+                show: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } }
+              }}
+              className="flex-1 overflow-y-auto px-6 py-8"
+            >
               <div className="flex flex-col gap-2">
-                <Link href="/" onClick={() => setMobileOpen(false)} className="text-2xl font-display font-semibold text-gray-900 dark:text-white no-underline py-2">
-                  {{ uk: 'Головна', ru: 'Главная', pl: 'Główna', en: 'Home', rom: 'Acasă' }[locale] || 'Головна'}
-                </Link>
-                <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
-                <span className="text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</span>
-                {SERVICES.map((s, i) => (
-                  <Link key={i} href={s.href} onClick={() => setMobileOpen(false)} className={`text-lg font-medium py-2 no-underline flex items-center gap-3 ${s.accent ? 'text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}>
-                    <span>{s.icon}</span> {s.label}
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/" onClick={() => setMobileOpen(false)} className="block text-2xl font-display font-semibold text-gray-900 dark:text-white no-underline py-2">
+                    {{ uk: 'Головна', ru: 'Главная', pl: 'Główna', en: 'Home', rom: 'Acasă' }[locale] || 'Головна'}
                   </Link>
+                </motion.div>
+                
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }} className="h-px bg-black/5 dark:bg-white/10 my-4" />
+                
+                <motion.span variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }} className="block text-xs font-bold uppercase tracking-widest text-blue-400 mb-2">{t('nav_services')}</motion.span>
+                {SERVICES.map((s, i) => (
+                  <motion.div key={i} variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                    <Link href={s.href} onClick={() => setMobileOpen(false)} className={`block text-lg font-medium py-2 no-underline flex items-center gap-3 transition-transform active:scale-95 ${s.accent ? 'text-blue-400' : 'text-gray-700 dark:text-gray-300'}`}>
+                      <span className="text-xl">{s.icon}</span> {s.label}
+                    </Link>
+                  </motion.div>
                 ))}
-                <div className="h-px bg-black/5 dark:bg-white/10 my-4" />
-                <Link href="/doctrine" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">
-                  {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
-                </Link>
-                <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">{t('nav_pricing')}</Link>
-                <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline">iPhoenixCRM</Link>
-                <button 
-                  onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
-                  className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4"
-                >
-                  Kompas AI
-                </button>
+                
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }} className="h-px bg-black/5 dark:bg-white/10 my-4" />
+                
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/doctrine" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">
+                    {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
+                  </Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('nav_pricing')}</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">iPhoenixCRM</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <button 
+                    onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
+                    className="block text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4 active:scale-95 transition-transform"
+                  >
+                    Kompas AI
+                  </button>
+                </motion.div>
               </div>
-            </div>
-            <div className="p-6 border-t border-black/10 dark:border-white/10 bg-white dark:bg-[#1a1a1a]">
-              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-bold mb-4">{PHONE}</a>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="p-6 border-t border-black/10 dark:border-white/10 bg-white/50 dark:bg-[#1a1a1a]/50"
+            >
+              <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-bold mb-4 active:scale-95 transition-transform">{PHONE}</a>
               <div className="flex justify-center gap-4">
                 {SOCIAL.map((s, i) => (
-                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300">
+                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300 active:scale-95 transition-transform hover:scale-110">
                     {s.icon}
                   </a>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
