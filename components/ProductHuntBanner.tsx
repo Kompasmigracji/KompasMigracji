@@ -7,12 +7,12 @@ import { X, Trophy } from 'lucide-react';
 export default function ProductHuntBanner() {
   const [isVisible, setIsVisible] = useState(true);
 
-  if (!isVisible) return null;
-
   return (
     <AnimatePresence>
-      <motion.div 
-        initial={{ y: -50, opacity: 0 }}
+      {isVisible && (
+        <motion.div 
+          key="product-hunt-banner"
+          initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -50, opacity: 0 }}
         className="w-full bg-gradient-to-r from-[#DA552F] to-[#E96643] text-white py-2 px-4 relative z-[9999] shadow-[0_0_20px_rgba(218,85,47,0.4)]"
@@ -35,7 +35,7 @@ export default function ProductHuntBanner() {
             <X className="w-4 h-4" />
           </button>
         </div>
-      </motion.div>
+      )}
     </AnimatePresence>
   );
 }
