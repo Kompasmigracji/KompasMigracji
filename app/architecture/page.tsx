@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Check, ArrowRight, Zap, Image as ImageIcon, Ruler, Building2, Star, Send } from 'lucide-react';
+import PortfolioCarousel from '@/components/PortfolioCarousel';
 
 export default function ArchitectureServicePage() {
   const [form, setForm] = useState({ name: '', phone: '', objectType: 'Квартира', area: '', package: 'Pro' });
@@ -145,6 +146,9 @@ export default function ArchitectureServicePage() {
           </div>
         </div>
       </section>
+
+      {/* Portfolio Carousel */}
+      <PortfolioCarousel />
 
       {/* Pricing Section */}
       <section className="py-20 px-6 md:px-12 relative z-10">
