@@ -81,16 +81,32 @@ export default function Hero({ onShowMore }: { onShowMore?: () => void }) {
             Ваш шлях до легалізації починається тут
           </motion.div>
 
-          <motion.h1
+          <motion.div
             variants={{
-              hidden: { opacity: 0, y: 30 },
-              show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100, damping: 20 } }
+              hidden: { opacity: 0 },
+              show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.2 } }
             }}
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter mb-6"
+            className="flex flex-wrap justify-center gap-x-[0.2em] mb-6 text-4xl sm:text-6xl md:text-7xl lg:text-[5rem] font-bold tracking-tighter"
             style={{ letterSpacing: '-0.04em', lineHeight: 1.05, color: 'var(--text)' }}
           >
-            {t('hero_title')}
-          </motion.h1>
+            {t('hero_title').split(' ').map((word, i) => (
+              <span key={i} className="inline-flex whitespace-nowrap">
+                {Array.from(word).map((char, j) => (
+                  <motion.span
+                    key={j}
+                    variants={{
+                      hidden: { opacity: 0, y: 40, rotateX: -90, filter: 'blur(10px)' },
+                      show: { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)', transition: { type: 'spring', stiffness: 150, damping: 15 } }
+                    }}
+                    className="inline-block"
+                    style={{ transformOrigin: 'bottom center' }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </span>
+            ))}
+          </motion.div>
 
           <motion.p
             variants={{

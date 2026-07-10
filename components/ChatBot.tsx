@@ -194,7 +194,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-24 right-6 z-[60] w-[calc(100vw-48px)] sm:w-[350px] h-[500px] max-h-[calc(100vh-120px)] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-[#111] border border-orange-500/20 shadow-[0_20px_60px_rgba(0,0,0,0.1)]"
+            className="fixed bottom-24 right-6 z-[60] w-[calc(100vw-48px)] sm:w-[350px] h-[500px] max-h-[calc(100vh-120px)] flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-[#0a0a0a] border border-orange-500/40 shadow-[0_0_40px_-5px_rgba(249,115,22,0.25)] dark:shadow-[0_0_50px_-10px_rgba(249,115,22,0.3)] ring-1 ring-orange-500/20"
           >
             {/* Header */}
             <div className="p-4 flex items-center justify-between bg-gradient-to-r from-orange-600/10 to-transparent border-b border-orange-500/20">
