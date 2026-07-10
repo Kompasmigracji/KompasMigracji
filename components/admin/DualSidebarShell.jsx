@@ -33,6 +33,7 @@ const NAV_DATA = [
         items: [
           { label: "Модулі та Налаштування", href: "/architect/modules" },
           { label: "AI Генератор Концептів", href: "/admin/crm/ai-prompter" },
+          { label: "AI Асистент (WhatsApp)", href: "/admin/crm/ai-automations" },
           { label: "Фінанси (Оплата)", href: "/architect/finance" },
         ]
       },

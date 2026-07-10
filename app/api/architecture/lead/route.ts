@@ -32,18 +32,15 @@ export async function POST(request: Request) {
       console.log('Could not insert notification, probably table missing or schema differs.');
     }
 
-    // Trigger AI Assistant outreach via WhatsApp/Telegram
+    // Trigger AI Assistant outreach via WhatsApp
     try {
-      const baseUrl = request.headers.get('origin') || 'http://localhost:3000';
+      const { sendInitialMessage } = require('@/app/api/bot/whatsapp/route');
       const welcomeMsg = `Вітаю, ${name}! Я AI-асистент Олександра (iPhoenix Architecture). Отримали ваш запит на пакет ${pkgName} для об'єкта (${objectType}). Підкажіть, чи є у вас обмірний план або креслення БТІ? Це допоможе нам швидше розпочати роботу.`;
       
-      await fetch(`${baseUrl}/api/bot/outbound`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone, platform: 'whatsapp', message: welcomeMsg, leadId: newLeadId })
-      });
+      await sendInitialMessage(phone, "hello_architecture");
+      console.log(`[WHATSAPP MOCK] Triggered outbound message for ${name} at ${phone}`);
     } catch (e) {
-      console.log('Bot outreach failed:', e);
+      console.log('WhatsApp Bot outreach failed:', e);
     }
 
     return NextResponse.json({ success: true, message: 'Lead captured successfully' });
