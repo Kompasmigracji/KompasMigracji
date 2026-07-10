@@ -12,17 +12,15 @@ export async function POST(req) {
 
     // 1. Create a Test Lead
     const newLead = await one(`
-      INSERT INTO kompas_leads (first_name, service, contact, situation, source, status, score, assigned_to)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO kompas_leads (name, contact, message, source, status, assigned_to)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
     `, [
       "[TEST] Олександр Автоматизація", 
-      "Швидка Консультація", 
       "+48000000000", 
       "Тестовий запит з Пісочниці", 
-      "sandbox", 
+      "bot", 
       "new", 
-      100, // High score
       user.id
     ]);
 
@@ -31,23 +29,19 @@ export async function POST(req) {
     // 2. Generate Fake Payment Link
     const paymentToken = `tok_${Math.random().toString(36).substring(2, 10)}`;
 
-    // 3. Move Lead to 'Won' (Converted)
-    await q(`UPDATE kompas_leads SET status = 'won' WHERE id = $1`, [leadId]);
+    // 3. Move Lead to 'converted' (status in check constraint: 'new','in_progress','converted','closed')
+    await q(`UPDATE kompas_leads SET status = 'converted' WHERE id = $1`, [leadId]);
 
-    // 4. Create Buyer
-    await one(`
-      INSERT INTO buyers (full_name, phone, email) 
-      VALUES ($1, $2, $3)
-      RETURNING id
-    `, ["[TEST] Олександр Автоматизація", "+48000000000", "test@sandbox.local"]);
+    // 4. Skip Create Buyer (table might not exist in sandbox or schema)
+    // await one(`INSERT INTO buyers ...`);
 
-    // 5. Create Task (Case)
+    // 5. Create Task (Case) — kompas_cases has user_id not client_id, status must be 'open','in_progress','resolved','closed'
     await q(`
-      INSERT INTO kompas_cases (title, client_id, status, assigned_to)
+      INSERT INTO kompas_cases (title, user_id, status, assigned_to)
       VALUES ($1, $2, $3, $4)
     `, [
       "[TEST] Надіслати документи клієнту",
-      leadId,
+      user.id,
       "open",
       user.id
     ]);
