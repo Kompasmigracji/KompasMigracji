@@ -24,7 +24,7 @@ function PricingCard({ card, i, onSelect }: { card: any, i: number, onSelect: ()
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: i * 0.1 }}
       onMouseMove={handleMouseMove}
-      className={`group relative p-8 sm:p-10 flex flex-col rounded-[2.5rem] bg-white/60 dark:bg-white/5 border backdrop-blur-2xl overflow-hidden transition-transform duration-300 ${
+      className={`group relative p-8 sm:p-10 flex flex-col rounded-[2.5rem] bg-white dark:bg-[#111] border overflow-hidden transition-transform duration-300 ${
         card.featured 
           ? 'border-blue-500/50 shadow-[0_0_40px_rgba(59,130,246,0.15)] md:-translate-y-4 md:hover:-translate-y-6' 
           : 'border-black/10 dark:border-white/10 shadow-2xl md:hover:-translate-y-2'
@@ -129,8 +129,8 @@ export default function Pricing() {
   return (
     <section id="pricing" className="py-24 sm:py-32 relative bg-[#fbfbfd] dark:bg-[#0a0a0a] text-gray-900 dark:text-white overflow-hidden">
       {/* Background Orbs */}
-      <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] pointer-events-none -translate-x-1/2" />
-      <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px] pointer-events-none translate-x-1/2" />
+      <div className="absolute top-1/4 left-0 w-[400px] h-[400px] bg-blue-600/5 rounded-full pointer-events-none -translate-x-1/2 hidden sm:block" style={{ filter: 'blur(80px)' }} />
+      <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-purple-600/5 rounded-full pointer-events-none translate-x-1/2 hidden sm:block" style={{ filter: 'blur(80px)' }} />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div 
@@ -158,7 +158,7 @@ export default function Pricing() {
           className="mb-12 relative overflow-hidden rounded-[2rem] p-[1px]"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 opacity-20" />
-          <div className="relative bg-white/90 dark:bg-[#111]/90 backdrop-blur-xl rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-black/5 dark:border-white/10">
+          <div className="relative bg-white dark:bg-[#111] rounded-[2rem] p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-black/5 dark:border-white/10">
             <div>
               <div className="text-xs font-bold uppercase tracking-widest text-purple-600 dark:text-purple-400 mb-2 flex items-center gap-2">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>

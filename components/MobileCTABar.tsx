@@ -21,7 +21,7 @@ export default function MobileCTABar() {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 20, stiffness: 200 }}
-          className="md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-[#f5f5f7]/95 dark:bg-[#0a0a0a]/95 backdrop-blur-2xl border-t border-black/10 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
+          className="md:hidden fixed bottom-0 left-0 right-0 z-[9980] bg-[#f5f5f7] dark:bg-[#0a0a0a] border-t border-black/10 dark:border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <div className="grid grid-cols-3 h-16 sm:h-20">

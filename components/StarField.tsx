@@ -2,10 +2,15 @@
 import { useEffect, useRef } from 'react';
 import { useTheme } from '@/lib/ThemeContext';
 
-const N = 200;
+const N = 80; // Reduced from 200 for mobile performance
 
-function mkStars(w: number, h: number) {
-  return Array.from({ length: N }, () => ({
+function isMobile() {
+  if (typeof window === 'undefined') return false;
+  return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+}
+
+function mkStars(w: number, h: number, count: number) {
+  return Array.from({ length: count }, () => ({
     x: Math.random() * w, y: Math.random() * h,
     r: Math.random() * 1.4 + 0.15,
     base: Math.random() * 0.5 + 0.2,
@@ -20,6 +25,10 @@ export default function StarField() {
 
   useEffect(() => {
     if (!dark) return;
+    
+    // Skip entirely on mobile devices to prevent iPhone hanging
+    if (isMobile()) return;
+    
     const c = ref.current;
     if (!c) return;
     const ctx = c.getContext('2d')!;
@@ -29,8 +38,8 @@ export default function StarField() {
     const resize = () => { c.width = window.innerWidth; c.height = window.innerHeight; };
     resize();
     window.addEventListener('resize', resize);
-    let stars = mkStars(c.width, c.height);
-    const onResize = () => { stars = mkStars(c.width, c.height); };
+    let stars = mkStars(c.width, c.height, N);
+    const onResize = () => { stars = mkStars(c.width, c.height, N); };
     window.addEventListener('resize', onResize);
 
     const spawnShoot = () => {
@@ -42,17 +51,11 @@ export default function StarField() {
       ctx.clearRect(0, 0, c.width, c.height);
       for (const s of stars) {
         const a = Math.min(1, Math.max(0, s.base + Math.sin(t * s.freq + s.phase) * 0.3));
-        if (s.r > 1.0) {
-          const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 4.5);
-          g.addColorStop(0, `rgba(180,205,255,${a * 0.45})`);
-          g.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.beginPath(); ctx.arc(s.x, s.y, s.r * 4.5, 0, Math.PI * 2);
-          ctx.fillStyle = g; ctx.fill();
-        }
+        // Skip glow effect entirely — saves GPU compositing
         ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(215,228,255,${a})`; ctx.fill();
       }
-      if (!shoot && shootClock > 4.5 + Math.random() * 3.5) { spawnShoot(); shootClock = 0; }
+      if (!shoot && shootClock > 6 + Math.random() * 5) { spawnShoot(); shootClock = 0; }
       if (shoot) {
         const angle = Math.atan2(shoot.vy, shoot.vx);
         const len = shoot.tail * shoot.life;

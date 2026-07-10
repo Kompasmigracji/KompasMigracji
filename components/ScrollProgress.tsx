@@ -1,13 +1,22 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function ScrollProgress() {
-  const [progress, setProgress] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const total = document.documentElement.scrollHeight - window.innerHeight;
+          if (barRef.current) {
+            barRef.current.style.width = `${total > 0 ? (window.scrollY / total) * 100 : 0}%`;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -15,15 +24,15 @@ export default function ScrollProgress() {
 
   return (
     <div
+      ref={barRef}
       style={{
         position: 'fixed',
         top: 0,
         left: 0,
         zIndex: 99999,
         height: 3,
-        width: `${progress}%`,
+        width: '0%',
         background: 'linear-gradient(90deg, #2563eb, #f97316)',
-        transition: 'width 0.1s linear',
         pointerEvents: 'none',
       }}
     />

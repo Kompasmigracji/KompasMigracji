@@ -42,7 +42,7 @@ export default function Header() {
   const [showAIModal, setShowAIModal] = useState(false);
   const locale = useLocale();
   const [langOpen, setLangOpen] = useState(false);
-  console.log('HEADER SSR LOCALE:', locale);
+
   const [activeLang, setActiveLang] = useState(locale.toUpperCase());
   const dropRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
@@ -64,8 +64,17 @@ export default function Header() {
   };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', onScroll);
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
@@ -83,12 +92,12 @@ export default function Header() {
       <div className={`mx-auto transition-all duration-500 ${scrolled ? 'max-w-5xl px-4' : 'max-w-7xl px-0'}`}>
         <div className={`relative flex items-center justify-between h-[72px] transition-all duration-500 ${
           scrolled 
-            ? 'px-6 rounded-full bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border border-black/10 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
+            ? 'px-6 rounded-full bg-white dark:bg-[#0a0a0a] border border-black/10 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.1)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)]' 
             : 'px-6 bg-transparent'
         }`}>
 
           <Link href="/" className="flex items-center gap-3 no-underline flex-shrink-0 group">
-            <div className="w-10 h-10 rounded-xl bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center p-1.5 backdrop-blur-md transition-all group-hover:scale-105 group-hover:border-black/20 dark:group-hover:border-white/20">
+            <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center p-1.5 transition-all group-hover:scale-105 group-hover:border-black/20 dark:group-hover:border-white/20">
               <Image src="/logo.svg" alt="logo" width={32} height={32} className="w-full h-full object-contain spin-slow" />
             </div>
             <span className="font-display font-bold text-gray-900 dark:text-white text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
@@ -203,7 +212,7 @@ export default function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 dark:bg-[#111111]/95 backdrop-blur-xl flex flex-col md:hidden"
+            className="fixed inset-0 z-50 bg-[#fbfbfd] dark:bg-[#111111] flex flex-col md:hidden"
           >
             <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10 dark:border-white/10">
               <span className="font-display font-bold text-lg text-gray-900 dark:text-white">Menu</span>

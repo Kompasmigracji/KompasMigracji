@@ -400,3 +400,15 @@ html[data-theme="dark"] body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(150, 150, 150, 0.5);
 }
+
+/* Shimmer animation used across multiple components */
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(200%); }
+}
+
+/* StarField fade-in */
+@keyframes sf-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
