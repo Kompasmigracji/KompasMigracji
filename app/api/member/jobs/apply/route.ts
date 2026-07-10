@@ -1,26 +1,24 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { q } from '@/lib/db';
 
 export async function POST(request: Request) {
   try {
-    const supabase = getSupabaseAdmin();
-    if (!supabase) {
-      return NextResponse.json({ error: 'Supabase client not initialized' }, { status: 500 });
-    }
-
     const { jobId } = await request.json();
 
     if (!jobId) {
         return NextResponse.json({ error: 'Job ID is required' }, { status: 400 });
     }
 
-    // Since we don't have user authentication fully wired up in this mockup API, we'll return success
-    // In a real scenario, we would:
-    // 1. Get current user ID
-    // 2. Fetch their kompas_member_profile.id
-    // 3. Insert into kompas_job_applications (job_id, member_id, status='applied')
-    
-    // Simulate API delay
+    // Insert into kompas_job_applications
+    // Since we don't have user authentication fully wired up on the frontend yet,
+    // we'll insert a null user_id, which the HR can later link if needed, 
+    // or we'll update it once auth is fully integrated.
+    await q(
+      `INSERT INTO kompas_job_applications (job_id, status) VALUES ($1, 'new')`,
+      [jobId]
+    );
+
+    // Simulate API delay for UX
     await new Promise(resolve => setTimeout(resolve, 800));
 
     return NextResponse.json({ success: true, message: 'Application submitted successfully' });

@@ -29,6 +29,12 @@ const NAV_DATA = [
         ]
       },
       {
+        title: "HR / РЕКРУТИНГ",
+        items: [
+          { label: "Вакансії", href: "/admin/crm/jobs" },
+        ]
+      },
+      {
         title: "ФИНАНСЫ",
         items: [
           { label: "Журнал платежей", href: "/admin/crm/payments" },
