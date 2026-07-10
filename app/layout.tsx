@@ -3,8 +3,28 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
 
 export const metadata = {
-  title: "Kompas Migracji",
-  description: "Цифрова профспілка та персональний AI-помічник для мігрантів",
+  title: {
+    default: "Kompas Migracji & iPhoenix Architecture",
+    template: "%s | Kompas Migracji"
+  },
+  description: "Цифрова екосистема для мігрантів у Польщі. Легалізація, пошук роботи, нерухомість та преміальна архітектура від iPhoenix.",
+  keywords: ["мігранти", "Польща", "карта побуту", "робота в Польщі", "архітектура", "дизайн інтер'єру", "ревіталізація", "iPhoenix", "Kompas Migracji"],
+  authors: [{ name: "Oleksandr Khrystodul" }],
+  creator: "iPhoenix",
+  openGraph: {
+    type: "website",
+    locale: "uk_UA",
+    url: "https://kompasmigracji.pl",
+    title: "Kompas Migracji & iPhoenix",
+    description: "Найшвидший шлях до легального життя та красивого простору у Польщі.",
+    siteName: "Kompas Migracji"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kompas Migracji & iPhoenix Architecture",
+    description: "Цифрова екосистема для мігрантів у Польщі та преміальний архітектурний сервіс.",
+    creator: "@iphoenix"
+  },
   manifest: "/manifest.json",
 };
 

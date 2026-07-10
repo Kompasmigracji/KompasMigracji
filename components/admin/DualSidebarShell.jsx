@@ -29,6 +29,13 @@ const NAV_DATA = [
         ]
       },
       {
+        title: "ПРОДАЖІ ТА МАРКЕТИНГ",
+        items: [
+          { label: "Email Розсилки", href: "/admin/crm/emails" },
+          { label: "Мої Задачі", href: "/admin/crm/tasks" },
+        ]
+      },
+      {
         title: "HR / РЕКРУТИНГ",
         items: [
           { label: "Вакансії", href: "/admin/crm/jobs" },
@@ -68,6 +75,7 @@ const NAV_DATA = [
         title: "ОТЧЕТЫ",
         items: [
           { label: "Дашборд", href: "/admin/crm/dashboard" },
+          { label: "Фінансові Звіти", href: "/admin/crm/reports" },
           { label: "Эффективность", href: "/admin/crm/efficiency" },
         ]
       }

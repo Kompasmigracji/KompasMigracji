@@ -15,20 +15,35 @@ export async function POST(request: Request) {
     const source = 'iPhoenix Architecture Landing';
     const notes = `Об'єкт: ${objectType}, Метраж: ${area || 'не вказано'} м², Пакет: ${pkgName}`;
 
-    await q(`
+    const result = await q(`
       INSERT INTO kompas_leads (name, phone, source, notes, status)
       VALUES ($1, $2, $3, $4, 'New Request')
+      RETURNING id
     `, [name, phone, source, notes]);
+    const newLeadId = result[0]?.id || null;
 
-    // Add a notification for the CRM (if notifications table exists)
+    // Add a notification for the CRM
     try {
       await q(`
         INSERT INTO notifications (title, message, type)
         VALUES ($1, $2, 'info')
       `, ['Новий клієнт на Архітектуру!', `${name} (${phone}) хоче пакет ${pkgName}.`]);
     } catch (e) {
-      // Ignore if notifications table doesn't exist
       console.log('Could not insert notification, probably table missing or schema differs.');
+    }
+
+    // Trigger AI Assistant outreach via WhatsApp/Telegram
+    try {
+      const baseUrl = request.headers.get('origin') || 'http://localhost:3000';
+      const welcomeMsg = `Вітаю, ${name}! Я AI-асистент Олександра (iPhoenix Architecture). Отримали ваш запит на пакет ${pkgName} для об'єкта (${objectType}). Підкажіть, чи є у вас обмірний план або креслення БТІ? Це допоможе нам швидше розпочати роботу.`;
+      
+      await fetch(`${baseUrl}/api/bot/outbound`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, platform: 'whatsapp', message: welcomeMsg, leadId: newLeadId })
+      });
+    } catch (e) {
+      console.log('Bot outreach failed:', e);
     }
 
     return NextResponse.json({ success: true, message: 'Lead captured successfully' });
