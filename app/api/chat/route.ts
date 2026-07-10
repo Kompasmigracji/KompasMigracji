@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const supabase = getSupabase();
 
   const result = streamText({
-    model: google('gemini-2.5-flash') as any,
+    model: google('gemini-1.5-flash') as any,
     system: SYSTEM_PROMPT,
     messages,
     tools: {

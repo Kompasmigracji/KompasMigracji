@@ -113,7 +113,7 @@ export default function ChatBot() {
     setMessages(newMsgs);
     setIsLoading(true);
     
-    await saveMessageToDb(userMsg);
+    // await saveMessageToDb(userMsg);
     
     try {
       const res = await fetch('/api/chat', {
@@ -143,7 +143,7 @@ export default function ChatBot() {
       
       const botMsg: Msg = { id: generateUUID(), role: 'assistant', content: assistantContent };
       setMessages(prev => [...prev, botMsg]);
-      await saveMessageToDb(botMsg);
+      // await saveMessageToDb(botMsg);
       
     } catch (err) {
       const errMsg: Msg = { id: generateUUID(), role: 'assistant', content: t('chat_error') };

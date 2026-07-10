@@ -1,11 +1,11 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
-import { getUser } from "@/lib/auth";
+import { currentUser } from "@/lib/auth";
 
 export async function PATCH(req, { params }) {
   try {
-    const user = await getUser(req);
+    const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = params;
@@ -45,7 +45,7 @@ export async function PATCH(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
-    const user = await getUser(req);
+    const user = await currentUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const { id } = params;
