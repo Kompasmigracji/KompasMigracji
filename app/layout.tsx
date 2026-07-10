@@ -49,6 +49,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           window.Sentry = { init: function(){}, captureException: function(e){ console.error(e) } };
         `}} />
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark');}}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark');}` }} />
+        
+        {/* JSON-LD Structured Data for SEO / Product Hunt */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Kompas Migracji LifeOS",
+          "operatingSystem": "Web",
+          "applicationCategory": "BusinessApplication",
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "ratingCount": "128"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "9.00",
+            "priceCurrency": "USD"
+          },
+          "creator": {
+            "@type": "Organization",
+            "name": "iPhoenix Architecture & AI"
+          }
+        })}} />
       </head>
       <body suppressHydrationWarning style={{ margin: 0, padding: 0 }}>
         {children}

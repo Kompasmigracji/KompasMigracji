@@ -6,6 +6,8 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import ScrollProgress from '@/components/ScrollProgress';
 import StarField from '@/components/StarField';
+import CosmicSpiral from '@/components/CosmicSpiral';
+import ProductHuntBanner from '@/components/ProductHuntBanner';
 import VideosShowcase from '@/components/VideosShowcase';
 
 // Components below the fold (lazy loaded)
@@ -36,12 +38,15 @@ export default function HomePage() {
 
   return (
     <>
+      <ProductHuntBanner />
       <ScrollProgress />
       <ReturnVisitor />
-      <StarField />
-      <Header />
-      <main>
-        <Hero onShowMore={() => setShowMore(true)} />
+      <div className="relative">
+        <StarField />
+        <CosmicSpiral />
+        <Header />
+        <main className="relative z-10">
+          <Hero onShowMore={() => setShowMore(true)} />
         {showMore && (
           <>
             <VideosShowcase />
@@ -59,7 +64,8 @@ export default function HomePage() {
             <ContactForm />
           </>
         )}
-      </main>
+        </main>
+      </div>
       <Footer />
       <CookieBanner />
       <ChatBot />
