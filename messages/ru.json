@@ -462,5 +462,12 @@
     "phone": "Телефон"
   },
   "chat_online": "В сети",
-  "chat_error": "Something went wrong. Please try again."
+  "chat_error": "Something went wrong. Please try again.",
+  "partners_title": "Партнеры и Скидки",
+  "partners_desc": "Эксклюзивные предложения от проверенных компаний для членов профсоюза.",
+  "partners_filter_all": "Все категории",
+  "partners_loading": "Загрузка партнеров...",
+  "partners_error": "Ошибка загрузки партнеров",
+  "partners_website": "Перейти на сайт",
+  "partners_promo_code": "Промокод"
 }
