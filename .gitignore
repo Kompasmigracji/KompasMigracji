@@ -68,3 +68,6 @@ test-results/
 playwright-report/
 blob-report/
 playwright/.cache/
+
+# CRM screenshot harness output
+.crm-shots/

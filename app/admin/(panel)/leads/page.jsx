@@ -76,6 +76,15 @@ export default function LeadsPage() {
     );
   }) : [];
 
+  // Вік ліда для картки канбану ("сьогодні", "3 дн. тому")
+  const leadAge = (createdAt) => {
+    if (!createdAt) return "";
+    const days = Math.floor((Date.now() - new Date(createdAt).getTime()) / 86400000);
+    if (days <= 0) return "сьогодні";
+    if (days === 1) return "вчора";
+    return `${days} дн. тому`;
+  };
+
   // Map to Kanban Format
   const kanbanCards = visibleLeads.map(l => ({
     id: String(l.id),
@@ -83,7 +92,8 @@ export default function LeadsPage() {
     subtitle: l.contact || "Немає контактів",
     columnId: l.status || "new",
     amount: 0, // Placeholder for deal value
-    tags: [l.source],
+    tags: [l.source, l.service].filter(Boolean),
+    timeAgo: leadAge(l.created_at),
     badge: { status: l.status, text: null }
   }));
 
@@ -248,7 +258,7 @@ function AddLeadModal({ onClose, onCreated }) {
           
           <div className="kc-field">
             <label className="kc-label">Послуга</label>
-            <input className="kc-input" value={f.service} onChange={(e) => setF({ ...f, service: e.target.value })} placeholder="наприклад, Карту побиту" />
+            <input className="kc-input" value={f.service} onChange={(e) => setF({ ...f, service: e.target.value })} placeholder="наприклад, Карта побуту" />
           </div>
 
           <div className="kc-field">

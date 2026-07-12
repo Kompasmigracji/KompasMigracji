@@ -151,15 +151,16 @@ export default function Shell({ children }) {
                     <button 
                       onClick={() => setOpenGroup(isExpanded ? "" : groupOrItem.name)}
                       className={`kc-nav-item ${isExpanded ? "kc-group-open" : ""}`}
-                      style={{ 
-                        background: isExpanded ? "var(--bg-hover)" : "transparent", 
-                        border: "none", 
-                        width: "100%", 
-                        cursor: "pointer", 
+                      style={{
+                        background: isExpanded ? "var(--bg-hover)" : "transparent",
+                        border: "none",
+                        width: "100%",
+                        cursor: "pointer",
                         color: isExpanded ? "var(--color-primary)" : "var(--dim)",
                         justifyContent: "space-between",
                         paddingRight: 12,
-                        fontWeight: isExpanded ? 600 : 500
+                        fontWeight: isExpanded ? 600 : 500,
+                        textAlign: "left"
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -172,7 +173,7 @@ export default function Shell({ children }) {
                       }} />
                     </button>
                     <div style={{
-                      height: isExpanded ? `${groupOrItem.items.length * 36 + 8}px` : "0",
+                      maxHeight: isExpanded ? `${groupOrItem.items.length * 64 + 8}px` : "0",
                       opacity: isExpanded ? 1 : 0,
                       overflow: "hidden",
                       transition: "all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",

@@ -21,7 +21,7 @@ const WIDGETS_INFO = {
   pipeline_funnel: { title: "Воронка продажів (Deals)", desc: "Розподіл угод та сум по стадіях", colSpan: 1 },
   sla_deadlines: { title: "Термінові дедлайни (SLA)", desc: "Справи клієнтів з наближенням дедлайну", colSpan: 1 },
   activities: { title: "Останні події системи", desc: "Хронологічна стрічка активностей співробітників", colSpan: 1 },
-  ai_terminal: { title: "AI Primus Dispatch Terminal", desc: "Диспетчерський лог роботи автоматизованих агентів", colSpan: 1 },
+  ai_terminal: { title: "Термінал подій (Audit Live)", desc: "Живий потік подій з журналу аудиту системи", colSpan: 1 },
   custom_report: { title: "Кастомний звіт", desc: "Графік одного з ваших збережених звітів", colSpan: 1 }
 };
 
@@ -47,7 +47,7 @@ export default function Dashboard() {
   const [selectedReportId, setSelectedReportId] = useState("");
   const [reports, setReports] = useState([]);
 
-  // AI Dispatcher Logs (Simulated Coordinator feed)
+  // Живая лента журнала аудита (виджет ai_terminal)
   const [dashboardLogs, setDashboardLogs] = useState([]);
 
   useEffect(() => {
@@ -81,27 +81,36 @@ export default function Dashboard() {
       .catch(() => setError("Помилка завантаження аналітики"));
   }, []);
 
-  // Update AI logs periodically
+  // Лента реальных событий из журнала аудита; обновление раз в 30 сек
   useEffect(() => {
-    const messages = [
-      { type: "agent", text: "Agent-012 calculated daily conversions rate metric: +4.2% up." },
-      { type: "agent", text: "Agent-142 parsed inbound document for TRC applicant Oleh S." },
-      { type: "coordinator", text: "Coordinator [Agent-C03] auto-allocated 3 new immigration consultations." },
-      { type: "system", text: "President digital credentials broadcasted to secure node endpoints." },
-      { type: "agent", text: "Agent-088 verified payment transaction: 150 PLN credited to Union Account." }
-    ];
+    let cancelled = false;
 
-    const interval = setInterval(() => {
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-      const now = new Date();
-      const timeStr = now.toTimeString().split(" ")[0];
-      setDashboardLogs(prev => [
-        { time: timeStr, type: randomMsg.type, message: randomMsg.text },
-        ...prev.slice(0, 14)
-      ]);
-    }, 5000);
+    const ACTION_TYPE = (action) => {
+      if (/create|add|insert/i.test(action)) return "create";
+      if (/delete|remove/i.test(action)) return "delete";
+      if (/login|auth/i.test(action)) return "auth";
+      return "update";
+    };
 
-    return () => clearInterval(interval);
+    const load = () => {
+      fetch("/api/admin/audit")
+        .then((r) => r.json())
+        .then((d) => {
+          if (cancelled || !Array.isArray(d.logs)) return;
+          setDashboardLogs(
+            d.logs.slice(0, 15).map((l) => ({
+              time: new Date(l.created_at).toLocaleString("uk-UA", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }),
+              type: ACTION_TYPE(l.action || ""),
+              message: `${l.actor_name || l.actor_email || "Система"} · ${l.action}${l.entity ? ` → ${l.entity}${l.entity_id ? ` #${l.entity_id}` : ""}` : ""}`,
+            }))
+          );
+        })
+        .catch(() => {});
+    };
+
+    load();
+    const interval = setInterval(load, 30000);
+    return () => { cancelled = true; clearInterval(interval); };
   }, []);
 
   const saveLayout = (newLayout) => {
@@ -205,42 +214,49 @@ export default function Dashboard() {
       case "kpi":
         return (
           <div className="kc-grid kc-grid-4">
-            <StatCard 
-              icon="users" value={stats.members.total} label="Учасники" 
-              sub={`${stats.members.active} активних · ${stats.members.pending} в очікуванні`} 
-              trend={12} 
+            <StatCard
+              icon="users" value={stats.members.total} label="Учасники"
+              sub={`${stats.members.active} активних · ${stats.members.pending} в очікуванні`}
+              trend={stats.trends?.members ?? null}
             />
-            <StatCard 
-              icon="target" value={stats.leads.new} label="Нові ліди" 
-              sub={`${stats.leads.total} всього · ${conv}% конв.`} 
-              trend={5} 
+            <StatCard
+              icon="target" value={stats.leads.new} label="Нові ліди"
+              sub={`${stats.leads.total} всього · ${conv}% конв.`}
+              trend={stats.trends?.leads ?? null}
             />
-            <StatCard 
-              icon="briefcase" value={stats.cases.active} label="Активні справи" 
-              sub={`${stats.cases.resolved} вирішено`} 
-              trend={-2} 
+            <StatCard
+              icon="briefcase" value={stats.cases.active} label="Активні справи"
+              sub={`${stats.cases.resolved} вирішено`}
+              trend={stats.trends?.cases ?? null}
             />
-            <StatCard 
-              icon="cash" value={`${stats.duesCollected.toLocaleString("uk-UA")} zł`} 
-              label="Отримані внески" 
-              sub={`${duesRate}% збору`} 
-              trend={8} 
+            <StatCard
+              icon="cash" value={`${stats.duesCollected.toLocaleString("uk-UA")} zł`}
+              label="Отримані внески"
+              sub={`${duesRate}% збору`}
+              trend={stats.trends?.dues ?? null}
             />
           </div>
         );
-      case "leads_trend":
+      case "leads_trend": {
+        const series = stats.series || [];
+        const seriesTotal = series.reduce((a, b) => a + b, 0);
         return (
           <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 'var(--space-md) 0', minHeight: 120 }}>
-              <Sparkline data={stats.series || [5, 10, 8, 15, 12, 20, 18, 25, 22, 30, 28, 35, 40, 38]} w={400} h={120} />
+              {seriesTotal > 0 ? (
+                <Sparkline data={series} w={400} h={120} />
+              ) : (
+                <EmptyState title="Ще немає лідів" description="За останні 14 днів нових лідів не зареєстровано." icon="target" />
+              )}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)", marginTop: "auto" }}>
               <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>14 днів тому</div>
-              <div style={{ fontSize: "var(--text-xs)", color: "var(--text)", fontWeight: 500 }}>Всього: {stats.series?.reduce((a, b) => a + b, 0) || 0}</div>
+              <div style={{ fontSize: "var(--text-xs)", color: "var(--text)", fontWeight: 500 }}>Всього: {seriesTotal}</div>
               <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Сьогодні</div>
             </div>
           </div>
         );
+      }
       case "lead_sources_revenue":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
@@ -270,15 +286,19 @@ export default function Dashboard() {
         return <RecentActivities activities={stats.recentActivities} />;
       case "ai_terminal":
         return (
-          <div style={{ 
-            fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.5", 
+          <div style={{
+            fontFamily: "var(--font-mono)", fontSize: "var(--text-xs)", lineHeight: "1.5",
             display: "flex", flexDirection: "column", gap: 8, maxHeight: 180, overflowY: "auto",
             background: "#06090e", color: "#c9d1d9", padding: "var(--space-md)", borderRadius: "var(--radius-md)"
           }}>
+            {dashboardLogs.length === 0 && (
+              <div style={{ color: "#8b949e" }}>Журнал аудиту порожній — події з&apos;являться тут у реальному часі.</div>
+            )}
             {dashboardLogs.map((log, index) => {
               let color = "#8b949e";
-              if (log.type === "coordinator") color = "#58a6ff";
-              if (log.type === "system") color = "#56d364";
+              if (log.type === "create") color = "#56d364";
+              if (log.type === "delete") color = "#f85149";
+              if (log.type === "auth") color = "#58a6ff";
               return (
                 <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
                   <span style={{ color: "#8b949e" }}>[{log.time}]</span>{" "}
@@ -506,7 +526,7 @@ function SLADeadlines({ deadlines }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <div style={{ fontSize: "var(--text-xs)", fontWeight: 600 }}>{d.full_name}</div>
               <div style={{ fontSize: "10px", color: "var(--dim)" }}>
-                {d.case_number} · {d.urzad || "Уженд не вказано"}
+                {d.case_number} · {d.urzad || "Ужонд не вказано"}
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>

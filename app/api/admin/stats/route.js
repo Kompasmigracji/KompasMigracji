@@ -41,16 +41,53 @@ export async function GET() {
       coalesce(sum(amount) FILTER (WHERE paid = false), 0) AS outstanding
     FROM kompas_dues`);
 
-  // Динамика регистраций участников за 14 дней
+  // Динамика регистраций лидов за 14 дней (виджет "Динаміка реєстрації лідів")
   const series = await q(`
     SELECT to_char(d, 'YYYY-MM-DD') AS day, coalesce(c.cnt, 0) AS cnt
     FROM generate_series(current_date - 13, current_date, '1 day') d
     LEFT JOIN (
       SELECT date_trunc('day', created_at)::date dd, count(*) cnt
-      FROM kompas_users WHERE role = 'member'
+      FROM leads
       GROUP BY 1
     ) c ON c.dd = d
     ORDER BY d`);
+
+  // Реальные тренды KPI: последние 7 дней против предыдущих 7.
+  // null = нет базы для сравнения (бейдж тренда скрывается на фронте).
+  const trendPct = (cur, prev) => {
+    cur = Number(cur || 0); prev = Number(prev || 0);
+    if (prev > 0) return Math.round(((cur - prev) / prev) * 100);
+    return cur > 0 ? 100 : null;
+  };
+  let trends = { members: null, leads: null, cases: null, dues: null };
+  try {
+    const [mT, lT, cT, dT] = await Promise.all([
+      one(`SELECT
+             count(*) FILTER (WHERE created_at >= current_date - 6)                                    AS cur,
+             count(*) FILTER (WHERE created_at >= current_date - 13 AND created_at < current_date - 6) AS prev
+           FROM kompas_users WHERE role = 'member'`),
+      one(`SELECT
+             count(*) FILTER (WHERE created_at >= current_date - 6)                                    AS cur,
+             count(*) FILTER (WHERE created_at >= current_date - 13 AND created_at < current_date - 6) AS prev
+           FROM leads`),
+      one(`SELECT
+             count(*) FILTER (WHERE created_at >= current_date - 6)                                    AS cur,
+             count(*) FILTER (WHERE created_at >= current_date - 13 AND created_at < current_date - 6) AS prev
+           FROM kompas_cases`),
+      one(`SELECT
+             coalesce(sum(amount) FILTER (WHERE paid AND paid_at >= current_date - 6), 0)                                  AS cur,
+             coalesce(sum(amount) FILTER (WHERE paid AND paid_at >= current_date - 13 AND paid_at < current_date - 6), 0) AS prev
+           FROM kompas_dues`),
+    ]);
+    trends = {
+      members: trendPct(mT?.cur, mT?.prev),
+      leads: trendPct(lT?.cur, lT?.prev),
+      cases: trendPct(cT?.cur, cT?.prev),
+      dues: trendPct(dT?.cur, dT?.prev),
+    };
+  } catch (err) {
+    console.error("[stats] trends failed:", err?.message);
+  }
 
   // Лиды по источникам (bot = из Telegram, site = с сайта)
   const bySource = await q(`
@@ -132,6 +169,7 @@ export async function GET() {
     },
     duesCollected: Number(dues?.collected || 0),
     duesOutstanding: Number(dues?.outstanding || 0),
+    trends,
     series: series.map((r) => Number(r.cnt)),
     leadsBySource: bySource.map((r) => ({ source: r.source, count: Number(r.cnt) })),
     recentLeads,
