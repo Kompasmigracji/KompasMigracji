@@ -1,6 +1,6 @@
 "use client";
-/* /admin/me — особистий кабiнет учасника профспiлки.
-   Учасник бачить тiльки своi данi (middleware + RBAC) i редагує своi контакти. */
+/* /admin/me — особистий кабінет учасника профспілки.
+   Учасник бачить тільки своі дані (middleware + RBAC) i редагує своі контакти. */
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Badge, Spinner, EmptyState, Icon, StatCard } from "@/components/admin/ui";
@@ -70,21 +70,21 @@ export default function Cabinet() {
 
   return (
     <div style={{ maxWidth: 760, margin: "0 auto" }} className="kc-page-enter">
-      {/* шапка кабiнету */}
+      {/* шапка кабінету */}
       <div className="kc-row" style={{ marginBottom: 18 }}>
         <div className="kc-brand-mark"><Icon name="compass" size={21} color="#d99e54" /></div>
         <div style={{ flex: 1 }}>
           <div style={{ fontFamily: "var(--display)", fontWeight: 600, fontSize: 18 }}>
-            Кабiнет учасника
+            Кабінет учасника
           </div>
-          <div style={{ color: "#828c9b", fontSize: 12 }}>Профспiлка Kompas Migracji</div>
+          <div style={{ color: "#828c9b", fontSize: 12 }}>Профспілка Kompas Migracji</div>
         </div>
         <button className="kc-btn kc-btn-ghost" onClick={logout}>
           <Icon name="logout" size={15} /> Вийти
         </button>
       </div>
 
-      {/* профiль */}
+      {/* профіль */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
         <div style={{ fontFamily: "var(--display)", fontSize: 22, fontWeight: 600 }}>
           {m.full_name}
@@ -99,18 +99,18 @@ export default function Cabinet() {
 
       <div className="kc-grid kc-grid-2" style={{ marginBottom: 14 }}>
         <StatCard icon="cash" value={duePaid + " / " + data.dues.length}
-          label="Внескiв оплачено" />
+          label="Внесків оплачено" />
         <StatCard icon="briefcase" value={activeCases} label="Активних звернень" />
       </div>
 
-      {/* контактнi данi — самообслуговування */}
+      {/* контактні дані — самообслуговування */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
         <div className="kc-row" style={{ justifyContent: "space-between" }}>
-          <div className="kc-card-cap" style={{ margin: 0 }}>Контактнi данi</div>
+          <div className="kc-card-cap" style={{ margin: 0 }}>Контактні дані</div>
           {!editing && (
             <button className="kc-link" onClick={() => setEditing(true)}
               style={{ fontSize: 13, background: "none", border: "none" }}>
-              Змiнити
+              Змінити
             </button>
           )}
         </div>
@@ -129,7 +129,7 @@ export default function Cabinet() {
                 placeholder="+48 ..." />
             </div>
             <div className="kc-field">
-              <label className="kc-label">Мiсто</label>
+              <label className="kc-label">Місто</label>
               <input className="kc-input" value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
                 placeholder="Gdansk" />
@@ -159,7 +159,7 @@ export default function Cabinet() {
               <span style={{ fontSize: 13.5 }}>{m.phone || "—"}</span>
             </div>
             <div className="kc-row" style={{ padding: "7px 0" }}>
-              <span style={{ color: "#828c9b", width: 90, fontSize: 13 }}>Мiсто</span>
+              <span style={{ color: "#828c9b", width: 90, fontSize: 13 }}>Місто</span>
               <span style={{ fontSize: 13.5 }}>{m.city || "—"}</span>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function Cabinet() {
 
       {/* мої справи */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
-        <div className="kc-card-cap">Моi юридичнi звернення</div>
+        <div className="kc-card-cap">Моі юридичні звернення</div>
         {data.cases.length ? data.cases.map((c) => (
           <div key={c.id} className="kc-row"
             style={{ padding: "9px 0", borderBottom: "1px solid var(--border)" }}>
@@ -180,7 +180,7 @@ export default function Cabinet() {
 
       {/* мої внески */}
       <div className="kc-card">
-        <div className="kc-card-cap">Iсторiя внескiв</div>
+        <div className="kc-card-cap">Історія внесків</div>
         {data.dues.length ? data.dues.map((d) => (
           <div key={d.id} className="kc-row"
             style={{ padding: "9px 0", borderBottom: "1px solid var(--border)" }}>

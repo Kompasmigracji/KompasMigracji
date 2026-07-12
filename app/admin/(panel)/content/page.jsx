@@ -1,14 +1,14 @@
 "use client";
-/* /admin/content — управлiння блоками контенту сайту kompasmigracji.com.
-   Юридичний чек-лист: оферта, цiни, регламент, полiтика приватностi. */
+/* /admin/content — управління блоками контенту сайту kompasmigracji.com.
+   Юридичний чек-лист: оферта, ціни, регламент, політика приватності. */
 import React, { useEffect, useState } from "react";
 import { Icon, Spinner, Badge } from "@/components/admin/ui";
 
 const DESC = {
   offer: "Опис послуг порталу",
-  pricing: "Прайс юридичних консультацiй",
-  regulamin: "Правила — посилання з чекбокса в оплатi",
-  privacy: "Полiтика приватностi — обов'язкова за законом",
+  pricing: "Прайс юридичних консультацій",
+  regulamin: "Правила — посилання з чекбокса в оплаті",
+  privacy: "Політика приватності — обов'язкова за законом",
 };
 
 export default function ContentPage() {
@@ -50,8 +50,8 @@ export default function ContentPage() {
       if (d.error) { flash("⚠ " + d.error); return; }
       patch(block.slug, d.block);
       flash(
-        publishedOverride === true ? "Опублiковано: " + d.block.title
-        : publishedOverride === false ? "Знято з публiкацiї: " + d.block.title
+        publishedOverride === true ? "Опубліковано: " + d.block.title
+        : publishedOverride === false ? "Знято з публікації: " + d.block.title
         : "Збережено: " + d.block.title
       );
     } catch {
@@ -76,9 +76,9 @@ export default function ContentPage() {
   return (
     <div>
       <div className="kc-note" style={{ marginBottom: 14 }}>
-        Юридичний чек-лист kompasmigracji.com: опублiкувати чотири блоки нижче,
-        виправити данi фiрми у футерi сайту (NIP, REGON, KRS) i додати
-        чекбокс згоди з регламентом у процес оплати. Опублiковано:{" "}
+        Юридичний чек-лист kompasmigracji.com: опублікувати чотири блоки нижче,
+        виправити дані фірми у футері сайту (NIP, REGON, KRS) i додати
+        чекбокс згоди з регламентом у процес оплати. Опубліковано:{" "}
         {publishedCount} з {blocks.length}.
       </div>
 
@@ -102,7 +102,7 @@ export default function ContentPage() {
                 </div>
               </div>
               <Badge status={b.published ? "paid" : "unpaid"}
-                text={b.published ? "Опублiковано" : "Чернетка"} />
+                text={b.published ? "Опубліковано" : "Чернетка"} />
             </div>
 
             <div className="kc-field" style={{ marginTop: 12, marginBottom: 10 }}>
@@ -113,13 +113,13 @@ export default function ContentPage() {
 
             <textarea className="kc-textarea" value={b.body || ""}
               onChange={(e) => patch(b.slug, { body: e.target.value })}
-              placeholder={"Змiст блоку «" + b.title + "»…"} />
+              placeholder={"Зміст блоку «" + b.title + "»…"} />
 
             <div className="kc-row"
               style={{ justifyContent: "space-between", marginTop: 10 }}>
               <span className="kc-stat-sub">
                 {b.updated_at
-                  ? "змiнено " + new Date(b.updated_at).toLocaleDateString("uk-UA")
+                  ? "змінено " + new Date(b.updated_at).toLocaleDateString("uk-UA")
                   : "не збережено"}
               </span>
               <div className="kc-row" style={{ gap: 8 }}>
@@ -130,12 +130,12 @@ export default function ContentPage() {
                 {b.published ? (
                   <button className="kc-btn kc-btn-danger" disabled={busy === b.slug}
                     onClick={() => save(b, false)}>
-                    Зняти з публiкацiї
+                    Зняти з публікації
                   </button>
                 ) : (
                   <button className="kc-btn kc-btn-primary" disabled={busy === b.slug}
                     onClick={() => save(b, true)}>
-                    <Icon name="check" size={14} /> Опублiкувати
+                    <Icon name="check" size={14} /> Опублікувати
                   </button>
                 )}
               </div>

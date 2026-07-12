@@ -1,5 +1,5 @@
 "use client";
-/* /admin/members/:id — картка учасника профспiлки. */
+/* /admin/members/:id — картка учасника профспілки. */
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Badge, Spinner, EmptyState, Icon, StatCard } from "@/components/admin/ui";
@@ -46,7 +46,7 @@ export default function MemberDetailPage() {
     const d = await res.json();
     setBusy(false);
     if (d.error) { setMsg("⚠ " + d.error); return; }
-    setMsg("Статус внескiв оновлено");
+    setMsg("Статус внесків оновлено");
     setData((p) => ({ ...p, member: { ...p.member, dues_status } }));
     setTimeout(() => setMsg(""), 2500);
   };
@@ -90,7 +90,7 @@ export default function MemberDetailPage() {
           style={{ marginBottom: 14 }}>{msg}</div>
       )}
 
-      {/* основнi данi */}
+      {/* основні дані */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
         <div style={{ fontFamily: "var(--display)", fontSize: 22, fontWeight: 600 }}>
           {m.full_name}
@@ -112,17 +112,17 @@ export default function MemberDetailPage() {
               onChange={(e) => setStatus(e.target.value)} disabled={busy}>
               <option value="active">Активний</option>
               <option value="suspended">Заблокований</option>
-              <option value="pending">Очiкує</option>
+              <option value="pending">Очікує</option>
             </select>
           </div>
-          {/* статус внескiв */}
+          {/* статус внесків */}
           <div>
-            <div className="kc-label">Статус внескiв</div>
+            <div className="kc-label">Статус внесків</div>
             <select className="kc-select" value={m.dues_status || "unpaid"}
               onChange={(e) => setDuesStatus(e.target.value)} disabled={busy}>
               <option value="paid">Оплачено</option>
               <option value="unpaid">Не оплачено</option>
-              <option value="exempt">Звiльнений</option>
+              <option value="exempt">Звільнений</option>
             </select>
           </div>
         </div>
@@ -131,19 +131,19 @@ export default function MemberDetailPage() {
       {/* метрики */}
       <div className="kc-grid kc-grid-2" style={{ marginBottom: 14 }}>
         <StatCard icon="cash" value={duePaid + " / " + data.dues.length}
-          label="Внескiв оплачено" />
+          label="Внесків оплачено" />
         <StatCard icon="briefcase" value={activeCases} label="Активних звернень" />
       </div>
 
       {/* контакти */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
-        <div className="kc-card-cap">Контактнi данi</div>
+        <div className="kc-card-cap">Контактні дані</div>
         <div className="kc-row" style={{ padding: "7px 0", borderBottom: "1px solid var(--border)" }}>
           <span style={{ color: "var(--dim)", width: 110, fontSize: 13 }}>Телефон</span>
           <span style={{ fontSize: 13.5 }}>{m.phone || "—"}</span>
         </div>
         <div className="kc-row" style={{ padding: "7px 0", borderBottom: "1px solid var(--border)" }}>
-          <span style={{ color: "var(--dim)", width: 110, fontSize: 13 }}>Мiсто</span>
+          <span style={{ color: "var(--dim)", width: 110, fontSize: 13 }}>Місто</span>
           <span style={{ fontSize: 13.5 }}>{m.city || "—"}</span>
         </div>
         <div className="kc-row" style={{ padding: "7px 0", borderBottom: "1px solid var(--border)" }}>
@@ -162,19 +162,19 @@ export default function MemberDetailPage() {
 
       {/* справи */}
       <div className="kc-card" style={{ marginBottom: 14 }}>
-        <div className="kc-card-cap">Юридичнi звернення</div>
+        <div className="kc-card-cap">Юридичні звернення</div>
         {data.cases.length ? data.cases.map((c) => (
           <div key={c.id} className="kc-row"
             style={{ padding: "9px 0", borderBottom: "1px solid var(--border)" }}>
             <span style={{ flex: 1, fontSize: 13.5 }}>{c.title}</span>
             <Badge status={c.status} />
           </div>
-        )) : <EmptyState text="Немає записiв" />}
+        )) : <EmptyState text="Немає записів" />}
       </div>
 
       {/* внески */}
       <div className="kc-card">
-        <div className="kc-card-cap">Iсторiя внескiв</div>
+        <div className="kc-card-cap">Історія внесків</div>
         {data.dues.length ? data.dues.map((d) => (
           <div key={d.id} className="kc-row"
             style={{ padding: "9px 0", borderBottom: "1px solid var(--border)" }}>

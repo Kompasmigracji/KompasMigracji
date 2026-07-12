@@ -1,19 +1,19 @@
 "use client";
-/* /admin/templates — база шаблонiв повiдомлень KompasCRM.
-   Пiдтримує перегляд, редагування, створення та видалення шаблонiв.
-   Категорiї: payment | qualification | checklist | objection | reminder | other */
+/* /admin/templates — база шаблонів повідомлень KompasCRM.
+   Підтримує перегляд, редагування, створення та видалення шаблонів.
+   Категорії: payment | qualification | checklist | objection | reminder | other */
 import React, { useEffect, useState, useCallback } from "react";
 import { Icon, Spinner } from "@/components/admin/ui";
 
 const CATEGORIES = [
-  { value: "",              label: "Всi" },
+  { value: "",              label: "Всі" },
   { value: "email",        label: "Email-шаблони" },
   { value: "payment",      label: "Оплата" },
-  { value: "qualification",label: "Квалiфiкацiя" },
-  { value: "checklist",    label: "Чеклiсти" },
+  { value: "qualification",label: "Кваліфікація" },
+  { value: "checklist",    label: "Чеклісти" },
   { value: "objection",    label: "Заперечення" },
   { value: "reminder",     label: "Нагадування" },
-  { value: "other",        label: "Iнше" },
+  { value: "other",        label: "Інше" },
 ];
 
 const CAT_COLOR = {
@@ -35,9 +35,9 @@ export default function TemplatesPage() {
   const [editing, setEditing]     = useState(null);   // null | EMPTY | template object
   const [busy, setBusy]           = useState(false);
   const [toast, setToast]         = useState("");
-  const [copy, setCopy]           = useState("");      // slug що щойно скопiйовано
+  const [copy, setCopy]           = useState("");      // slug що щойно скопійовано
   const [search, setSearch]       = useState("");
-  const [confirm, setConfirm]     = useState(null);   // id для пiдтвердження видалення
+  const [confirm, setConfirm]     = useState(null);   // id для підтвердження видалення
 
   const flash = (msg) => { setToast(msg); setTimeout(() => setToast(""), 2800); };
 
@@ -67,7 +67,7 @@ export default function TemplatesPage() {
   const save = async () => {
     if (!editing) return;
     if (!editing.slug || !editing.title || !editing.body) {
-      flash("Заповнiть slug, назву та текст");
+      flash("Заповніть slug, назву та текст");
       return;
     }
     setBusy(true);
@@ -121,9 +121,9 @@ export default function TemplatesPage() {
       {/* Заголовок + кнопка */}
       <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:16, flexWrap:"wrap", gap:10 }}>
         <div>
-          <div style={{ fontWeight:700, fontSize:17 }}>Шаблони повiдомлень</div>
+          <div style={{ fontWeight:700, fontSize:17 }}>Шаблони повідомлень</div>
           <div style={{ color:"#8a96a3", fontSize:12, marginTop:2 }}>
-            {templates.length} шаблонiв · натиснiть <b>/</b> у картцi лiда для швидкої вставки
+            {templates.length} шаблонів · натисніть <b>/</b> у картці ліда для швидкої вставки
           </div>
         </div>
         <button className="kc-btn kc-btn-primary" onClick={() => setEditing({ ...EMPTY })}>
@@ -131,7 +131,7 @@ export default function TemplatesPage() {
         </button>
       </div>
 
-      {/* Пошук + фiльтр категорiй */}
+      {/* Пошук + фільтр категорій */}
       <div className="kc-row" style={{ gap:8, marginBottom:14, flexWrap:"wrap" }}>
         <input
           className="kc-input"
@@ -159,7 +159,7 @@ export default function TemplatesPage() {
         </div>
       </div>
 
-      {/* Список шаблонiв */}
+      {/* Список шаблонів */}
       {filtered.length === 0 ? (
         <div style={{ textAlign:"center", padding:"40px 0", color:"#8a96a3" }}>
           Шаблони не знайдено
@@ -170,7 +170,7 @@ export default function TemplatesPage() {
             <div key={t.id} className="kc-card" style={{ padding:"14px 18px" }}>
               <div className="kc-row" style={{ justifyContent:"space-between", flexWrap:"wrap", gap:8 }}>
                 <div className="kc-row" style={{ gap:10, flex:1, minWidth:0 }}>
-                  {/* Кольорова смужка категорiї */}
+                  {/* Кольорова смужка категорії */}
                   <div style={{
                     width:4, borderRadius:4, flexShrink:0, alignSelf:"stretch",
                     background: CAT_COLOR[t.category] || "#ccc",
@@ -210,9 +210,9 @@ export default function TemplatesPage() {
                     className="kc-btn kc-btn-ghost"
                     style={{ fontSize:12 }}
                     onClick={() => copyText(t)}
-                    title="Скопiювати текст"
+                    title="Скопіювати текст"
                   >
-                    {copy===t.slug ? "✓ Скопiйовано" : "Копiювати"}
+                    {copy===t.slug ? "✓ Скопійовано" : "Копіювати"}
                   </button>
                   <button
                     className="kc-btn kc-btn-ghost"
@@ -259,7 +259,7 @@ export default function TemplatesPage() {
                   placeholder="payment_received" />
               </div>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">Категорiя</label>
+                <label className="kc-label">Категорія</label>
                 <select className="kc-input" value={editing.category}
                   onChange={e => patchEdit("category", e.target.value)}>
                   {CATEGORIES.filter(c=>c.value).map(c=>(
@@ -306,7 +306,7 @@ export default function TemplatesPage() {
               <label className="kc-label">Текст шаблону</label>
               <textarea className="kc-textarea" rows={7} value={editing.body}
                 onChange={e => patchEdit("body", e.target.value)}
-                placeholder="Вiтаємо, {{name}}! ..." />
+                placeholder="Вітаємо, {{name}}! ..." />
             </div>
 
             {/* Preview Section */}
@@ -333,7 +333,7 @@ export default function TemplatesPage() {
               <label className="kc-row" style={{ gap:8, cursor:"pointer" }}>
                 <input type="checkbox" checked={editing.auto_send}
                   onChange={e => patchEdit("auto_send", e.target.checked)} />
-                <span style={{ fontSize:13 }}>Автовiдправлення (тригер)</span>
+                <span style={{ fontSize:13 }}>Автовідправлення (тригер)</span>
               </label>
               <div className="kc-field" style={{ margin:0 }}>
                 <label className="kc-label" style={{ fontSize:11 }}>Порядок</label>
@@ -352,7 +352,7 @@ export default function TemplatesPage() {
         </div>
       )}
 
-      {/* Пiдтвердження видалення */}
+      {/* Підтвердження видалення */}
       {confirm && (
         <div style={{
           position:"fixed", inset:0, background:"rgba(0,0,0,0.45)",
@@ -360,7 +360,7 @@ export default function TemplatesPage() {
         }}>
           <div className="kc-card" style={{ maxWidth:360, margin:16, textAlign:"center" }}>
             <div style={{ fontWeight:600, marginBottom:10 }}>Видалити шаблон?</div>
-            <div style={{ color:"#8a96a3", fontSize:13, marginBottom:16 }}>Це незворотна дiя.</div>
+            <div style={{ color:"#8a96a3", fontSize:13, marginBottom:16 }}>Це незворотна дія.</div>
             <div className="kc-row" style={{ justifyContent:"center", gap:10 }}>
               <button className="kc-btn kc-btn-ghost" onClick={() => setConfirm(null)}>Скасувати</button>
               <button className="kc-btn kc-btn-danger" disabled={busy} onClick={() => del(confirm)}>

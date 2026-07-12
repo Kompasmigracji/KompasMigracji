@@ -1,5 +1,5 @@
 "use client";
-/* Сторiнка входу /admin/login */
+/* Сторінка входу /admin/login */
 import "@/styles/kompascrm.css";
 import React, { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,7 +16,7 @@ function LoginForm() {
   const [loading, setLoading]   = useState(false);
 
   const submit = async () => {
-    if (!email || !password) { setError("Введiть email та пароль"); return; }
+    if (!email || !password) { setError("Введіть email та пароль"); return; }
     setLoading(true);
     setError("");
     try {
@@ -26,7 +26,7 @@ function LoginForm() {
         body: JSON.stringify(step === 1 ? { email, password } : { email, password, token2fa }),
       });
 
-      // Безпечно читаємо тiло — навiть якщо сервер повернув не-JSON (500 HTML)
+      // Безпечно читаємо тіло — навіть якщо сервер повернув не-JSON (500 HTML)
       let data = {};
       try { data = await res.json(); } catch { /* ignore parse errors */ }
 
@@ -45,7 +45,7 @@ function LoginForm() {
       const next = params.get("next") || "/admin";
       router.push(data.user?.role === "member" ? "/admin/me" : next);
     } catch {
-      setError("Мережа недоступна — перевiрте пiдключення");
+      setError("Мережа недоступна — перевірте підключення");
       setLoading(false);
     }
   };
@@ -120,7 +120,7 @@ function LoginForm() {
             disabled={loading}
             style={{ width: "100%", justifyContent: "center", marginTop: 6 }}
           >
-            {loading ? "Зачекайте…" : (step === 1 ? "Увiйти" : "Підтвердити")}
+            {loading ? "Зачекайте…" : (step === 1 ? "Увійти" : "Підтвердити")}
           </button>
           
           {step === 2 && (

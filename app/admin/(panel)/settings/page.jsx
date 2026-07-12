@@ -1,5 +1,5 @@
 "use client";
-/* /admin/settings — налаштування CRM: команда, змiна пароля, безпека. */
+/* /admin/settings — налаштування CRM: команда, зміна пароля, безпека. */
 import React, { useEffect, useState } from "react";
 import { Icon, Spinner, Badge, EmptyState, Avatar } from "@/components/admin/ui";
 import { ROLE_LABEL } from "@/lib/rbac";
@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [inviteErr, setInviteErr] = useState("");
   const [created, setCreated] = useState(null); // {email,temp_password,role}
 
-  /* змiна пароля */
+  /* зміна пароля */
   const [pwd, setPwd] = useState({ current: "", next: "", confirm: "" });
   const [pwdBusy, setPwdBusy] = useState(false);
   const [pwdMsg, setPwdMsg] = useState("");
@@ -34,7 +34,7 @@ export default function SettingsPage() {
 
   const sendInvite = async () => {
     if (!invite.full_name.trim() || !invite.email.trim()) {
-      setInviteErr("Iм'я та email обов'язковi");
+      setInviteErr("Ім'я та email обов'язкові");
       return;
     }
     setInviteBusy(true); setInviteErr("");
@@ -57,8 +57,8 @@ export default function SettingsPage() {
   };
 
   const changePwd = async () => {
-    if (pwd.next.length < 6) { setPwdMsg("⚠ Новий пароль — мiнiмум 6 символiв"); return; }
-    if (pwd.next !== pwd.confirm) { setPwdMsg("⚠ Паролi не збiгаються"); return; }
+    if (pwd.next.length < 6) { setPwdMsg("⚠ Новий пароль — мінімум 6 символів"); return; }
+    if (pwd.next !== pwd.confirm) { setPwdMsg("⚠ Паролі не збігаються"); return; }
     setPwdBusy(true); setPwdMsg("");
     try {
       const res = await fetch("/api/admin/auth/password", {
@@ -69,7 +69,7 @@ export default function SettingsPage() {
       const d = await res.json();
       if (d.error) { setPwdMsg("⚠ " + d.error); return; }
       setPwd({ current: "", next: "", confirm: "" });
-      setPwdMsg("Пароль змiнено");
+      setPwdMsg("Пароль змінено");
     } catch {
       setPwdMsg("⚠ Мережа недоступна");
     } finally {
@@ -114,9 +114,9 @@ export default function SettingsPage() {
           )}
         </div>
 
-        {/* змiна пароля */}
+        {/* зміна пароля */}
         <div className="kc-card">
-          <div className="kc-card-cap">Змiна пароля</div>
+          <div className="kc-card-cap">Зміна пароля</div>
           {me && (
             <div style={{ marginBottom: 16, display: "flex", alignItems: "center", gap: "var(--space-sm)" }}>
               <Avatar name={me.name} size={32} />
@@ -137,7 +137,7 @@ export default function SettingsPage() {
               onChange={(e) => setPwd({ ...pwd, next: e.target.value })} />
           </div>
           <div className="kc-field">
-            <label className="kc-label">Повторiть новий пароль</label>
+            <label className="kc-label">Повторіть новий пароль</label>
             <input className="kc-input" type="password" value={pwd.confirm}
               onChange={(e) => setPwd({ ...pwd, confirm: e.target.value })} />
           </div>
@@ -149,7 +149,7 @@ export default function SettingsPage() {
           )}
           <button className="kc-btn kc-btn-primary" disabled={pwdBusy}
             onClick={changePwd} style={{ width: "100%", justifyContent: "center" }}>
-            {pwdBusy ? "Збереження…" : "Змiнити пароль"}
+            {pwdBusy ? "Збереження…" : "Змінити пароль"}
           </button>
         </div>
 
@@ -157,11 +157,11 @@ export default function SettingsPage() {
         <div className="kc-card">
           <div className="kc-card-cap">Безпека</div>
           <ul style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.8, paddingLeft: 18, margin: 0 }}>
-            <li>JWT в httpOnly-cookie, термiн 7 днiв</li>
-            <li>Паролi — bcrypt, 10 раундiв</li>
-            <li>Захист маршрутiв — middleware.js + requireAuth</li>
-            <li>Журнал дiй — таблиця kompas_audit_log</li>
-            <li>Iзоляцiя: префiкси kompas_ / /api/admin / kc-</li>
+            <li>JWT в httpOnly-cookie, термін 7 днів</li>
+            <li>Паролі — bcrypt, 10 раундів</li>
+            <li>Захист маршрутів — middleware.js + requireAuth</li>
+            <li>Журнал дій — таблиця kompas_audit_log</li>
+            <li>Ізоляція: префікси kompas_ / /api/admin / kc-</li>
           </ul>
         </div>
 
@@ -169,11 +169,11 @@ export default function SettingsPage() {
         <div className="kc-card">
           <div className="kc-card-cap">Дорожня карта</div>
           <ul style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.8, paddingLeft: 18, margin: 0 }}>
-            <li>Refresh-токени та вiдкликання сесiй</li>
+            <li>Refresh-токени та відкликання сесій</li>
             <li>Модуль юридичних справ /admin/cases</li>
-            <li>Експорт реєстру учасникiв у CSV</li>
-            <li>Оплата внескiв через Przelewy24</li>
-            <li>Двофакторна автентифiкацiя</li>
+            <li>Експорт реєстру учасників у CSV</li>
+            <li>Оплата внесків через Przelewy24</li>
+            <li>Двофакторна автентифікація</li>
           </ul>
         </div>
       </div>
@@ -190,10 +190,10 @@ export default function SettingsPage() {
               </div>
             )}
             <div className="kc-field">
-              <label className="kc-label">Iм&apos;я та прiзвище</label>
+              <label className="kc-label">Ім&apos;я та прізвище</label>
               <input className="kc-input" value={invite.full_name}
                 onChange={(e) => setInvite({ ...invite, full_name: e.target.value })}
-                placeholder="Юлiя Онищак" />
+                placeholder="Юлія Онищак" />
             </div>
             <div className="kc-field">
               <label className="kc-label">Email</label>
@@ -206,8 +206,8 @@ export default function SettingsPage() {
               <label className="kc-label">Роль</label>
               <select className="kc-select" value={invite.role}
                 onChange={(e) => setInvite({ ...invite, role: e.target.value })}>
-                <option value="moderator">Модератор — учасники та лiди</option>
-                <option value="admin">Адмiнiстратор — повний доступ</option>
+                <option value="moderator">Модератор — учасники та ліди</option>
+                <option value="admin">Адміністратор — повний доступ</option>
               </select>
             </div>
             <div className="kc-row" style={{ justifyContent: "flex-end", gap: 8, marginTop: 6 }}>
@@ -229,8 +229,8 @@ export default function SettingsPage() {
           <div className="kc-modal" onClick={(e) => e.stopPropagation()}>
             <div className="kc-modal-title">Доступ створено</div>
             <p style={{ color: "#828c9b", fontSize: 13, lineHeight: 1.6 }}>
-              Передайте цi данi колезi особисто. Тимчасовий пароль показується
-              один раз — вiн змiнить його в роздiлi «Налаштування».
+              Передайте ці дані колезі особисто. Тимчасовий пароль показується
+              один раз — він змінить його в розділі «Налаштування».
             </p>
             <div className="kc-card" style={{ background: "var(--bg)", marginTop: 6 }}>
               <div style={{ fontSize: 12, color: "#828c9b" }}>Email</div>

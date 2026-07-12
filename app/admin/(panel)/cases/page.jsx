@@ -1,6 +1,6 @@
 "use client";
-/* /admin/cases — Воронка Понаглення (3 щаблi).
-   Аналiз документiв → Понаглення подано → Пiдготовка до суду */
+/* /admin/cases — Воронка Понаглення (3 щаблі).
+   Аналіз документів → Понаглення подано → Підготовка до суду */
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { Icon, Spinner } from "@/components/admin/ui";
@@ -9,24 +9,24 @@ import ImportWizard from "@/components/admin/ImportWizard";
 const STAGES = [
   {
     key:   "analysis",
-    label: "Аналiз документiв",
+    label: "Аналіз документів",
     color: "#6fa3d4",
     bg:    "#eef4fb",
-    desc:  "Збiр доказової бази, перевiрка Dodatek №1 та ZUS",
+    desc:  "Збір доказової бази, перевірка Dodatek №1 та ZUS",
   },
   {
     key:   "ponaglenie",
     label: "Понаглення подано",
     color: "#d99e54",
     bg:    "#fff8ed",
-    desc:  "Офiцiйна скарга до керiвника вiддiлу Уженду",
+    desc:  "Офіційна скарга до керівника відділу Ужонду",
   },
   {
     key:   "court",
-    label: "Пiдготовка до суду",
+    label: "Підготовка до суду",
     color: "#d96c6c",
     bg:    "#fdf0f0",
-    desc:  "Збiр архiву логiв, позовна заява до суду",
+    desc:  "Збір архіву логів, позовна заява до суду",
   },
 ];
 
@@ -59,9 +59,19 @@ export default function CasesPage() {
   useEffect(() => { load(); }, [load]);
 
   const loadDetail = async (id) => {
-    const r = await fetch(`/api/admin/cases/${id}`);
-    const d = await r.json();
-    setDetail(d);
+    try {
+      const r = await fetch(`/api/admin/cases/${id}`);
+      const d = await r.json();
+      setDetail(d);
+    } catch { flash("Не вдалося завантажити деталі справи"); }
+  };
+
+  /* 1 день / 2 дні / 5 днів */
+  const daysWord = (n) => {
+    const a = Math.abs(n), m10 = a % 10, m100 = a % 100;
+    if (m10 === 1 && m100 !== 11) return "день";
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return "дні";
+    return "днів";
   };
 
   const byStage = (stage) => (cases || []).filter(c => c.stage === stage);
@@ -83,25 +93,29 @@ export default function CasesPage() {
 
   const toggleDoc = async (c, field) => {
     setBusy(c.id + field);
-    await fetch(`/api/admin/cases/${c.id}`, {
-      method:"PATCH",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ [field]: !c[field] }),
-    });
-    load();
-    setBusy("");
+    try {
+      await fetch(`/api/admin/cases/${c.id}`, {
+        method:"PATCH",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ [field]: !c[field] }),
+      });
+      load();
+    } catch { flash("Помилка оновлення документа"); }
+    finally { setBusy(""); }
   };
 
   const closeCase = async (id) => {
     if (!confirm("Закрити справу?")) return;
-    await fetch(`/api/admin/cases/${id}`, { method:"DELETE" });
-    flash("Справу закрито");
-    setDetail(null);
-    load();
+    try {
+      await fetch(`/api/admin/cases/${id}`, { method:"DELETE" });
+      flash("Справу закрито");
+      setDetail(null);
+      load();
+    } catch { flash("Помилка закриття справи"); }
   };
 
   const createCase = async () => {
-    if (!form.full_name) { flash("Введiть ПIБ клiєнта"); return; }
+    if (!form.full_name) { flash("Введіть ПІБ клієнта"); return; }
     setBusy("create");
     try {
       const r = await fetch("/api/admin/cases", {
@@ -193,7 +207,7 @@ export default function CasesPage() {
                     style={{ padding:"12px 14px", cursor:"pointer", transition:"box-shadow .15s" }}
                     onClick={() => { loadDetail(c.id); setDetail({ case:c, logs:[] }); }}
                   >
-                    {/* Iм'я + днi */}
+                    {/* Ім'я + дні */}
                     <div className="kc-row" style={{ justifyContent:"space-between", marginBottom:6 }}>
                       <div style={{ fontWeight:600, fontSize:13 }}>{c.full_name}</div>
                       {c.days_left !== null && (
@@ -203,13 +217,13 @@ export default function CasesPage() {
                           color: daysColor(c.days_left),
                         }}>
                           {c.days_left < 0 ? `+${Math.abs(c.days_left)}д прострочено`
-                           : c.days_left === 0 ? "Сьогоднi!"
+                           : c.days_left === 0 ? "Сьогодні!"
                            : `${c.days_left}д`}
                         </div>
                       )}
                     </div>
 
-                    {/* Деталi */}
+                    {/* Деталі */}
                     {c.case_number && (
                       <div style={{ fontSize:11, color:"var(--dim)" }}>№ {c.case_number}</div>
                     )}
@@ -217,7 +231,7 @@ export default function CasesPage() {
                       <div style={{ fontSize:11, color:"var(--faint)" }}>{c.contact}</div>
                     )}
 
-                    {/* Документи (тiльки для analysis) */}
+                    {/* Документи (тільки для analysis) */}
                     {stage.key === "analysis" && (
                       <div className="kc-row" style={{ gap:8, marginTop:8 }}>
                         <button
@@ -245,7 +259,7 @@ export default function CasesPage() {
                       </div>
                     )}
 
-                    {/* Стрiлки переходу */}
+                    {/* Стрілки переходу */}
                     <div className="kc-row" style={{ gap:4, marginTop:8, justifyContent:"flex-end" }}>
                       {si > 0 && (
                         <button
@@ -266,7 +280,7 @@ export default function CasesPage() {
                           onClick={e => { e.stopPropagation(); moveStage(c, STAGES[si+1].key); }}
                           title={STAGES[si+1].label}
                         >
-                          Далi →
+                          Далі →
                         </button>
                       )}
                     </div>
@@ -278,7 +292,7 @@ export default function CasesPage() {
         })}
       </div>
 
-      {/* Бiчна панель деталей справи */}
+      {/* Бічна панель деталей справи */}
       {mounted && detail && createPortal(
         <div style={{
           position:"fixed", top:0, right:0, bottom:0, width:"100%", maxWidth:400,
@@ -304,7 +318,7 @@ export default function CasesPage() {
                     ? new Date(detail.case.deadline_date).toLocaleDateString("uk-UA")
                     : null],
                   ["Лишилось", detail.case.days_left !== null
-                    ? detail.case.days_left + " днiв"
+                    ? `${detail.case.days_left} ${daysWord(detail.case.days_left)}`
                     : null],
                 ].map(([label, val]) => val ? (
                   <div key={label} style={{ fontSize:12 }}>
@@ -330,10 +344,10 @@ export default function CasesPage() {
             </>
           )}
 
-          {/* Лог подiй */}
-          <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Iсторiя подiй</div>
+          {/* Лог подій */}
+          <div style={{ fontWeight:600, fontSize:13, marginBottom:10 }}>Історія подій</div>
           {(detail.logs || []).length === 0 ? (
-            <div style={{ color:"var(--faint)", fontSize:12 }}>Поки немає подiй</div>
+            <div style={{ color:"var(--faint)", fontSize:12 }}>Поки немає подій</div>
           ) : (
             <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
               {detail.logs.map(l => (
@@ -368,10 +382,10 @@ export default function CasesPage() {
 
             <div className="kc-row" style={{ gap:10, marginBottom:10 }}>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">ПIБ клiєнта *</label>
+                <label className="kc-label">ПІБ клієнта *</label>
                 <input className="kc-input" value={form.full_name}
                   onChange={e => setForm(f=>({...f,full_name:e.target.value}))}
-                  placeholder="Iван Петренко" />
+                  placeholder="Іван Петренко" />
               </div>
               <div className="kc-field" style={{ flex:1 }}>
                 <label className="kc-label">Контакт (телефон/TG)</label>
@@ -383,13 +397,13 @@ export default function CasesPage() {
 
             <div className="kc-row" style={{ gap:10, marginBottom:10 }}>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">№ справи в Уженду</label>
+                <label className="kc-label">№ справи в Ужонду</label>
                 <input className="kc-input" value={form.case_number}
                   onChange={e => setForm(f=>({...f,case_number:e.target.value}))}
                   placeholder="WU-2024-XXXXXX" />
               </div>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">Вiддiл Уженду</label>
+                <label className="kc-label">Відділ Ужонду</label>
                 <input className="kc-input" value={form.urzad}
                   onChange={e => setForm(f=>({...f,urzad:e.target.value}))}
                   placeholder="Mazowiecki UW" />
@@ -398,22 +412,22 @@ export default function CasesPage() {
 
             <div className="kc-row" style={{ gap:10, marginBottom:10 }}>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">Дата подачi заяви</label>
+                <label className="kc-label">Дата подачі заяви</label>
                 <input className="kc-input" type="date" value={form.submission_date}
                   onChange={e => setForm(f=>({...f,submission_date:e.target.value}))} />
               </div>
               <div className="kc-field" style={{ flex:1 }}>
-                <label className="kc-label">Кiнцевий дедлайн</label>
+                <label className="kc-label">Кінцевий дедлайн</label>
                 <input className="kc-input" type="date" value={form.deadline_date}
                   onChange={e => setForm(f=>({...f,deadline_date:e.target.value}))} />
               </div>
             </div>
 
             <div className="kc-field" style={{ marginBottom:16 }}>
-              <label className="kc-label">Примiтки</label>
+              <label className="kc-label">Примітки</label>
               <textarea className="kc-textarea" rows={3} value={form.notes}
                 onChange={e => setForm(f=>({...f,notes:e.target.value}))}
-                placeholder="Контекст справи, особливостi..." />
+                placeholder="Контекст справи, особливості..." />
             </div>
 
             <div className="kc-row" style={{ justifyContent:"flex-end", gap:8 }}>

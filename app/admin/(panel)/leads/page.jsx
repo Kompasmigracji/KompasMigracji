@@ -6,20 +6,20 @@ import KanbanBoard from "@/components/admin/KanbanBoard";
 import ImportWizard from "@/components/admin/ImportWizard";
 
 const FILTERS = [
-  { id: "", label: "Всi" },
-  { id: "new", label: "Новi" },
+  { id: "", label: "Всі" },
+  { id: "new", label: "Нові" },
   { id: "contacted", label: "В контакті" },
   { id: "in_progress", label: "В роботі" },
   { id: "closed", label: "Успішно" },
-  { id: "dropped", label: "Вiдмова" },
+  { id: "dropped", label: "Відмова" },
 ];
 
 const COLUMNS = [
-  { id: "new", title: "Новi ліди", color: "var(--color-info)" },
+  { id: "new", title: "Нові ліди", color: "var(--color-info)" },
   { id: "contacted", title: "В контакті", color: "var(--color-warning)" },
   { id: "in_progress", title: "В роботі", color: "var(--color-primary)" },
   { id: "closed", title: "Успішно", color: "var(--color-success)" },
-  { id: "dropped", title: "Вiдмова", color: "var(--color-danger)" },
+  { id: "dropped", title: "Відмова", color: "var(--color-danger)" },
 ];
 
 export default function LeadsPage() {
