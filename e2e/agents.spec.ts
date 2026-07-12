@@ -66,60 +66,39 @@ test.describe('Agents Dashboard E2E', () => {
     });
   });
 
-  test('should render the GodCard and AgentCards correctly', async ({ page }) => {
+  // Agent cards render only after client hydration + the mocked SWR fetch
+  // resolves, so waiting for them guarantees button handlers are attached.
+  // Generous timeout: first load on a cold dev server compiles the route.
+  async function waitForDashboardReady(page: import('@playwright/test').Page) {
     await page.goto('/admin/agents');
+    await expect(page.getByText('UI/UX Polisher')).toBeVisible({ timeout: 30000 });
+  }
 
-    // Wait for header to be visible
+  test('should render the GodCard and AgentCards correctly', async ({ page }) => {
+    await waitForDashboardReady(page);
+
     await expect(page.locator('h1')).toContainText('Primus — Панель Агентов');
-
-    // Check GodCard is visible
-    await expect(page.locator('text=Grand Architect Oleksandr Khrysytodul')).toBeVisible();
-
-    // Check both agents are rendered
-    await expect(page.locator('text=UI/UX Polisher')).toBeVisible();
-    await expect(page.locator('text=DevOps Agent')).toBeVisible();
+    await expect(page.getByText('Grand Architect Oleksandr Khrysytodul')).toBeVisible();
+    await expect(page.getByText('DevOps Agent')).toBeVisible();
   });
 
   test('should dispatch motivation when clicking Motivate button', async ({ page }) => {
-    await page.goto('/admin/agents');
+    await waitForDashboardReady(page);
 
-    let dispatchCalled = false;
-    await page.route('**/api/agents/primus/dispatch', async (route) => {
-      const payload = route.request().postDataJSON();
-      expect(payload.type).toBe('motivate');
-      dispatchCalled = true;
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true }),
-      });
-    });
+    const dispatchRequest = page.waitForRequest('**/api/agents/primus/dispatch');
+    await page.getByRole('button', { name: 'Мотивировать' }).first().click();
 
-    // Click motivate on first card
-    const motivateBtn = page.locator('text=Мотивировать').first();
-    await motivateBtn.click();
-
-    expect(dispatchCalled).toBe(true);
+    const payload = (await dispatchRequest).postDataJSON();
+    expect(payload.type).toBe('motivate');
   });
 
   test('should dispatch scaling command when clicking Scale button', async ({ page }) => {
-    await page.goto('/admin/agents');
+    await waitForDashboardReady(page);
 
-    let scaleCalled = false;
-    await page.route('**/api/god/command', async (route) => {
-      const payload = route.request().postDataJSON();
-      expect(payload.command).toBe('scale');
-      scaleCalled = true;
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ message: 'Command dispatched' }),
-      });
-    });
+    const commandRequest = page.waitForRequest('**/api/god/command');
+    await page.getByRole('button', { name: 'Запустить масштабирование' }).click();
 
-    const scaleBtn = page.locator('text=Запустить масштабирование');
-    await scaleBtn.click();
-
-    expect(scaleCalled).toBe(true);
+    const payload = (await commandRequest).postDataJSON();
+    expect(payload.command).toBe('scale');
   });
 });

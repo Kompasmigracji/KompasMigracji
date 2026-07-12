@@ -29,7 +29,7 @@ export default function AdminIntlProvider({ children }: { children: React.ReactN
   }, []);
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone="Europe/Warsaw">
       {children}
     </NextIntlClientProvider>
   );
