@@ -1,5 +1,6 @@
 "use client";
-/* PayU-branded payment steps section — used on pricing, plans, karta pages */
+/* Przelewy24-branded payment steps section — used on pricing, plans, karta pages */
+import { ShoppingCart, User, CreditCard, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 interface Step {
   n: string;
@@ -8,7 +9,7 @@ interface Step {
   desc: string;
 }
 
-const PAYU_BLUE = "#00AEEF";
+const P24_BRAND = "#ff5a00";
 const GREEN = "#44A649";
 const NAVY  = "#1B2547";
 const GRAY  = "#6C757D";
@@ -16,13 +17,13 @@ const LIGHT = "#F8F9FA";
 const BORD  = "#DEE2E6";
 
 /* ── Official PayU logo ─────────────────────────────────── */
-export function P24Logo({ width = 140 }: { width?: number }) {
+export function P24Logo({ width = 140 }: { width?: number }) { // Note: Renamed from PayULogo to P24Logo to match filename, but it was PayU. Now it's Przelewy24.
   const h = Math.round(width * 0.27);
   return (
-    <svg width={width} height={h} viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PayU">
-      <rect width="140" height="38" rx="6" fill={PAYU_BLUE} />
+    <svg width={width} height={h} viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Przelewy24">
+      <rect width="140" height="38" rx="6" fill="#fff" stroke={BORD} />
       <text x="70" y="26" textAnchor="middle" fill="#fff" fontFamily="'Arial Black', 'Arial', sans-serif"
-        fontSize="18" fontWeight="900" letterSpacing="1">PayU</text>
+        fontSize="16" fontWeight="900" letterSpacing="0"><tspan fill={P24_BRAND}>Przelewy</tspan><tspan fill={NAVY}>24</tspan></text>
     </svg>
   );
 }
@@ -50,11 +51,10 @@ function PayIcons() {
         <circle cx="29" cy="12" r="7.5" fill="#F79E1B"/>
         <ellipse cx="23" cy="12" rx="3.5" ry="7.5" fill="#FF5F00"/>
       </svg>
-      {/* PayU */}
-      <svg width="46" height="24" viewBox="0 0 46 24" fill="none">
-        <rect width="46" height="24" rx="4" fill={PAYU_BLUE}/>
-        <text x="23" y="16.5" textAnchor="middle" fill="#fff"
-          fontFamily="'Arial Black',Arial,sans-serif" fontSize="10" fontWeight="900">PayU</text>
+      {/* Przelewy24 */}
+      <svg width="70" height="24" viewBox="0 0 70 24" fill="none">
+        <rect width="70" height="24" rx="4" fill="#fff" stroke={BORD}/>
+        <text x="35" y="16.5" textAnchor="middle" fill={P24_BRAND} fontFamily="'Arial Black',Arial,sans-serif" fontSize="9" fontWeight="900">Przelewy24</text>
       </svg>
       {/* Google Pay */}
       <svg width="46" height="24" viewBox="0 0 46 24" fill="none">
@@ -68,43 +68,19 @@ function PayIcons() {
 
 /* ── Step card icons (SVG) — exported for use with translated steps ───── */
 export function CartIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={PAYU_BLUE} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-    </svg>
-  );
+  return <ShoppingCart color={P24_BRAND} size={32} strokeWidth={1.8} />;
 }
 export function UserIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-      <circle cx="12" cy="7" r="4"/>
-    </svg>
-  );
+  return <User color={NAVY} size={32} strokeWidth={1.8} />;
 }
 export function CardIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="1" y="4" width="22" height="16" rx="2"/>
-      <line x1="1" y1="10" x2="23" y2="10"/>
-    </svg>
-  );
+  return <CreditCard color={GREEN} size={32} strokeWidth={1.8} />;
 }
 export function CheckCircleIcon() {
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-      <polyline points="22 4 12 14.01 9 11.01"/>
-    </svg>
-  );
+  return <CheckCircle2 color={GREEN} size={32} strokeWidth={1.8} />;
 }
 function ShieldIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={GREEN} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    </svg>
-  );
+  return <ShieldCheck color={GREEN} size={20} strokeWidth={2} />;
 }
 
 /* ── Props ──────────────────────────────────────────────────────────────── */
@@ -130,8 +106,8 @@ const DEFAULT_STEPS: Step[] = [
   {
     n: "03",
     icon: <CardIcon />,
-    title: "Płatność PayU",
-    desc: "Bezpieczna płatność przez PayU — karta, BLIK, przelew. Szyfrowanie SSL 256-bit.",
+    title: "Płatność Przelewy24",
+    desc: "Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. Szyfrowanie SSL 256-bit.",
   },
   {
     n: "04",
@@ -147,7 +123,7 @@ export default function P24PaymentSteps({
   securityNote,
 }: P24PaymentStepsProps) {
   const accentFn = (idx: number) => idx % 2 === 0
-    ? `linear-gradient(90deg, ${PAYU_BLUE}, #7dd3fc)`
+    ? `linear-gradient(90deg, ${P24_BRAND}, #ff9a80)`
     : `linear-gradient(90deg, ${GREEN}, #86efac)`;
 
   return (
@@ -162,9 +138,9 @@ export default function P24PaymentSteps({
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 48 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-            <div style={{ height: 2, width: 40, background: PAYU_BLUE, borderRadius: 2 }} />
+            <div style={{ height: 2, width: 40, background: P24_BRAND, borderRadius: 2 }} />
             <P24Logo width={120} />
-            <div style={{ height: 2, width: 40, background: PAYU_BLUE, borderRadius: 2 }} />
+            <div style={{ height: 2, width: 40, background: P24_BRAND, borderRadius: 2 }} />
           </div>
           <h2 style={{
             fontSize: "clamp(22px, 4vw, 34px)",
@@ -267,7 +243,7 @@ export default function P24PaymentSteps({
               <div style={{ fontSize: 11, color: GRAY, lineHeight: 1.4 }}>
           <div style={{ fontSize: 11, color: GRAY, lineHeight: 1.4 }}>
                 {securityNote ||
-                  "PayU S.A. — licencjonowany operator płatności w Polsce · Dane karty nie są przechowywane na naszym serwerze · Szyfrowanie SSL 256-bit"}
+                  "PayPro S.A. (Przelewy24) — licencjonowany operator płatności w Polsce · Dane karty nie są przechowywane na naszym serwerze · Szyfrowanie SSL 256-bit"}
               </div>
               </div>
             </div>
@@ -285,7 +261,7 @@ export default function P24PaymentSteps({
           marginTop: 14,
           marginBottom: 0,
         }}>
-          Operator płatności PayU jest nadzorowany przez KNF · Certyfikat PCI DSS Level 1
+          Operator płatności Przelewy24 jest nadzorowany przez KNF · Certyfikat PCI DSS Level 1
         </p>
       </div>
     </section>

@@ -24,6 +24,9 @@ const PLAN_ICONS: Record<string, string> = {
   basic: "&#x1F4D6;",
   standard: "&#x2B50;",
   premium: "&#x1F451;",
+  basic: "📖",
+  standard: "⭐",
+  premium: "👑",
 };
 
 const TRANSLATED_FEATURES: Record<string, Record<string, string>> = {
@@ -112,8 +115,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Wybierz plan Basic, Standard lub Premium i kliknij „Wybierz plan”.",
     p24Step2Title: "Dane klienta",
     p24Step2Desc: "Podaj imię, e-mail i telefon — potrzebne do rejestracji i faktury.",
-    p24Step3Title: "Płatność PayU",
-    p24Step3Desc: "Bezpieczna płatność przez PayU — karta, BLIK, przelew. SSL 256-bit.",
+    p24Step3Title: "Płatność Przelewy24",
+    p24Step3Desc: "Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. SSL 256-bit.",
     p24Step4Title: "Dostęp natychmiastowy",
     p24Step4Desc: "Po płatności doradca skontaktuje się w ciągu 2 godzin. Subskrypcja jest aktywna.",
     faqTitle: "Najczęściej zadawane pytania",
@@ -130,7 +133,7 @@ const T: Record<string, any> = {
     inputPhone: "Telefon (opcjonalnie)",
     agreeRODO: "Zapoznałem/am się z Regulaminem Sklepu i akceptuję jego warunki",
     subscribing: "Przekierowujemy do płatności...",
-    footerDisclaimer: "Bezpieczna płatność przez PayU • Można anulować w dowolnym momencie",
+    footerDisclaimer: "Bezpieczna płatność przez Przelewy24 • Można anulować w dowolnym momencie",
     serverError: "Błąd serwera",
     networkError: "Błąd sieci"
   },
@@ -152,8 +155,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Оберіть тариф Basic, Standard або Premium та натисніть «Обрати тариф».",
     p24Step2Title: "Дані клієнта",
     p24Step2Desc: "Вкажіть ім'я, e-mail та телефон — вони потрібні для реєстрації та виписки фактури.",
-    p24Step3Title: "Оплата PayU",
-    p24Step3Desc: "Безпечна оплата через PayU — карткою, BLIK або переказом. SSL 256-біт.",
+    p24Step3Title: "Оплата Przelewy24",
+    p24Step3Desc: "Безпечна оплата через Przelewy24 — карткою, BLIK або переказом. SSL 256-біт.",
     p24Step4Title: "Миттєвий доступ",
     p24Step4Desc: "Після оплати спеціаліст зв'яжеться з вами протягом 2 годин. Підписка активована.",
     faqTitle: "Часті запитання",
@@ -170,7 +173,7 @@ const T: Record<string, any> = {
     inputPhone: "Телефон (необов'язково)",
     agreeRODO: "Я ознайомився(-лася) з Регламентом магазину та приймаю його умови",
     subscribing: "Перенаправляємо на сторінку оплати...",
-    footerDisclaimer: "Безпечна оплата через PayU • Можна скасувати в будь-який момент",
+    footerDisclaimer: "Безпечна оплата через Przelewy24 • Можна скасувати в будь-який момент",
     serverError: "Помилка сервера",
     networkError: "Помилка мережі"
   },
@@ -192,8 +195,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Выберите тариф Basic, Standard или Premium и нажмите «Выбрать тариф».",
     p24Step2Title: "Данные клиента",
     p24Step2Desc: "Укажите имя, e-mail и телефон — это нужно для регистрации и выставления счета.",
-    p24Step3Title: "Оплата PayU",
-    p24Step3Desc: "Безопасный платеж через PayU — карта, BLIK, перевод. SSL 256-бит.",
+    p24Step3Title: "Оплата Przelewy24",
+    p24Step3Desc: "Безопасный платеж через Przelewy24 — карта, BLIK, перевод. SSL 256-бит.",
     p24Step4Title: "Мгновенный доступ",
     p24Step4Desc: "После оплаты специалист свяжется с вами в течение 2 часов. Подписка активна.",
     faqTitle: "Часто задаваемые вопросы",
@@ -210,7 +213,7 @@ const T: Record<string, any> = {
     inputPhone: "Телефон (необязательно)",
     agreeRODO: "Я ознакомился(-лась) с Регламентом магазина и принимаю его условия",
     subscribing: "Перенаправляем на страницу оплаты...",
-    footerDisclaimer: "Безопасная оплата через PayU • Можно отменить в любой момент",
+    footerDisclaimer: "Безопасная оплата через Przelewy24 • Можно отменить в любой момент",
     serverError: "Ошибка сервера",
     networkError: "Ошибка сети"
   },
@@ -232,8 +235,8 @@ const T: Record<string, any> = {
     p24Step1Desc: "Choose Basic, Standard, or Premium plan and click 'Choose Plan'.",
     p24Step2Title: "Client details",
     p24Step2Desc: "Enter name, email, and phone — required for registration and invoice.",
-    p24Step3Title: "PayU Payment",
-    p24Step3Desc: "Secure payment via PayU — card, BLIK, bank transfer. 256-bit SSL.",
+    p24Step3Title: "Przelewy24 Payment",
+    p24Step3Desc: "Secure payment via Przelewy24 — card, BLIK, bank transfer. 256-bit SSL.",
     p24Step4Title: "Immediate access",
     p24Step4Desc: "A specialist will contact you within 2 hours. Your subscription is active.",
     faqTitle: "Frequently Asked Questions",
@@ -250,7 +253,7 @@ const T: Record<string, any> = {
     inputPhone: "Phone (optional)",
     agreeRODO: "I have read the Store Regulations and accept its terms",
     subscribing: "Redirecting to payment...",
-    footerDisclaimer: "Secure payment via PayU • Cancel at any time",
+    footerDisclaimer: "Secure payment via Przelewy24 • Cancel at any time",
     serverError: "Server error",
     networkError: "Network error"
   }
@@ -320,6 +323,7 @@ function Modal({ plan, onClose, locale }: { plan: Plan; onClose: () => void; loc
 
         <div style={{ textAlign: "center", marginBottom: 20 }}>
           <div style={{ fontSize: 32, marginBottom: 4 }} dangerouslySetInnerHTML={{ __html: PLAN_ICONS[plan.slug] || "&#x1F4B3;" }} />
+          <div style={{ fontSize: 32, marginBottom: 4 }}>{PLAN_ICONS[plan.slug] || "💳"}</div>
           <div style={{ fontSize: 18, fontWeight: 800, color: "#111" }}>{t.modalTitle} {plan.name}</div>
           <div style={{ fontSize: 28, fontWeight: 800, color: BRAND, margin: "6px 0" }}>
             {plan.price_pln} PLN<span style={{ fontSize: 14, fontWeight: 500, color: "#6B7280" }}>{t.modalPriceLabel}</span>
@@ -507,6 +511,7 @@ export default function PlansPage() {
 
                   <div style={{ textAlign: "center", marginBottom: 20 }}>
                     <div style={{ fontSize: 32, marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: PLAN_ICONS[plan.slug] || "&#x1F4B3;" }} />
+                    <div style={{ fontSize: 32, marginBottom: 8 }}>{PLAN_ICONS[plan.slug] || "💳"}</div>
                     <div style={{ fontSize: 20, fontWeight: 700, color: "#111" }}>{plan.name}</div>
                     <div style={{ fontSize: 36, fontWeight: 800, color: BRAND, margin: "8px 0 2px" }}>
                       {plan.price_pln} PLN
@@ -555,9 +560,15 @@ export default function PlansPage() {
               { icon: "&#x1F4C4;", text: t.vatIncluded },
               { icon: "&#x21A9;&#xFE0F;", text: t.cancelAnytime },
               { icon: "&#x1F4DE;", text: t.support7days },
+            {[ // Replaced HTML entities with Unicode characters
+              { icon: "🔒", text: t.secureSSL },
+              { icon: "📄", text: t.vatIncluded },
+              { icon: "↩️", text: t.cancelAnytime },
+              { icon: "📞", text: t.support7days },
             ].map((b, i) => (
               <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#6B7280" }}>
                 <span style={{ fontSize: 20 }} dangerouslySetInnerHTML={{ __html: b.icon }} />
+                <span style={{ fontSize: 20 }}>{b.icon}</span>
                 {b.text}
               </div>
             ))}
