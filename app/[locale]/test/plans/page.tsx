@@ -21,9 +21,6 @@ interface Plan {
 }
 
 const PLAN_ICONS: Record<string, string> = {
-  basic: "&#x1F4D6;",
-  standard: "&#x2B50;",
-  premium: "&#x1F451;",
   basic: "📖",
   standard: "⭐",
   premium: "👑",
@@ -556,11 +553,6 @@ export default function PlansPage() {
             marginTop: 52, padding: "28px 0", borderTop: "1px solid #E5E7EB",
           }}>
             {[
-              { icon: "&#x1F512;", text: t.secureSSL },
-              { icon: "&#x1F4C4;", text: t.vatIncluded },
-              { icon: "&#x21A9;&#xFE0F;", text: t.cancelAnytime },
-              { icon: "&#x1F4DE;", text: t.support7days },
-            {[ // Replaced HTML entities with Unicode characters
               { icon: "🔒", text: t.secureSSL },
               { icon: "📄", text: t.vatIncluded },
               { icon: "↩️", text: t.cancelAnytime },
