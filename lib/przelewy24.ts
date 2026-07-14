@@ -50,6 +50,12 @@ export interface RegisterResult {
   sessionId: string;
 }
 
+/** Повертає true, якщо задані реальні P24_MERCHANT_ID/P24_API_KEY/P24_CRC. */
+export function isP24Configured(): boolean {
+  const merchantId = parseInt(process.env.P24_MERCHANT_ID ?? "", 10);
+  return !!(merchantId && process.env.P24_API_KEY && process.env.P24_CRC);
+}
+
 /**
  * Повертає true, якщо P24 не налаштований або увімкнений мок-режим.
  * Мок: P24_SANDBOX=mock  АБО  P24_MERCHANT_ID не задано.

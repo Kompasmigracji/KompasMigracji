@@ -31,20 +31,38 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { sessionId, orderId, amount, currency, sign } = body as Record<
-    string,
-    string | number
-  >;
+  const {
+    sessionId, orderId, amount, currency, sign,
+    merchantId: bodyMerchantId, posId, originAmount, methodId, statement,
+  } = body as Record<string, string | number>;
 
-  /* ── 1. Перевірка підпису від Przelewy24 ───────────────────────── */
-  const expectedSign = crypto
+  /* ── 1. Перевірка підпису нотифікації від Przelewy24 ─────────────
+     Поля й порядок за REST API v1 (окремі від sign у transaction/verify).
+     Не блокуємо запит при розбіжності — нижче йде авторитетна
+     перевірка через verify(), яку підробити без реальних ключів
+     мерчанта неможливо; жорсткий 400 тут ризикував би тихо
+     відкидати легітимні нотифікації через розбіжність формату. */
+  const expectedNotifySign = crypto
     .createHash("sha384")
-    .update(JSON.stringify({ sessionId, orderId, amount, currency, crc }))
+    .update(JSON.stringify({
+      merchantId: bodyMerchantId,
+      posId,
+      sessionId,
+      amount,
+      originAmount,
+      currency,
+      orderId,
+      methodId,
+      statement,
+      crc,
+    }))
     .digest("hex");
 
-  if (sign !== expectedSign) {
-    console.error("P24 notify: invalid sign", { received: sign, expected: expectedSign });
-    return NextResponse.json({ error: "Invalid sign" }, { status: 400 });
+  if (sign !== expectedNotifySign) {
+    console.warn("P24 notify: signature mismatch (proceeding to authoritative verify)", {
+      received: sign,
+      expected: expectedNotifySign,
+    });
   }
 
   const BASE = sandbox

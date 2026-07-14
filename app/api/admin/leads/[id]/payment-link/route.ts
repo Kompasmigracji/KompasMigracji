@@ -11,6 +11,7 @@ import { randomUUID } from "crypto";
 import { q, one } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { createPayUOrder } from "@/lib/payu";
+import { isP24Configured, registerTransaction } from "@/lib/przelewy24";
 
 export async function POST(
   req: NextRequest,
@@ -57,15 +58,27 @@ export async function POST(
   const sessionId    = randomUUID();
   const appUrl       = (process.env.NEXT_PUBLIC_APP_URL ?? "https://kompas-migracji.vercel.app").replace(/\/$/, "");
 
+  const finalDescription = description?.trim() || `Usługa: ${lead.service ?? "KompasMigracji"}`;
+  const finalEmail       = email?.trim()       || "client@kompas-migracji.pl";
+
   try {
-    const result = await createPayUOrder({
-      sessionId,
-      amount:      amountGroszy,
-      description: description?.trim() || `Usługa: ${lead.service ?? "KompasMigracji"}`,
-      email:       email?.trim()       || "client@kompas-migracji.pl",
-      continueUrl: `${appUrl}/payment/success`,
-      notifyUrl:   `${appUrl}/api/payu/notify`,
-    });
+    const result = isP24Configured()
+      ? await registerTransaction({
+          sessionId,
+          amount:      amountGroszy,
+          description: finalDescription,
+          email:       finalEmail,
+          urlReturn:   `${appUrl}/payment/success`,
+          urlStatus:   `${appUrl}/api/payment-notify`,
+        }).then(r => ({ redirectUrl: r.paymentUrl, orderId: r.sessionId }))
+      : await createPayUOrder({
+          sessionId,
+          amount:      amountGroszy,
+          description: finalDescription,
+          email:       finalEmail,
+          continueUrl: `${appUrl}/payment/success`,
+          notifyUrl:   `${appUrl}/api/payu/notify`,
+        });
 
     /* ── Зберегти session_id у лідові ───────────────────────────── */
     await q(

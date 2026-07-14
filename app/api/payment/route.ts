@@ -66,7 +66,37 @@ export async function POST(req: NextRequest) {
   const sessionId  = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
 
-  /* ── 1. Try PayU ─────────────────────────────────────────────────── */
+  /* ── 1. Try Przelewy24 (primary — matches on-site branding) ───────── */
+  try {
+    const { isP24Configured, registerTransaction } = await import('@/lib/przelewy24');
+    if (isP24Configured()) {
+      await createLeadForPayment({
+        sessionId,
+        description: String(description),
+        email:       String(email),
+        source:      leadSource,
+        firstName:   firstName ? String(firstName) : undefined,
+        lastName:    lastName  ? String(lastName)  : undefined,
+        phone:       phone     ? String(phone)     : undefined,
+      });
+
+      const result = await registerTransaction({
+        sessionId,
+        amount:      Number(amount),
+        description: String(description),
+        email:       String(email),
+        urlReturn:   `${siteUrl}/payment/success`,
+        urlStatus:   `${siteUrl}/api/payment-notify`,
+        language:    lang ? String(lang) : 'pl',
+      });
+
+      return NextResponse.json({ redirectUrl: result.paymentUrl });
+    }
+  } catch (err) {
+    console.error('P24 handler error, trying PayU:', err);
+  }
+
+  /* ── 2. Try PayU ─────────────────────────────────────────────────── */
   try {
     const { isPayUConfigured, createPayUOrder } = await import('@/lib/payu');
     if (isPayUConfigured()) {
@@ -99,7 +129,7 @@ export async function POST(req: NextRequest) {
     console.error('PayU handler error, trying Stripe:', err);
   }
 
-  /* ── 2. Try Stripe Checkout ──────────────────────────────────────── */
+  /* ── 3. Try Stripe Checkout ──────────────────────────────────────── */
   try {
     const { stripe } = await import('@/lib/stripe');
     if (stripe) {
@@ -137,7 +167,7 @@ export async function POST(req: NextRequest) {
     console.error('Stripe handler error, falling back to mock:', err);
   }
 
-  /* ── 3. Mock mode ────────────────────────────────────────────────── */
+  /* ── 4. Mock mode ────────────────────────────────────────────────── */
   const mockSessionId = `km-${randomUUID()}`;
   let appUrl = siteUrl;
   if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
