@@ -78,7 +78,7 @@ Shared admin UI primitives (`StatCard`, `ProgressBar`, `DataTable`, `EmptyState`
 
 ### Payments & messaging integrations
 
-Three payment providers, each with its own client lib and webhook: Przelewy24 (`lib/przelewy24.ts`, SHA-384 signed, `/api/payment`, `/api/payment-notify`, `/api/payment/p24-callback`), PayU (`lib/payu.ts`, `/api/payu/notify`), Stripe (`lib/stripe.ts`, `/api/stripe/webhook`, `/api/stripe/checkout-architecture`). Messaging channels each have their own lib + webhook route under `app/api/bot/*`: WhatsApp (`lib/whatsapp.ts`), Telegram (`lib/telegram.ts`), plus Viber and Facebook webhooks. Know which provider a given route/lib pair belongs to before touching payment or webhook code — they are not unified behind a common interface.
+Three payment providers, each with its own client lib and webhook: Przelewy24 (`lib/przelewy24.ts`, SHA-384 signed, primary provider tried first in `/api/payment`, IPN webhook at `/api/payment-notify`), PayU (`lib/payu.ts`, `/api/payu/notify`), Stripe (`lib/stripe.ts`, `/api/stripe/webhook`, `/api/stripe/checkout-architecture`). `/api/payment` tries P24 → PayU → Stripe → an internal mock (`/payment/mock/[sessionId]`) in that order, using whichever is configured via env vars. Messaging channels each have their own lib + webhook route under `app/api/bot/*`: WhatsApp (`lib/whatsapp.ts`), Telegram (`lib/telegram.ts`), plus Viber and Facebook webhooks. Know which provider a given route/lib pair belongs to before touching payment or webhook code — they are not unified behind a common interface.
 
 ### Theming
 
