@@ -120,36 +120,8 @@ const DEFAULT_STEPS: Step[] = [
 export default function P24PaymentSteps({
   title = "Jak działa proces płatności",
   steps = DEFAULT_STEPS,
-  steps: stepsProp,
   securityNote,
 }: P24PaymentStepsProps) {
-  const DEFAULT_STEPS: Step[] = [
-    {
-      n: "01",
-      icon: <CartIcon />,
-      title: "Wybór usługi",
-      desc: "Znajdź usługę w tabeli i kliknij «Kup». Zobaczysz dokładną cenę przed płatnością.",
-    },
-    {
-      n: "02",
-      icon: <UserIcon />,
-      title: "Dane klienta",
-      desc: "Wypełnij imię, nazwisko, telefon i email — potrzebne do faktury i kontaktu.",
-    },
-    {
-      n: "03",
-      icon: <CardIcon />,
-      title: "Płatność Przelewy24",
-      desc: "Bezpieczna płatność przez Przelewy24 — karta, BLIK, przelew. Szyfrowanie SSL 256-bit.",
-    },
-    {
-      n: "04",
-      icon: <CheckCircleIcon />,
-      title: "Potwierdzenie",
-      desc: "Otrzymujesz paragon email, a specjalista skontaktuje się w ciągu 2 godzin.",
-    },
-  ];
-  const steps = stepsProp ?? DEFAULT_STEPS;
   const accentFn = (idx: number) => idx % 2 === 0
     ? `linear-gradient(90deg, ${P24_BRAND}, #ff9a80)`
     : `linear-gradient(90deg, ${GREEN}, #86efac)`;
