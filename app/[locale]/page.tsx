@@ -7,7 +7,6 @@ import Hero from '@/components/Hero';
 import ScrollProgress from '@/components/ScrollProgress';
 import StarField from '@/components/StarField';
 import CosmicSpiral from '@/components/CosmicSpiral';
-import ProductHuntBanner from '@/components/ProductHuntBanner';
 import VideosShowcase from '@/components/VideosShowcase';
 
 // Components below the fold (lazy loaded)
@@ -38,7 +37,6 @@ export default function HomePage() {
 
   return (
     <>
-      <ProductHuntBanner />
       <ScrollProgress />
       <ReturnVisitor />
       <div className="relative">
