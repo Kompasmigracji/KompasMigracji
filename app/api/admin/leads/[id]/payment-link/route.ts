@@ -56,7 +56,7 @@ export async function POST(
   /* ── Параметри транзакції ───────────────────────────────────────── */
   const amountGroszy = Math.round(amount_pln * 100); // 1 PLN = 100 groszy
   const sessionId    = randomUUID();
-  const appUrl       = (process.env.NEXT_PUBLIC_APP_URL ?? "https://kompas-migracji.vercel.app").replace(/\/$/, "");
+  const appUrl       = (process.env.NEXT_PUBLIC_APP_URL ?? "https://www.kompasmigracji.com").replace(/\/$/, "");
 
   const finalDescription = description?.trim() || `Usługa: ${lead.service ?? "KompasMigracji"}`;
   const finalEmail       = email?.trim()       || "client@kompas-migracji.pl";
@@ -68,7 +68,7 @@ export async function POST(
           amount:      amountGroszy,
           description: finalDescription,
           email:       finalEmail,
-          urlReturn:   `${appUrl}/payment/success`,
+          urlReturn:   `${appUrl}/payment/success?session=${sessionId}`,
           urlStatus:   `${appUrl}/api/payment-notify`,
         }).then(r => ({ redirectUrl: r.paymentUrl, orderId: r.sessionId }))
       : await createPayUOrder({
@@ -76,7 +76,7 @@ export async function POST(
           amount:      amountGroszy,
           description: finalDescription,
           email:       finalEmail,
-          continueUrl: `${appUrl}/payment/success`,
+          continueUrl: `${appUrl}/payment/success?session=${sessionId}`,
           notifyUrl:   `${appUrl}/api/payu/notify`,
         });
 

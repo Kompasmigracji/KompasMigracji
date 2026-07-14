@@ -50,6 +50,18 @@ export interface RegisterResult {
   sessionId: string;
 }
 
+const P24_HOSTED_LANGUAGES = new Set(["pl", "en", "de"]);
+
+/**
+ * P24's hosted checkout page only ships pl/en/de UI chrome. The site itself
+ * has 5 locales (uk/pl/en/ru/rom); any locale P24 doesn't support falls back
+ * to pl rather than being forwarded as-is and rejected by the register call.
+ */
+export function toP24Language(lang?: string): string {
+  const code = (lang ?? "").toLowerCase();
+  return P24_HOSTED_LANGUAGES.has(code) ? code : "pl";
+}
+
 /** Повертає true, якщо задані реальні P24_MERCHANT_ID/P24_API_KEY/P24_CRC. */
 export function isP24Configured(): boolean {
   const merchantId = parseInt(process.env.P24_MERCHANT_ID ?? "", 10);

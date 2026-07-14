@@ -64,11 +64,11 @@ export async function POST(req: NextRequest) {
 
   const leadSource = String(source || 'pricing');
   const sessionId  = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://kompasmigracji.com').replace(/\/$/, '');
+  const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://www.kompasmigracji.com').replace(/\/$/, '');
 
   /* ── 1. Try Przelewy24 (primary — matches on-site branding) ───────── */
   try {
-    const { isP24Configured, registerTransaction } = await import('@/lib/przelewy24');
+    const { isP24Configured, registerTransaction, toP24Language } = await import('@/lib/przelewy24');
     if (isP24Configured()) {
       await createLeadForPayment({
         sessionId,
@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
         amount:      Number(amount),
         description: String(description),
         email:       String(email),
-        urlReturn:   `${siteUrl}/payment/success`,
+        urlReturn:   `${siteUrl}/payment/success?session=${sessionId}`,
         urlStatus:   `${siteUrl}/api/payment-notify`,
-        language:    lang ? String(lang) : 'pl',
+        language:    toP24Language(lang ? String(lang) : undefined),
       });
 
       return NextResponse.json({ redirectUrl: result.paymentUrl });
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
         phone:       phone     ? String(phone)     : undefined,
         lang:        lang      ? String(lang)      : 'pl',
         notifyUrl:   `${siteUrl}/api/payu/notify`,
-        continueUrl: `${siteUrl}/payment/success`,
+        continueUrl: `${siteUrl}/payment/success?session=${sessionId}`,
       });
 
       return NextResponse.json({ redirectUrl: result.redirectUrl });
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest) {
           quantity: 1,
         }],
         mode:             'payment',
-        success_url:      `${siteUrl}/payment/success`,
+        success_url:      `${siteUrl}/payment/success?session=${sessionId}`,
         cancel_url:       `${siteUrl}/test/pricing`,
         customer_email:   String(email),
         client_reference_id: sessionId,
