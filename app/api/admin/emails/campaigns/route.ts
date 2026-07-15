@@ -27,23 +27,6 @@ export async function POST(request: Request) {
     }
 
     const emailList = targetEmails.split(',').map((e: string) => e.trim()).filter((e: string) => e);
-    
-    // Ensure table exists (for development)
-    try {
-      await q(`
-        CREATE TABLE IF NOT EXISTS email_campaigns (
-          id SERIAL PRIMARY KEY,
-          name TEXT NOT NULL,
-          subject TEXT NOT NULL,
-          body TEXT NOT NULL,
-          target_count INT NOT NULL,
-          status TEXT NOT NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
-    } catch (e) {
-      console.log('Error creating email_campaigns table:', e);
-    }
 
     // Insert campaign
     await q(`
