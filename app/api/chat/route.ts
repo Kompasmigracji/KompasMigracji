@@ -63,25 +63,13 @@ export async function POST(req: Request) {
           }),
           // @ts-expect-error ai sdk execute types
           execute: async ({ caseId }: { caseId: string }) => {
-            if (!supabase) return { message: 'Сервіс перевірки тимчасово недоступний.' };
-            const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(caseId);
-            let query = supabase.from('kompas_legal_cases_v2').select('*');
-            if (isUuid) {
-              query = (query as any).eq('id', caseId);
-            } else {
-              query = (query as any).ilike('case_type', `%${caseId}%`).limit(1);
-            }
-            const { data, error } = await (query as any).single();
-            if (error || !data) {
-              return { message: 'Справу не знайдено. Перевірте правильність введеного ID.' };
-            }
+            // Case data is per-client and requires being logged into the
+            // personal cabinet — this public, unauthenticated chatbot
+            // cannot look up (or fuzzy-match) anyone's case by type/name,
+            // that previously let any visitor pull up another client's
+            // case notes. Direct them to the member portal instead.
             return {
-              status: data.status,
-              case_type: data.case_type,
-              current_stage: data.current_stage,
-              deadline: data.deadline,
-              notes: data.notes,
-              message: 'Дані по справі отримано.',
+              message: 'Щоб перевірити статус вашої справи, увійдіть в особистий кабінет на сайті — там ви побачите актуальний статус усіх своїх справ.',
             };
           },
         }),
