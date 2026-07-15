@@ -20,7 +20,8 @@ const NAV_DATA = [
         items: [
           { label: "Дашборд", href: "/admin/crm/dashboard" },
           { label: "Ліди", href: "/admin/crm/leads" },
-          { label: "Воронка (Kanban)", href: "/admin/crm/funnels" },
+          { label: "Воронка лідів (Kanban)", href: "/admin/crm/funnels" },
+          { label: "Воронка угод (Deals)", href: "/admin/crm/deals" },
           { label: "Покупці", href: "/admin/crm/buyers" },
           { label: "Автоматизація (E2E)", href: "/admin/crm/automation-test" },
           { label: "Списки заказов", href: "/admin/crm/order-lists" },
@@ -77,6 +78,19 @@ const NAV_DATA = [
           { label: "Дашборд", href: "/admin/crm/dashboard" },
           { label: "Фінансові Звіти", href: "/admin/crm/reports" },
           { label: "Эффективность", href: "/admin/crm/efficiency" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "legacy",
+    icon: "archive",
+    label: "Старий адмін",
+    groups: [
+      {
+        title: "",
+        items: [
+          { label: "Старий адмін (усі модулі) ↗", href: "/admin" },
         ]
       }
     ]
