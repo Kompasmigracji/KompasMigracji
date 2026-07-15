@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
-import { currentUser } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(req) {
   try {
-    // Basic auth check
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+    const { user } = auth;
 
     const timestamp = new Date().toISOString();
 

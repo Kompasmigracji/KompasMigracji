@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const rows = await q(`
       SELECT * FROM crm_calls
       ORDER BY created_at DESC
@@ -20,6 +24,9 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const body = await req.json();
     const { from_number, duration, time } = body;
     

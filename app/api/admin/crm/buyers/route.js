@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const rows = await q(`
       SELECT b.id, b.full_name, b.phone, b.email, b.created_at, s.name as source_name 
       FROM buyers b
@@ -29,6 +33,9 @@ export async function GET() {
 
 export async function POST(req) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const { full_name, email, phone } = await req.json();
 
     if (!full_name || (!email && !phone)) {

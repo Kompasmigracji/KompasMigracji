@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET() {
+  const auth = await requireAuth(["admin", "moderator"]);
+  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
   const supabase = getSupabase();
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase admin client not configured' }, { status: 500 });

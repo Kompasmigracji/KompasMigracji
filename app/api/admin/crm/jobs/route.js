@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(request) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const jobs = await q('SELECT * FROM kompas_jobs_v2 ORDER BY created_at DESC');
     
     // Fetch application counts for each job
@@ -29,6 +33,9 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const body = await request.json();
     const { title, company_name, location, salary_range, employment_type, description, requirements, ai_match_reasoning, ai_match_score, is_active } = body;
 
@@ -55,6 +62,9 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 

@@ -1,12 +1,12 @@
 export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
-import { currentUser } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET(req) {
   try {
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     let leads = [];
     try {
@@ -36,8 +36,9 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const user = await currentUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+    const { user } = auth;
 
     const body = await req.json();
     const { name, contact, source = 'site', message, status = 'new' } = body;

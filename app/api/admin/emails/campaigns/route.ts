@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(request: Request) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const campaigns = await q('SELECT * FROM email_campaigns ORDER BY created_at DESC');
     return NextResponse.json({ campaigns });
   } catch (error: any) {
@@ -13,6 +17,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const auth = await requireAuth(["admin", "moderator"]);
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+
     const { name, subject, body, targetEmails } = await request.json();
 
     if (!name || !subject || !body || !targetEmails) {
