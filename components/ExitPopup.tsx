@@ -121,7 +121,7 @@ export default function ExitPopup() {
                     />
                     <input
                       type="text"
-                      placeholder={t('email_ph')}
+                      placeholder={t('email')}
                       required
                       value={email}
                       onChange={e => setEmail(e.target.value)}
@@ -133,7 +133,7 @@ export default function ExitPopup() {
                       className="w-full mt-2 relative overflow-hidden group bg-blue-600 rounded-xl px-4 py-3.5 text-white font-bold text-sm transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(37,99,235,0.3)] disabled:opacity-50 disabled:hover:scale-100"
                     >
                       <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
-                      <span className="relative z-10">{loading ? t('btn_loading') : t('btn')}</span>
+                      <span className="relative z-10">{loading ? t('sending') : t('submit')}</span>
                     </button>
                     
                     <p className="text-center text-[11px] text-gray-500 mt-2">
@@ -150,7 +150,7 @@ export default function ExitPopup() {
                     </svg>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('success_title')}</h3>
-                  <p className="text-gray-500 text-sm">{t('success_desc')}</p>
+                  <p className="text-gray-500 text-sm">{t('success_subtitle')}</p>
                   <button
                     onClick={() => setOpen(false)}
                     className="mt-8 px-6 py-2.5 rounded-full bg-white/80 text-gray-900 font-medium hover:bg-white/20 transition-colors text-sm"
