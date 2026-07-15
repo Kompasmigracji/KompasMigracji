@@ -90,7 +90,7 @@ Dark/light mode via `lib/ThemeContext.tsx`, persisted to `localStorage` (`theme`
 
 ## Repo hygiene notes
 
-- The repo root has many one-off debugging/migration scripts (`check_schema*.js`, `seed_*.js`, `test_*.js`/`.mjs`, `fix_translations*.mjs`, `update_*.js`, etc.) that were run manually against a live DB during development. They are not part of the build, the test suite, or `package.json` scripts — treat them as disposable historical artifacts, not conventions to follow for new work.
+- `scripts/_archive/` holds one-off debugging/migration scripts (`check_schema*.js`, `seed_*.js`, `test_*.js`/`.mjs`, `fix_translations*.mjs`, `update_*.js`, etc.) that were run manually against a live DB during development. They are not part of the build, the test suite, or `package.json` scripts — treat them as disposable historical artifacts, not conventions to follow for new work.
 - `.agents/` contains handoff/progress notes from previous autonomous multi-agent development sessions (per-agent `BRIEFING.md`/`handoff.md`/`progress.md`). It's a session log, not application code or documentation to maintain.
 - `docs/agent-learnings.md` is an append-only log some automation writes to after audits — don't hand-edit its history, only append if you're performing that same kind of audit.
 - `PROJECT.md` and `ORIGINAL_REQUEST.md` document the origin of the 120-module admin panel buildout; `README.md` is partially stale (e.g. lists only 4 locales, omits Stripe/PayU/LifeOS/Orakul/next-auth) — prefer this file and the actual source over `README.md` for architectural claims.
