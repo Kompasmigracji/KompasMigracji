@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import WhatsAppFloat from "@/components/WhatsAppFloat";
 import P24PaymentSteps from "@/components/P24PaymentSteps";
 import { useLocale } from "next-intl";
 
@@ -595,7 +594,6 @@ export default function PlansPage() {
       </main>
 
       <Footer />
-      <WhatsAppFloat />
       {selected && <Modal plan={selected} onClose={() => setSelected(null)} locale={locale} />}
     </>
   );

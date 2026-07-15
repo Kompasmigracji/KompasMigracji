@@ -26,7 +26,12 @@ export default function CrmDemoPage() {
   const [mounted, setMounted] = useState(false);
 
   React.useEffect(() => {
-    setMounted(true);
+    // Delay mounting the charts by one frame so the grid layout has
+    // already been painted before recharts' ResponsiveContainer takes
+    // its first measurement — otherwise it can measure a 0-size
+    // container on the very first pass and log a width(-1)/height(-1)
+    // warning even though the chart ends up rendering correctly.
+    const raf = requestAnimationFrame(() => setMounted(true));
     async function loadData() {
       try {
         const res = await fetch('/api/admin/crm/dashboard');
@@ -40,6 +45,7 @@ export default function CrmDemoPage() {
       }
     }
     loadData();
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   return (
