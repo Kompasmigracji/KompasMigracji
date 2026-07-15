@@ -8,16 +8,15 @@ export async function GET() {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const rows = await q(`
-      SELECT * FROM crm_calls
-      ORDER BY created_at DESC
+      SELECT c.*, l.name AS lead_name
+      FROM crm_calls c
+      LEFT JOIN leads l ON l.id = c.lead_id
+      ORDER BY c.created_at DESC
+      LIMIT 200
     `);
     return NextResponse.json({ data: rows });
   } catch (error) {
     console.error('Error fetching calls:', error);
-    if (error.code === '42P01') {
-      // Table does not exist
-      return NextResponse.json({ data: [] });
-    }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -28,22 +27,20 @@ export async function POST(req) {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const body = await req.json();
-    const { from_number, duration, time } = body;
-    
-    // Auto-create table if missing (for easy setup)
-    await q(`
-      CREATE TABLE IF NOT EXISTS crm_calls (
-        id SERIAL PRIMARY KEY,
-        from_number TEXT,
-        duration TEXT,
-        time TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `);
+    const { lead_id, direction, phone, duration_seconds, outcome, notes } = body;
 
     const result = await one(
-      `INSERT INTO crm_calls (from_number, duration, time) VALUES ($1, $2, $3) RETURNING *`,
-      [from_number || '', duration || '', time || '']
+      `INSERT INTO crm_calls (lead_id, direction, phone, duration_seconds, outcome, notes, manager_name)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [
+        lead_id || null,
+        direction === 'incoming' ? 'incoming' : 'outgoing',
+        phone || null,
+        Number(duration_seconds) || 0,
+        outcome || 'answered',
+        notes || null,
+        auth.user.name || auth.user.email || 'Менеджер'
+      ]
     );
 
     return NextResponse.json({ ok: true, data: result });

@@ -2,22 +2,57 @@
 import React, { useEffect, useState } from "react";
 import { Icon } from "@/components/admin/ui";
 import SpotlightCard from "@/components/SpotlightCard";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProductsDemoPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ name: "", category: "", price: "", qty_in_stock: "" });
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/admin/crm/products');
+      const json = await res.json();
+      setProducts(json.data || []);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/admin/crm/products');
-        const json = await res.json();
-        setProducts(json.data || []);
-      } catch (e) { console.error(e); }
-      setLoading(false);
-    };
     fetchData();
   }, []);
+
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/crm/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        setIsModalOpen(false);
+        setForm({ name: "", category: "", price: "", qty_in_stock: "" });
+        fetchData();
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Помилка');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setSaving(false);
+  };
+
+  const visibleProducts = products.filter(p => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (p.name || "").toLowerCase().includes(q) || (p.category || "").toLowerCase().includes(q);
+  });
 
   return (
     <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
@@ -34,20 +69,19 @@ export default function ProductsDemoPage() {
         {/* Search Bar */}
         <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
           <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Быстрый поиск" 
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Быстрый поиск"
             className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-600 dark:placeholder:text-gray-500"
           />
         </div>
 
-        {/* Category Dropdown */}
-        <div className="flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 min-w-[200px] cursor-pointer hover:border-black/20 dark:hover:border-white/20 transition-colors">
-          <span className="text-gray-500 dark:text-gray-400 text-sm flex-1">Выберите категорию...</span>
-          <Icon name="chevron-down" size={16} className="text-gray-500 dark:text-gray-400" />
-        </div>
-
-        <button className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+        >
           <Icon name="plus" size={16} />
           Добавить товар
         </button>
@@ -78,10 +112,10 @@ export default function ProductsDemoPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="8" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка товаров из базы...</td></tr>
-              ) : products.length === 0 ? (
+              ) : visibleProducts.length === 0 ? (
                 <tr><td colSpan="8" className="p-8 text-center text-gray-500 dark:text-gray-400">Нет товаров</td></tr>
-              ) : products.map((product, index) => (
-                <tr key={product.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== products.length - 1 ? 'border-b' : ''}`}>
+              ) : visibleProducts.map((product, index) => (
+                <tr key={product.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== visibleProducts.length - 1 ? 'border-b' : ''}`}>
                   <td className="px-6 py-4"><input type="checkbox" className="accent-blue-500 cursor-pointer" /></td>
                   <td className="px-4 py-4 text-center">
                     <div className="inline-flex p-1.5 border border-black/10 dark:border-white/10 rounded-md bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400">
@@ -123,7 +157,7 @@ export default function ProductsDemoPage() {
               <button className="px-3 py-1.5 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-black/10 dark:border-white/10 rounded-md cursor-pointer transition-colors">&gt;</button>
             </div>
             <div className="flex items-center gap-6">
-              <span>Показано 1 - {products.length} из {products.length} записей</span>
+              <span>Показано 1 - {visibleProducts.length} из {visibleProducts.length} записей</span>
               <div className="flex items-center gap-2">
                 <select className="bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md outline-none">
                   <option>15</option>
@@ -136,6 +170,59 @@ export default function ProductsDemoPage() {
           </div>
         </SpotlightCard>
       </div>
+
+      {/* Add Product Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 p-8 rounded-2xl w-[420px] shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 blur-[50px] rounded-full pointer-events-none" />
+
+              <h3 className="m-0 mb-6 text-gray-900 dark:text-white font-bold text-xl relative z-10">Новий товар / послуга</h3>
+
+              <form onSubmit={handleAddProduct} className="flex flex-col gap-4 relative z-10">
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Назва *</label>
+                  <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="напр. Карта побуту" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Категорія</label>
+                  <input value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} placeholder="напр. Легалізація" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Ціна (PLN)</label>
+                    <input required type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="0.00" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Кількість</label>
+                    <input type="number" value={form.qty_in_stock} onChange={e => setForm({ ...form, qty_in_stock: e.target.value })} placeholder="0" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" />
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-4">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 font-semibold cursor-pointer transition-colors">
+                    Відмінити
+                  </button>
+                  <button type="submit" disabled={saving} className={`px-5 py-2.5 rounded-xl border-none bg-blue-500 text-white font-bold cursor-pointer transition-all ${saving ? 'opacity-70' : 'hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)]'}`}>
+                    {saving ? 'Збереження...' : 'Зберегти'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

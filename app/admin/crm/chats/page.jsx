@@ -12,29 +12,77 @@ export default function ChatsDemoPage() {
   const [messages, setMessages] = useState([]);
   const [loadingChats, setLoadingChats] = useState(true);
   const [newMessage, setNewMessage] = useState("");
+  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
+  const [newChatName, setNewChatName] = useState("");
+  const [savingBuyer, setSavingBuyer] = useState(false);
+  const [buyerSaved, setBuyerSaved] = useState(false);
   const messagesEndRef = useRef(null);
+
+  const handleCreateChat = async (e) => {
+    e.preventDefault();
+    if (!newChatName.trim() || !supabase) return;
+    const { data, error } = await supabase.from('custom_chats').insert([{
+      name: newChatName.trim(),
+      source: 'manual',
+      source_icon: 'user',
+      source_color: '#6b7280',
+      last_message: 'Новий діалог створено вручну',
+      time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
+      unread: 0,
+      status: 'open',
+    }]).select().single();
+    if (!error && data) {
+      setChats(prev => [data, ...prev]);
+      setActiveChat(data);
+      setNewChatName("");
+      setIsNewChatOpen(false);
+    }
+  };
+
+  const handleCloseChat = async () => {
+    if (!activeChat || !supabase) return;
+    const newStatus = activeChat.status === 'closed' ? 'open' : 'closed';
+    await supabase.from('custom_chats').update({ status: newStatus }).eq('id', activeChat.id);
+    setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, status: newStatus } : c));
+    setActiveChat(prev => ({ ...prev, status: newStatus }));
+  };
+
+  const handleSaveBuyer = async () => {
+    if (!activeChat) return;
+    const phone = window.prompt(`Телефон для "${activeChat.name}" (обов'язково, бо в чаті контакти не зберігаються):`, "+48");
+    if (!phone || !phone.trim()) return;
+    setSavingBuyer(true);
+    try {
+      const res = await fetch('/api/admin/crm/buyers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name: activeChat.name, phone: phone.trim() })
+      });
+      if (res.ok) {
+        setBuyerSaved(true);
+        setTimeout(() => setBuyerSaved(false), 2500);
+      } else {
+        const err = await res.json();
+        alert(err.error || 'Помилка збереження');
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setSavingBuyer(false);
+  };
 
   // 1. Fetch Chats
   useEffect(() => {
-    const fetchChats = async () => {
+    (async () => {
+      if (!supabase) { setLoadingChats(false); return; }
       setLoadingChats(true);
-      try {
-        if (supabase) {
-          const { data, error } = await supabase.from('custom_chats').select('*').order('updated_at', { ascending: false });
-          if (!error && data) {
-            setChats(data);
-            if (data.length > 0 && !activeChat) {
-              setActiveChat(data[0]);
-            }
-          }
-        }
-      } catch (e) {
-        console.error(e);
+      const { data, error } = await supabase.from('custom_chats').select('*').order('created_at', { ascending: false });
+      if (!error && data) {
+        setChats(data);
+        if (data.length > 0) setActiveChat(data[0]);
       }
       setLoadingChats(false);
-    };
-
-    fetchChats();
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -72,7 +120,7 @@ export default function ChatsDemoPage() {
     }, 100);
 
     // Update Chat last_message
-    await supabase.from('custom_chats').update({ last_message: msgText, time: timeStr, updated_at: new Date() }).eq('id', activeChat.id);
+    await supabase.from('custom_chats').update({ last_message: msgText, time: timeStr }).eq('id', activeChat.id);
 
     // Insert message
     await supabase.from('custom_messages').insert([{
@@ -94,8 +142,8 @@ export default function ChatsDemoPage() {
           <div className="flex justify-between items-center">
             <h2 className="m-0 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Чаты</h2>
             <div className="flex gap-2">
-              <button className="p-2 hover:bg-white/80 dark:hover:bg-white/10 rounded-lg text-gray-500 dark:text-gray-400 transition-colors">
-                <Icon name="plus-circle" size={18} />
+              <button onClick={() => setIsNewChatOpen(true)} title="Новий діалог" className="p-2 hover:bg-white/80 dark:hover:bg-white/10 rounded-lg text-gray-500 dark:text-gray-400 transition-colors">
+                <Icon name="plus" size={18} />
               </button>
               <button className="p-2 hover:bg-white/80 dark:hover:bg-white/10 rounded-lg text-gray-500 dark:text-gray-400 transition-colors">
                 <Icon name="filter" size={18} />
@@ -202,8 +250,8 @@ export default function ChatsDemoPage() {
                 <button className="w-10 h-10 rounded-xl bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
                   <Icon name="paperclip" size={18} />
                 </button>
-                <button className="px-4 h-10 rounded-xl bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
-                  <Icon name="x" size={16} /> Закрыть диалог
+                <button onClick={handleCloseChat} className="px-4 h-10 rounded-xl bg-white/60 dark:bg-white/10 border border-black/10 dark:border-white/10 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/80 dark:hover:bg-white/20 transition-colors">
+                  <Icon name={activeChat.status === 'closed' ? 'refresh-cw' : 'x'} size={16} /> {activeChat.status === 'closed' ? 'Відкрити діалог' : 'Закрити діалог'}
                 </button>
               </div>
             </div>
@@ -312,18 +360,17 @@ export default function ChatsDemoPage() {
 
               <div className="w-full flex flex-col gap-4 text-left">
                 <div className="bg-black/5 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/5">
-                  <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Телефон</div>
-                  <div className="text-sm font-medium text-gray-800 dark:text-gray-200">+48 123 456 789</div>
+                  <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Джерело</div>
+                  <div className="text-sm font-medium text-gray-800 dark:text-gray-200 capitalize">{activeChat.source || "Вручну"}</div>
                 </div>
-                <div className="bg-black/5 dark:bg-black/20 p-4 rounded-xl border border-black/5 dark:border-white/5 flex flex-col items-start">
-                  <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Email</div>
-                  <button className="text-blue-400 text-sm font-semibold hover:text-blue-300 transition-colors flex items-center gap-1">
-                    <Icon name="plus" size={14} /> Добавить email
-                  </button>
-                </div>
-                
-                <button className="w-full bg-white/80 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border border-black/10 dark:border-white/10 text-gray-900 dark:text-white py-3 rounded-xl text-sm font-bold transition-colors mt-2 shadow-sm">
-                  Сохранить покупателя
+
+                <button
+                  onClick={handleSaveBuyer}
+                  disabled={savingBuyer}
+                  className={`w-full border text-sm font-bold py-3 rounded-xl transition-colors mt-2 shadow-sm flex items-center justify-center gap-2 ${buyerSaved ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' : 'bg-white/80 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border-black/10 dark:border-white/10 text-gray-900 dark:text-white'}`}
+                >
+                  <Icon name={buyerSaved ? "check" : "user-check"} size={14} />
+                  {buyerSaved ? 'Збережено!' : savingBuyer ? 'Збереження...' : 'Зберегти як покупця'}
                 </button>
               </div>
             </div>
@@ -342,28 +389,14 @@ export default function ChatsDemoPage() {
 
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h4 className="m-0 text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Активные воронки</h4>
-                <button className="w-6 h-6 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-blue-500 dark:text-blue-400 hover:bg-blue-500/20 transition-colors">
+                <h4 className="m-0 text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Пов'язані угоди</h4>
+                <a href="/admin/crm/deals" className="w-6 h-6 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-blue-500 dark:text-blue-400 hover:bg-blue-500/20 transition-colors">
                   <Icon name="plus" size={14} />
-                </button>
+                </a>
               </div>
-              
-              {/* Active Funnel Card */}
-              <SpotlightCard className="bg-black/5 dark:bg-black/40 border border-black/10 dark:border-white/10 rounded-xl p-4 hover:border-black/20 dark:hover:border-white/20 transition-colors cursor-pointer">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-amber-500/10 dark:bg-amber-500/20 text-amber-500 dark:text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">В работе</span>
-                  </div>
-                  <Icon name="more-horizontal" size={16} className="text-gray-500 hover:text-gray-700 dark:hover:text-white transition-colors" />
-                </div>
-                <div className="font-bold text-sm text-gray-900 dark:text-white mb-2">Чат з {activeChat.name}</div>
-                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-3">
-                  <Icon name="clock" size={12} /> Сегодня 16:21
-                </div>
-                <div className="text-sm font-bold text-blue-400">
-                  500,00 PLN
-                </div>
-              </SpotlightCard>
+              <div className="bg-black/5 dark:bg-black/20 border border-black/10 dark:border-white/10 border-dashed rounded-xl p-4 text-center">
+                <p className="m-0 text-xs text-gray-500 dark:text-gray-400 font-medium italic">Немає пов'язаних угод</p>
+              </div>
             </div>
             
           </motion.div>
@@ -371,6 +404,38 @@ export default function ChatsDemoPage() {
           <div className="p-8 text-gray-500 dark:text-gray-400 text-sm font-medium text-center">Нет активного чата</div>
         )}
       </div>
+
+      {/* New Chat Modal */}
+      <AnimatePresence>
+        {isNewChatOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 p-8 rounded-2xl w-[380px] shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/20 blur-[50px] rounded-full pointer-events-none" />
+              <h3 className="m-0 mb-6 text-gray-900 dark:text-white font-bold text-xl relative z-10">Новий діалог</h3>
+              <form onSubmit={handleCreateChat} className="flex flex-col gap-4 relative z-10">
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Ім'я контакту</label>
+                  <input required autoFocus value={newChatName} onChange={e => setNewChatName(e.target.value)} placeholder="Іван Іванов" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" />
+                </div>
+                <div className="flex justify-end gap-3 mt-2">
+                  <button type="button" onClick={() => setIsNewChatOpen(false)} className="px-5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 font-semibold transition-colors">Скасувати</button>
+                  <button type="submit" className="px-5 py-2.5 rounded-xl border-none bg-blue-500 text-white font-bold hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all">Створити</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

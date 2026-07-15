@@ -8,15 +8,12 @@ export async function GET() {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const rows = await q(`
-      SELECT * FROM crm_products
+      SELECT * FROM products
       ORDER BY created_at DESC
     `);
     return NextResponse.json({ data: rows });
   } catch (error) {
     console.error('Error fetching products:', error);
-    if (error.code === '42P01') {
-      return NextResponse.json({ data: [] });
-    }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -27,21 +24,15 @@ export async function POST(req) {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const body = await req.json();
-    const { name, price, stock } = body;
-    
-    await q(`
-      CREATE TABLE IF NOT EXISTS crm_products (
-        id SERIAL PRIMARY KEY,
-        name TEXT NOT NULL,
-        price NUMERIC DEFAULT 0,
-        stock INTEGER DEFAULT 0,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `);
+    const { name, category, price, qty_in_stock } = body;
+
+    if (!name) {
+      return NextResponse.json({ error: 'Назва обов\'язкова' }, { status: 400 });
+    }
 
     const result = await one(
-      `INSERT INTO crm_products (name, price, stock) VALUES ($1, $2, $3) RETURNING *`,
-      [name || 'New Product', price || 0, stock || 0]
+      `INSERT INTO products (name, category, price, qty_in_stock) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [name, category || null, price || 0, qty_in_stock || 0]
     );
 
     return NextResponse.json({ ok: true, data: result });

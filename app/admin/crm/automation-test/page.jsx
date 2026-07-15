@@ -47,7 +47,7 @@ export default function AutomationSandboxPage() {
       // Step 2: Lead creation
       await new Promise((r) => setTimeout(r, 1200));
       setCompletedSteps((prev) => [...prev, "lead"]);
-      addLog(`Лід створений в БД (ID: ${data.leadId}).`, "success");
+      addLog(`Лід створений в БД (ID: ${data.leadId}). Перевірте /admin/crm/leads.`, "success");
       setCurrentStepIndex(2);
 
       // Step 3: Scoring
@@ -65,13 +65,13 @@ export default function AutomationSandboxPage() {
       // Step 5: Conversion
       await new Promise((r) => setTimeout(r, 1200));
       setCompletedSteps((prev) => [...prev, "conversion"]);
-      addLog("Імітація успішної оплати. Лід переведений в 'Покупці'.", "success");
+      addLog("Імітація успішної оплати. Лід переведений у статус 'won'.", "success");
       setCurrentStepIndex(5);
 
       // Step 6: Finish Task
       await new Promise((r) => setTimeout(r, 1000));
       setCompletedSteps((prev) => [...prev, "finish"]);
-      addLog("Створено задачу: 'Надіслати стартові документи клієнту'.", "success");
+      addLog("Створено задачу: 'Надіслати стартові документи клієнту'. Перевірте /admin/crm/tasks.", "success");
       setCurrentStepIndex(6);
 
       addLog("✅ E2E Тест успішно завершено!", "success");
@@ -84,26 +84,26 @@ export default function AutomationSandboxPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-8">
+    <div className="p-8 max-w-5xl mx-auto space-y-8 text-gray-800 dark:text-gray-300">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">Пісочниця Автоматизації</h1>
-        <p className="text-gray-500">
-          Візуальний інструмент для тестування End-to-End процесів CRM. Використовуйте для демонстрації або перевірки справності систем.
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2">Пісочниця Автоматизації</h1>
+        <p className="text-gray-500 dark:text-gray-400">
+          Візуальний інструмент для тестування End-to-End процесів CRM (лід → угода → задача) на реальних таблицях.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Visual Pipeline */}
-        <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+        <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl rounded-2xl p-8 border border-black/10 dark:border-white/10 shadow-sm">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-lg font-bold text-gray-800">Пайплайн Процесів</h2>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-white">Пайплайн Процесів</h2>
             <button
               onClick={runSimulation}
               disabled={isRunning}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm transition-all shadow-sm ${
                 isRunning
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-md active:scale-95"
+                  ? "bg-gray-100 dark:bg-white/10 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] active:scale-95"
               }`}
             >
               {isRunning ? <Loader2 size={18} className="animate-spin" /> : <Play size={18} />}
@@ -111,7 +111,7 @@ export default function AutomationSandboxPage() {
             </button>
           </div>
 
-          <div className="space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+          <div className="space-y-6 relative before:absolute before:inset-0 before:ml-4 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-black/10 dark:before:via-white/10 before:to-transparent">
             {STEPS.map((step, idx) => {
               const isCompleted = completedSteps.includes(step.id);
               const isActive = currentStepIndex === idx;
@@ -120,8 +120,8 @@ export default function AutomationSandboxPage() {
                 <div key={step.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                   {/* Icon */}
                   <div
-                    className={`flex items-center justify-center w-8 h-8 rounded-full border-4 border-white z-10 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-colors duration-500 ${
-                      isCompleted ? "bg-green-500 text-white" : isActive ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]" : "bg-gray-200 text-gray-400"
+                    className={`flex items-center justify-center w-8 h-8 rounded-full border-4 border-[#f5f5f7] dark:border-[#0a0a0a] z-10 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-colors duration-500 ${
+                      isCompleted ? "bg-green-500 text-white" : isActive ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.5)]" : "bg-gray-200 dark:bg-white/10 text-gray-400 dark:text-gray-500"
                     }`}
                   >
                     {isCompleted ? <CheckCircle2 size={16} /> : isActive ? <Loader2 size={16} className="animate-spin" /> : <Circle size={16} />}
@@ -132,14 +132,14 @@ export default function AutomationSandboxPage() {
                     initial={{ opacity: 0.5, x: idx % 2 === 0 ? 20 : -20 }}
                     animate={{ opacity: isActive || isCompleted ? 1 : 0.5, x: 0 }}
                     className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border shadow-sm transition-all duration-300 ${
-                      isActive ? "bg-blue-50/50 border-blue-200" : isCompleted ? "bg-white border-green-200" : "bg-gray-50 border-gray-100"
+                      isActive ? "bg-blue-500/10 border-blue-500/30" : isCompleted ? "bg-white dark:bg-white/5 border-green-500/30" : "bg-gray-50 dark:bg-white/[0.02] border-black/5 dark:border-white/5"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${isCompleted ? "bg-green-100 text-green-600" : isActive ? "bg-blue-100 text-blue-600" : "bg-gray-200 text-gray-500"}`}>
+                      <div className={`p-2 rounded-lg ${isCompleted ? "bg-green-500/10 text-green-500 dark:text-green-400" : isActive ? "bg-blue-500/10 text-blue-500 dark:text-blue-400" : "bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-gray-400"}`}>
                         {step.icon}
                       </div>
-                      <span className={`font-semibold text-sm ${isActive ? "text-blue-900" : isCompleted ? "text-green-900" : "text-gray-500"}`}>
+                      <span className={`font-semibold text-sm ${isActive ? "text-blue-700 dark:text-blue-300" : isCompleted ? "text-green-700 dark:text-green-300" : "text-gray-500 dark:text-gray-400"}`}>
                         {step.label}
                       </span>
                     </div>
@@ -159,7 +159,7 @@ export default function AutomationSandboxPage() {
             </h2>
             <span className="text-xs text-gray-600 font-mono">automation_engine.log</span>
           </div>
-          
+
           <div className="p-6 flex-1 overflow-y-auto font-mono text-sm space-y-3 custom-scrollbar">
             {logs.length === 0 ? (
               <div className="text-gray-600 text-center mt-20 italic">Очікування запуску тестів...</div>

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import DualSidebarShell from "@/components/admin/DualSidebarShell";
 import { Icon } from "@/components/admin/ui";
 import { motion } from "framer-motion";
 
@@ -51,12 +50,11 @@ export default function EmailOutreachPage() {
   };
 
   return (
-    <DualSidebarShell>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Email Outreach</h1>
-            <p className="text-gray-500 dark:text-gray-400">Керування холодними розсилками для архітектурного сервісу.</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Email-розсилки</h1>
+            <p className="text-gray-500 dark:text-gray-400">Керування email-кампаніями для клієнтів та лідів.</p>
           </div>
           <button 
             onClick={() => setShowNew(true)}
@@ -126,6 +124,5 @@ export default function EmailOutreachPage() {
           </table>
         </div>
       </div>
-    </DualSidebarShell>
   );
 }

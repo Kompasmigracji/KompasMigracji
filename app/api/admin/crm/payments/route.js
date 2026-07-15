@@ -8,15 +8,12 @@ export async function GET() {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const rows = await q(`
-      SELECT * FROM crm_payments
+      SELECT * FROM custom_payments
       ORDER BY created_at DESC
     `);
     return NextResponse.json({ data: rows });
   } catch (error) {
     console.error('Error fetching payments:', error);
-    if (error.code === '42P01') {
-      return NextResponse.json({ data: [] });
-    }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -27,21 +24,22 @@ export async function POST(req) {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const body = await req.json();
-    const { amount, date, status } = body;
-    
-    await q(`
-      CREATE TABLE IF NOT EXISTS crm_payments (
-        id SERIAL PRIMARY KEY,
-        amount NUMERIC DEFAULT 0,
-        date TEXT,
-        status TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )
-    `);
+    const { type, description, amount, currency } = body;
+
+    const typeLabel = type === 'income' ? 'Надходження' : 'Списання';
 
     const result = await one(
-      `INSERT INTO crm_payments (amount, date, status) VALUES ($1, $2, $3) RETURNING *`,
-      [amount || 0, date || new Date().toISOString().split('T')[0], status || 'Pending']
+      `INSERT INTO custom_payments (type, type_label, description, manager, amount, currency, status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [
+        type || 'income',
+        typeLabel,
+        description || '',
+        auth.user.name || auth.user.email || 'Адміністратор',
+        amount || 0,
+        currency || 'PLN',
+        'paid'
+      ]
     );
 
     return NextResponse.json({ ok: true, data: result });

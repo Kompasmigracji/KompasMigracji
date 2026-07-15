@@ -4,7 +4,7 @@ import { q } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
-    const jobs = await q('SELECT * FROM kompas_jobs_v2 WHERE is_active = true ORDER BY created_at DESC');
+    const jobs = await q("SELECT * FROM kompas_jobs_v2 WHERE status = 'active' ORDER BY created_at DESC");
 
     // If no jobs exist yet, return a mock job so the frontend isn't empty, 
     // but clearly mark it as an example.
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
         requirements: ['Досвід роботи зі сканером', 'Базове знання польської', 'Готовність до позмінної роботи'],
         ai_match_reasoning: 'Ваш профіль частково відповідає вимогам. Фізична витривалість є перевагою.',
         ai_match_score: 85,
-        is_active: true
+        status: 'active'
       }
     ];
 

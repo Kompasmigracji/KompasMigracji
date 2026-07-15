@@ -37,20 +37,20 @@ export async function POST(request) {
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
     const body = await request.json();
-    const { title, company_name, location, salary_range, employment_type, description, requirements, ai_match_reasoning, ai_match_score, is_active } = body;
+    const { title, company_name, location, salary_range, employment_type, description, requirements, ai_match_reasoning, ai_match_score, status } = body;
 
     const newJob = await one(`
       INSERT INTO kompas_jobs_v2 (
-        title, company_name, location, salary_range, employment_type, 
-        description, requirements, ai_match_reasoning, ai_match_score, is_active
+        title, company_name, location, salary_range, employment_type,
+        description, requirements, ai_match_reasoning, ai_match_score, status
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING *
     `, [
-      title, company_name, location, salary_range, employment_type, 
-      description, JSON.stringify(requirements || []), 
-      ai_match_reasoning || 'Система проаналізує ваш профіль для розрахунку синергії.', 
-      ai_match_score || 85, 
-      is_active !== undefined ? is_active : true
+      title, company_name, location, salary_range, employment_type,
+      description, JSON.stringify(requirements || []),
+      ai_match_reasoning || 'Система проаналізує ваш профіль для розрахунку синергії.',
+      ai_match_score || 85,
+      status || 'active'
     ]);
 
     return NextResponse.json({ job: newJob });

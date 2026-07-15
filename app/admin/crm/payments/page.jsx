@@ -1,24 +1,48 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
 
 export default function PaymentsDemoPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ type: "income", description: "", amount: "", currency: "PLN" });
+
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/admin/crm/payments');
+      const json = await res.json();
+      setPayments(json.data || []);
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/admin/crm/payments');
-        const json = await res.json();
-        setPayments(json.data || []);
-      } catch (e) { console.error(e); }
-      setLoading(false);
-    };
     fetchData();
   }, []);
+
+  const handleAddPayment = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const res = await fetch('/api/admin/crm/payments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      if (res.ok) {
+        setIsModalOpen(false);
+        setForm({ type: "income", description: "", amount: "", currency: "PLN" });
+        fetchData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setSaving(false);
+  };
 
   return (
     <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
@@ -46,7 +70,10 @@ export default function PaymentsDemoPage() {
           <Icon name="sliders" size={16} />
         </button>
 
-        <button className="ml-auto bg-emerald-500 hover:bg-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto bg-emerald-500 hover:bg-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+        >
           <Icon name="plus" size={16} />
           Добавить оплату
         </button>
@@ -130,6 +157,66 @@ export default function PaymentsDemoPage() {
           </table>
         </SpotlightCard>
       </div>
+
+      {/* Add Payment Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[9999]"
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-white dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 p-8 rounded-2xl w-[420px] shadow-2xl relative overflow-hidden"
+            >
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 blur-[50px] rounded-full pointer-events-none" />
+
+              <h3 className="m-0 mb-6 text-gray-900 dark:text-white font-bold text-xl relative z-10">Новий запис у журналі</h3>
+
+              <form onSubmit={handleAddPayment} className="flex flex-col gap-4 relative z-10">
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Тип</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button type="button" onClick={() => setForm({ ...form, type: "income" })} className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors ${form.type === "income" ? "bg-emerald-500/20 text-emerald-500 dark:text-emerald-400 border-emerald-500/30" : "bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 border-black/10 dark:border-white/10"}`}>Надходження</button>
+                    <button type="button" onClick={() => setForm({ ...form, type: "expense" })} className={`px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors ${form.type === "expense" ? "bg-red-500/20 text-red-500 dark:text-red-400 border-red-500/30" : "bg-white/60 dark:bg-white/5 text-gray-500 dark:text-gray-400 border-black/10 dark:border-white/10"}`}>Списання</button>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Опис</label>
+                  <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="напр. Оплата за консультацію" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-emerald-500/50 transition-colors placeholder:text-gray-400" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Сума</label>
+                    <input required type="number" step="0.01" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} placeholder="0.00" className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-emerald-500/50 transition-colors placeholder:text-gray-400" />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Валюта</label>
+                    <select value={form.currency} onChange={e => setForm({ ...form, currency: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-emerald-500/50 transition-colors">
+                      <option value="PLN">PLN</option>
+                      <option value="EUR">EUR</option>
+                      <option value="USD">USD</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-4">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl border border-black/10 dark:border-white/10 bg-transparent hover:bg-black/5 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 font-semibold cursor-pointer transition-colors">
+                    Відмінити
+                  </button>
+                  <button type="submit" disabled={saving} className={`px-5 py-2.5 rounded-xl border-none bg-emerald-500 text-white font-bold cursor-pointer transition-all ${saving ? 'opacity-70' : 'hover:bg-emerald-600 shadow-[0_0_15px_rgba(16,185,129,0.3)]'}`}>
+                    {saving ? 'Збереження...' : 'Зберегти'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

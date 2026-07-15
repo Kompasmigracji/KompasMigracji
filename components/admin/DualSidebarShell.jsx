@@ -13,27 +13,34 @@ const NAV_DATA = [
   {
     id: "sales",
     icon: "shopping-cart",
-    label: "Продажи",
+    label: "Продажі",
     groups: [
       {
         title: "",
         items: [
           { label: "Дашборд", href: "/admin/crm/dashboard" },
-          { label: "Ліди", href: "/admin/crm/leads" },
+          { label: "Ліди (список)", href: "/admin/crm/leads" },
           { label: "Воронка лідів (Kanban)", href: "/admin/crm/funnels" },
           { label: "Воронка угод (Deals)", href: "/admin/crm/deals" },
-          { label: "Покупці", href: "/admin/crm/buyers" },
+          { label: "Клієнти", href: "/admin/crm/buyers" },
+          { label: "Дзвінки", href: "/admin/crm/calls" },
+          { label: "Чати", href: "/admin/crm/chats" },
           { label: "Автоматизація (E2E)", href: "/admin/crm/automation-test" },
-          { label: "Списки заказов", href: "/admin/crm/order-lists" },
-          { label: "Покупатели", href: "/admin/crm/buyers" },
-          { label: "История звонков", href: "/admin/crm/calls" },
         ]
       },
       {
-        title: "ПРОДАЖІ ТА МАРКЕТИНГ",
+        title: "ПОСЛУГИ ТА ФІНАНСИ",
         items: [
-          { label: "Email Розсилки", href: "/admin/crm/emails" },
-          { label: "Мої Задачі", href: "/admin/crm/tasks" },
+          { label: "Каталог послуг", href: "/admin/crm/products" },
+          { label: "Замовлення", href: "/admin/crm/orders" },
+          { label: "Журнал платежів", href: "/admin/crm/payments" },
+        ]
+      },
+      {
+        title: "МАРКЕТИНГ",
+        items: [
+          { label: "Email-розсилки", href: "/admin/crm/emails" },
+          { label: "Мої завдання", href: "/admin/crm/tasks" },
         ]
       },
       {
@@ -41,43 +48,19 @@ const NAV_DATA = [
         items: [
           { label: "Вакансії", href: "/admin/crm/jobs" },
         ]
-      },
-      {
-        title: "ФИНАНСЫ",
-        items: [
-          { label: "Журнал платежей", href: "/admin/crm/payments" },
-        ]
-      }
-    ]
-  },
-  {
-    id: "products",
-    icon: "package",
-    label: "Товары",
-    groups: [
-      {
-        title: "",
-        items: [
-          { label: "Товары", href: "/admin/crm/products" },
-          { label: "Публикации", href: "/admin/crm/publications" },
-          { label: "Остатки", href: "/admin/crm/inventory" },
-          { label: "Движение товаров", href: "/admin/crm/movements" },
-          { label: "Категории", href: "/admin/crm/categories" },
-        ]
       }
     ]
   },
   {
     id: "analytics",
     icon: "bar-chart-2",
-    label: "Аналитика",
+    label: "Аналітика",
     groups: [
       {
-        title: "ОТЧЕТЫ",
+        title: "ЗВІТИ",
         items: [
-          { label: "Дашборд", href: "/admin/crm/dashboard" },
-          { label: "Фінансові Звіти", href: "/admin/crm/reports" },
-          { label: "Эффективность", href: "/admin/crm/efficiency" },
+          { label: "Фінансові звіти", href: "/admin/crm/reports" },
+          { label: "Ефективність менеджерів", href: "/admin/crm/efficiency" },
         ]
       }
     ]
@@ -251,18 +234,18 @@ export default function DualSidebarShell({ children }) {
             <div className="p-6 pb-4 flex items-center justify-between border-b border-black/10 dark:border-white/10">
               <div className="flex items-center gap-3">
                 <Icon name="bell" size={18} color="#94a3b8" />
-                <span className="font-bold text-lg">Уведомления <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">({notifications.length})</span></span>
+                <span className="font-bold text-lg">Сповіщення <span className="text-sm text-gray-500 dark:text-gray-400 font-normal">({notifications.length})</span></span>
               </div>
               <Icon name="settings" size={16} className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer transition-colors" />
             </div>
             <div className="flex px-5 border-b border-black/10 dark:border-white/10">
-              <button className="border-b-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-4 py-3 text-sm font-semibold">События</button>
-              <button className="border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-4 py-3 text-sm transition-colors">Системные</button>
+              <button className="border-b-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-4 py-3 text-sm font-semibold">Події</button>
+              <button className="border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-4 py-3 text-sm transition-colors">Системні</button>
             </div>
             
             <div className="flex-1 overflow-y-auto custom-scrollbar">
               {notifications.length === 0 ? (
-                <div className="h-full flex items-center justify-center text-gray-500 text-sm">Уведомлений нет</div>
+                <div className="h-full flex items-center justify-center text-gray-500 text-sm">Немає сповіщень</div>
               ) : (
                 notifications.map((notif, i) => (
                   <div key={notif.id || i} className={`p-4 border-b border-black/5 dark:border-white/5 flex flex-col gap-1.5 relative transition-colors hover:bg-black/5 dark:hover:bg-white/10 ${notif.is_read ? 'bg-transparent' : 'bg-blue-500/5 dark:bg-blue-500/10'}`}>
@@ -290,11 +273,11 @@ export default function DualSidebarShell({ children }) {
           >
             <div className="flex items-center gap-3 mb-8">
               <Icon name="help-circle" size={20} className="text-blue-400" />
-              <span className="font-bold text-xl">Помощь</span>
+              <span className="font-bold text-xl">Допомога</span>
             </div>
-            
+
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-xs font-bold text-gray-500 tracking-wider">ЗАДАТЬ ВОПРОС</span>
+              <span className="text-xs font-bold text-gray-500 tracking-wider">ЗАДАТИ ПИТАННЯ</span>
               <div className="flex-1 h-px bg-white/80"></div>
             </div>
             
@@ -317,20 +300,15 @@ export default function DualSidebarShell({ children }) {
           >
             <div className="p-6 flex items-center gap-3">
               <Icon name="settings" size={20} className="text-blue-400" />
-              <span className="font-bold text-xl">Настройки</span>
+              <span className="font-bold text-xl">Налаштування</span>
             </div>
             
             <div className="flex flex-col py-2">
               {[
-                { label: "Основные", path: "/admin/crm/settings/general" },
-                { label: "Источники", path: "/admin/crm/settings/sources" },
-                { label: "Коммуникации", path: "/admin/crm/settings/communications" },
-                { label: "Воронки", path: "/admin/crm/settings/funnels" },
-                { label: "Заказы", path: "/admin/crm/settings/orders" }, 
-                { label: "Товары", path: "/admin/crm/settings/products" },
-                { label: "Финансы", path: "/admin/crm/settings/finances" },
-                { label: "Пользователи", path: "/admin/crm/settings/users" },
-                { label: "Роли", path: "/admin/crm/settings/roles" }
+                { label: "Основні", path: "/admin/crm/settings/general" },
+                { label: "Джерела лідів", path: "/admin/crm/settings/sources" },
+                { label: "Комунікації", path: "/admin/crm/settings/communications" },
+                { label: "Ролі", path: "/admin/crm/settings/roles" }
               ].map(item => (
                 <Link 
                   key={item.label} 

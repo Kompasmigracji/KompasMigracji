@@ -1,102 +1,111 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import DualSidebarShell from "@/components/admin/DualSidebarShell";
 import { Icon } from "@/components/admin/ui";
+import SpotlightCard from "@/components/SpotlightCard";
 import { motion } from "framer-motion";
 
+const SOURCE_COLORS = ["#3b82f6", "#8b5cf6", "#f59e0b", "#10b981", "#ef4444", "#06b6d4", "#ec4899", "#6366f1"];
+
 export default function ReportsPage() {
-  const [stats, setStats] = useState({
-    totalRevenue: 0,
-    activeLeads: 0,
-    conversionRate: 0,
-    archPackages: { starter: 0, pro: 0, premium: 0 }
-  });
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In production this would be a fetch to /api/admin/reports
-    setTimeout(() => {
-      setStats({
-        totalRevenue: 12500,
-        activeLeads: 24,
-        conversionRate: 15,
-        archPackages: { starter: 3, pro: 8, premium: 1 }
-      });
-    }, 1000);
+    fetch('/api/admin/crm/reports')
+      .then(r => r.json())
+      .then(j => setData(j.data))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <DualSidebarShell>
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Аналітика та Звіти</h1>
-          <p className="text-gray-500 dark:text-gray-400">Фінансові показники та ефективність воронок продажу.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3 text-gray-500 mb-4">
-              <Icon name="dollar-sign" className="text-green-500" /> Дохід (Поточний місяць)
-            </div>
-            <div className="text-4xl font-black text-gray-900 dark:text-white">${stats.totalRevenue.toLocaleString()}</div>
-            <div className="text-sm text-green-500 font-bold mt-2">+12% до минулого місяця</div>
-          </motion.div>
-          
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3 text-gray-500 mb-4">
-              <Icon name="users" className="text-blue-500" /> Активні Ліди
-            </div>
-            <div className="text-4xl font-black text-gray-900 dark:text-white">{stats.activeLeads}</div>
-            <div className="text-sm text-gray-500 mt-2">В роботі зараз</div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-3 text-gray-500 mb-4">
-              <Icon name="percent" className="text-orange-500" /> Конверсія
-            </div>
-            <div className="text-4xl font-black text-gray-900 dark:text-white">{stats.conversionRate}%</div>
-            <div className="text-sm text-green-500 font-bold mt-2">+2% до минулого місяця</div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 shadow-lg text-white">
-            <div className="flex items-center gap-3 text-white/80 mb-4">
-              <Icon name="target" /> Ціль: 5090 64GB
-            </div>
-            <div className="text-4xl font-black">45%</div>
-            <div className="w-full bg-black/20 rounded-full h-2 mt-4 overflow-hidden">
-              <div className="bg-white h-full" style={{ width: '45%' }}></div>
-            </div>
-            <div className="text-xs text-white/80 mt-2">$2,500 зібрано</div>
-          </motion.div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
-          <div className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-sm">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Продажі Архітектурних Пакетів</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-gray-500">Starter ($1.5k)</span><span className="font-bold dark:text-white">{stats.archPackages.starter}</span></div>
-                <div className="w-full bg-gray-100 dark:bg-white/5 rounded-full h-2"><div className="bg-gray-400 h-full rounded-full" style={{ width: `${(stats.archPackages.starter / 12) * 100}%` }}></div></div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-blue-500 font-bold">Pro ($2.5k)</span><span className="font-bold dark:text-white">{stats.archPackages.pro}</span></div>
-                <div className="w-full bg-gray-100 dark:bg-white/5 rounded-full h-2"><div className="bg-blue-500 h-full rounded-full" style={{ width: `${(stats.archPackages.pro / 12) * 100}%` }}></div></div>
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1"><span className="text-purple-500 font-bold">Premium ($4.5k)</span><span className="font-bold dark:text-white">{stats.archPackages.premium}</span></div>
-                <div className="w-full bg-gray-100 dark:bg-white/5 rounded-full h-2"><div className="bg-purple-500 h-full rounded-full" style={{ width: `${(stats.archPackages.premium / 12) * 100}%` }}></div></div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 rounded-2xl p-6 shadow-sm flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <Icon name="pie-chart" size={48} className="mx-auto mb-4 opacity-50" />
-              <p>Графіки доходів завантажуються...</p>
-            </div>
-          </div>
-        </div>
+    <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300 p-8">
+      <div className="mb-2">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Фінансові звіти</h1>
+        <p className="text-gray-500 dark:text-gray-400 m-0">Реальні показники продажів та воронки Kompas Migracji.</p>
       </div>
-    </DualSidebarShell>
+
+      {loading ? (
+        <div className="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">Завантаження звітів...</div>
+      ) : (
+        <div className="flex flex-col gap-6 mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6">
+                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-4">
+                  <Icon name="cash" size={18} className="text-green-500" /> Дохід (цей місяць)
+                </div>
+                <div className="text-4xl font-black text-gray-900 dark:text-white tabular-nums">{data.totalRevenue.toLocaleString('uk-UA')} zł</div>
+                {data.revenueDelta !== null ? (
+                  <div className={`text-sm font-bold mt-2 ${data.revenueDelta >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {data.revenueDelta >= 0 ? '+' : ''}{data.revenueDelta}% до минулого місяця
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">Немає даних за минулий місяць</div>
+                )}
+              </SpotlightCard>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+              <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6">
+                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-4">
+                  <Icon name="users" size={18} className="text-blue-500" /> Активні ліди
+                </div>
+                <div className="text-4xl font-black text-gray-900 dark:text-white tabular-nums">{data.activeLeads}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">з {data.totalLeads} усього в системі</div>
+              </SpotlightCard>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6">
+                <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-4">
+                  <Icon name="percent" size={18} className="text-orange-500" /> Конверсія
+                </div>
+                <div className="text-4xl font-black text-gray-900 dark:text-white tabular-nums">{data.conversionRate}%</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">{data.wonLeads} успішних із {data.totalLeads}</div>
+              </SpotlightCard>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <SpotlightCard className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-6 shadow-lg text-white border-none">
+                <div className="flex items-center gap-3 text-white/80 mb-4">
+                  <Icon name="target" size={18} /> Джерел лідів
+                </div>
+                <div className="text-4xl font-black">{data.bySource.length}</div>
+                <div className="text-xs text-white/80 mt-2">активних каналів залучення</div>
+              </SpotlightCard>
+            </motion.div>
+          </div>
+
+          <SpotlightCard className="bg-white/60 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-6">Ліди за джерелами</h3>
+            {data.bySource.length === 0 ? (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-6">Ще немає даних</div>
+            ) : (
+              <div className="space-y-4">
+                {data.bySource.map((s, i) => (
+                  <div key={s.source}>
+                    <div className="flex justify-between text-sm mb-1.5">
+                      <span className="text-gray-700 dark:text-gray-300 font-semibold capitalize">{s.source}</span>
+                      <span className="font-bold text-gray-900 dark:text-white tabular-nums">{s.count} ({s.pct}%)</span>
+                    </div>
+                    <div className="w-full bg-gray-100 dark:bg-white/5 rounded-full h-2 overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${s.pct}%` }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="h-full rounded-full"
+                        style={{ background: SOURCE_COLORS[i % SOURCE_COLORS.length] }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </SpotlightCard>
+        </div>
+      )}
+    </div>
   );
 }
