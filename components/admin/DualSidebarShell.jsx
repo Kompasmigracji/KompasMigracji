@@ -20,6 +20,7 @@ const NAV_DATA = [
         items: [
           { label: "Дашборд", href: "/admin/crm/dashboard" },
           { label: "Ліди (список)", href: "/admin/crm/leads" },
+          { label: "Кандидати EWU", href: "/admin/crm/ewu-candidates" },
           { label: "Воронка лідів (Kanban)", href: "/admin/crm/funnels" },
           { label: "Воронка угод (Deals)", href: "/admin/crm/deals" },
           { label: "Клієнти", href: "/admin/crm/buyers" },
