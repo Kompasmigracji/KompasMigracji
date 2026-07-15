@@ -39,11 +39,11 @@ export async function GET() {
     let totalRevenue = 0;
     const { data: revenueData, error: revenueError } = await supabase
       .from('orders')
-      .select('amount')
+      .select('total_price')
       .eq('status', 'выполнено');
-    
+
     if (!revenueError && revenueData) {
-      totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+      totalRevenue = revenueData.reduce((acc, curr) => acc + (Number(curr.total_price) || 0), 0);
     }
 
     // Dynamic Chart Data (mocked months, but using real logic if available)

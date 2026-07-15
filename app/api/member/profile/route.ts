@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       .from('kompas_member_profiles')
       .select(`
         *,
-        kompas_users!inner(name, email)
+        kompas_users!inner(full_name, email)
       `)
       .limit(1)
       .single();
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     ]);
 
     return NextResponse.json({
-      name: profile.kompas_users?.name || "Невідомий користувач",
+      name: profile.kompas_users?.full_name || "Невідомий користувач",
       role: profile.category === 'premium' ? 'Premium Учасник' : 'Стандартний Учасник',
       id: profile.member_no || `KP-ID-${profile.user_id}`,
       status: "verified",

@@ -44,16 +44,15 @@ export async function POST(req: Request) {
     const newOrder = {
       order_number: body.order_number || `ORD-${Date.now().toString().slice(-6)}`,
       status: body.status || 'новый',
-      amount: body.total_amount || body.amount || 0,
+      total_price: body.total_amount || body.amount || 0,
       buyer_id: body.buyer_id || null,
-      notes: body.notes || ''
     };
 
     const row = await one(
-      `INSERT INTO orders (order_number, status, amount, buyer_id, notes)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO orders (order_number, status, total_price, buyer_id)
+       VALUES ($1, $2, $3, $4)
        RETURNING *`,
-      [newOrder.order_number, newOrder.status, newOrder.amount, newOrder.buyer_id, newOrder.notes]
+      [newOrder.order_number, newOrder.status, newOrder.total_price, newOrder.buyer_id]
     );
 
     return NextResponse.json({ ok: true, data: row });
