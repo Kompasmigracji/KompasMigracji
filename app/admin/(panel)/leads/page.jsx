@@ -15,11 +15,11 @@ const FILTERS = [
 ];
 
 const COLUMNS = [
-  { id: "new", title: "Нові ліди", color: "var(--color-info)" },
-  { id: "contacted", title: "В контакті", color: "var(--color-warning)" },
-  { id: "in_progress", title: "В роботі", color: "var(--color-primary)" },
-  { id: "closed", title: "Успішно", color: "var(--color-success)" },
-  { id: "dropped", title: "Відмова", color: "var(--color-danger)" },
+  { id: "new", title: "Нові ліди", color: "#3b82f6" },
+  { id: "contacted", title: "В контакті", color: "#f59e0b" },
+  { id: "in_progress", title: "В роботі", color: "#8b5cf6" },
+  { id: "closed", title: "Успішно", color: "#10b981" },
+  { id: "dropped", title: "Відмова", color: "#ef4444" },
 ];
 
 export default function LeadsPage() {

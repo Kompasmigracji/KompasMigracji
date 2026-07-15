@@ -17,12 +17,12 @@ const FILTERS = [
 ];
 
 const COLUMNS = [
-  { id: "prospecting", title: "Пошук / Prospecting", color: "var(--color-info)" },
-  { id: "qualification", title: "Кваліфікація / Qualification", color: "var(--color-warning)" },
-  { id: "proposal", title: "Пропозиція / Proposal", color: "var(--color-primary)" },
-  { id: "negotiation", title: "Переговори / Negotiation", color: "var(--color-warning)" },
-  { id: "closed_won", title: "Закрито Успішно", color: "var(--color-success)" },
-  { id: "closed_lost", title: "Втрачено", color: "var(--color-danger)" },
+  { id: "prospecting", title: "Пошук / Prospecting", color: "#3b82f6" },
+  { id: "qualification", title: "Кваліфікація / Qualification", color: "#f59e0b" },
+  { id: "proposal", title: "Пропозиція / Proposal", color: "#8b5cf6" },
+  { id: "negotiation", title: "Переговори / Negotiation", color: "#f97316" },
+  { id: "closed_won", title: "Закрито Успішно", color: "#10b981" },
+  { id: "closed_lost", title: "Втрачено", color: "#ef4444" },
 ];
 
 const EMPTY_FORM = {

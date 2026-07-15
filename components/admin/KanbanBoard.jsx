@@ -1,17 +1,18 @@
 "use client";
-/* KompasCRM — Kanban Board (дизайн-система kc-*, CSS-змінні тем).
-   Використовується на /admin/leads, /admin/deals та ін.
-   API: columns [{id,title,color}], cards [{id,title,subtitle,columnId,amount,tags,assignee,timeAgo,isUrgent}] */
+/* KompasCRM — Kanban Board (premium glass, matches /admin/crm design language).
+   Used on /admin/crm/funnels, /admin/crm/deals, and the legacy /admin/leads, /admin/deals.
+   API: columns [{id,title,color}], cards [{id,title,subtitle,columnId,amount,tags,assignee,timeAgo,isUrgent}]
+   `color` should be a real color (#hex / rgb / hsl) — CSS custom properties like
+   var(--color-info) or Tailwind class strings are NOT resolvable here and are
+   filtered out via cssColor() below, falling back to a neutral blue. */
 import React, { useState } from "react";
 import { Icon, Avatar } from "./ui";
 import { motion } from "framer-motion";
 
-/* col.color очікується як CSS-колір (var(--color-info), #hex, rgb…).
-   Старі виклики могли передавати Tailwind-класи — відсіюємо їх. */
-function cssColor(value, fallback = "var(--color-primary)") {
+function cssColor(value, fallback = "#3b82f6") {
   if (typeof value !== "string") return fallback;
   const v = value.trim();
-  if (v.startsWith("var(") || v.startsWith("#") || v.startsWith("rgb") || v.startsWith("hsl")) return v;
+  if (v.startsWith("#") || v.startsWith("rgb") || v.startsWith("hsl")) return v;
   return fallback;
 }
 
@@ -64,10 +65,7 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
   };
 
   return (
-    <div style={{
-      display: "flex", gap: "var(--space-md)", alignItems: "flex-start",
-      overflowX: "auto", paddingBottom: "var(--space-md)", minHeight: 420,
-    }}>
+    <div className="flex gap-5 items-start overflow-x-auto pb-4 min-h-[420px]">
       {columns.map((col) => {
         const color = cssColor(col.color);
         const colCards = cards.filter((c) => String(c.columnId) === String(col.id));
@@ -80,47 +78,50 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
             onDragOver={(e) => handleDragOver(e, col.id)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, col.id)}
+            className="relative flex-none w-[300px] flex flex-col rounded-2xl overflow-hidden
+                       bg-white/60 dark:bg-white/[0.04] backdrop-blur-xl
+                       border border-black/10 dark:border-white/10
+                       shadow-[0_10px_30px_rgba(0,0,0,0.04)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.25)]
+                       transition-[border-color,box-shadow] duration-300"
             style={{
-              flex: "0 0 300px", width: 300, display: "flex", flexDirection: "column",
-              background: "var(--panel)", borderRadius: "var(--radius-lg)",
-              border: isDraggedOver ? `1.5px dashed ${color}` : "1px solid var(--border)",
               borderTop: `3px solid ${color}`,
-              transition: "border-color var(--transition-fast), box-shadow var(--transition-fast)",
-              boxShadow: isDraggedOver ? `0 0 0 3px color-mix(in srgb, ${color} 20%, transparent)` : "none",
+              ...(isDraggedOver
+                ? { boxShadow: `0 0 0 3px ${color}33`, borderColor: color }
+                : {}),
             }}
           >
-            {/* Заголовок колонки */}
-            <div style={{
-              padding: "var(--space-md)", borderBottom: "1px solid var(--border)",
-              display: "flex", flexDirection: "column", gap: 4,
-            }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 style={{ margin: 0, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--text)" }}>
+            {/* Ambient glow behind the header, echoes the stage color */}
+            <div
+              className="pointer-events-none absolute -top-10 -right-10 w-32 h-32 rounded-full opacity-[0.12] dark:opacity-[0.18] blur-2xl"
+              style={{ background: color }}
+            />
+
+            {/* Column header */}
+            <div className="relative z-10 px-4 py-3.5 border-b border-black/10 dark:border-white/10 flex flex-col gap-1.5">
+              <div className="flex justify-between items-center gap-2">
+                <h3 className="m-0 text-sm font-bold text-gray-900 dark:text-white tracking-tight truncate">
                   {col.title}
                 </h3>
-                <span style={{
-                  background: `color-mix(in srgb, ${color} 15%, transparent)`, color,
-                  padding: "1px 8px", borderRadius: 999, fontSize: "var(--text-xs)", fontWeight: 700,
-                }}>
+                <span
+                  className="shrink-0 text-xs font-extrabold px-2.5 py-0.5 rounded-full tabular-nums"
+                  style={{ background: `${color}26`, color }}
+                >
                   {colCards.length}
                 </span>
               </div>
               {totalAmount > 0 && (
-                <div className="kc-mono" style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>
+                <div className="font-mono text-xs font-semibold text-gray-500 dark:text-gray-400 tabular-nums">
                   {zl.format(totalAmount)} zł
                 </div>
               )}
             </div>
 
-            {/* Тіло колонки (drop-зона) */}
-            <div style={{
-              flex: 1, padding: "var(--space-sm)", display: "flex", flexDirection: "column",
-              gap: "var(--space-sm)", overflowY: "auto", maxHeight: "calc(100vh - 320px)", minHeight: 120,
-            }}>
+            {/* Drop zone / cards */}
+            <div className="relative z-10 flex-1 p-3 flex flex-col gap-2.5 overflow-y-auto min-h-[130px] max-h-[calc(100vh-320px)]">
               {colCards.map((card) => (
-                /* Зовнішній div несе нативний HTML5 DnD: на motion.div пропси
-                   onDragStart/onDragEnd перехоплює framer-motion (свої жести)
-                   і до DOM вони не доходять. */
+                /* Native HTML5 DnD lives on this outer div — framer-motion
+                   intercepts its own gesture props on the inner motion.div,
+                   so onDragStart/onDragEnd never reach the DOM from there. */
                 <div
                   key={card.id}
                   draggable
@@ -128,74 +129,64 @@ export default function KanbanBoard({ columns, cards, onCardMove, onCardClick })
                   onDragEnd={handleDragEnd}
                   onClick={() => onCardClick && onCardClick(card)}
                 >
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ y: -2, boxShadow: "var(--shadow-md, 0 6px 18px rgba(0,0,0,0.18))" }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    background: "var(--panel-2)", border: "1px solid var(--border)",
-                    borderLeft: `3px solid ${color}`, borderRadius: "var(--radius-md)",
-                    padding: "var(--space-md)", cursor: "grab",
-                    display: "flex", flexDirection: "column", gap: 8,
-                  }}
-                >
-                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--text)", lineHeight: 1.35, wordBreak: "break-word" }}>
-                    {card.title}
-                  </div>
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex flex-col gap-2 p-3.5 rounded-xl cursor-grab
+                               bg-white dark:bg-[#161616] border border-black/10 dark:border-white/10
+                               shadow-sm hover:shadow-lg dark:hover:shadow-black/40 transition-shadow duration-200"
+                    style={{ borderLeft: `3px solid ${color}` }}
+                  >
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white leading-snug break-words">
+                      {card.title}
+                    </div>
 
-                  {card.subtitle && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                      <span style={{
-                        display: "inline-flex", alignItems: "center", gap: 5,
-                        fontSize: "var(--text-xs)", padding: "2px 8px", borderRadius: "var(--radius-sm)",
-                        background: card.isUrgent ? "color-mix(in srgb, var(--color-danger) 12%, transparent)" : "var(--panel)",
-                        color: card.isUrgent ? "var(--color-danger)" : "var(--dim)",
-                        border: "1px solid var(--border)",
-                      }}>
-                        {card.subtitle}
-                      </span>
-                      {card.timeAgo && (
-                        <span style={{ fontSize: "var(--text-xs)", color: "var(--faint)" }}>{card.timeAgo}</span>
+                    {card.subtitle && (
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span
+                          className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-md border ${
+                            card.isUrgent
+                              ? "bg-red-500/10 text-red-500 border-red-500/20"
+                              : "bg-black/[0.03] dark:bg-white/5 text-gray-500 dark:text-gray-400 border-black/5 dark:border-white/10"
+                          }`}
+                        >
+                          {card.subtitle}
+                        </span>
+                        {card.timeAgo && (
+                          <span className="text-xs text-gray-400 dark:text-gray-500">{card.timeAgo}</span>
+                        )}
+                      </div>
+                    )}
+
+                    {card.tags?.filter(Boolean).length > 0 && (
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                        <Icon name={sourceIcon(card.tags[0])} size={12} />
+                        <span className="truncate">{card.tags.filter(Boolean).join(" · ")}</span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center gap-2 border-t border-black/5 dark:border-white/10 pt-2 mt-0.5">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Avatar name={card.assignee?.name || "?"} size={20} hideName />
+                        <span className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          {card.assignee?.name || "Не призначено"}
+                        </span>
+                      </div>
+                      {Number(card.amount) > 0 && (
+                        <span className="font-mono text-xs font-bold tabular-nums shrink-0" style={{ color }}>
+                          {zl.format(Number(card.amount))} zł
+                        </span>
                       )}
                     </div>
-                  )}
-
-                  {card.tags?.filter(Boolean).length > 0 && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "var(--text-xs)", color: "var(--dim)" }}>
-                      <Icon name={sourceIcon(card.tags[0])} size={12} />
-                      <span>{card.tags.filter(Boolean).join(" · ")}</span>
-                    </div>
-                  )}
-
-                  <div style={{
-                    display: "flex", justifyContent: "space-between", alignItems: "center",
-                    borderTop: "1px solid var(--border)", paddingTop: 8, marginTop: 2,
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-                      <Avatar name={card.assignee?.name || "?"} size={20} hideName />
-                      <span style={{ fontSize: "var(--text-xs)", color: "var(--dim)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {card.assignee?.name || "Не призначено"}
-                      </span>
-                    </div>
-                    {Number(card.amount) > 0 && (
-                      <span className="kc-mono" style={{ fontSize: "var(--text-xs)", fontWeight: 700, color }}>
-                        {zl.format(Number(card.amount))} zł
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
+                  </motion.div>
                 </div>
               ))}
 
               {colCards.length === 0 && (
-                <div style={{
-                  textAlign: "center", padding: "var(--space-lg) var(--space-md)",
-                  color: "var(--faint)", fontSize: "var(--text-xs)", fontWeight: 600,
-                  letterSpacing: 0.6, textTransform: "uppercase",
-                  border: "1.5px dashed var(--border)", borderRadius: "var(--radius-md)",
-                }}>
+                <div className="text-center py-8 px-3 text-gray-400 dark:text-gray-600 text-xs font-bold uppercase tracking-wider border-2 border-dashed border-black/10 dark:border-white/10 rounded-xl">
                   Перетягніть сюди
                 </div>
               )}

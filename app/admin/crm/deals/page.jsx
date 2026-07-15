@@ -4,12 +4,12 @@ import { Spinner } from "@/components/admin/ui";
 import KanbanBoard from "@/components/admin/KanbanBoard";
 
 const STAGES = [
-  { id: "prospecting", title: "Пошук", color: "var(--color-info)" },
-  { id: "qualification", title: "Кваліфікація", color: "var(--color-warning)" },
-  { id: "proposal", title: "Пропозиція", color: "var(--color-primary)" },
-  { id: "negotiation", title: "Переговори", color: "var(--color-warning)" },
-  { id: "closed_won", title: "Закрито успішно", color: "var(--color-success)" },
-  { id: "closed_lost", title: "Втрачено", color: "var(--color-danger)" },
+  { id: "prospecting", title: "Пошук", color: "#3b82f6" },
+  { id: "qualification", title: "Кваліфікація", color: "#f59e0b" },
+  { id: "proposal", title: "Пропозиція", color: "#8b5cf6" },
+  { id: "negotiation", title: "Переговори", color: "#f97316" },
+  { id: "closed_won", title: "Закрито успішно", color: "#10b981" },
+  { id: "closed_lost", title: "Втрачено", color: "#ef4444" },
 ];
 
 const EMPTY_FORM = {

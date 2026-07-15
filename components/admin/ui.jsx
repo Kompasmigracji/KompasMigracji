@@ -197,7 +197,10 @@ export function Avatar({ name = "?", role = "", size = 32, src = null, hideName 
   const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', minWidth: 0, flex: 1 }}>
-      <div className="kc-avatar" style={{ width: size, height: size, fontSize: size * 0.4, flexShrink: 0 }}>
+      <div
+        className="flex items-center justify-center rounded-full font-bold text-white bg-gradient-to-br from-blue-500 to-purple-500 overflow-hidden"
+        style={{ width: size, height: size, fontSize: size * 0.4, flexShrink: 0 }}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {src ? <Image src={src} alt={name} width={size} height={size} style={{ width: '100%', height: '100%', borderRadius: 'inherit', objectFit: 'cover' }} unoptimized /> : initials}
       </div>

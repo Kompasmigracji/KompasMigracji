@@ -5,11 +5,11 @@ import KanbanBoard from "@/components/admin/KanbanBoard";
 import LeadDetailsModal from "@/components/admin/LeadDetailsModal";
 
 const FUNNEL_COLUMNS = [
-  { id: "new", title: "Нові", color: "border-blue-500 bg-blue-500/10 text-blue-400" },
-  { id: "contacted", title: "Взяті в роботу", color: "border-purple-500 bg-purple-500/10 text-purple-400" },
-  { id: "pending", title: "Думають", color: "border-amber-500 bg-amber-500/10 text-amber-400" },
-  { id: "won", title: "Успіх", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
-  { id: "lost", title: "Відмова", color: "border-red-500 bg-red-500/10 text-red-400" },
+  { id: "new", title: "Нові", color: "#3b82f6" },
+  { id: "contacted", title: "Взяті в роботу", color: "#8b5cf6" },
+  { id: "pending", title: "Думають", color: "#f59e0b" },
+  { id: "won", title: "Успіх", color: "#10b981" },
+  { id: "lost", title: "Відмова", color: "#ef4444" },
 ];
 
 export default function FunnelsPage() {
