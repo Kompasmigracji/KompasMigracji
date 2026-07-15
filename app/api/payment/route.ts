@@ -1,23 +1,20 @@
 export const dynamic = "force-dynamic";
 /* /api/payment — публічний ендпоінт для P24-оплати з сайту (pricing, karta тощо).
-   Коли P24 не налаштований — автоматично повертає мок-URL для тестів.
+   Мок-режим (redirect на /payment/mock/...) використовується ЛИШЕ поза
+   продакшеном (локальна розробка) або коли явно задано P24_SANDBOX=mock —
+   інакше, якщо жоден провайдер не спрацював, повертаємо чесну помилку.
+   Раніше в проді мовчки підміняли реальний чекаут фейковим, через що
+   клієнт міг подумати, що оплатив, хоча гроші нікуди не пішли.
    При реєстрації платежу створює лід у БД (щоб mock-confirm міг його оновити). */
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
 import { randomUUID } from 'crypto';
 import { q } from '@/lib/db';
 import { createTaskFromLead } from '@/lib/task-from-lead';
 
-function isMockMode(): boolean {
-  const mid = parseInt(process.env.P24_MERCHANT_ID ?? '', 10);
-  return (
-    process.env.P24_SANDBOX === 'mock' ||
-    !mid || mid === 0 ||
-    !process.env.P24_CRC ||
-    !process.env.P24_API_KEY
-  );
+function mockModeAllowed(): boolean {
+  return process.env.NODE_ENV !== 'production' || process.env.P24_SANDBOX === 'mock';
 }
 
 /** Зберігає лід у БД з session_id щоб payment-mock-confirm міг його знайти */
@@ -167,15 +164,37 @@ export async function POST(req: NextRequest) {
     console.error('Stripe handler error, falling back to mock:', err);
   }
 
-  /* ── 4. Mock mode ────────────────────────────────────────────────── */
-  const mockSessionId = `km-${randomUUID()}`;
-  let appUrl = siteUrl;
-  if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
-    appUrl = `https://${appUrl}`;
+  /* ── 4. Жоден провайдер не спрацював ───────────────────────────────── */
+  if (mockModeAllowed()) {
+    const mockSessionId = `km-${randomUUID()}`;
+    let appUrl = siteUrl;
+    if (appUrl && !appUrl.startsWith('http://') && !appUrl.startsWith('https://')) {
+      appUrl = `https://${appUrl}`;
+    }
+
+    await createLeadForPayment({
+      sessionId:   mockSessionId,
+      description: String(description),
+      email:       String(email),
+      source:      leadSource,
+      firstName:   firstName ? String(firstName) : undefined,
+      lastName:    lastName  ? String(lastName)  : undefined,
+      phone:       phone     ? String(phone)     : undefined,
+    });
+
+    const qs = new URLSearchParams({
+      amount: String(amount),
+      desc:   String(description),
+      cur:    'PLN',
+    }).toString();
+    return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${mockSessionId}?${qs}` });
   }
 
+  /* Продакшен без робочого провайдера: чесна помилка замість фейкового
+     чекауту. Лід все одно зберігаємо — це реальний зацікавлений клієнт,
+     менеджер зв'яже з ним вручну навіть якщо автоматична оплата недоступна. */
   await createLeadForPayment({
-    sessionId:   mockSessionId,
+    sessionId,
     description: String(description),
     email:       String(email),
     source:      leadSource,
@@ -184,10 +203,12 @@ export async function POST(req: NextRequest) {
     phone:       phone     ? String(phone)     : undefined,
   });
 
-  const qs = new URLSearchParams({
-    amount: String(amount),
-    desc:   String(description),
-    cur:    'PLN',
-  }).toString();
-  return NextResponse.json({ redirectUrl: `${appUrl}/payment/mock/${mockSessionId}?${qs}` });
+  console.error('payment/route: no payment provider available for session', sessionId);
+  return NextResponse.json(
+    {
+      error:
+        'Оплата тимчасово недоступна. Ми вже отримали вашу заявку — менеджер зв\'яжеться з вами найближчим часом, щоб оформити оплату іншим способом.',
+    },
+    { status: 502 },
+  );
 }

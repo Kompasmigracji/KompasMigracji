@@ -1,7 +1,8 @@
 export const dynamic = "force-dynamic";
-// F2: Subscribe endpoint — creates subscription record + PayU payment
+// F2: Subscribe endpoint — creates subscription record + P24/PayU payment
 // POST { planSlug, name, email, phone }
-// Returns { redirectUrl } to PayU checkout or mock
+// Returns { redirectUrl } to checkout, or an error if no provider is available
+// (mock checkout only outside production / P24_SANDBOX=mock — see mockModeAllowed below)
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
@@ -9,7 +10,11 @@ import { one, q } from "@/lib/db";
 import { sendEmail, welcomeEmailHtml } from "@/lib/email";
 import { createTaskFromLead } from "@/lib/task-from-lead";
 
-const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://kompasmigracji.com";
+const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://www.kompasmigracji.com";
+
+function mockModeAllowed(): boolean {
+  return process.env.NODE_ENV !== "production" || process.env.P24_SANDBOX === "mock";
+}
 
 export async function POST(req: NextRequest) {
   let body: Record<string, unknown> = {};
@@ -89,40 +94,70 @@ export async function POST(req: NextRequest) {
     sendEmail(email, "Witamy w Kompas Migracji!", welcomeEmailHtml(name), "welcome").catch(() => {});
   }
 
-  // Try PayU Checkout
+  const amountGrosze = Math.round(Number(plan.price_pln) * 100);
+  const description = `Subskrypcja ${plan.name} - Kompas Migracji`;
+
+  // ── 1. Try Przelewy24 (primary — matches on-site branding) ──────────
+  try {
+    const { isP24Configured, registerTransaction, toP24Language } = await import("@/lib/przelewy24");
+    if (isP24Configured()) {
+      const result = await registerTransaction({
+        sessionId,
+        amount: amountGrosze,
+        description,
+        email,
+        urlReturn: `${SITE}/payment/success?session=${sessionId}`,
+        urlStatus: `${SITE}/api/payment-notify`,
+        language: toP24Language(),
+      });
+      return NextResponse.json({ redirectUrl: result.paymentUrl, sessionId });
+    }
+  } catch (err: any) {
+    console.error("[subscribe] P24 checkout error, trying PayU:", err.message);
+  }
+
+  // ── 2. Try PayU ───────────────────────────────────────────────────
   try {
     const { createPayUOrder, isPayUConfigured } = await import("@/lib/payu");
-    
-    if (!isPayUConfigured()) {
-      // Fallback to mock if PayU is not configured
-      const params = new URLSearchParams({
-        session: sessionId,
-        amount: String(Math.round(Number(plan.price_pln) * 100)),
-        desc: encodeURIComponent(`Subskrypcja ${plan.name} - Kompas Migracji`),
-        email,
-        name,
-      });
-      return NextResponse.json({
-        redirectUrl: `${SITE}/payment/mock/${sessionId}?${params}`,
+    if (isPayUConfigured()) {
+      const result = await createPayUOrder({
         sessionId,
+        amount: amountGrosze,
+        description,
+        email,
+        firstName: name.split(' ')[0] || '',
+        lastName: name.split(' ').slice(1).join(' ') || '',
+        phone,
+        notifyUrl: `${SITE}/api/payu/notify`,
+        continueUrl: `${SITE}/payment/success?session=${sessionId}`,
       });
+      return NextResponse.json({ redirectUrl: result.redirectUrl, sessionId: result.orderId });
     }
-
-    const result = await createPayUOrder({
-      sessionId,
-      amount: Math.round(Number(plan.price_pln) * 100), // in grosze
-      description: `Subskrypcja ${plan.name} - Kompas Migracji`,
-      email,
-      firstName: name.split(' ')[0] || '',
-      lastName: name.split(' ').slice(1).join(' ') || '',
-      phone,
-      notifyUrl: `${SITE}/api/payu/notify`,
-      continueUrl: `${SITE}/payment/success`,
-    });
-
-    return NextResponse.json({ redirectUrl: result.redirectUrl, sessionId: result.orderId });
   } catch (err: any) {
     console.error("[subscribe] PayU checkout error:", err.message);
-    return NextResponse.json({ error: err.message }, { status: 502 });
   }
+
+  // ── 3. No provider available ──────────────────────────────────────
+  if (mockModeAllowed()) {
+    const params = new URLSearchParams({
+      session: sessionId,
+      amount: String(amountGrosze),
+      desc: encodeURIComponent(description),
+      email,
+      name,
+    });
+    return NextResponse.json({
+      redirectUrl: `${SITE}/payment/mock/${sessionId}?${params}`,
+      sessionId,
+    });
+  }
+
+  console.error("[subscribe] no payment provider available for session", sessionId);
+  return NextResponse.json(
+    {
+      error:
+        "Оплата тимчасово недоступна. Ми вже отримали вашу заявку — менеджер зв'яжеться з вами найближчим часом, щоб оформити підписку іншим способом.",
+    },
+    { status: 502 },
+  );
 }
