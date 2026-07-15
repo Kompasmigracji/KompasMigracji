@@ -16,6 +16,7 @@ export default function ExitPopup() {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const spotlightBackground = useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(59,130,246,0.5), transparent 80%)`;
 
   const show = useCallback(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem(STORAGE_KEY)) return;
@@ -84,9 +85,7 @@ export default function ExitPopup() {
             {/* Spotlight */}
             <motion.div
               className="absolute inset-0 z-0 pointer-events-none opacity-20"
-              style={{
-                background: useMotionTemplate`radial-gradient(400px circle at ${mouseX}px ${mouseY}px, rgba(59,130,246,0.5), transparent 80%)`,
-              }}
+              style={{ background: spotlightBackground }}
             />
 
             <div className="relative z-10 p-8">
