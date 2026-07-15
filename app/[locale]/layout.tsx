@@ -32,8 +32,8 @@ export async function generateMetadata({ params: { locale } }: { params: { local
     },
     icons: {
       icon: [
-        { url: '/favicon.svg', type: 'image/svg+xml' },
-        { url: '/favicon.ico', sizes: '32x32' },
+        { url: '/favicon-v2.svg', type: 'image/svg+xml' },
+        { url: '/favicon-v2.ico', sizes: '32x32' },
       ],
       apple: '/apple-touch-icon.png',
     },
