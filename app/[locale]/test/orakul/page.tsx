@@ -1252,10 +1252,7 @@ export default function OrakulPage() {
       c.lineTo(cx, cy - outer);
       c.closePath();
       c.fillStyle = '#38bdf8';
-      c.shadowColor = '#00e5ff';
-      c.shadowBlur = 6;
       c.fill();
-      c.shadowBlur = 0;
     }
 
     let raf: number;
@@ -1280,6 +1277,9 @@ export default function OrakulPage() {
     const cv = sparksRef.current;
     const arc = arcRef.current;
     if (!cv || !arc) return;
+    // Cursor-follow effect is meaningless on touch and was a real perf cost
+    // (full-screen canvas + per-particle glow) on phones with no mouse to drive it.
+    if (typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches) return;
     const ctx = cv.getContext('2d');
     if (!ctx) return;
     const c = ctx;
@@ -1314,10 +1314,9 @@ export default function OrakulPage() {
         const t = p.life;
         c.beginPath();
         c.fillStyle = `rgba(${Math.floor(60 + 195 * t)},${Math.floor(180 + 75 * t)},255,${t})`;
-        c.shadowBlur = 14; c.shadowColor = `rgba(0,200,255,${t})`;
         c.arc(p.x, p.y, p.r * t, 0, Math.PI * 2); c.fill();
       }
-      c.globalCompositeOperation = 'source-over'; c.shadowBlur = 0;
+      c.globalCompositeOperation = 'source-over';
       raf2 = requestAnimationFrame(tick);
     }
     tick();
