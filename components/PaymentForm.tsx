@@ -125,7 +125,7 @@ export default function PaymentForm({
       </div>
       {error && <div className={styles.error}>{error}</div>}
       <button type="submit" className={styles.button} disabled={loading}>
-        {loading ? 'Redirecting...' : 'Proceed to PayU payment'}
+        {loading ? 'Redirecting...' : 'Proceed to Przelewy24 payment'}
       </button>
     </form>
   );

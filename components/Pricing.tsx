@@ -208,7 +208,7 @@ export default function Pricing() {
         </motion.div>
       </div>
 
-      {/* PayU Modal */}
+      {/* Przelewy24 Modal */}
       {payService && (
         <PayModal 
           service={payService} 

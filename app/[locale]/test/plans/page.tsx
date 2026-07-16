@@ -566,7 +566,7 @@ export default function PlansPage() {
           </div>
         </section>
 
-        {/* PayU payment steps */}
+        {/* Przelewy24 payment steps */}
         <P24PaymentSteps
           title={t.p24Title}
           steps={[

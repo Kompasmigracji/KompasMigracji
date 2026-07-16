@@ -150,11 +150,11 @@ const P24_BORDER = '#DEE2E6';
 const P24_TEXT   = '#212529';
 const P24_MUTED  = '#6C757D';
 
-function PayULogo() {
+function P24Logo() {
   return (
-    <svg width="100" height="30" viewBox="0 0 100 30" fill="none" aria-label="PayU">
-      <rect width="100" height="30" rx="5" fill="#00AEEF"/>
-      <text x="50" y="21" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="14" fontWeight="900" letterSpacing="0.5">PayU</text>
+    <svg width="126" height="30" viewBox="0 0 126 30" fill="none" aria-label="Przelewy24">
+      <rect width="126" height="30" rx="5" fill={P24_RED}/>
+      <text x="63" y="21" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="13" fontWeight="900" letterSpacing="0.4">przelewy24</text>
     </svg>
   );
 }
@@ -165,7 +165,7 @@ function PaymentBadges() {
       <svg width="44" height="22" viewBox="0 0 44 22" fill="none"><rect width="44" height="22" rx="3" fill="#E30613"/><text x="22" y="15" textAnchor="middle" fill="#fff" fontFamily="Arial" fontSize="9" fontWeight="900">BLIK</text></svg>
       <svg width="44" height="22" viewBox="0 0 44 22" fill="none"><rect width="44" height="22" rx="3" fill="#fff" stroke="#DEE2E6"/><text x="22" y="15" textAnchor="middle" fill="#1A1F71" fontFamily="Arial" fontSize="11" fontWeight="900" letterSpacing="0.5">VISA</text></svg>
       <svg width="44" height="22" viewBox="0 0 44 22" fill="none"><rect width="44" height="22" rx="3" fill="#fff" stroke="#DEE2E6"/><circle cx="17" cy="11" r="7" fill="#EB001B"/><circle cx="27" cy="11" r="7" fill="#F79E1B"/><ellipse cx="22" cy="11" rx="3" ry="7" fill="#FF5F00"/></svg>
-      <svg width="44" height="22" viewBox="0 0 44 22" fill="none"><rect width="44" height="22" rx="3" fill="#00AEEF"/><text x="22" y="15" textAnchor="middle" fill="#fff" fontFamily="Arial" fontSize="10" fontWeight="900">PayU</text></svg>
+      <svg width="44" height="22" viewBox="0 0 44 22" fill="none"><rect width="44" height="22" rx="3" fill={P24_RED}/><text x="22" y="15" textAnchor="middle" fill="#fff" fontFamily="Arial" fontSize="10" fontWeight="900">P24</text></svg>
     </div>
   );
 }
@@ -212,10 +212,10 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
       <div onClick={onClose} style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(15,23,42,0.72)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflowY:'auto' }}>
         <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:12, maxWidth:460, width:'100%', overflow:'hidden', fontFamily:"'Syne',sans-serif", animation:'pm-in 0.3s cubic-bezier(0.22,1,0.36,1) both', margin:'auto', boxShadow:'0 24px 80px rgba(0,0,0,0.35)' }}>
           <div style={{ background:'#fff', borderBottom:`1px solid ${P24_BORDER}`, padding:'14px 20px', display:'flex', alignItems:'center', justifyContent:'space-between', gap:12 }}>
-            <PayULogo />
+            <P24Logo />
             <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:11, color:P24_MUTED, fontWeight:600 }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Bezpieczna płatność
+              {t('pay_secure')}
             </div>
             <button onClick={onClose} style={{ background:'none', border:'none', color:'#9CA3AF', fontSize:20, cursor:'pointer', lineHeight:1, padding:'2px 4px', marginLeft:'auto' }} onMouseEnter={e => { e.currentTarget.style.color = P24_TEXT; }} onMouseLeave={e => { e.currentTarget.style.color = '#9CA3AF'; }}>✕</button>
           </div>
@@ -281,7 +281,7 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
             <PaymentBadges />
             <span style={{ fontSize:10, color:'#9CA3AF', display:'flex', alignItems:'center', gap:4 }}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              Szyfrowanie SSL 256-bit · PayU S.A. · licencja KNF
+              {t('pay_ssl')}
             </span>
           </div>
         </div>

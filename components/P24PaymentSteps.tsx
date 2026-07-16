@@ -16,8 +16,8 @@ const GRAY  = "#6C757D";
 const LIGHT = "#F8F9FA";
 const BORD  = "#DEE2E6";
 
-/* ── Official PayU logo ─────────────────────────────────── */
-export function P24Logo({ width = 140 }: { width?: number }) { // Note: Renamed from PayULogo to P24Logo to match filename, but it was PayU. Now it's Przelewy24.
+/* ── Official Przelewy24 logo ─────────────────────────────────── */
+export function P24Logo({ width = 140 }: { width?: number }) {
   const h = Math.round(width * 0.27);
   return (
     <svg width={width} height={h} viewBox="0 0 140 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Przelewy24">

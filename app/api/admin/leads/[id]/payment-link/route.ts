@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 /* /api/admin/leads/[id]/payment-link
    POST { amount_pln, description?, email? }
-   → реєструє транзакцію в PayU
+   → реєструє транзакцію в Przelewy24 (fallback: PayU, якщо P24 не сконфігуровано)
    → зберігає session_id у leads
    → повертає { paymentUrl, sessionId } */
 export const runtime = "nodejs";
