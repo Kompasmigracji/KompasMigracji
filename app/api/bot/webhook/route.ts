@@ -16,6 +16,13 @@ import { q, one } from "@/lib/db";
 import { sendMessage, notifyAdmin, answerCallback } from "@/lib/telegram";
 import { sendLanguagePanel, sendMainMenu } from "@/lib/orakul-bot";
 import { ORAKUL_SYSTEM_PROMPT } from "@/lib/orakul-prompt";
+import {
+  extractTaggedJson,
+  extractEmployerJson,
+  extractHandoffReason,
+  buildEmployerSituation,
+  EMPLOYER_SENTINEL,
+} from "@/lib/orakul-employer";
 
 interface TgUser { id: number; username?: string; first_name?: string }
 interface TgChat { id: number }
@@ -31,14 +38,9 @@ interface TgUpdate {
   message?: TgMessage;
 }
 
-function extractJson(text: string, after: string): Record<string, unknown> | null {
-  const idx = text.indexOf(after);
-  if (idx === -1) return null;
-  const slice = text.slice(idx + after.length);
-  const match = slice.match(/\{[\s\S]*?\}/);
-  if (!match) return null;
-  try { return JSON.parse(match[0]); } catch { return null; }
-}
+const CANDIDATE_SENTINEL = '[КАНДИДАТ_ГОТОВИЙ]';
+const ALL_TAGS_RE = /\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]|\[ЛЮДИНА_ПОТРІБНА:?[^\]]*\]/;
+const ESCALATION_FALLBACK_UK = "Передаю ваш запит менеджеру — він зв'яжеться з вами найближчим часом.";
 
 export async function POST(req: NextRequest) {
   const token = req.nextUrl.searchParams.get("token") || undefined;
@@ -196,34 +198,45 @@ export async function POST(req: NextRequest) {
     }
       history.push({ role: 'assistant', content: aiText });
 
-      const [visibleText] = aiText.split(/\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]/);
-      
-      if (visibleText.trim()) {
-        const isFinished = aiText.includes('[КАНДИДАТ_ГОТОВИЙ]') || aiText.includes('[РОБОТОДАВЕЦЬ_ГОТОВИЙ]');
+      const hasAnyTag = ALL_TAGS_RE.test(aiText);
+      const [visibleTextRaw] = aiText.split(ALL_TAGS_RE);
+      // Тег інколи стоїть на початку відповіді (перед видимим коментарем) —
+      // якщо після вирізання нічого не лишилось, показуємо коротке
+      // підтвердження замість порожнього повідомлення.
+      const visibleText = visibleTextRaw.trim() || (hasAnyTag ? ESCALATION_FALLBACK_UK : '');
+
+      if (visibleText) {
+        const isFinished = aiText.includes(CANDIDATE_SENTINEL) || aiText.includes(EMPLOYER_SENTINEL);
         const replyMarkup = isFinished ? undefined : {
           inline_keyboard: [
             [{ text: "🏁 Завершити опитування та зв'язатися з менеджером", callback_data: "action_call_human" }]
           ]
         };
-        await sendMessage(chatId, visibleText.trim(), "HTML", token, replyMarkup);
+        await sendMessage(chatId, visibleText, "HTML", token, replyMarkup);
       }
 
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
 
       const contactStr = username ? `@${username}` : String(chatId);
 
-      if (aiText.includes('[КАНДИДАТ_ГОТОВИЙ]')) {
-        const d = extractJson(aiText, '[КАНДИДАТ_ГОТОВИЙ]');
+      if (aiText.includes(CANDIDATE_SENTINEL)) {
+        const d = extractTaggedJson(aiText, CANDIDATE_SENTINEL);
         const phone = d?.phone as string | undefined;
         const finalContact = phone || contactStr;
-        const situation = [
-          `AI чат Оракул. Спеціальність: ${d?.specialty || '—'}`,
-          `Досвід: ${d?.experience || '—'}`,
-          `Документи: ${d?.documents || '—'}`,
-          `Мови: ${d?.languages || '—'}`,
-          `Мобільність: ${d?.mobility || '—'}`,
-          `Оцінка: ${d?.lead_score || '—'}`,
-        ].join('. ');
+        let situation: string;
+        if (d) {
+          situation = [
+            `AI чат Оракул. Спеціальність: ${d?.specialty || '—'}`,
+            `Досвід: ${d?.experience || '—'}`,
+            `Документи: ${d?.documents || '—'}`,
+            `Мови: ${d?.languages || '—'}`,
+            `Мобільність: ${d?.mobility || '—'}`,
+            `Оцінка: ${d?.lead_score || '—'}`,
+          ].join('. ');
+        } else {
+          console.error('[webhook] candidate JSON malformed:', aiText);
+          situation = aiText;
+        }
 
         await q(
           `UPDATE kompas_leads SET contact = $1, message = $2, status = 'in_progress' WHERE chat_id = $3`,
@@ -233,7 +246,7 @@ export async function POST(req: NextRequest) {
           `UPDATE leads SET contact = $1, message = $2, status = 'in_progress' WHERE chat_id = $3`,
           [finalContact, situation, String(chatId)]
         );
-        
+
         // Add to timeline
         try {
           await q(
@@ -241,41 +254,60 @@ export async function POST(req: NextRequest) {
             [lead.id, situation]
           );
         } catch (e) { console.error("Error adding timeline activity:", e); }
-        
+
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Кандидат)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
       }
 
-      if (aiText.includes('[РОБОТОДАВЕЦЬ_ГОТОВИЙ]')) {
-        const d = extractJson(aiText, '[РОБОТОДАВЕЦЬ_ГОТОВИЙ]');
-        const contact = d?.contact as string | undefined;
-        const finalContact = contact || contactStr;
-        const situation = [
-          `AI чат Оракул. Роботодавець.`,
-          `Потреба: ${d?.specialty_needed || '—'}`,
-          `Кількість: ${d?.workers_count || '—'}`,
-          `Локація: ${d?.location || '—'}`,
-          `Старт: ${d?.start_date || '—'}`,
-          d?.message || '',
-        ].filter(Boolean).join(' ');
+      if (aiText.includes(EMPLOYER_SENTINEL)) {
+        const d = extractEmployerJson(aiText);
+        const finalContact = d?.whatsapp || d?.email || contactStr;
+        let situation: string;
+        if (d) {
+          situation = buildEmployerSituation(d);
+        } else {
+          console.error('[webhook] employer JSON malformed:', aiText);
+          situation = aiText;
+        }
+        const metadata = JSON.stringify(d || {});
 
         await q(
           `UPDATE kompas_leads SET contact = $1, message = $2, email = $3, status = 'in_progress' WHERE chat_id = $4`,
-          [finalContact, situation, (d?.email as string) || null, String(chatId)]
+          [finalContact, situation, d?.email || null, String(chatId)]
         );
         await q(
           `UPDATE leads SET contact = $1, message = $2, email = $3, status = 'in_progress' WHERE chat_id = $4`,
-          [finalContact, situation, (d?.email as string) || null, String(chatId)]
+          [finalContact, situation, d?.email || null, String(chatId)]
         );
-        
+
         // Add to timeline
         try {
           await q(
-            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Анкета від Оракула', $2)`,
-            [lead.id, situation]
+            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body, metadata) VALUES ('lead', $1, 'note', 'Анкета від Оракула', $2, $3::jsonb)`,
+            [lead.id, situation, metadata]
           );
         } catch (e) { console.error("Error adding timeline activity:", e); }
 
-        await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\nКонтакт: ${finalContact}\nДеталі: ${situation}`, token);
+        await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\n${situation}`, token);
+      }
+
+      const handoffReason = extractHandoffReason(aiText);
+      if (handoffReason) {
+        const situation = `⚠️ НЕГАЙНА ЕСКАЛАЦІЯ: ${handoffReason}`;
+        await q(
+          `UPDATE kompas_leads SET message = $1, status = 'in_progress' WHERE chat_id = $2`,
+          [situation, String(chatId)]
+        );
+        await q(
+          `UPDATE leads SET message = $1, status = 'in_progress' WHERE chat_id = $2`,
+          [situation, String(chatId)]
+        );
+        try {
+          await q(
+            `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Ескалація від Оракула', $2)`,
+            [lead.id, situation]
+          );
+        } catch (e) { console.error("Error adding timeline activity:", e); }
+        await notifyAdmin(`⚠️ <b>Оракул: негайна ескалація!</b>\nКонтакт: ${contactStr}\nПричина: ${handoffReason}`, token);
       }
 
 
