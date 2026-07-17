@@ -25,6 +25,10 @@
     {
       "path": "/api/cron/lifeos",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/orakul-abandoned",
+      "schedule": "*/30 * * * *"
     }
   ]
 }
