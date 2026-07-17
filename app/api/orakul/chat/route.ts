@@ -49,7 +49,9 @@ async function getOrCreateSessionLead(sessionId: string): Promise<{ id: string }
         [sessionId]
       ) as { id: string };
     } else {
-      await q(`UPDATE leads SET last_activity_at = NOW() WHERE id = $1`, [row.id]);
+      // abandoned_notified_at скидається — якщо сесія відновилась, наступне
+      // затихання розмови має знову потрапити під сканер stage 8.
+      await q(`UPDATE leads SET last_activity_at = NOW(), abandoned_notified_at = NULL WHERE id = $1`, [row.id]);
     }
     return row;
   } catch (err) {

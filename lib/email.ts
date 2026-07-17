@@ -249,6 +249,18 @@ ${crossSellBlock}
 </table>`);
 }
 
+// Internal staff notification when a web-chat Orakul session (stage 8) stalls
+// before the candidate/employer questionnaire completes — session id + whatever
+// transcript was captured, so staff can decide whether to reach out manually.
+export function orakulAbandonedEmailHtml(chatId: string, transcript: string, lastActivityAt: string): string {
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x1F44B; Оракул: покинута розмова (Web)</h2>
+<p style="margin:0 0 20px;color:#6B7280;font-size:14px;">
+  Сесія: <strong>${esc(chatId)}</strong> &middot; Останній меседж: ${esc(new Date(lastActivityAt).toLocaleString("uk-UA"))}
+</p>
+<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;color:#374151;line-height:1.6;">${esc(transcript || "(розмова порожня)")}</div>`);
+}
+
 // Internal staff notification when the employer-intake bot escalates immediately
 // (20+ workers requested, an atypical rate, or a complex B2B/tax question) —
 // no structured schema exists yet at this point, only the reason + transcript so far.
