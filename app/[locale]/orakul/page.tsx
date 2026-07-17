@@ -670,64 +670,25 @@ const CSS = `
   background:linear-gradient(180deg,#ffffff 0%,#b4d5ff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   filter:drop-shadow(0 4px 24px rgba(0,229,255,.25))}
 .e-ac-sub{text-align:center;color:var(--text-muted);margin-bottom:5rem;font-size:1.25rem;font-weight:500;max-width:600px;margin-inline:auto}
-.e-ac-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:2.5rem;max-width:1080px;margin:0 auto;padding:0 1.5rem}
 
-.e-ac-card{
-  position:relative;
+.e-terms-list{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem;padding:0 1.5rem}
+.e-terms-item{
+  display:flex;gap:1.25rem;align-items:flex-start;
   background:rgba(8,12,32,.4);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(0,229,255,.15);
-  border-radius:28px;padding:3rem 2.5rem;
-  transition:all .5s cubic-bezier(.16,1,.3,1);
+  border:1px solid rgba(0,229,255,.15);border-radius:20px;padding:1.75rem 2rem;
   box-shadow:0 20px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);
-  display:flex;flex-direction:column;
 }
-.e-ac-card::after{
-  content:'';position:absolute;inset:0;border-radius:28px;
-  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 50%,rgba(0,229,255,.05) 100%);
-  pointer-events:none;
-}
-.e-ac-card:hover{
-  transform:translateY(-10px);
-  border-color:rgba(0,229,255,.4);
-  box-shadow:0 30px 60px rgba(0,229,255,.15),inset 0 1px 0 rgba(255,255,255,.2);
-}
-.e-ac-badge{
-  position:absolute;top:1.5rem;right:1.5rem;
-  background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);
-  color:#00e5ff;font-size:.75rem;font-weight:800;padding:.4rem 1rem;
-  border-radius:50px;text-transform:uppercase;letter-spacing:.1em;
-  backdrop-filter:blur(8px);
-}
-.e-ac-icon{font-size:4rem;margin-bottom:1.5rem;filter:drop-shadow(0 0 20px rgba(0,229,255,.3))}
-.e-ac-name{font-size:2rem;font-weight:900;margin-bottom:1rem;color:#fff;letter-spacing:-.02em}
-.e-ac-desc{font-size:1.05rem;color:rgba(180,210,255,.7);line-height:1.7;margin-bottom:2.5rem;flex:1}
-
-/* 🔥 PREMIUM BUY BUTTON 🔥 */
-.e-ac-btn{
-  width:100%;padding:1.2rem;border-radius:16px;border:none;
+.e-terms-num{
+  flex-shrink:0;width:2.75rem;height:2.75rem;border-radius:50%;
   background:linear-gradient(135deg,#00e5ff 0%,#0055ff 100%);
-  color:#fff;font-weight:900;font-size:1.1rem;cursor:pointer;
-  text-transform:uppercase;letter-spacing:.1em;
-  position:relative;overflow:hidden;
-  transition:all .4s cubic-bezier(.16,1,.3,1);
-  box-shadow:0 10px 30px rgba(0,188,255,.3),inset 0 2px 0 rgba(255,255,255,.3);
+  color:#fff;font-weight:900;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
 }
-.e-ac-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,#ffffff 0%,transparent 50%);
-  opacity:.2;transition:opacity .4s;
-}
-.e-ac-btn::after{
-  content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);
-  transform:skewX(-20deg);transition:0s;
-}
-.e-ac-btn:hover{
-  transform:translateY(-4px);
-  box-shadow:0 20px 40px rgba(0,188,255,.4),inset 0 2px 0 rgba(255,255,255,.5);
-}
-.e-ac-btn:hover::after{left:200%;transition:left .8s ease-in-out}
-.e-ac-btn:active{transform:translateY(1px);box-shadow:0 5px 15px rgba(0,188,255,.4)}
+.e-terms-body{flex:1}
+.e-terms-title2{font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:.5rem}
+.e-terms-sub{margin:0;padding-left:1.1rem;color:rgba(180,210,255,.75);font-size:.95rem;line-height:1.7}
+.e-terms-sub li{margin-bottom:.25rem}
+.e-terms-single{color:rgba(180,210,255,.75);font-size:.95rem;line-height:1.7;margin:0}
 `;
 
 
@@ -1082,47 +1043,56 @@ export default function OrakulPage() {
   const [faqOpen, setFaqOpen] = useState<number|null>(null);
   const msgsEndRef = useRef<HTMLDivElement>(null);
 
-  const T_AC = {
-    uk: { title: 'AI-Академія Оракула', sub: 'Сертифікована підготовка', w: 'Зварювальник 4.0', wd: 'Підготовка до TIG/MIG/MAG, AI-симуляція співбесід', f: 'Монтер 4.0', fd: 'Читання ізометрії, віртуальні AI-тести', btn: 'Купити курс (499 PLN)' },
-    pl: { title: 'Akademia AI Orakul', sub: 'Certyfikowane szkolenie', w: 'Spawacz 4.0', wd: 'Przygotowanie do TIG/MIG/MAG, AI-symulacja', f: 'Monter 4.0', fd: 'Czytanie izometrii, testy AI', btn: 'Kup kurs (499 PLN)' },
-    ru: { title: 'AI-Академия Оракула', sub: 'Сертифицированная подготовка', w: 'Сварщик 4.0', wd: 'Подготовка к TIG/MIG/MAG, AI-симуляция', f: 'Монтер 4.0', fd: 'Чтение изометрии, AI-тесты', btn: 'Купить курс (499 PLN)' },
-    en: { title: 'Orakul AI Academy', sub: 'Certified Training', w: 'Welder 4.0', wd: 'TIG/MIG/MAG prep, AI simulation', f: 'Fitter 4.0', fd: 'Isometric reading, AI tests', btn: 'Buy Course (499 PLN)' },
-  }[lang] || { title: 'AI-Академія Оракула', sub: 'Сертифікована підготовка', w: 'Зварювальник 4.0', wd: 'Підготовка до TIG/MIG/MAG, AI-симуляція', f: 'Монтер 4.0', fd: 'Читання ізометрії, AI-тести', btn: 'Купити курс (499 PLN)' };
-
-  const [academyModal, setAcademyModal] = useState<{ course: string; price: number; name: string } | null>(null);
-  const [acName, setAcName] = useState('');
-  const [acEmail, setAcEmail] = useState('');
-  const [acPhone, setAcPhone] = useState('');
-  const [acLoading, setAcLoading] = useState(false);
-
-  const handleBuyCourse = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!academyModal) return;
-    setAcLoading(true);
-    try {
-      const res = await fetch('/api/payment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: academyModal.price,
-          description: `AI-Академія: ${academyModal.name}`,
-          email: acEmail,
-          firstName: acName,
-          phone: acPhone,
-          source: 'ai_academy'
-        })
-      });
-      const data = await res.json();
-      if (data.redirectUrl) {
-        window.location.href = data.redirectUrl;
-      } else {
-        alert(data.error || 'Помилка оплати');
-      }
-    } catch (err) {
-      alert('Помилка сервера');
-    } finally {
-      setAcLoading(false);
-    }
+  const T_TERMS = {
+    uk: {
+      title: 'Комерційні умови співпраці', sub: 'Прозорі умови для компаній, які замовляють персонал через EWU',
+      items: [
+        { title: 'Вартість послуги', lines: ['перший працівник — 2 500 zł нетто', 'другий працівник — 2 500 zł нетто', 'третій і кожний наступний — 5 000 zł нетто'] },
+        { title: 'Момент виникнення оплати', lines: ['рахунок виставляється після 3 календарних днів роботи працівника'] },
+        { title: 'Термін оплати', lines: ['стандартний термін — 7 днів від дати виставлення рахунку'] },
+        { title: 'Знижки', lines: ['можливі знижки при комплексному підборі персоналу (повний комплект працівників)'] },
+        { title: 'Гарантія', lines: ['гарантія на працівника — 30 календарних днів', 'якщо працівник самостійно залишає роботу або не проходить випробувальний термін протягом 30 днів, виконавець одноразово надає безкоштовну заміну'] },
+      ],
+    },
+    pl: {
+      title: 'Komercyjne warunki współpracy', sub: 'Przejrzyste warunki dla firm zamawiających personel przez EWU',
+      items: [
+        { title: 'Koszt usługi', lines: ['pierwszy pracownik — 2 500 zł netto', 'drugi pracownik — 2 500 zł netto', 'trzeci i każdy kolejny — 5 000 zł netto'] },
+        { title: 'Moment powstania płatności', lines: ['faktura wystawiana jest po 3 dniach kalendarzowych pracy pracownika'] },
+        { title: 'Termin płatności', lines: ['standardowy termin — 7 dni od daty wystawienia faktury'] },
+        { title: 'Rabaty', lines: ['możliwe rabaty przy kompleksowej obsłudze kompletu personelu'] },
+        { title: 'Gwarancja', lines: ['gwarancja na pracownika — 30 dni kalendarzowych', 'jeśli pracownik samodzielnie odejdzie z pracy lub nie przejdzie okresu próbnego w ciągu 30 dni, wykonawca jednorazowo zapewnia bezpłatne zastępstwo'] },
+      ],
+    },
+    ru: {
+      title: 'Коммерческие условия сотрудничества', sub: 'Прозрачные условия для компаний-заказчиков персонала через EWU',
+      items: [
+        { title: 'Стоимость услуги', lines: ['первый работник — 2 500 zł нетто', 'второй работник — 2 500 zł нетто', 'третий и каждый следующий — 5 000 zł нетто'] },
+        { title: 'Момент возникновения оплаты', lines: ['счёт выставляется после 3 календарных дней работы сотрудника'] },
+        { title: 'Срок оплаты', lines: ['стандартный срок — 7 дней от даты выставления счёта'] },
+        { title: 'Скидки', lines: ['возможны скидки при комплексном подборе персонала (полный комплект работников)'] },
+        { title: 'Гарантия', lines: ['гарантия на работника — 30 календарных дней', 'если работник самостоятельно покидает работу или не проходит испытательный срок в течение 30 дней, исполнитель один раз бесплатно предоставляет замену'] },
+      ],
+    },
+    en: {
+      title: 'Commercial Terms of Cooperation', sub: 'Transparent terms for companies ordering staff through EWU',
+      items: [
+        { title: 'Service cost', lines: ['first worker — PLN 2,500 net', 'second worker — PLN 2,500 net', 'third and each subsequent worker — PLN 5,000 net'] },
+        { title: 'When payment is due', lines: ["the invoice is issued after 3 calendar days of the worker's employment"] },
+        { title: 'Payment term', lines: ['standard term — 7 days from the invoice date'] },
+        { title: 'Discounts', lines: ['possible discounts for full-team staffing (a complete set of personnel)'] },
+        { title: 'Guarantee', lines: ["30 calendar days' guarantee per worker", 'if a worker voluntarily leaves or fails the probation period within 30 days, the contractor provides one free replacement'] },
+      ],
+    },
+  }[lang] || {
+    title: 'Комерційні умови співпраці', sub: 'Прозорі умови для компаній, які замовляють персонал через EWU',
+    items: [
+      { title: 'Вартість послуги', lines: ['перший працівник — 2 500 zł нетто', 'другий працівник — 2 500 zł нетто', 'третій і кожний наступний — 5 000 zł нетто'] },
+      { title: 'Момент виникнення оплати', lines: ['рахунок виставляється після 3 календарних днів роботи працівника'] },
+      { title: 'Термін оплати', lines: ['стандартний термін — 7 днів від дати виставлення рахунку'] },
+      { title: 'Знижки', lines: ['можливі знижки при комплексному підборі персоналу (повний комплект працівників)'] },
+      { title: 'Гарантія', lines: ['гарантія на працівника — 30 календарних днів', 'якщо працівник самостійно залишає роботу або не проходить випробувальний термін протягом 30 днів, виконавець одноразово надає безкоштовну заміну'] },
+    ],
   };
 
   const GREET: Record<LangKey, string> = {
@@ -1952,26 +1922,27 @@ export default function OrakulPage() {
           <div className="e-social-pill">🌍 <span className="num">12+</span> {T.socialStrip[3]}</div>
         </div>
 
-        {/* ── AI ACADEMY ── */}
+        {/* ── COMMERCIAL TERMS ── */}
         <section className="e-academy">
           <div className="e-wrap">
-            <h2 className="e-ac-title">{T_AC.title}</h2>
-            <p className="e-ac-sub">{T_AC.sub}</p>
-            <div className="e-ac-cards">
-              <div className="e-ac-card">
-                <div className="e-ac-badge">Cert Included</div>
-                <div className="e-ac-icon">🔥</div>
-                <h3 className="e-ac-name">{T_AC.w}</h3>
-                <p className="e-ac-desc">{T_AC.wd}</p>
-                <button className="e-ac-btn" onClick={() => setAcademyModal({ course: 'welder', price: 499, name: T_AC.w })}>{T_AC.btn}</button>
-              </div>
-              <div className="e-ac-card">
-                <div className="e-ac-badge">Cert Included</div>
-                <div className="e-ac-icon">🔧</div>
-                <h3 className="e-ac-name">{T_AC.f}</h3>
-                <p className="e-ac-desc">{T_AC.fd}</p>
-                <button className="e-ac-btn" onClick={() => setAcademyModal({ course: 'fitter', price: 499, name: T_AC.f })}>{T_AC.btn}</button>
-              </div>
+            <h2 className="e-ac-title">{T_TERMS.title}</h2>
+            <p className="e-ac-sub">{T_TERMS.sub}</p>
+            <div className="e-terms-list">
+              {T_TERMS.items.map((item, i) => (
+                <div key={i} className="e-terms-item">
+                  <div className="e-terms-num">{i + 1}</div>
+                  <div className="e-terms-body">
+                    <h3 className="e-terms-title2">{item.title}</h3>
+                    {item.lines.length > 1 ? (
+                      <ul className="e-terms-sub">
+                        {item.lines.map((line, j) => <li key={j}>{line}</li>)}
+                      </ul>
+                    ) : (
+                      <p className="e-terms-single">{item.lines[0]}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -2002,26 +1973,6 @@ export default function OrakulPage() {
 
 
       </div>
-
-      {/* ── EXIT INTENT POPUP ── */}
-      {academyModal && (
-        <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setAcademyModal(null); }}>
-          <div className="e-exit-box">
-            <button className="e-exit-close" onClick={() => setAcademyModal(null)}>✕</button>
-            <div className="e-exit-emoji">🎓</div>
-            <div className="e-exit-title">Оформлення курсу</div>
-            <div className="e-exit-sub">{academyModal.name} — 499 PLN. Введіть дані для отримання доступу та сертифікату.</div>
-            <form onSubmit={handleBuyCourse}>
-              <input className="e-inp" placeholder="Ім'я та Прізвище" value={acName} onChange={e => setAcName(e.target.value)} required />
-              <input className="e-inp" type="email" placeholder="Email" value={acEmail} onChange={e => setAcEmail(e.target.value)} required />
-              <input className="e-inp" placeholder="Телефон" value={acPhone} onChange={e => setAcPhone(e.target.value)} required />
-              <button className="e-submit-btn" type="submit" disabled={acLoading}>
-                {acLoading ? 'Обробка...' : 'Перейти до оплати'}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {exitPopup && (
         <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setExitPopup(false); }}>
