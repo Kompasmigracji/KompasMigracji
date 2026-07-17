@@ -44,6 +44,7 @@ export default function Header() {
   const [langOpen, setLangOpen] = useState(false);
 
   const [activeLang, setActiveLang] = useState(locale.toUpperCase());
+  const [langChanging, setLangChanging] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
   const langRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +60,22 @@ export default function Header() {
   ];
 
   const changeLang = (lng: string) => {
-    router.replace(pathname, { locale: lng as Locale });
+    // Guards against a stuck/blank page on iOS Safari when a tap fires the
+    // handler twice (touchend + click) — two overlapping router.replace()
+    // navigations to different locale-prefixed URLs can leave the router
+    // waiting on the first while the second never resolves.
+    if (langChanging || lng === locale) {
+      setLangOpen(false);
+      return;
+    }
+    setLangChanging(true);
     setLangOpen(false);
+    router.replace(pathname, { locale: lng as Locale });
   };
+
+  useEffect(() => {
+    setLangChanging(false);
+  }, [locale]);
 
   useEffect(() => {
     let ticking = false;

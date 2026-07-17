@@ -46,7 +46,7 @@ const SECRET = new TextEncoder().encode(jwtSecret || "dev-secret-change-me-in-pr
 
 const intlMiddleware = createMiddleware({
   locales: ["uk", "pl", "en", "ru", "rom"],
-  defaultLocale: "pl",
+  defaultLocale: "uk",
   localePrefix: "always",
   localeDetection: true,
 });

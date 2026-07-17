@@ -15,6 +15,21 @@ import {
 import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from '@/lib/email';
 import { notifyAdmin } from '@/lib/telegram';
 
+/** Gemini free-tier RPM quota (429 RESOURCE_EXHAUSTED) — the API embeds its
+ * own suggested retryDelay in the error body, so we honor that instead of
+ * guessing. Never surfaced to the client raw: dumping the multi-KB nested
+ * JSON error blob into the chat bubble is what users were actually seeing. */
+function isRateLimitError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return msg.includes('"code":429') || msg.includes('RESOURCE_EXHAUSTED') || /too many requests/i.test(msg);
+}
+
+function extractRetryDelaySeconds(err: unknown, fallback = 3): number {
+  const msg = err instanceof Error ? err.message : String(err);
+  const m = msg.match(/"retryDelay":\s*"(\d+)s"/);
+  return m ? Math.min(parseInt(m[1], 10), 10) : fallback;
+}
+
 function notifyEmployerCompletion(d: Partial<EmployerLeadData>, situation: string): void {
   notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець, Web)!</b>\n${situation}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
@@ -205,11 +220,23 @@ export async function POST(req: NextRequest) {
             role: m.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: m.content }],
           }));
-          const respStream = await ai.models.generateContentStream({
+          const callGemini = () => ai.models.generateContentStream({
             model: 'gemini-2.5-flash',
             contents: aiMessages,
             config: { systemInstruction: systemInstructionWithNote }
           });
+
+          let respStream;
+          try {
+            respStream = await callGemini();
+          } catch (err) {
+            // Only worth retrying if nothing streamed yet — a 429 here fires
+            // before generation starts, so there's no partial text to duplicate.
+            if (!isRateLimitError(err)) throw err;
+            await new Promise((r) => setTimeout(r, extractRetryDelaySeconds(err) * 1000));
+            respStream = await callGemini();
+          }
+
           for await (const chunk of respStream) {
             if (chunk.text) {
               fullText += chunk.text;
@@ -275,7 +302,10 @@ export async function POST(req: NextRequest) {
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));
         controller.close();
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'AI error';
+        console.error('[orakul/chat] AI call failed:', err);
+        const msg = isRateLimitError(err)
+          ? 'Зараз забагато запитів одночасно. Спробуйте, будь ласка, ще раз за хвилину.'
+          : 'Тимчасова технічна помилка. Спробуйте, будь ласка, ще раз.';
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
         controller.close();
       }
