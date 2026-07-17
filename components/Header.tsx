@@ -145,6 +145,7 @@ export default function Header() {
               {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
             </Link>
             <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
+            <Link href="/orakul" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">EWU</Link>
             <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">iPhoenixCRM</Link>
             <button 
               onClick={() => setShowAIModal(true)}
@@ -258,6 +259,9 @@ export default function Header() {
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('nav_pricing')}</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/orakul" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">EWU</Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">iPhoenixCRM</Link>
