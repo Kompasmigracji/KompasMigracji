@@ -474,5 +474,20 @@
     "phone": "Telefon"
   },
   "chat_online": "Online",
-  "chat_error": "Something went wrong. Please try again."
+  "chat_error": "Coś poszło nie tak. Spróbuj ponownie.",
+  "cookie_title": "Używamy plików cookie",
+  "cookie_desc": "Niezbędne pliki cookie są zawsze aktywne. Analityczne pomagają nam się rozwijać.",
+  "cookie_privacy_link": "Polityka prywatności",
+  "cookie_necessary_title": "Niezbędne",
+  "cookie_necessary_desc": "Język, motyw, sesja — zawsze aktywne",
+  "cookie_analytics_title": "Analityczne",
+  "cookie_analytics_desc": "Pomagają ulepszać usługę",
+  "cookie_accept_all": "Akceptuj wszystkie",
+  "cookie_save": "Zapisz",
+  "cookie_customize": "Dostosuj",
+  "cookie_hide": "Ukryj",
+  "cookie_continue_without": "Kontynuuj bez akceptacji",
+  "footer_subscriptions": "Subskrypcje miesięczne",
+  "footer_book_consultation": "Zapisz się na konsultację",
+  "footer_client_portal": "Portal klienta"
 }

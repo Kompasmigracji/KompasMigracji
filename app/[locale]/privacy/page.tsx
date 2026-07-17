@@ -21,7 +21,7 @@ export default function Privacy() {
       <div className="max-w-2xl mx-auto">
         <Link href="/" className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-primary no-underline mb-8 transition-colors">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-          На головну
+          Strona główna
         </Link>
 
         <p className="text-xs font-bold uppercase tracking-widest text-primary mb-2">POLITYKA PRYWATNOŚCI</p>

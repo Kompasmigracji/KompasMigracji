@@ -474,5 +474,20 @@
   },
   "chat_online": "Online",
   "chat_greeting_msg": "Hello! I am the Kompas Migracji AI assistant 👋",
-  "chat_error": "Something went wrong. Please try again."
+  "chat_error": "Something went wrong. Please try again.",
+  "cookie_title": "We use cookies",
+  "cookie_desc": "Necessary cookies are always active. Analytics cookies help us improve.",
+  "cookie_privacy_link": "Privacy policy",
+  "cookie_necessary_title": "Necessary",
+  "cookie_necessary_desc": "Language, theme, session — always active",
+  "cookie_analytics_title": "Analytics",
+  "cookie_analytics_desc": "Help us improve the service",
+  "cookie_accept_all": "Accept all",
+  "cookie_save": "Save",
+  "cookie_customize": "Customize",
+  "cookie_hide": "Hide",
+  "cookie_continue_without": "Continue without accepting",
+  "footer_subscriptions": "Monthly subscriptions",
+  "footer_book_consultation": "Book a consultation",
+  "footer_client_portal": "Client portal"
 }

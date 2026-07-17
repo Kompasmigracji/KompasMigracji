@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useCookieConsent } from '@/lib/useCookieConsent';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,6 +24,7 @@ function Toggle({ on, onChange }: { on: boolean; onChange: ((v: boolean) => void
 }
 
 export default function CookieBanner() {
+  const t = useTranslations();
   const { decided, acceptAll, rejectAll, saveCustom } = useCookieConsent();
   const [open, setOpen] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);
@@ -46,12 +48,12 @@ export default function CookieBanner() {
             </div>
             <div>
               <p className="m-0 font-display font-bold text-base text-gray-900 leading-tight mb-1">
-                Ми використовуємо cookies
+                {t('cookie_title')}
               </p>
               <p className="m-0 text-xs text-gray-500 leading-relaxed">
-                Необхідні cookies завжди активні. Аналітичні допомагають нам стати краще.{' '}
+                {t('cookie_desc')}{' '}
                 <Link href="/privacy" className="text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors">
-                  Політика конфіденційності
+                  {t('cookie_privacy_link')}
                 </Link>
               </p>
             </div>
@@ -68,15 +70,15 @@ export default function CookieBanner() {
                 <div className="py-3 flex flex-col gap-2 border-t border-black/10 mt-2">
                   <div className="flex items-center justify-between rounded-xl p-3 bg-white/60 border border-black/5">
                     <div>
-                      <p className="m-0 text-sm font-semibold text-gray-900">Необхідні</p>
-                      <p className="m-0 mt-0.5 text-[11px] text-gray-500">Мова, тема, сесія — завжди активні</p>
+                      <p className="m-0 text-sm font-semibold text-gray-900">{t('cookie_necessary_title')}</p>
+                      <p className="m-0 mt-0.5 text-[11px] text-gray-500">{t('cookie_necessary_desc')}</p>
                     </div>
                     <Toggle on={true} onChange={null} />
                   </div>
                   <div className="flex items-center justify-between rounded-xl p-3 bg-white/60 border border-black/5">
                     <div>
-                      <p className="m-0 text-sm font-semibold text-gray-900">Аналітичні</p>
-                      <p className="m-0 mt-0.5 text-[11px] text-gray-500">Допомагають покращувати сервіс</p>
+                      <p className="m-0 text-sm font-semibold text-gray-900">{t('cookie_analytics_title')}</p>
+                      <p className="m-0 mt-0.5 text-[11px] text-gray-500">{t('cookie_analytics_desc')}</p>
                     </div>
                     <Toggle on={analyticsOn} onChange={setAnalyticsOn} />
                   </div>
@@ -91,30 +93,30 @@ export default function CookieBanner() {
               className="flex-1 min-w-[120px] px-4 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all active:scale-95 shadow-[0_0_15px_rgba(37,99,235,0.3)] relative overflow-hidden group"
             >
               <div className="absolute inset-0 w-full h-full transform -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
-              <span className="relative z-10">Прийняти всі</span>
+              <span className="relative z-10">{t('cookie_accept_all')}</span>
             </button>
-            
+
             {open && (
-              <button 
-                onClick={() => saveCustom({ analytics: analyticsOn })} 
+              <button
+                onClick={() => saveCustom({ analytics: analyticsOn })}
                 className="px-4 py-2.5 rounded-full bg-white/80 hover:bg-white/20 text-gray-900 font-semibold text-sm transition-all active:scale-95"
               >
-                Зберегти
+                {t('cookie_save')}
               </button>
             )}
 
-            <button 
-              onClick={() => setOpen(!open)} 
+            <button
+              onClick={() => setOpen(!open)}
               className="px-4 py-2.5 rounded-full border border-black/10 hover:bg-white/60 text-gray-700 font-medium text-sm transition-all active:scale-95"
             >
-              {open ? 'Сховати' : 'Налаштувати'}
+              {open ? t('cookie_hide') : t('cookie_customize')}
             </button>
           </div>
-          
+
           {!open && (
              <div className="text-center mt-3">
                <button onClick={rejectAll} className="text-xs text-gray-500 hover:text-gray-700 transition-colors bg-transparent border-none cursor-pointer">
-                 Продовжити без прийняття
+                 {t('cookie_continue_without')}
                </button>
              </div>
           )}

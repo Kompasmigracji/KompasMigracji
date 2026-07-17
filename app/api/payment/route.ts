@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
         }],
         mode:             'payment',
         success_url:      `${siteUrl}/payment/success?session=${sessionId}`,
-        cancel_url:       `${siteUrl}/test/pricing`,
+        cancel_url:       `${siteUrl}/pricing`,
         customer_email:   String(email),
         client_reference_id: sessionId,
         metadata: { sessionId, source: leadSource },

@@ -2,8 +2,16 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useLocale } from 'next-intl';
 
 type Lang = 'uk' | 'pl';
+
+/** This document only exists in uk/pl — map the other 3 site locales to the
+ * closer of the two rather than always defaulting to Polish regardless of
+ * which locale the visitor is actually on. */
+function defaultLangFor(locale: string): Lang {
+  return locale === 'pl' || locale === 'en' || locale === 'rom' ? 'pl' : 'uk';
+}
 
 const stepsPL = [
   {
@@ -110,7 +118,8 @@ const stepsUA = [
 ];
 
 export default function ManualPage() {
-  const [lang, setLang] = useState<Lang>('pl');
+  const siteLocale = useLocale();
+  const [lang, setLang] = useState<Lang>(() => defaultLangFor(siteLocale));
   const steps = lang === 'uk' ? stepsUA : stepsPL;
 
   return (

@@ -474,5 +474,20 @@
     "phone": "Телефон"
   },
   "chat_online": "В мережі",
-  "chat_error": "Something went wrong. Please try again."
+  "chat_error": "Щось пішло не так. Спробуйте, будь ласка, ще раз.",
+  "cookie_title": "Ми використовуємо cookies",
+  "cookie_desc": "Необхідні cookies завжди активні. Аналітичні допомагають нам стати краще.",
+  "cookie_privacy_link": "Політика конфіденційності",
+  "cookie_necessary_title": "Необхідні",
+  "cookie_necessary_desc": "Мова, тема, сесія — завжди активні",
+  "cookie_analytics_title": "Аналітичні",
+  "cookie_analytics_desc": "Допомагають покращувати сервіс",
+  "cookie_accept_all": "Прийняти всі",
+  "cookie_save": "Зберегти",
+  "cookie_customize": "Налаштувати",
+  "cookie_hide": "Сховати",
+  "cookie_continue_without": "Продовжити без прийняття",
+  "footer_subscriptions": "Місячні підписки",
+  "footer_book_consultation": "Записатися на консультацію",
+  "footer_client_portal": "Портал клієнта"
 }

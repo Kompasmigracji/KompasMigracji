@@ -49,14 +49,14 @@ export default function Header() {
   const langRef = useRef<HTMLDivElement>(null);
 
   const SERVICES = [
-    { label: t('pcat_legalization'), href: '/test/pricing#legalization', icon: '🏠' },
-    { label: t('pcat_notary'),       href: '/test/pricing#notary',       icon: '✍️' },
-    { label: t('pcat_legal'),        href: '/test/pricing#legal',        icon: '⚖️' },
-    { label: t('pcat_marriage'),     href: '/test/pricing#marriage',     icon: '💍' },
-    { label: t('pcat_translations'), href: '/test/pricing#translations', icon: '📄' },
-    { label: t('pcat_bureaucracy'),  href: '/test/pricing#bureaucracy',  icon: '📋' },
-    { label: t('pcat_free'),         href: '/test/pricing#free',         icon: '🎁' },
-    { label: t('nav_svc_express'),   href: '/test/karta',                icon: '⚡', accent: true },
+    { label: t('pcat_legalization'), href: '/pricing#legalization', icon: '🏠' },
+    { label: t('pcat_notary'),       href: '/pricing#notary',       icon: '✍️' },
+    { label: t('pcat_legal'),        href: '/pricing#legal',        icon: '⚖️' },
+    { label: t('pcat_marriage'),     href: '/pricing#marriage',     icon: '💍' },
+    { label: t('pcat_translations'), href: '/pricing#translations', icon: '📄' },
+    { label: t('pcat_bureaucracy'),  href: '/pricing#bureaucracy',  icon: '📋' },
+    { label: t('pcat_free'),         href: '/pricing#free',         icon: '🎁' },
+    { label: t('nav_svc_express'),   href: '/karta',                icon: '⚡', accent: true },
   ];
 
   const changeLang = (lng: string) => {
@@ -158,9 +158,8 @@ export default function Header() {
             <Link href="/doctrine" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">
               {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
             </Link>
-            <Link href="/test/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
+            <Link href="/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
             <Link href="/orakul" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">EWU</Link>
-            <Link href="/admin/crm" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">iPhoenixCRM</Link>
             <button 
               onClick={() => setShowAIModal(true)}
               className="premium-btn overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] dark:hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
@@ -272,16 +271,13 @@ export default function Header() {
                   </Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
-                  <Link href="/test/pricing" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('nav_pricing')}</Link>
+                  <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('nav_pricing')}</Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/orakul" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">EWU</Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
-                  <Link href="/admin/crm" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">iPhoenixCRM</Link>
-                </motion.div>
-                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
-                  <button 
+                  <button
                     onClick={() => { setShowAIModal(true); setMobileOpen(false); }}
                     className="block text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 py-2 text-left mt-4 active:scale-95 transition-transform"
                   >

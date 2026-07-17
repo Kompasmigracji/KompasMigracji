@@ -474,5 +474,20 @@
   },
   "chat_online": "Online",
   "chat_greeting_msg": "Bună! Sunt asistentul AI Kompas Migracji 👋",
-  "chat_error": "Ceva nu a mers bine. Te rugăm să încerci din nou."
+  "chat_error": "Ceva nu a mers bine. Te rugăm să încerci din nou.",
+  "cookie_title": "Folosim cookie-uri",
+  "cookie_desc": "Cookie-urile necesare sunt mereu active. Cele analitice ne ajută să ne îmbunătățim.",
+  "cookie_privacy_link": "Politica de confidențialitate",
+  "cookie_necessary_title": "Necesare",
+  "cookie_necessary_desc": "Limbă, temă, sesiune — mereu active",
+  "cookie_analytics_title": "Analitice",
+  "cookie_analytics_desc": "Ajută la îmbunătățirea serviciului",
+  "cookie_accept_all": "Acceptă tot",
+  "cookie_save": "Salvează",
+  "cookie_customize": "Personalizează",
+  "cookie_hide": "Ascunde",
+  "cookie_continue_without": "Continuă fără acceptare",
+  "footer_subscriptions": "Abonamente lunare",
+  "footer_book_consultation": "Programează o consultație",
+  "footer_client_portal": "Portal client"
 }

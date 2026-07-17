@@ -167,7 +167,7 @@ export default function Pricing() {
               <p className="text-gray-800 dark:text-gray-200 font-medium text-lg leading-snug">{t('pricing_sub_desc')}</p>
             </div>
             <Link
-              href="/test/plans"
+              href="/plans"
               className="shrink-0 px-8 py-4 rounded-full text-sm font-bold text-gray-900 bg-white hover:bg-gray-50 border border-black/10 transition-all duration-300 no-underline shadow-sm"
             >
               {t('pricing_sub_cta')}

@@ -1,8 +1,16 @@
 "use client";
 import Link from 'next/link';
 import { useState } from 'react';
+import { useLocale } from 'next-intl';
 
 type Lang = 'uk' | 'pl';
+
+/** This document only exists in uk/pl — map the other 3 site locales to the
+ * closer of the two rather than always defaulting to Polish regardless of
+ * which locale the visitor is actually on. */
+function defaultLangFor(locale: string): Lang {
+  return locale === 'pl' || locale === 'en' || locale === 'rom' ? 'pl' : 'uk';
+}
 
 const p  = { fontSize: 15, lineHeight: 1.75, color: '#111', margin: '0 0 10px' } as const;
 const li = { fontSize: 15, lineHeight: 1.75, color: '#111', marginBottom: 4 } as const;
@@ -288,7 +296,8 @@ function ContentPL() {
 
 // ── PAGE ──────────────────────────────────────────────────────────────────────
 export default function Regulamin() {
-  const [lang, setLang] = useState<Lang>('pl');
+  const siteLocale = useLocale();
+  const [lang, setLang] = useState<Lang>(() => defaultLangFor(siteLocale));
 
   return (
     <div className="min-h-screen bg-white text-black py-16 px-4 font-display">

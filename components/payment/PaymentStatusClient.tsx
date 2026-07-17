@@ -117,7 +117,7 @@ function PendingView() {
         <br />Якщо оплату не було завершено — спробуйте ще раз.
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-        <Link href="/test/pricing" style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: 8, background: P24_GREEN, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+        <Link href="/pricing" style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: 8, background: P24_GREEN, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
           Спробувати ще раз →
         </Link>
         <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display: "block", textAlign: "center", padding: "11px 0", borderRadius: 8, background: "rgba(37,211,102,0.1)", border: "1.5px solid rgba(37,211,102,0.3)", color: "#16a34a", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>

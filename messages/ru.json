@@ -474,5 +474,20 @@
     "phone": "Телефон"
   },
   "chat_online": "В сети",
-  "chat_error": "Something went wrong. Please try again."
+  "chat_error": "Что-то пошло не так. Попробуйте ещё раз.",
+  "cookie_title": "Мы используем cookies",
+  "cookie_desc": "Необходимые cookies всегда активны. Аналитические помогают нам стать лучше.",
+  "cookie_privacy_link": "Политика конфиденциальности",
+  "cookie_necessary_title": "Необходимые",
+  "cookie_necessary_desc": "Язык, тема, сессия — всегда активны",
+  "cookie_analytics_title": "Аналитические",
+  "cookie_analytics_desc": "Помогают улучшать сервис",
+  "cookie_accept_all": "Принять все",
+  "cookie_save": "Сохранить",
+  "cookie_customize": "Настроить",
+  "cookie_hide": "Скрыть",
+  "cookie_continue_without": "Продолжить без принятия",
+  "footer_subscriptions": "Месячные подписки",
+  "footer_book_consultation": "Записаться на консультацию",
+  "footer_client_portal": "Портал клиента"
 }
