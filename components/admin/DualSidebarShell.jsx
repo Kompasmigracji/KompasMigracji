@@ -26,6 +26,7 @@ const NAV_DATA = [
           { label: "Клієнти", href: "/admin/crm/buyers" },
           { label: "Дзвінки", href: "/admin/crm/calls" },
           { label: "Чати", href: "/admin/crm/chats" },
+          { label: "Розмови бота (Мілена)", href: "/admin/crm/bot-conversations" },
           { label: "Автоматизація (E2E)", href: "/admin/crm/automation-test" },
         ]
       },

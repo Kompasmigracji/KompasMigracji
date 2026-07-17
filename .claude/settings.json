@@ -3,7 +3,8 @@
     "allow": [
       "Bash(node -e ' *)",
       "Bash(git config *)",
-      "Bash(pnpm run *)"
+      "Bash(pnpm run *)",
+      "Bash(pnpm typecheck *)"
     ]
   }
 }
