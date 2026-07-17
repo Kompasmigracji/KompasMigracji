@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
-import { one } from '@/lib/db';
+import { q, one } from '@/lib/db';
 import { ORAKUL_SYSTEM_PROMPT } from '@/lib/orakul-prompt';
 import {
   extractTaggedJson,
@@ -32,18 +32,68 @@ function notifyEmployerHandoff(reason: string, contact: string, transcript: stri
   }
 }
 
-async function saveLead(
+/** Знаходить або створює лід-рядок, прив'язаний до сесії віджета (chat_id = sessionId),
+ * дзеркалячи те, що app/api/bot/webhook/route.ts вже робить для Telegram. Дає серверний
+ * слід розмови, потрібний для виявлення покинутих заявок (stage 8). */
+async function getOrCreateSessionLead(sessionId: string): Promise<{ id: string } | null> {
+  try {
+    let row = await one(
+      `SELECT id FROM leads WHERE chat_id = $1 AND deleted_at IS NULL LIMIT 1`,
+      [sessionId]
+    ) as { id: string } | null;
+    if (!row) {
+      row = await one(
+        `INSERT INTO leads (chat_id, source, status, history, last_activity_at, created_at)
+         VALUES ($1, 'orakul_web', 'new', '[]'::jsonb, NOW(), NOW())
+         RETURNING id`,
+        [sessionId]
+      ) as { id: string };
+    } else {
+      await q(`UPDATE leads SET last_activity_at = NOW() WHERE id = $1`, [row.id]);
+    }
+    return row;
+  } catch (err) {
+    console.error('[orakul/chat] getOrCreateSessionLead:', err);
+    return null;
+  }
+}
+
+async function persistHistory(sessionLeadId: string | null, history: unknown[]): Promise<void> {
+  if (!sessionLeadId) return;
+  try {
+    await q(`UPDATE leads SET history = $1::jsonb, last_activity_at = NOW() WHERE id = $2`, [JSON.stringify(history), sessionLeadId]);
+  } catch (err) {
+    console.error('[orakul/chat] persistHistory:', err);
+  }
+}
+
+/** Завершує лід: якщо є серверний рядок сесії (sessionLeadId) — оновлює його
+ * (щоб не плодити другий, відірваний рядок для тієї ж розмови); інакше —
+ * старий INSERT-шлях як фолбек для запитів без sessionId (напр. застарілий
+ * закешований фронтенд-бандл). */
+async function finalizeLead(
+  sessionLeadId: string | null,
   firstName: string, contact: string,
   service: string, situation: string, email: string,
   metadata?: Record<string, unknown>,
 ) {
   try {
-    const row = await one(
-      `INSERT INTO leads (first_name, contact, source, service, situation, email, status, created_at)
-       VALUES ($1, $2, 'orakul', $3, $4, $5, 'new', NOW())
-       ON CONFLICT DO NOTHING RETURNING id`,
-      [firstName, contact, service, situation, email || null],
-    ) as { id: string } | null;
+    let leadId: string | null = sessionLeadId;
+    if (sessionLeadId) {
+      await q(
+        `UPDATE leads SET first_name = $1, contact = $2, service = $3, situation = $4, email = $5, status = 'in_progress' WHERE id = $6`,
+        [firstName, contact, service, situation, email || null, sessionLeadId]
+      );
+    } else {
+      const row = await one(
+        `INSERT INTO leads (first_name, contact, source, service, situation, email, status, created_at)
+         VALUES ($1, $2, 'orakul', $3, $4, $5, 'new', NOW())
+         ON CONFLICT DO NOTHING RETURNING id`,
+        [firstName, contact, service, situation, email || null],
+      ) as { id: string } | null;
+      leadId = row?.id || null;
+    }
+
     const crmMsg = [service, situation].filter(Boolean).join('\n') || null;
     await one(
       `INSERT INTO kompas_leads (source, name, contact, email, message, status)
@@ -51,14 +101,14 @@ async function saveLead(
       [firstName, contact, email || null, crmMsg],
     );
 
-    if (row && crmMsg) {
+    if (leadId && crmMsg) {
       await one(
         `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body, metadata) VALUES ('lead', $1, 'note', 'Анкета від Оракула (Web)', $2, $3::jsonb)`,
-        [row.id, crmMsg, JSON.stringify(metadata || {})]
+        [leadId, crmMsg, JSON.stringify(metadata || {})]
       );
     }
   } catch (err) {
-    console.error('[orakul/chat] saveLead:', err);
+    console.error('[orakul/chat] finalizeLead:', err);
   }
 }
 
@@ -67,12 +117,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'AI not configured' }, { status: 503 });
   }
 
-  let body: { messages?: { role: string; content: string }[] };
+  let body: { messages?: { role: string; content: string }[]; sessionId?: string };
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
   const messages = (body.messages || []).slice(-20); // keep last 20 turns max
+  const sessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : undefined;
   const encoder = new TextEncoder();
   let fullText = '';
 
@@ -92,6 +143,10 @@ export async function POST(req: NextRequest) {
     ? '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід уже показано раніше в цій розмові — НЕ повторюй його, окрім фінального повідомлення роботодавцю.]'
     : '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід ще НЕ показано в цій розмові — якщо це перша відповідь роботодавцю, покажи його зараз.]';
   const systemInstructionWithNote = ORAKUL_SYSTEM_PROMPT + adBlockNote;
+
+  const sessionLead = sessionId ? await getOrCreateSessionLead(sessionId) : null;
+  const sessionLeadId = sessionLead?.id || null;
+  await persistHistory(sessionLeadId, messages);
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -161,6 +216,8 @@ export async function POST(req: NextRequest) {
           }
         }
 
+        await persistHistory(sessionLeadId, [...messages, { role: 'assistant', content: fullText }]);
+
         // Detect candidate lead
         if (fullText.includes('[КАНДИДАТ_ГОТОВИЙ]')) {
           const d = extractTaggedJson(fullText, '[КАНДИДАТ_ГОТОВИЙ]');
@@ -175,11 +232,11 @@ export async function POST(req: NextRequest) {
               `Мобільність: ${d?.mobility || '—'}`,
               `Оцінка: ${d?.lead_score || '—'}`,
             ].join('. ');
-            await saveLead(name, phone, 'EWU — Зварювальник (AI чат)', situation, '');
+            await finalizeLead(sessionLeadId, name, phone, 'EWU — Зварювальник (AI чат)', situation, '');
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           } else {
             console.error('[orakul/chat] candidate JSON malformed/incomplete:', fullText);
-            await saveLead('Кандидат (дані неповні)', 'невідомо — див. розмову', 'EWU — Зварювальник (AI чат)', fullText, '');
+            await finalizeLead(sessionLeadId, 'Кандидат (дані неповні)', 'невідомо — див. розмову', 'EWU — Зварювальник (AI чат)', fullText, '');
           }
         }
 
@@ -190,14 +247,14 @@ export async function POST(req: NextRequest) {
           const name = d?.contact_person || d?.company_name;
           if (d && contact && name) {
             const situation = buildEmployerSituation(d);
-            await saveLead(name, contact, 'EWU — Роботодавець (AI чат)', situation, d.email || '', d as unknown as Record<string, unknown>);
+            await finalizeLead(sessionLeadId, name, contact, 'EWU — Роботодавець (AI чат)', situation, d.email || '', d as unknown as Record<string, unknown>);
             notifyEmployerCompletion(d, situation);
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           } else {
             // Тег є, але JSON не розпарсився або бракує ключових полів —
             // все одно зберігаємо, щоб заявка не зникла безслідно.
             console.error('[orakul/chat] employer JSON malformed/incomplete:', fullText);
-            await saveLead('Роботодавець (дані неповні)', 'невідомо — див. розмову', 'EWU — Роботодавець (AI чат)', fullText, '', d ? (d as unknown as Record<string, unknown>) : undefined);
+            await finalizeLead(sessionLeadId, 'Роботодавець (дані неповні)', 'невідомо — див. розмову', 'EWU — Роботодавець (AI чат)', fullText, '', d ? (d as unknown as Record<string, unknown>) : undefined);
             notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець, Web) — дані неповні!</b>\n${fullText}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           }
@@ -208,7 +265,7 @@ export async function POST(req: NextRequest) {
         if (handoffReason) {
           const transcript = messages.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
           const situation = `⚠️ НЕГАЙНА ЕСКАЛАЦІЯ: ${handoffReason}\n\n${transcript}`;
-          await saveLead('Роботодавець (ескалація)', 'невідомо — див. розмову', 'EWU — Роботодавець (ескалація)', situation, '');
+          await finalizeLead(sessionLeadId, 'Роботодавець (ескалація)', 'невідомо — див. розмову', 'EWU — Роботодавець (ескалація)', situation, '');
           notifyEmployerHandoff(handoffReason, 'невідомо — див. розмову', transcript);
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
         }

@@ -1061,6 +1061,9 @@ export default function OrakulPage() {
   const [exitSent, setExitSent] = useState(false);
   const [faqOpen, setFaqOpen] = useState<number|null>(null);
   const msgsEndRef = useRef<HTMLDivElement>(null);
+  // Стабільний на весь час життя віджета — дає серверу спосіб зберігати
+  // прогрес розмови (для виявлення покинутих заявок), не вимагаючи логіну.
+  const [chatSessionId] = useState<string>(() => crypto.randomUUID());
 
   const T_TERMS = {
     uk: {
@@ -1210,7 +1213,7 @@ export default function OrakulPage() {
       const res = await fetch('/api/orakul/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMsgs }),
+        body: JSON.stringify({ messages: newMsgs, sessionId: chatSessionId }),
       });
       if (!res.ok || !res.body) throw new Error('error');
       const reader = res.body.getReader();
