@@ -31,6 +31,16 @@ const nextConfig = {
         source: '/prices',
         destination: '/pricing',
         permanent: true,
+      },
+      {
+        source: '/:locale(uk|pl|en|ru|rom)/test/orakul',
+        destination: '/:locale/orakul',
+        permanent: true,
+      },
+      {
+        source: '/test/orakul',
+        destination: '/orakul',
+        permanent: true,
       }
     ];
   },

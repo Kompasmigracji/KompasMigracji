@@ -66,7 +66,7 @@ export default function EwuCandidatesPage() {
       <div className="bg-white/60 dark:bg-white/5 backdrop-blur-xl border-b border-black/10 dark:border-white/10 px-8 py-5 flex items-center gap-4 sticky top-0 z-20 flex-wrap">
         <div>
           <h2 className="m-0 text-xl font-bold text-gray-900 dark:text-white tracking-tight">Кандидати EWU</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 m-0 mt-0.5">Заявки зі сторінки Оракула (/test/orakul) — European Welding Union</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 m-0 mt-0.5">Заявки зі сторінки Оракула (/orakul) — European Welding Union</p>
         </div>
 
         <div className="flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[320px] transition-colors focus-within:border-orange-500/50 ml-auto">
