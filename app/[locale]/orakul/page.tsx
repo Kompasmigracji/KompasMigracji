@@ -1031,13 +1031,8 @@ export default function OrakulPage() {
   const sparksRef = useRef<HTMLCanvasElement>(null);
   const arcRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
-  const [lang, setLang] = useState<LangKey>(() => normalizeLang(locale));
+  const lang = normalizeLang(locale);
   const T = TRANSLATIONS[lang];
-
-  useEffect(() => {
-    const normalized = normalizeLang(locale);
-    setLang(normalized);
-  }, [locale]);
 
   const [wName, setWName] = useState('');
   const [wPhone, setWPhone] = useState('');
