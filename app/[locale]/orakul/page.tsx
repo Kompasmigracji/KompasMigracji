@@ -707,7 +707,11 @@ const CSS = `
 `;
 
 
-type LangKey = 'uk' | 'en' | 'ru' | 'pl';
+const LANG_KEYS = ['uk', 'en', 'ru', 'pl'] as const;
+type LangKey = (typeof LANG_KEYS)[number];
+const DEFAULT_LANG: LangKey = 'uk';
+const normalizeLang = (locale: string): LangKey => (LANG_KEYS as readonly string[]).includes(locale) ? locale as LangKey : DEFAULT_LANG;
+
 interface PageTrans {
   badge: string; h1: string; heroDesc: string;
   card1Title: string; card1Desc: string;
@@ -1027,8 +1031,13 @@ export default function OrakulPage() {
   const sparksRef = useRef<HTMLCanvasElement>(null);
   const arcRef = useRef<HTMLDivElement>(null);
   const locale = useLocale();
-  const [lang, setLang] = useState<LangKey>(() => (['uk','en','ru','pl'] as LangKey[]).includes(locale as LangKey) ? locale as LangKey : 'uk');
+  const [lang, setLang] = useState<LangKey>(() => normalizeLang(locale));
   const T = TRANSLATIONS[lang];
+
+  useEffect(() => {
+    const normalized = normalizeLang(locale);
+    setLang(normalized);
+  }, [locale]);
 
   const [wName, setWName] = useState('');
   const [wPhone, setWPhone] = useState('');
