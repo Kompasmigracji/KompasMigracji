@@ -173,13 +173,28 @@ export function checkDeterministicHandoffTriggers(userText: string): HandoffChec
   return { handoff: false };
 }
 
+const ALL_AD_BLOCKS = [
+  ...Object.values(EMPLOYER_AD_BLOCK_OPEN),
+  ...Object.values(EMPLOYER_AD_BLOCK_CLOSE),
+];
+
 /** Чи вже показувався фіксований рекламний блок (open або close) у попередніх репліках бота. */
 export function hasAdBlockAlreadyShown(history: { role: string; content: string }[]): boolean {
-  const allBlocks = [
-    ...Object.values(EMPLOYER_AD_BLOCK_OPEN),
-    ...Object.values(EMPLOYER_AD_BLOCK_CLOSE),
-  ];
   return history.some(
-    (m) => m.role !== 'user' && allBlocks.some((block) => m.content.includes(block.slice(0, 40)))
+    (m) => m.role !== 'user' && ALL_AD_BLOCKS.some((block) => m.content.includes(block.slice(0, 40)))
   );
+}
+
+/**
+ * Вирізає повторний рекламний блок з відповіді бота. На відміну від веб-чату
+ * (SSE-стрімінг, токени вже пішли клієнту до моменту перевірки), Telegram-роут
+ * має повний текст ДО відправки — тож тут можна реально гарантувати
+ * "не більше 1 разу", а не лише підказати моделі.
+ */
+export function stripAdBlocks(text: string): string {
+  let result = text;
+  for (const block of ALL_AD_BLOCKS) {
+    result = result.split(block).join('');
+  }
+  return result.replace(/\n{3,}/g, '\n\n').trim();
 }

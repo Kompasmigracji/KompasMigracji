@@ -21,6 +21,9 @@ import {
   extractEmployerJson,
   extractHandoffReason,
   buildEmployerSituation,
+  checkDeterministicHandoffTriggers,
+  hasAdBlockAlreadyShown,
+  stripAdBlocks,
   EMPLOYER_SENTINEL,
   type EmployerLeadData,
 } from "@/lib/orakul-employer";
@@ -157,6 +160,20 @@ export async function POST(req: NextRequest) {
 
     history.push({ role: 'user', content: text });
 
+    const contactForPreCheck = username ? `@${username}` : String(chatId);
+    const preCheck = checkDeterministicHandoffTriggers(text);
+    if (preCheck.handoff && preCheck.reason) {
+      const preTranscript = history.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
+      notifyAdmin(`⚠️ <b>Оракул: авто-тригер ескалації!</b>\nКонтакт: ${contactForPreCheck}\nПричина: ${preCheck.reason}`, token).catch(() => {});
+      notifyHandoffEmail(`[авто-тригер] ${preCheck.reason}`, contactForPreCheck, preTranscript);
+    }
+    // Обчислюємо ДО виклику моделі — реплік асистента з рекламним блоком ще не
+    // могло з'явитись у цьому ж запиті, тож це коректно відображає стан "до".
+    const adBlockShownBefore = hasAdBlockAlreadyShown(history);
+    const systemInstructionWithNote = ORAKUL_SYSTEM_PROMPT + (adBlockShownBefore
+      ? '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід уже показано раніше в цій розмові — НЕ повторюй його, окрім фінального повідомлення роботодавцю.]'
+      : '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід ще НЕ показано в цій розмові — якщо це перша відповідь роботодавцю, покажи його зараз.]');
+
     let aiText = '';
     const useLocalLlm = process.env.USE_LOCAL_LLM === 'true';
 
@@ -170,7 +187,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             model: localModel,
             messages: [
-              { role: 'system', content: ORAKUL_SYSTEM_PROMPT },
+              { role: 'system', content: systemInstructionWithNote },
               ...history.map((m: any) => ({ role: m.role, content: m.content })).slice(-20)
             ],
             temperature: 0.7,
@@ -200,7 +217,7 @@ export async function POST(req: NextRequest) {
         const resp = await ai.models.generateContent({
           model: 'gemini-2.5-flash',
           contents: aiMessages,
-          config: { systemInstruction: ORAKUL_SYSTEM_PROMPT }
+          config: { systemInstruction: systemInstructionWithNote }
         });
         aiText = resp.text || '';
       } catch (err) {
@@ -211,6 +228,13 @@ export async function POST(req: NextRequest) {
     if (!aiText) {
       return NextResponse.json({ ok: true });
     }
+
+      // Telegram (на відміну від веб-чату) має повний текст ДО відправки —
+      // тож повторний рекламний блок можна реально вирізати, а не лише
+      // підказати моделі не повторювати його.
+      if (adBlockShownBefore && !aiText.includes(EMPLOYER_SENTINEL)) {
+        aiText = stripAdBlocks(aiText);
+      }
       history.push({ role: 'assistant', content: aiText });
 
       const hasAnyTag = ALL_TAGS_RE.test(aiText);

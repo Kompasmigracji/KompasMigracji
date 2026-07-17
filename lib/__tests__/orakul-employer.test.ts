@@ -10,6 +10,7 @@ import {
   isCrossSellFlagged,
   checkDeterministicHandoffTriggers,
   hasAdBlockAlreadyShown,
+  stripAdBlocks,
   EMPLOYER_SENTINEL,
   EMPLOYER_AD_BLOCK_OPEN,
   EMPLOYER_AD_BLOCK_CLOSE,
@@ -189,5 +190,31 @@ describe('hasAdBlockAlreadyShown', () => {
       { role: 'user', content: EMPLOYER_AD_BLOCK_OPEN.pl },
     ];
     expect(hasAdBlockAlreadyShown(history)).toBe(false);
+  });
+});
+
+describe('stripAdBlocks', () => {
+  it('removes a repeated ad block and trims surrounding whitespace', () => {
+    const text = `Дякую за відповідь.\n\n${EMPLOYER_AD_BLOCK_OPEN.uk}\n\nЯку ставку пропонуєте?`;
+    const out = stripAdBlocks(text);
+    expect(out).not.toContain(EMPLOYER_AD_BLOCK_OPEN.uk);
+    expect(out).toContain('Дякую за відповідь.');
+    expect(out).toContain('Яку ставку пропонуєте?');
+  });
+
+  it('leaves text with no ad block untouched (aside from trimming)', () => {
+    expect(stripAdBlocks('Яку ставку пропонуєте?')).toBe('Яку ставку пропонуєте?');
+  });
+
+  it('strips any of the 4 locale variants, not just uk', () => {
+    for (const block of [EMPLOYER_AD_BLOCK_OPEN.pl, EMPLOYER_AD_BLOCK_OPEN.en, EMPLOYER_AD_BLOCK_CLOSE.ru]) {
+      expect(stripAdBlocks(`before ${block} after`)).toBe('before  after');
+    }
+  });
+
+  it('collapses resulting excess blank lines', () => {
+    const text = `Line one.\n\n${EMPLOYER_AD_BLOCK_CLOSE.uk}\n\n\nLine two.`;
+    const out = stripAdBlocks(text);
+    expect(out).not.toMatch(/\n{3,}/);
   });
 });

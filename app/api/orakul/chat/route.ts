@@ -7,6 +7,8 @@ import {
   extractEmployerJson,
   extractHandoffReason,
   buildEmployerSituation,
+  checkDeterministicHandoffTriggers,
+  hasAdBlockAlreadyShown,
   EMPLOYER_SENTINEL,
   type EmployerLeadData,
 } from '@/lib/orakul-employer';
@@ -74,6 +76,23 @@ export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
   let fullText = '';
 
+  // Детермінований бекстоп (регекс), незалежний від того, чи LLM сама
+  // згадає про ескалацію в своїй відповіді — спрацьовує одразу на вхідне
+  // повідомлення, до виклику моделі, тож команда дізнається навіть якщо
+  // модель проігнорує інструкцію з промпту.
+  const latestUserMsg = [...messages].reverse().find((m: any) => m.role === 'user');
+  if (latestUserMsg) {
+    const preCheck = checkDeterministicHandoffTriggers(latestUserMsg.content);
+    if (preCheck.handoff && preCheck.reason) {
+      const transcript = messages.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
+      notifyEmployerHandoff(`[авто-тригер] ${preCheck.reason}`, 'невідомо — див. розмову', transcript);
+    }
+  }
+  const adBlockNote = hasAdBlockAlreadyShown(messages)
+    ? '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід уже показано раніше в цій розмові — НЕ повторюй його, окрім фінального повідомлення роботодавцю.]'
+    : '\n\n[ПРИМІТКА: рекламний блок про юридичний супровід ще НЕ показано в цій розмові — якщо це перша відповідь роботодавцю, покажи його зараз.]';
+  const systemInstructionWithNote = ORAKUL_SYSTEM_PROMPT + adBlockNote;
+
   const stream = new ReadableStream({
     async start(controller) {
       try {
@@ -83,7 +102,7 @@ export async function POST(req: NextRequest) {
 
         if (useLocalLlm) {
           const openAiMessages = [
-            { role: 'system', content: ORAKUL_SYSTEM_PROMPT },
+            { role: 'system', content: systemInstructionWithNote },
             ...messages.map((m: any) => ({ role: m.role, content: m.content }))
           ];
 
@@ -132,7 +151,7 @@ export async function POST(req: NextRequest) {
           const respStream = await ai.models.generateContentStream({
             model: 'gemini-2.5-flash',
             contents: aiMessages,
-            config: { systemInstruction: ORAKUL_SYSTEM_PROMPT }
+            config: { systemInstruction: systemInstructionWithNote }
           });
           for await (const chunk of respStream) {
             if (chunk.text) {
