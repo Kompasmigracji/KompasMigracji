@@ -659,7 +659,11 @@ const CSS = `
 .e-faq-chevron{font-size:.75rem;transition:transform .25s;flex-shrink:0;color:var(--union-blue)}
 .e-faq-item.open .e-faq-chevron{transform:rotate(180deg)}
 .e-faq-a{
-  max-height:0;overflow:hidden;transition:max-height .3s ease,p/* ── AI ACADEMY (PREMIUM TIER) ── */
+  max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;
+  padding:0 1.2rem;color:var(--text-muted);font-size:.9rem;line-height:1.6;
+}
+.e-faq-item.open .e-faq-a{max-height:300px;padding:0 1.2rem 1.2rem}
+/* ── AI ACADEMY (PREMIUM TIER) ── */
 .e-academy{padding:8rem 0;position:relative;background:transparent;z-index:2;overflow:hidden}
 .e-academy::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, rgba(0,229,255,0.08) 0%, transparent 60%);pointer-events:none}
 .e-ac-title{font-size:clamp(2.5rem, 5vw, 3.8rem);font-weight:900;text-align:center;margin-bottom:1rem;letter-spacing:-.03em;
