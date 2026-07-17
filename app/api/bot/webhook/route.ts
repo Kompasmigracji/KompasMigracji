@@ -22,7 +22,22 @@ import {
   extractHandoffReason,
   buildEmployerSituation,
   EMPLOYER_SENTINEL,
+  type EmployerLeadData,
 } from "@/lib/orakul-employer";
+import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from "@/lib/email";
+
+function notifyEmployerEmail(d: Partial<EmployerLeadData>): void {
+  const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
+  if (!notifyEmail) return;
+  const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
+  sendEmail(notifyEmail, subject, employerLeadEmailHtml(d), 'employer_lead').catch((e) => console.error('[webhook] Email notify failed:', e));
+}
+
+function notifyHandoffEmail(reason: string, contact: string, transcript: string): void {
+  const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
+  if (!notifyEmail) return;
+  sendEmail(notifyEmail, `Ескалація Оракула: ${reason}`, employerHandoffEmailHtml(reason, contact, transcript), 'employer_handoff').catch((e) => console.error('[webhook] Email notify failed:', e));
+}
 
 interface TgUser { id: number; username?: string; first_name?: string }
 interface TgChat { id: number }
@@ -288,6 +303,7 @@ export async function POST(req: NextRequest) {
         } catch (e) { console.error("Error adding timeline activity:", e); }
 
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\n${situation}`, token);
+        if (d) notifyEmployerEmail(d);
       }
 
       const handoffReason = extractHandoffReason(aiText);
@@ -308,6 +324,8 @@ export async function POST(req: NextRequest) {
           );
         } catch (e) { console.error("Error adding timeline activity:", e); }
         await notifyAdmin(`⚠️ <b>Оракул: негайна ескалація!</b>\nКонтакт: ${contactStr}\nПричина: ${handoffReason}`, token);
+        const transcript = history.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
+        notifyHandoffEmail(handoffReason, contactStr, transcript);
       }
 
 

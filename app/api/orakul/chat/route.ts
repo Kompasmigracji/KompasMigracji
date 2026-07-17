@@ -8,7 +8,27 @@ import {
   extractHandoffReason,
   buildEmployerSituation,
   EMPLOYER_SENTINEL,
+  type EmployerLeadData,
 } from '@/lib/orakul-employer';
+import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from '@/lib/email';
+import { notifyAdmin } from '@/lib/telegram';
+
+function notifyEmployerCompletion(d: Partial<EmployerLeadData>, situation: string): void {
+  notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець, Web)!</b>\n${situation}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
+  const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
+  if (notifyEmail) {
+    const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
+    sendEmail(notifyEmail, subject, employerLeadEmailHtml(d), 'employer_lead').catch((e) => console.error('[orakul/chat] Email notify failed:', e));
+  }
+}
+
+function notifyEmployerHandoff(reason: string, contact: string, transcript: string): void {
+  notifyAdmin(`⚠️ <b>Оракул: негайна ескалація (Web)!</b>\nКонтакт: ${contact}\nПричина: ${reason}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
+  const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
+  if (notifyEmail) {
+    sendEmail(notifyEmail, `Ескалація Оракула: ${reason}`, employerHandoffEmailHtml(reason, contact, transcript), 'employer_handoff').catch((e) => console.error('[orakul/chat] Email notify failed:', e));
+  }
+}
 
 async function saveLead(
   firstName: string, contact: string,
@@ -152,12 +172,14 @@ export async function POST(req: NextRequest) {
           if (d && contact && name) {
             const situation = buildEmployerSituation(d);
             await saveLead(name, contact, 'EWU — Роботодавець (AI чат)', situation, d.email || '', d as unknown as Record<string, unknown>);
+            notifyEmployerCompletion(d, situation);
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           } else {
             // Тег є, але JSON не розпарсився або бракує ключових полів —
             // все одно зберігаємо, щоб заявка не зникла безслідно.
             console.error('[orakul/chat] employer JSON malformed/incomplete:', fullText);
             await saveLead('Роботодавець (дані неповні)', 'невідомо — див. розмову', 'EWU — Роботодавець (AI чат)', fullText, '', d ? (d as unknown as Record<string, unknown>) : undefined);
+            notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець, Web) — дані неповні!</b>\n${fullText}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           }
         }
@@ -168,6 +190,7 @@ export async function POST(req: NextRequest) {
           const transcript = messages.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
           const situation = `⚠️ НЕГАЙНА ЕСКАЛАЦІЯ: ${handoffReason}\n\n${transcript}`;
           await saveLead('Роботодавець (ескалація)', 'невідомо — див. розмову', 'EWU — Роботодавець (ескалація)', situation, '');
+          notifyEmployerHandoff(handoffReason, 'невідомо — див. розмову', transcript);
           controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
         }
 

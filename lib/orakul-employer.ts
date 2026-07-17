@@ -72,7 +72,7 @@ const FIELD_LABELS_UK: Record<string, string> = {
   drawing_reading_required: 'читання технічних рисунків',
 };
 
-const FIELD_ORDER: (keyof EmployerLeadData)[] = [
+export const EMPLOYER_FIELD_ORDER: (keyof EmployerLeadData)[] = [
   'company_name', 'nip', 'contact_person', 'position', 'whatsapp', 'email', 'website',
   'positions_needed', 'location', 'start_date',
   'rate', 'hours', 'night_shifts', 'overtime_pay', 'deductions',
@@ -81,7 +81,7 @@ const FIELD_ORDER: (keyof EmployerLeadData)[] = [
   'verification_test', 'welding_method', 'certificates_required', 'drawing_reading_required',
 ];
 
-function fieldLabel(field: string): string {
+export function employerFieldLabel(field: string): string {
   return FIELD_LABELS_UK[field] || field;
 }
 
@@ -117,10 +117,10 @@ export function buildEmployerSituation(d: Partial<EmployerLeadData>): string {
   if (isCrossSellFlagged(d)) {
     lines.push('⚠️ КРОС-СЕЛЛ: роботодавець НЕ надає документи для карти побуту — можливість запропонувати юридичний супровід Kompas Migracji.');
   }
-  for (const field of FIELD_ORDER) {
+  for (const field of EMPLOYER_FIELD_ORDER) {
     const v = d[field];
     if (v === undefined) continue;
-    lines.push(`${fieldLabel(field)}: ${renderValue(v)}`);
+    lines.push(`${employerFieldLabel(field)}: ${renderValue(v)}`);
   }
   return lines.join('\n');
 }

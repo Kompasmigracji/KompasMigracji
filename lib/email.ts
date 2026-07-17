@@ -3,6 +3,7 @@
 // Requires: RESEND_API_KEY env var; FROM_EMAIL optional (default noreply@kompasmigracji.com)
 
 import { q } from "@/lib/db";
+import { EMPLOYER_FIELD_ORDER, employerFieldLabel, isCrossSellFlagged, type EmployerLeadData } from "@/lib/orakul-employer";
 
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const FROM = process.env.FROM_EMAIL || "KompasMigracji <noreply@kompasmigracji.com>";
@@ -208,4 +209,56 @@ export function npsSurveyEmailHtml(name: string, token: string): string {
 <p style="text-align:center;font-size:12px;color:#9CA3AF;">
   Lub skopiuj link: <a href="${surveyUrl}" style="color:#D8232A;">${surveyUrl}</a>
 </p>`);
+}
+
+function renderEmployerValue(v: unknown): string {
+  if (v === true) return "так";
+  if (v === false) return "ні";
+  if (v === null || v === undefined || v === "") return "—";
+  return esc(String(v));
+}
+
+// Internal staff notification when Orakul's employer-intake bot completes a conversation.
+export function employerLeadEmailHtml(d: Partial<EmployerLeadData>): string {
+  const rows = EMPLOYER_FIELD_ORDER
+    .filter((f) => d[f] !== undefined)
+    .map(
+      (f) => `
+  <tr>
+    <td style="padding:8px 16px;font-size:12px;color:#6B7280;white-space:nowrap;">${esc(employerFieldLabel(f))}</td>
+    <td style="padding:8px 16px;font-size:13px;font-weight:600;color:#111;">${renderEmployerValue(d[f])}</td>
+  </tr>`,
+    )
+    .join("");
+
+  const crossSellBlock = isCrossSellFlagged(d)
+    ? `<div style="background:#FFF7ED;border:1px solid #FDE68A;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <div style="font-weight:700;color:#92400E;margin-bottom:4px;">&#x26A0;&#xFE0F; КРОС-СЕЛЛ</div>
+  <div style="color:#78350F;line-height:1.6;">Роботодавець НЕ надає документи для карти побуту — можливість запропонувати юридичний супровід Kompas Migracji.</div>
+</div>`
+    : "";
+
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x1F4E5; Нова заявка від роботодавця (Оракул/EWU)</h2>
+<p style="margin:0 0 20px;color:#6B7280;font-size:14px;">
+  ${esc(d.company_name || "Компанія не вказана")}${d.positions_needed ? " — " + esc(d.positions_needed) : ""}
+</p>
+${crossSellBlock}
+<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;margin:0 0 8px;">
+  ${rows}
+</table>`);
+}
+
+// Internal staff notification when the employer-intake bot escalates immediately
+// (20+ workers requested, an atypical rate, or a complex B2B/tax question) —
+// no structured schema exists yet at this point, only the reason + transcript so far.
+export function employerHandoffEmailHtml(reason: string, contact: string, transcript: string): string {
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x26A0;&#xFE0F; Оракул: негайна ескалація</h2>
+<p style="margin:0 0 16px;color:#6B7280;font-size:14px;">Контакт: <strong>${esc(contact)}</strong></p>
+<div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <div style="font-weight:700;color:#991B1B;margin-bottom:4px;">Причина</div>
+  <div style="color:#7F1D1D;line-height:1.6;">${esc(reason)}</div>
+</div>
+<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;color:#374151;line-height:1.6;">${esc(transcript)}</div>`);
 }
