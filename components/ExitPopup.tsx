@@ -91,7 +91,7 @@ export default function ExitPopup() {
             <div className="relative z-10 p-8">
               <button
                 onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/80 transition-colors"
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/60 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white/80 transition-colors"
                 aria-label="Закрити"
               >
                 ✕

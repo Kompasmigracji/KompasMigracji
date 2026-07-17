@@ -72,7 +72,7 @@ export default function GuaranteeSection() {
             <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
             {t('guarantee_tag')}
           </div>
-          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
+          <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-900/70" style={{ fontSize: 'clamp(32px, 5vw, 56px)', letterSpacing: '-0.03em' }}>
             {t('guarantee_title')}
           </h2>
         </motion.div>

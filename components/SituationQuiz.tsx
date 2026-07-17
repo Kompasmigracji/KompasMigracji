@@ -74,7 +74,7 @@ export default function SituationQuiz() {
               </div>
               <button
                 onClick={() => setSelected(null)}
-                className="mt-8 text-sm font-medium text-gray-500 hover:text-white bg-transparent border-0 cursor-pointer transition-colors"
+                className="mt-8 text-sm font-medium text-gray-500 hover:text-gray-900 bg-transparent border-0 cursor-pointer transition-colors"
               >
                 {t('sq_back')}
               </button>
@@ -92,7 +92,7 @@ export default function SituationQuiz() {
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                   {t('sq_tag')}
                 </div>
-                <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-white/70" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
+                <h2 className="font-display tracking-tight font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-900/70" style={{ fontSize: 'clamp(28px, 4vw, 44px)', letterSpacing: '-0.02em' }}>
                   {t('sq_title').split(t('sq_title_em'))[0]}
                   <em className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 not-italic">{t('sq_title_em')}</em>
                   {t('sq_title').split(t('sq_title_em'))[1]}
@@ -116,7 +116,7 @@ export default function SituationQuiz() {
                       {ICONS[i]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className={`font-semibold text-lg transition-colors ${URGENT[i] ? 'text-red-400 group-hover:text-red-300' : 'text-gray-800 group-hover:text-white'}`}>
+                      <div className={`font-semibold text-lg transition-colors ${URGENT[i] ? 'text-red-400 group-hover:text-red-300' : 'text-gray-800 group-hover:text-gray-900'}`}>
                         {label}
                       </div>
                     </div>
