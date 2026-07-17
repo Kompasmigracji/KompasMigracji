@@ -2,10 +2,18 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { one } from '@/lib/db';
 import { ORAKUL_SYSTEM_PROMPT } from '@/lib/orakul-prompt';
+import {
+  extractTaggedJson,
+  extractEmployerJson,
+  extractHandoffReason,
+  buildEmployerSituation,
+  EMPLOYER_SENTINEL,
+} from '@/lib/orakul-employer';
 
 async function saveLead(
   firstName: string, contact: string,
   service: string, situation: string, email: string,
+  metadata?: Record<string, unknown>,
 ) {
   try {
     const row = await one(
@@ -23,22 +31,13 @@ async function saveLead(
 
     if (row && crmMsg) {
       await one(
-        `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body) VALUES ('lead', $1, 'note', 'Анкета від Оракула (Web)', $2)`,
-        [row.id, crmMsg]
+        `INSERT INTO kompas_activities (entity_type, entity_id, type, title, body, metadata) VALUES ('lead', $1, 'note', 'Анкета від Оракула (Web)', $2, $3::jsonb)`,
+        [row.id, crmMsg, JSON.stringify(metadata || {})]
       );
     }
   } catch (err) {
     console.error('[orakul/chat] saveLead:', err);
   }
-}
-
-function extractJson(text: string, after: string): Record<string, unknown> | null {
-  const idx = text.indexOf(after);
-  if (idx === -1) return null;
-  const slice = text.slice(idx + after.length);
-  const match = slice.match(/\{[\s\S]*?\}/);
-  if (!match) return null;
-  try { return JSON.parse(match[0]); } catch { return null; }
 }
 
 export async function POST(req: NextRequest) {
@@ -125,7 +124,7 @@ export async function POST(req: NextRequest) {
 
         // Detect candidate lead
         if (fullText.includes('[КАНДИДАТ_ГОТОВИЙ]')) {
-          const d = extractJson(fullText, '[КАНДИДАТ_ГОТОВИЙ]');
+          const d = extractTaggedJson(fullText, '[КАНДИДАТ_ГОТОВИЙ]');
           const phone = d?.phone as string | undefined;
           const name  = d?.name  as string | undefined;
           if (phone && name) {
@@ -139,26 +138,37 @@ export async function POST(req: NextRequest) {
             ].join('. ');
             await saveLead(name, phone, 'EWU — Зварювальник (AI чат)', situation, '');
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
+          } else {
+            console.error('[orakul/chat] candidate JSON malformed/incomplete:', fullText);
+            await saveLead('Кандидат (дані неповні)', 'невідомо — див. розмову', 'EWU — Зварювальник (AI чат)', fullText, '');
           }
         }
 
         // Detect employer lead
-        if (fullText.includes('[РОБОТОДАВЕЦЬ_ГОТОВИЙ]')) {
-          const d = extractJson(fullText, '[РОБОТОДАВЕЦЬ_ГОТОВИЙ]');
-          const contact = d?.contact as string | undefined;
-          const name    = d?.name    as string | undefined;
-          if (contact && name) {
-            const situation = [
-              `AI чат Оракул. Роботодавець.`,
-              `Потреба: ${d?.specialty_needed || '—'}`,
-              `Кількість: ${d?.workers_count || '—'}`,
-              `Локація: ${d?.location || '—'}`,
-              `Старт: ${d?.start_date || '—'}`,
-              d?.message || '',
-            ].filter(Boolean).join(' ');
-            await saveLead(name, contact, 'EWU — Роботодавець (AI чат)', situation, (d?.email as string) || '');
+        if (fullText.includes(EMPLOYER_SENTINEL)) {
+          const d = extractEmployerJson(fullText);
+          const contact = d?.whatsapp || d?.email;
+          const name = d?.contact_person || d?.company_name;
+          if (d && contact && name) {
+            const situation = buildEmployerSituation(d);
+            await saveLead(name, contact, 'EWU — Роботодавець (AI чат)', situation, d.email || '', d as unknown as Record<string, unknown>);
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
+          } else {
+            // Тег є, але JSON не розпарсився або бракує ключових полів —
+            // все одно зберігаємо, щоб заявка не зникла безслідно.
+            console.error('[orakul/chat] employer JSON malformed/incomplete:', fullText);
+            await saveLead('Роботодавець (дані неповні)', 'невідомо — див. розмову', 'EWU — Роботодавець (AI чат)', fullText, '', d ? (d as unknown as Record<string, unknown>) : undefined);
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           }
+        }
+
+        // Detect immediate handoff (escalation before the questionnaire completes)
+        const handoffReason = extractHandoffReason(fullText);
+        if (handoffReason) {
+          const transcript = messages.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
+          const situation = `⚠️ НЕГАЙНА ЕСКАЛАЦІЯ: ${handoffReason}\n\n${transcript}`;
+          await saveLead('Роботодавець (ескалація)', 'невідомо — див. розмову', 'EWU — Роботодавець (ескалація)', situation, '');
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
         }
 
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));

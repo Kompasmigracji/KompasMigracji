@@ -1178,6 +1178,16 @@ export default function OrakulPage() {
     en: "Hi! I'm Orakul ⟁\n\nThe operational intelligence of the EWU network.\n\nAre you looking for work or hiring staff?",
   };
 
+  // Якщо модель ставить тег ескалації/завершення першим — після вирізання
+  // тегів видимий текст може лишитись порожнім. Показуємо цей фолбек, щоб
+  // співрозмовник не побачив порожнє повідомлення бота.
+  const ESCALATION_FALLBACK: Record<LangKey, string> = {
+    uk: 'Передаю ваш запит менеджеру — він зв\'яжеться з вами найближчим часом.',
+    ru: 'Передаю ваш запрос менеджеру — он свяжется с вами в ближайшее время.',
+    pl: 'Przekazuję Twoje zapytanie menedżerowi — skontaktuje się z Tobą wkrótce.',
+    en: 'Passing your request to our manager — they will get in touch with you shortly.',
+  };
+
   const openChat = () => {
     if (chatMsgs.length === 0) {
       setChatMsgs([{ role: 'assistant', content: GREET[lang] }]);
@@ -1219,11 +1229,14 @@ export default function OrakulPage() {
             const d = JSON.parse(raw);
             if (d.text) {
               botText += d.text;
+              const hasTag = /\[КАНДИДАТ_ГОТОВИЙ\]|\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\]|\[ЛЮДИНА_ПОТРІБНА:?[^\]]*\]/.test(botText);
               const clean = botText
                 .replace(/\[КАНДИДАТ_ГОТОВИЙ\][\s\S]*$/, '')
                 .replace(/\[РОБОТОДАВЕЦЬ_ГОТОВИЙ\][\s\S]*$/, '')
+                .replace(/\[ЛЮДИНА_ПОТРІБНА:?[^\]]*\][\s\S]*$/, '')
                 .trim();
-              setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: clean }]);
+              const displayed = !clean && hasTag ? ESCALATION_FALLBACK[lang] : clean;
+              setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: displayed }]);
             }
             if (d.error) {
               setChatMsgs(prev => [...prev.slice(0, -1), { role: 'assistant', content: `⚠️ Помилка: ${d.error}` }]);
