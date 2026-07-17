@@ -28,7 +28,7 @@
     },
     {
       "path": "/api/cron/orakul-abandoned",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 6 * * *"
     }
   ]
 }
