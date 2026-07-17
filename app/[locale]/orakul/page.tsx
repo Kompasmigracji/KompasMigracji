@@ -689,6 +689,21 @@ const CSS = `
 .e-terms-sub{margin:0;padding-left:1.1rem;color:rgba(180,210,255,.75);font-size:.95rem;line-height:1.7}
 .e-terms-sub li{margin-bottom:.25rem}
 .e-terms-single{color:rgba(180,210,255,.75);font-size:.95rem;line-height:1.7;margin:0}
+
+/* ── RATES BY COUNTRY ── */
+.e-rates{padding:5rem 0;background:transparent;position:relative;z-index:2}
+.e-rates-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;max-width:1080px;margin:0 auto;padding:0 1.5rem}
+.e-rates-card{
+  display:flex;align-items:center;gap:1rem;
+  background:rgba(8,12,32,.4);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,229,255,.15);border-radius:18px;padding:1.25rem 1.5rem;
+  transition:border-color .3s,transform .3s;
+}
+.e-rates-card:hover{border-color:rgba(0,229,255,.4);transform:translateY(-4px)}
+.e-rates-flag{font-size:2rem;flex-shrink:0}
+.e-rates-body{flex:1}
+.e-rates-country{font-weight:800;color:#fff;font-size:1.05rem;margin-bottom:.25rem}
+.e-rates-rate{color:rgba(180,210,255,.75);font-size:.9rem;line-height:1.5}
 `;
 
 
@@ -772,7 +787,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     faqItems: [
       { q: 'Які документи потрібні для роботи зварювальником в ЄС?', a: 'Паспорт, диплом або посвідчення зварювальника, медична довідка. EWU допомагає з підтвердженням розряду та міжнародною атестацією — весь процес під нашим супроводом.' },
       { q: 'Чи є офіційне працевлаштування (UoP)?', a: '100% — UoP (Umowa o pracę) або UoZ з повним медичним страхуванням та ZUS. Жодних «сірих» схем. Координатор надає підтвердження до підписання контракту.' },
-      { q: 'Скільки заробляє зварювальник у Польщі / ЄС?', a: 'Від 5 000 до 9 000 zł нетто залежно від методу зварювання та досвіду. TIG-майстри отримують від 8 000 zł. Детальна вилка обговорюється з координатором під вашу кваліфікацію.' },
+      { q: 'Скільки заробляє зварювальник у Польщі / ЄС?', a: 'Ставка залежить від країни: у Польщі — 40–45 zł/год (сильні спеціалісти та JDG — 55–85 zł/год), у Німеччині — близько 23 €/год, у Бельгії — 21–45 €/год, у Нідерландах — близько 34 €/год, у Франції — близько 19 €/год, в Англії — близько 14 £/год. Детальна вилка обговорюється з координатором під вашу кваліфікацію та метод зварювання.' },
       { q: 'Як швидко EWU знаходить роботу?', a: 'Координатор зв\'язується протягом 24 годин після заявки. Підбір позиції займає 3–14 робочих днів залежно від методу та регіону.' },
       { q: 'Чи потрібно знати польську або іншу мову?', a: 'Базове розуміння — плюс, але не обов\'язково. На кожному об\'єкті є координатор-перекладач. Мовний бар\'єр не перешкода для початку роботи.' },
       { q: 'Ми — компанія. Як швидко отримати бригаду зварювальників?', a: 'Надішліть запит через форму. Координатор зв\'язується протягом доби, обговорює кількість, методи та терміни. Перша група може прибути вже через 7–14 днів.' },
@@ -845,7 +860,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     faqItems: [
       { q: 'What documents are required to work as a welder in the EU?', a: 'Passport, welding diploma or certificate, medical clearance. EWU assists with grade confirmation and international certification — the entire process is guided by us.' },
       { q: 'Is there official employment (UoP)?', a: '100% — UoP (Umowa o pracę) or UoZ with full medical insurance and ZUS. No grey schemes. The coordinator provides confirmation before signing the contract.' },
-      { q: 'How much does a welder earn in Poland / EU?', a: 'From 5,000 to 9,000 PLN net depending on welding method and experience. TIG masters earn from 8,000 PLN. The exact range is discussed with the coordinator based on your qualifications.' },
+      { q: 'How much does a welder earn in Poland / EU?', a: 'Rates vary by country: Poland — PLN 40–45/h typical (strong specialists and JDG — PLN 55–85/h), Germany — about €23/h, Belgium — €21–45/h, Netherlands — about €34/h, France — about €19/h, UK — about £14/h. The exact range is discussed with a coordinator based on your qualification and welding method.' },
       { q: 'How quickly does EWU find work?', a: 'The coordinator contacts you within 24 hours of your application. Position selection takes 3–14 working days depending on method and region.' },
       { q: 'Do I need to know Polish or another language?', a: 'A basic understanding is a plus, but not required. Each site has a coordinator-translator. A language barrier is not an obstacle to starting work.' },
       { q: 'We are a company. How quickly can we get a team of welders?', a: 'Submit a request via the form. The coordinator contacts you within a day, discusses numbers, methods and timelines. The first group can arrive within 7–14 days.' },
@@ -918,7 +933,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     faqItems: [
       { q: 'Какие документы нужны для работы сварщиком в ЕС?', a: 'Паспорт, диплом или удостоверение сварщика, медицинская справка. EWU помогает с подтверждением разряда и международной аттестацией — весь процесс под нашим сопровождением.' },
       { q: 'Есть ли официальное трудоустройство (UoP)?', a: '100% — UoP (Umowa o pracę) или UoZ с полным медицинским страхованием и ZUS. Никаких «серых» схем. Координатор предоставляет подтверждение до подписания контракта.' },
-      { q: 'Сколько зарабатывает сварщик в Польше / ЕС?', a: 'От 5 000 до 9 000 zł нетто в зависимости от метода сварки и опыта. TIG-мастера получают от 8 000 zł. Детальная вилка обсуждается с координатором под вашу квалификацию.' },
+      { q: 'Сколько зарабатывает сварщик в Польше / ЕС?', a: 'Ставка зависит от страны: в Польше — 40–45 zł/час (сильные специалисты и JDG — 55–85 zł/час), в Германии — около 23 €/час, в Бельгии — 21–45 €/час, в Нидерландах — около 34 €/час, во Франции — около 19 €/час, в Англии — около 14 £/час. Точная вилка обсуждается с координатором под вашу квалификацию и метод сварки.' },
       { q: 'Как быстро EWU находит работу?', a: 'Координатор связывается в течение 24 часов после заявки. Подбор позиции занимает 3–14 рабочих дней в зависимости от метода и региона.' },
       { q: 'Нужно ли знать польский или другой язык?', a: 'Базовое понимание — плюс, но не обязательно. На каждом объекте есть координатор-переводчик. Языковой барьер не помеха для начала работы.' },
       { q: 'Мы — компания. Как быстро получить бригаду сварщиков?', a: 'Отправьте запрос через форму. Координатор связывается в течение суток, обсуждает количество, методы и сроки. Первая группа может прибыть уже через 7–14 дней.' },
@@ -991,7 +1006,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     faqItems: [
       { q: 'Jakie dokumenty są potrzebne do pracy spawacza w UE?', a: 'Paszport, dyplom lub świadectwo spawacza, zaświadczenie lekarskie. EWU pomaga z potwierdzeniem klasy i certyfikacją międzynarodową — cały proces pod naszą opieką.' },
       { q: 'Czy jest oficjalne zatrudnienie (UoP)?', a: '100% — UoP (Umowa o pracę) lub UoZ z pełnym ubezpieczeniem zdrowotnym i ZUS. Żadnych szarych schematów. Koordynator dostarcza potwierdzenie przed podpisaniem umowy.' },
-      { q: 'Ile zarabia spawacz w Polsce / UE?', a: 'Od 5 000 do 9 000 zł netto w zależności od metody spawania i doświadczenia. Mistrzowie TIG zarabiają od 8 000 zł. Szczegółowe widełki omawiane są z koordynatorem na podstawie Twoich kwalifikacji.' },
+      { q: 'Ile zarabia spawacz w Polsce / UE?', a: 'Stawka zależy od kraju: w Polsce — 40–45 zł/h (mocni specjaliści i JDG — 55–85 zł/h), w Niemczech — ok. 23 €/h, w Belgii — 21–45 €/h, w Holandii — ok. 34 €/h, we Francji — ok. 19 €/h, w Anglii — ok. 14 £/h. Dokładne widełki omawiane są z koordynatorem na podstawie kwalifikacji i metody spawania.' },
       { q: 'Jak szybko EWU znajduje pracę?', a: 'Koordynator kontaktuje się w ciągu 24 godzin od zgłoszenia. Dobór stanowiska zajmuje 3–14 dni roboczych w zależności od metody i regionu.' },
       { q: 'Czy trzeba znać język polski lub inny?', a: 'Podstawowa znajomość to plus, ale nie jest wymagana. Na każdym obiekcie jest koordynator-tłumacz. Bariera językowa nie jest przeszkodą do rozpoczęcia pracy.' },
       { q: 'Jesteśmy firmą. Jak szybko możemy otrzymać brygadę spawaczy?', a: 'Wyślij zapytanie przez formularz. Koordynator kontaktuje się w ciągu jednego dnia, omawia liczbę, metody i terminy. Pierwsza grupa może przybyć już po 7–14 dniach.' },
@@ -1092,6 +1107,63 @@ export default function OrakulPage() {
       { title: 'Термін оплати', lines: ['стандартний термін — 7 днів від дати виставлення рахунку'] },
       { title: 'Знижки', lines: ['можливі знижки при комплексному підборі персоналу (повний комплект працівників)'] },
       { title: 'Гарантія', lines: ['гарантія на працівника — 30 календарних днів', 'якщо працівник самостійно залишає роботу або не проходить випробувальний термін протягом 30 днів, виконавець одноразово надає безкоштовну заміну'] },
+    ],
+  };
+
+  const T_RATES = {
+    uk: {
+      title: 'Орієнтовні ставки по країнах ЄС', sub: 'За відповідями нашої аудиторії зварювальників',
+      rows: [
+        { flag: '🇵🇱', country: 'Польща', rate: '40–45 zł/год — типова ставка, 55–85 zł/год — сильні спеціалісти або JDG' },
+        { flag: '🇩🇪', country: 'Німеччина', rate: 'близько 23 €/год' },
+        { flag: '🇧🇪', country: 'Бельгія', rate: 'близько 21–45 €/год (залежно від форми роботи)' },
+        { flag: '🇳🇱', country: 'Нідерланди', rate: 'близько 34 €/год' },
+        { flag: '🇫🇷', country: 'Франція', rate: 'близько 19 €/год' },
+        { flag: '🇬🇧', country: 'Англія', rate: 'близько 14 £/год' },
+      ],
+    },
+    pl: {
+      title: 'Orientacyjne stawki w krajach UE', sub: 'Na podstawie odpowiedzi naszej społeczności spawaczy',
+      rows: [
+        { flag: '🇵🇱', country: 'Polska', rate: '40–45 zł/h — typowa stawka, 55–85 zł/h — mocni specjaliści lub JDG' },
+        { flag: '🇩🇪', country: 'Niemcy', rate: 'ok. 23 €/h' },
+        { flag: '🇧🇪', country: 'Belgia', rate: 'ok. 21–45 €/h (zależnie od formy pracy)' },
+        { flag: '🇳🇱', country: 'Holandia', rate: 'ok. 34 €/h' },
+        { flag: '🇫🇷', country: 'Francja', rate: 'ok. 19 €/h' },
+        { flag: '🇬🇧', country: 'Anglia', rate: 'ok. 14 £/h' },
+      ],
+    },
+    ru: {
+      title: 'Ориентировочные ставки по странам ЕС', sub: 'По ответам нашей аудитории сварщиков',
+      rows: [
+        { flag: '🇵🇱', country: 'Польша', rate: '40–45 zł/час — типовая ставка, 55–85 zł/час — сильные специалисты или JDG' },
+        { flag: '🇩🇪', country: 'Германия', rate: 'около 23 €/час' },
+        { flag: '🇧🇪', country: 'Бельгия', rate: 'около 21–45 €/час (в зависимости от формы работы)' },
+        { flag: '🇳🇱', country: 'Нидерланды', rate: 'около 34 €/час' },
+        { flag: '🇫🇷', country: 'Франция', rate: 'около 19 €/час' },
+        { flag: '🇬🇧', country: 'Англия', rate: 'около 14 £/час' },
+      ],
+    },
+    en: {
+      title: 'Estimated Rates Across the EU', sub: 'Based on our welder community survey',
+      rows: [
+        { flag: '🇵🇱', country: 'Poland', rate: 'PLN 40–45/h typical, PLN 55–85/h for strong specialists or JDG' },
+        { flag: '🇩🇪', country: 'Germany', rate: 'about €23/h' },
+        { flag: '🇧🇪', country: 'Belgium', rate: 'about €21–45/h (depending on work form)' },
+        { flag: '🇳🇱', country: 'Netherlands', rate: 'about €34/h' },
+        { flag: '🇫🇷', country: 'France', rate: 'about €19/h' },
+        { flag: '🇬🇧', country: 'UK', rate: 'about £14/h' },
+      ],
+    },
+  }[lang] || {
+    title: 'Орієнтовні ставки по країнах ЄС', sub: 'За відповідями нашої аудиторії зварювальників',
+    rows: [
+      { flag: '🇵🇱', country: 'Польща', rate: '40–45 zł/год — типова ставка, 55–85 zł/год — сильні спеціалісти або JDG' },
+      { flag: '🇩🇪', country: 'Німеччина', rate: 'близько 23 €/год' },
+      { flag: '🇧🇪', country: 'Бельгія', rate: 'близько 21–45 €/год (залежно від форми роботи)' },
+      { flag: '🇳🇱', country: 'Нідерланди', rate: 'близько 34 €/год' },
+      { flag: '🇫🇷', country: 'Франція', rate: 'близько 19 €/год' },
+      { flag: '🇬🇧', country: 'Англія', rate: 'близько 14 £/год' },
     ],
   };
 
@@ -1379,7 +1451,7 @@ export default function OrakulPage() {
         "potentialAction": { "@type": "ReserveAction", "target": "https://www.kompasmigracji.com/uk/orakul#workers" },
         "faq": [
           { "@type": "Question", "name": "Чи є офіційне працевлаштування?", "acceptedAnswer": { "@type": "Answer", "text": "100% UoP або UoZ з повним медичним страхуванням та ZUS." } },
-          { "@type": "Question", "name": "Скільки заробляє зварювальник у Польщі?", "acceptedAnswer": { "@type": "Answer", "text": "Від 5 000 до 9 000 zł нетто залежно від методу та досвіду." } },
+          { "@type": "Question", "name": "Скільки заробляє зварювальник у Польщі?", "acceptedAnswer": { "@type": "Answer", "text": "У Польщі — 40–45 zł/год типова ставка, сильні спеціалісти та JDG — 55–85 zł/год." } },
           { "@type": "Question", "name": "Як швидко EWU знаходить роботу?", "acceptedAnswer": { "@type": "Answer", "text": "Координатор зв'язується протягом 24 годин після заявки." } },
         ],
       })}} />
@@ -1940,6 +2012,25 @@ export default function OrakulPage() {
                     ) : (
                       <p className="e-terms-single">{item.lines[0]}</p>
                     )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── RATES BY COUNTRY ── */}
+        <section className="e-rates">
+          <div className="e-wrap">
+            <h2 className="e-ac-title">{T_RATES.title}</h2>
+            <p className="e-ac-sub">{T_RATES.sub}</p>
+            <div className="e-rates-grid">
+              {T_RATES.rows.map((row, i) => (
+                <div key={i} className="e-rates-card">
+                  <span className="e-rates-flag">{row.flag}</span>
+                  <div className="e-rates-body">
+                    <div className="e-rates-country">{row.country}</div>
+                    <div className="e-rates-rate">{row.rate}</div>
                   </div>
                 </div>
               ))}
