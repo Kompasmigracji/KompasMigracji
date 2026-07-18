@@ -1597,6 +1597,7 @@ export default function OrakulPage() {
               className="e-theme-btn"
               onClick={() => setPageTheme(t => t === 'light' ? 'dark' : 'light')}
               title={pageTheme === 'light' ? 'Темна тема' : 'Світла тема'}
+              aria-label={pageTheme === 'light' ? 'Темна тема' : 'Світла тема'}
             >
               {pageTheme === 'light' ? (
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -2091,7 +2092,7 @@ export default function OrakulPage() {
       {exitPopup && (
         <div className="e-exit-overlay" onClick={e => { if (e.target === e.currentTarget) setExitPopup(false); }}>
           <div className="e-exit-box">
-            <button className="e-exit-close" onClick={() => setExitPopup(false)}>✕</button>
+            <button className="e-exit-close" onClick={() => setExitPopup(false)} aria-label="Закрити">✕</button>
             {exitSent ? (
               <div className="e-exit-ok">{T.exitOk}</div>
             ) : (
@@ -2167,7 +2168,7 @@ export default function OrakulPage() {
               <div className="oc-head-name">ОРАКУЛ · EWU</div>
               <div className="oc-head-sub">AI-рекрутинг · зварювальники</div>
             </div>
-            <button className="oc-close" onClick={() => setChatOpen(false)}>✕</button>
+            <button className="oc-close" onClick={() => setChatOpen(false)} aria-label="Закрити чат">✕</button>
           </div>
 
           <div className="oc-msgs">

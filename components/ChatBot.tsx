@@ -199,7 +199,8 @@ export default function ChatBot() {
                     localStorage.removeItem('km_chat_msgs');
                     setMessages([greetingMsg]);
                   }}
-                  title="Очистити чат"
+                  title={t('chat_clear')}
+                  aria-label={t('chat_clear')}
                   className="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/10 transition-all"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
@@ -212,6 +213,7 @@ export default function ChatBot() {
                 {/* Close */}
                 <button
                   onClick={() => setIsOpen(false)}
+                  aria-label={t('chat_close')}
                   className="w-8 h-8 rounded-xl flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
@@ -342,6 +344,7 @@ export default function ChatBot() {
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading}
+                  aria-label={t('chat_send')}
                   className="w-9 h-9 shrink-0 rounded-lg flex items-center justify-center transition-all disabled:opacity-30"
                   style={
                     input.trim() && !isLoading

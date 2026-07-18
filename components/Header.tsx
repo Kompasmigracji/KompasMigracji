@@ -212,7 +212,7 @@ export default function Header() {
               </div>
             </div>
 
-            <button className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/60 border border-black/10 text-gray-900" onClick={() => setMobileOpen(true)}>
+            <button className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/60 border border-black/10 text-gray-900" onClick={() => setMobileOpen(true)} aria-label={t('nav_open_menu')}>
               <span className="w-5 h-0.5 bg-current rounded-full" />
               <span className="w-5 h-0.5 bg-current rounded-full" />
             </button>
@@ -231,7 +231,7 @@ export default function Header() {
           >
             <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10 dark:border-white/10">
               <span className="font-display font-bold text-lg text-gray-900 dark:text-white">Menu</span>
-              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white transition-transform duration-300 hover:rotate-90">
+              <button onClick={() => setMobileOpen(false)} className="w-10 h-10 rounded-full bg-white/80 dark:bg-white/10 flex items-center justify-center text-gray-900 dark:text-white transition-transform duration-300 hover:rotate-90" aria-label={t('nav_close_menu')}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               </button>
             </div>
