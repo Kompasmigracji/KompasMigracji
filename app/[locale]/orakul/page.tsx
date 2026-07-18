@@ -211,6 +211,8 @@ const CSS = `
   .e-stats{grid-template-columns:1fr 1fr}
   .e-form-box{padding:1.8rem 1.2rem}
   .e-nav-logo span{display:none}
+  .e-nav{padding:0 1rem;gap:.5rem}
+  .e-nav-back span{display:none}
 }
 
 /* CURSOR */
@@ -1467,7 +1469,7 @@ export default function OrakulPage() {
 
   return (
     <>
-      <style>{CSS}</style>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Service",
@@ -1528,7 +1530,7 @@ export default function OrakulPage() {
 
         {/* NAV */}
         <nav className="e-nav">
-          <Link href={`/${locale}`} className="e-nav-back">← Kompas Migracji</Link>
+          <Link href={`/${locale}`} className="e-nav-back">← <span>Kompas Migracji</span></Link>
           <span className="e-nav-logo" style={{display:'flex',alignItems:'center',gap:'8px'}}>
             <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" style={{flexShrink:0}}>
               <defs>
