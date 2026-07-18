@@ -124,7 +124,7 @@ export default function ChatBot() {
             whileHover={{ scale: 1.08, boxShadow: '0 0 32px rgba(249,115,22,0.55)' }}
             whileTap={{ scale: 0.93 }}
             onClick={() => setIsOpen(true)}
-            aria-label="Відкрити чат"
+            aria-label={t('chat_open')}
             className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-[0_8px_30px_rgba(249,115,22,0.4)] border border-orange-500/30"
             style={{ background: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)' }}
           >
