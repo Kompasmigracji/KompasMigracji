@@ -50,5 +50,18 @@ export async function generateMetadata({ params: { locale } }: { params: { local
 }
 
 export default function OrakulLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      {/* LCP hint: the hero background (largest visible element on load) is a
+          CSS background-image inside a client-rendered <style> tag, so the
+          browser can't discover it until CSS parses. Preloading lets fetch
+          start the moment the HTML response arrives instead. */}
+      <link
+        rel="preload"
+        as="image"
+        href="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1920&q=95"
+      />
+      {children}
+    </>
+  );
 }
