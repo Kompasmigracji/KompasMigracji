@@ -1219,11 +1219,14 @@ export default function OrakulPage() {
       const reader = res.body.getReader();
       const dec = new TextDecoder();
       let botText = '';
+      let buffer = '';
       setChatMsgs(prev => [...prev, { role: 'assistant', content: '' }]);
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        const lines = dec.decode(value).split('\n');
+        buffer += dec.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
         for (const line of lines) {
           if (!line.startsWith('data: ')) continue;
           const raw = line.slice(6);

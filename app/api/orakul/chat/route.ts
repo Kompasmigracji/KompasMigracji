@@ -197,12 +197,14 @@ export async function POST(req: NextRequest) {
 
           const reader = response.body?.getReader();
           const decoder = new TextDecoder();
+          let localBuffer = '';
           if (reader) {
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
-              const chunkText = decoder.decode(value);
-              const lines = chunkText.split('\n');
+              localBuffer += decoder.decode(value, { stream: true });
+              const lines = localBuffer.split('\n');
+              localBuffer = lines.pop() ?? '';
               for (const line of lines) {
                 if (line.startsWith('data: ') && line.trim() !== 'data: [DONE]') {
                   try {
