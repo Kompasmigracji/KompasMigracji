@@ -254,7 +254,7 @@ ${crossSellBlock}
 // transcript was captured, so staff can decide whether to reach out manually.
 export function orakulAbandonedEmailHtml(chatId: string, transcript: string, lastActivityAt: string): string {
   return baseLayout(`
-<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x1F44B; Оракул: покинута розмова (Web)</h2>
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x1F44B; Оракул: незавершена заявка (Web)</h2>
 <p style="margin:0 0 20px;color:#6B7280;font-size:14px;">
   Сесія: <strong>${esc(chatId)}</strong> &middot; Останній меседж: ${esc(new Date(lastActivityAt).toLocaleString("uk-UA"))}
 </p>

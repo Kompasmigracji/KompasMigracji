@@ -25,18 +25,22 @@ import {
   hasAdBlockAlreadyShown,
   stripAdBlocks,
   EMPLOYER_SENTINEL,
+  EMPLOYER_NOTIFY_WHATSAPP,
   type EmployerLeadData,
 } from "@/lib/orakul-employer";
 import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from "@/lib/email";
+import { sendWhatsApp } from "@/lib/whatsapp";
 
-function notifyEmployerEmail(d: Partial<EmployerLeadData>): void {
+function notifyEmployerChannels(d: Partial<EmployerLeadData>, situation: string): void {
+  const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
+  sendWhatsApp(EMPLOYER_NOTIFY_WHATSAPP, `${subject}\n\n${situation}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (!notifyEmail) return;
-  const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
   sendEmail(notifyEmail, subject, employerLeadEmailHtml(d), 'employer_lead').catch((e) => console.error('[webhook] Email notify failed:', e));
 }
 
-function notifyHandoffEmail(reason: string, contact: string, transcript: string): void {
+function notifyHandoffChannels(reason: string, contact: string, transcript: string): void {
+  sendWhatsApp(EMPLOYER_NOTIFY_WHATSAPP, `⚠️ Ескалація Оракула: ${reason}\nКонтакт: ${contact}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (!notifyEmail) return;
   sendEmail(notifyEmail, `Ескалація Оракула: ${reason}`, employerHandoffEmailHtml(reason, contact, transcript), 'employer_handoff').catch((e) => console.error('[webhook] Email notify failed:', e));
@@ -165,7 +169,7 @@ export async function POST(req: NextRequest) {
     if (preCheck.handoff && preCheck.reason) {
       const preTranscript = history.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
       notifyAdmin(`⚠️ <b>Оракул: авто-тригер ескалації!</b>\nКонтакт: ${contactForPreCheck}\nПричина: ${preCheck.reason}`, token).catch(() => {});
-      notifyHandoffEmail(`[авто-тригер] ${preCheck.reason}`, contactForPreCheck, preTranscript);
+      notifyHandoffChannels(`[авто-тригер] ${preCheck.reason}`, contactForPreCheck, preTranscript);
     }
     // Обчислюємо ДО виклику моделі — реплік асистента з рекламним блоком ще не
     // могло з'явитись у цьому ж запиті, тож це коректно відображає стан "до".
@@ -327,7 +331,7 @@ export async function POST(req: NextRequest) {
         } catch (e) { console.error("Error adding timeline activity:", e); }
 
         await notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець)!</b>\n${situation}`, token);
-        if (d) notifyEmployerEmail(d);
+        if (d) notifyEmployerChannels(d, situation);
       }
 
       const handoffReason = extractHandoffReason(aiText);
@@ -349,7 +353,7 @@ export async function POST(req: NextRequest) {
         } catch (e) { console.error("Error adding timeline activity:", e); }
         await notifyAdmin(`⚠️ <b>Оракул: негайна ескалація!</b>\nКонтакт: ${contactStr}\nПричина: ${handoffReason}`, token);
         const transcript = history.map((m: any) => `${m.role === 'user' ? 'Клієнт' : 'Бот'}: ${m.content}`).join('\n');
-        notifyHandoffEmail(handoffReason, contactStr, transcript);
+        notifyHandoffChannels(handoffReason, contactStr, transcript);
       }
 
 

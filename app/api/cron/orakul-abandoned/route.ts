@@ -9,6 +9,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { q } from "@/lib/db";
 import { notifyAdmin } from "@/lib/telegram";
 import { sendEmail, orakulAbandonedEmailHtml } from "@/lib/email";
+import { sendWhatsApp } from "@/lib/whatsapp";
+import { EMPLOYER_NOTIFY_WHATSAPP } from "@/lib/orakul-employer";
 
 const STALE_MINUTES = 30;
 
@@ -53,13 +55,18 @@ export async function GET(req: NextRequest) {
     const transcript = buildTranscript(lead.history || []);
 
     notifyAdmin(
-      `👋 <b>Оракул: покинута розмова (Web)</b>\nСесія: ${lead.chat_id}\nОстанній меседж: ${new Date(lead.last_activity_at).toLocaleString("uk-UA")}\n\n${transcript.slice(0, 3000)}`
+      `👋 <b>Оракул: незавершена заявка (Web)</b>\nСесія: ${lead.chat_id}\nОстанній меседж: ${new Date(lead.last_activity_at).toLocaleString("uk-UA")}\n\n${transcript.slice(0, 3000)}`
     ).catch((e) => console.error("[cron/orakul-abandoned] Telegram notify failed:", e));
+
+    sendWhatsApp(
+      EMPLOYER_NOTIFY_WHATSAPP,
+      `Незавершена заявка (Оракул, Web)\nСесія: ${lead.chat_id}\nОстанній меседж: ${new Date(lead.last_activity_at).toLocaleString("uk-UA")}\n\n${transcript.slice(0, 1000)}`
+    );
 
     if (notifyEmail) {
       sendEmail(
         notifyEmail,
-        `Оракул: покинута розмова (${lead.chat_id})`,
+        `Незавершена заявка — Оракул (${lead.chat_id})`,
         orakulAbandonedEmailHtml(lead.chat_id, transcript, lead.last_activity_at),
         "orakul_abandoned"
       ).catch((e) => console.error("[cron/orakul-abandoned] Email notify failed:", e));
