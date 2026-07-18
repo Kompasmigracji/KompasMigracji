@@ -266,10 +266,12 @@ export async function POST(req: NextRequest) {
               `Оцінка: ${d?.lead_score || '—'}`,
             ].join('. ');
             await finalizeLead(sessionLeadId, name, phone, 'EWU — Зварювальник (AI чат)', situation, '');
+            notifyAdmin(`🚨 <b>Новий лід у CRM (Кандидат, Web)!</b>\nКонтакт: ${phone}\nДеталі: ${situation}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
             controller.enqueue(encoder.encode(`data: ${JSON.stringify({ lead_saved: true })}\n\n`));
           } else {
             console.error('[orakul/chat] candidate JSON malformed/incomplete:', fullText);
             await finalizeLead(sessionLeadId, 'Кандидат (дані неповні)', 'невідомо — див. розмову', 'EWU — Зварювальник (AI чат)', fullText, '');
+            notifyAdmin(`🚨 <b>Новий лід у CRM (Кандидат, Web) — дані неповні!</b>\n${fullText}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
           }
         }
 
