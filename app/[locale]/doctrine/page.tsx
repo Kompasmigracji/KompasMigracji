@@ -1,6 +1,8 @@
 import { useLocale } from 'next-intl';
 import { doctrineData } from '@/lib/doctrine';
 import { Metadata } from 'next';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const data = doctrineData[locale as keyof typeof doctrineData] || doctrineData.uk;
@@ -15,6 +17,8 @@ export default function DoctrinePage() {
   const data = doctrineData[locale as keyof typeof doctrineData] || doctrineData.uk;
 
   return (
+    <>
+    <Header />
     <main className="min-h-screen pb-24 pt-32 bg-[#fbfbfd] dark:bg-[#0a0a0a] relative overflow-hidden">
       {/* Background gradients */}
       <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-500/10 to-transparent -z-10" />
@@ -72,5 +76,7 @@ export default function DoctrinePage() {
         </div>
       </div>
     </main>
+    <Footer />
+    </>
   );
 }

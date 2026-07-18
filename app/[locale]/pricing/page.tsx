@@ -321,9 +321,9 @@ function PriceRow({ row, onBuy, onContact, isEven }: { row: ServiceRow; onBuy: (
       </td>
       <td className="pl-2 pr-4 py-3 text-right whitespace-nowrap">
         {isFree ? (
-          <Link href="/blog" className="text-xs font-semibold text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 transition-colors">
-            {t('pricing_btn_read')}
-          </Link>
+          <button onClick={() => onContact(row)} className="text-xs font-semibold text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 transition-colors bg-transparent border-none cursor-pointer">
+            {t('pricing_btn_contact')}
+          </button>
         ) : isFixed ? (
           <button onClick={() => onBuy(row)} className="bg-black text-white dark:bg-white dark:text-black px-4 py-2 rounded-full font-bold text-xs shadow-md hover:scale-105 transition-transform">
             {t('pricing_btn_buy')}
