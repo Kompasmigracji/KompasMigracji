@@ -20,7 +20,7 @@ export async function GET() {
         source,
         created_at
       FROM leads
-      WHERE source = 'orakul' AND deleted_at IS NULL
+      WHERE source IN ('orakul', 'orakul_web') AND deleted_at IS NULL
       ORDER BY created_at DESC
     `);
 
@@ -42,7 +42,7 @@ export async function PATCH(req) {
     }
 
     const row = await one(
-      `UPDATE leads SET status = $1 WHERE id = $2 AND source = 'orakul' RETURNING id`,
+      `UPDATE leads SET status = $1 WHERE id = $2 AND source IN ('orakul', 'orakul_web') RETURNING id`,
       [status, id]
     );
     if (!row) return NextResponse.json({ error: "Not found" }, { status: 404 });

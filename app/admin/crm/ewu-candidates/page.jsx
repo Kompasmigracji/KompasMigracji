@@ -4,10 +4,11 @@ import { Icon, Avatar } from "@/components/admin/ui";
 import SpotlightCard from "@/components/SpotlightCard";
 import { motion } from "framer-motion";
 
-const STATUS_LABEL = { new: "Новий", contacted: "В роботі", pending: "Думає", won: "Успіх", lost: "Відмова" };
+const STATUS_LABEL = { new: "Новий", contacted: "В роботі", in_progress: "В обробці", pending: "Думає", won: "Успіх", lost: "Відмова" };
 const STATUS_COLOR = {
   new: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   contacted: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  in_progress: "bg-purple-500/10 text-purple-500 border-purple-500/20",
   pending: "bg-amber-500/10 text-amber-500 border-amber-500/20",
   won: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
   lost: "bg-red-500/10 text-red-500 border-red-500/20",
