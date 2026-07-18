@@ -1,4 +1,14 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+// Content is monolingual Polish regardless of URL locale prefix — a single
+// canonical URL avoids the locale-prefixed variants reading as duplicate
+// content to search engines.
+export const metadata: Metadata = {
+  title: 'Polityka Prywatności | Kompas Migracji',
+  description: 'Polityka prywatności DOMUS V Sp. z o.o. — zasady przetwarzania danych osobowych zgodnie z RODO/GDPR.',
+  alternates: { canonical: 'https://kompasmigracji.com/uk/privacy' },
+};
 
 function Section({ num, title, children }: { num?: number; title: string; children: React.ReactNode }) {
   return (
