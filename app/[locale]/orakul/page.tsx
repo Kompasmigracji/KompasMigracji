@@ -718,7 +718,7 @@ interface PageTrans {
   card2Title: string; card2Desc: string;
   workersTitle: string; workersDesc: string; workersItems: string[];
   wFormTitle: string; wNamePlh: string; wPhonePlh: string; wEmailPlh: string; wMsgPlh: string;
-  wBtn: string; wSendingBtn: string; wSentTitle: string; wSentDesc: string;
+  wBtn: string; wSendingBtn: string; wSentTitle: string; wSentDesc: string; rodo: string;
   employersTitle: string; employersDesc: string;
   stat1: string; stat2: string; stat3: string; employersItems: string[];
   eFormTitle: string; eNamePlh: string; ePhonePlh: string; eEmailPlh: string; eMsgPlh: string;
@@ -755,6 +755,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     wPhonePlh: 'Телефон або WhatsApp',
     wEmailPlh: "Email (необов'язково)",
     wMsgPlh: 'Коротко про себе — досвід, країна, місто',
+    rodo: 'Я погоджуюсь з обробкою персональних даних згідно з RODO',
     wBtn: 'Знайти роботу',
     wSendingBtn: 'Надсилання...',
     wSentTitle: 'Заявку отримано',
@@ -828,6 +829,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     wPhonePlh: 'Phone or WhatsApp',
     wEmailPlh: 'Email (optional)',
     wMsgPlh: 'About yourself — experience, country, city',
+    rodo: 'I consent to the processing of personal data in accordance with GDPR',
     wBtn: 'Find work',
     wSendingBtn: 'Sending...',
     wSentTitle: 'Application received',
@@ -901,6 +903,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     wPhonePlh: 'Телефон или WhatsApp',
     wEmailPlh: 'Email (необязательно)',
     wMsgPlh: 'Кратко о себе — опыт, страна, город',
+    rodo: 'Я согласен с обработкой персональных данных в соответствии с RODO',
     wBtn: 'Найти работу',
     wSendingBtn: 'Отправка...',
     wSentTitle: 'Заявка получена',
@@ -974,6 +977,7 @@ const TRANSLATIONS: Record<LangKey, any> = {
     wPhonePlh: 'Telefon lub WhatsApp',
     wEmailPlh: 'Email (opcjonalnie)',
     wMsgPlh: 'O sobie — doświadczenie, kraj, miasto',
+    rodo: 'Wyrażam zgodę na przetwarzanie danych osobowych zgodnie z RODO',
     wBtn: 'Znajdź pracę',
     wSendingBtn: 'Wysyłanie...',
     wSentTitle: 'Zgłoszenie otrzymane',
@@ -1040,6 +1044,7 @@ export default function OrakulPage() {
   const [wMsg, setWMsg] = useState('');
   const [wSent, setWSent] = useState(false);
   const [wSending, setWSending] = useState(false);
+  const [wConsent, setWConsent] = useState(false);
 
   const [eName, setEName] = useState('');
   const [ePhone, setEPhone] = useState('');
@@ -1047,6 +1052,7 @@ export default function OrakulPage() {
   const [eMsg, setEMsg] = useState('');
   const [eSent, setESent] = useState(false);
   const [eSending, setESending] = useState(false);
+  const [eConsent, setEConsent] = useState(false);
 
   // ── Chat state ──
   interface ChatMsg { role: 'user' | 'assistant'; content: string }
@@ -1900,7 +1906,11 @@ export default function OrakulPage() {
                       <input className="e-inp" placeholder={T.wPhonePlh} value={wPhone} onChange={e => setWPhone(e.target.value)} required />
                       <input className="e-inp" type="email" placeholder={T.wEmailPlh} value={wEmail} onChange={e => setWEmail(e.target.value)} />
                       <textarea className="e-textarea" placeholder={T.wMsgPlh} value={wMsg} onChange={e => setWMsg(e.target.value)} />
-                      <button className="e-submit-btn" type="submit" disabled={wSending || !wName.trim() || !wPhone.trim()}>
+                      <label style={{display:'flex',alignItems:'flex-start',gap:'.5rem',marginBottom:'1rem',fontSize:'.82rem',color:'var(--text-muted)',cursor:'pointer'}}>
+                        <input type="checkbox" required checked={wConsent} onChange={e => setWConsent(e.target.checked)} style={{marginTop:'.2rem'}} />
+                        <span>{T.rodo}</span>
+                      </label>
+                      <button className="e-submit-btn" type="submit" disabled={wSending || !wName.trim() || !wPhone.trim() || !wConsent}>
                         {wSending ? T.wSendingBtn : T.wBtn}
                       </button>
                     </form>
@@ -1987,7 +1997,11 @@ export default function OrakulPage() {
                       <input className="e-inp" placeholder={T.ePhonePlh} value={ePhone} onChange={e => setEPhone(e.target.value)} required />
                       <input className="e-inp" type="email" placeholder={T.eEmailPlh} value={eEmail} onChange={e => setEEmail(e.target.value)} />
                       <textarea className="e-textarea" placeholder={T.eMsgPlh} value={eMsg} onChange={e => setEMsg(e.target.value)} />
-                      <button className="e-submit-btn" type="submit" disabled={eSending || !eName.trim() || !ePhone.trim()}>
+                      <label style={{display:'flex',alignItems:'flex-start',gap:'.5rem',marginBottom:'1rem',fontSize:'.82rem',color:'var(--text-muted)',cursor:'pointer'}}>
+                        <input type="checkbox" required checked={eConsent} onChange={e => setEConsent(e.target.checked)} style={{marginTop:'.2rem'}} />
+                        <span>{T.rodo}</span>
+                      </label>
+                      <button className="e-submit-btn" type="submit" disabled={eSending || !eName.trim() || !ePhone.trim() || !eConsent}>
                         {eSending ? T.eSendingBtn : T.eBtn}
                       </button>
                     </form>
