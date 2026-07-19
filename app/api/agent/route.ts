@@ -1,8 +1,14 @@
 // app/api/agent/route.ts
 import { NextResponse } from 'next/server';
 import { invokeAlexDigital, AgentRequest } from '@/lib/lifeos/alexDigital';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(req: Request) {
+  const auth = await requireAuth(["admin"]);
+  if (auth.error) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const body = await req.json();
     const agentReq: AgentRequest = {

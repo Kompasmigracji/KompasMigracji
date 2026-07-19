@@ -1,7 +1,20 @@
 import { streamText } from 'ai';
 import { openai } from '@ai-sdk/openai';
+import { NextRequest } from 'next/server';
+import { requireAuth } from '@/lib/auth';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const auth = await requireAuth(["member", "admin"]);
+  if (auth.error) {
+    return new Response(JSON.stringify({ error: auth.error }), { status: auth.status });
+  }
+
+  const rl = rateLimit(clientIp(req), { max: 20, windowMs: 60_000, ns: "member-chat" });
+  if (!rl.ok) {
+    return new Response(JSON.stringify({ error: "Забагато запитів. Спробуйте за хвилину." }), { status: 429 });
+  }
+
   try {
     const { messages, profile } = await req.json();
 

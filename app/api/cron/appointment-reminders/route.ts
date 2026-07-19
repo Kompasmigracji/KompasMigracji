@@ -12,10 +12,10 @@ const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://kompasmigracji.com";
 const ADMIN_CHAT = process.env.TELEGRAM_ADMIN_CHAT_ID;
 
 function checkCronAuth(req: NextRequest): boolean {
-  const cronHeader = req.headers.get("x-vercel-cron");
   const authHeader = req.headers.get("authorization");
   const secret = process.env.CRON_SECRET;
-  return cronHeader === "1" || (!!secret && authHeader === `Bearer ${secret}`);
+  if (secret) return authHeader === `Bearer ${secret}`;
+  return req.headers.get("x-vercel-cron") === "1";
 }
 
 export async function POST(req: NextRequest) {

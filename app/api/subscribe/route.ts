@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { sendEmail, welcomeEmailHtml } from "@/lib/email";
 import { createTaskFromLead } from "@/lib/task-from-lead";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://www.kompasmigracji.com";
 
@@ -17,6 +18,11 @@ function mockModeAllowed(): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 10, windowMs: 10 * 60_000, ns: "subscribe" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });

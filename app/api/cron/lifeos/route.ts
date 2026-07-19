@@ -5,9 +5,13 @@ import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase admin client to bypass RLS in Cron
 export async function GET(req: Request) {
-  // Vercel Cron Authentication
+  // Vercel Cron Authentication: secret-first, header fallback when no secret is set
   const authHeader = req.headers.get('authorization');
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  const authorized = cronSecret
+    ? authHeader === `Bearer ${cronSecret}`
+    : req.headers.get('x-vercel-cron') === '1';
+  if (!authorized) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

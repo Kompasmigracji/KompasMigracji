@@ -1,21 +1,26 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '@/lib/supabase';
+import { requireAuth } from '@/lib/auth';
 
 export async function GET(request: Request) {
+  const auth = await requireAuth(["member", "admin"]);
+  if (auth.error || !auth.user) {
+    return NextResponse.json({ error: auth.error || "Unauthorized" }, { status: auth.status || 401 });
+  }
+
   const supabase = getSupabaseAdmin();
   if (!supabase) {
     return NextResponse.json({ error: 'Database connection failed' }, { status: 500 });
   }
 
   try {
-    // For now we get the first member to demonstrate Stage 1
-    // In production, you would use getSupabase() with auth session
     const { data: profile, error } = await supabase
       .from('kompas_member_profiles')
       .select(`
         *,
         kompas_users!inner(full_name, email)
       `)
+      .eq('user_id', auth.user.sub)
       .limit(1)
       .single();
 

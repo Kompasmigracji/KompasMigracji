@@ -2,10 +2,16 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { q, one } from '@/lib/db';
 import { createTaskFromLead } from '@/lib/task-from-lead';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 const CRM_SOURCES = ['bot', 'site', 'facebook', 'instagram', 'other'] as const;
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 10, windowMs: 10 * 60_000, ns: 'lead' });
+  if (!rl.ok) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   let body: {
     name?: string; phone?: string; source?: string;
     first_name?: string; contact?: string; service?: string;

@@ -8,11 +8,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import { sendMessage } from "@/lib/telegram";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 const ADMIN_CHAT = process.env.TELEGRAM_ADMIN_CHAT_ID;
 const SITE = process.env.NEXT_PUBLIC_APP_URL || "https://kompasmigracji.com";
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 5, windowMs: 10 * 60_000, ns: "appointment" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });

@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { q as query } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 
 export async function POST(req) {
+  const auth = await requireAuth(["admin", "moderator"]);
+  if (auth.error) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
   try {
     const body = await req.json();
     const { title, message, type = "system" } = body;
@@ -27,6 +32,10 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
+  const auth = await requireAuth();
+  if (auth.error) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
   try {
     const result = await query(
       `SELECT * FROM notifications ORDER BY created_at DESC LIMIT 50`,
@@ -43,6 +52,10 @@ export async function GET(req) {
 }
 
 export async function PATCH(req) {
+  const auth = await requireAuth();
+  if (auth.error) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
   try {
     // Mark as read
     await query(

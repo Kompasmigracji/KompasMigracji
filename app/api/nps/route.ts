@@ -4,6 +4,7 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   const token = new URL(req.url).searchParams.get("token");
@@ -23,6 +24,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 20, windowMs: 10 * 60_000, ns: "nps" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
