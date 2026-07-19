@@ -12,6 +12,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
 import { q } from '@/lib/db';
 import { createTaskFromLead } from '@/lib/task-from-lead';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
+
+/* Суми приходять з клієнта в грошах (integer). Межі відсікають NaN, від'ємні
+   та абсурдні значення до того, як вони підуть у P24/PayU/Stripe; максимум
+   у каталозі послуг зараз 400 000 грошів (4 000 zł), стеля з запасом. */
+const MIN_AMOUNT_GROSZE = 100;        // 1 zł
+const MAX_AMOUNT_GROSZE = 2_000_000;  // 20 000 zł
 
 function mockModeAllowed(): boolean {
   return process.env.NODE_ENV !== 'production' || process.env.P24_SANDBOX === 'mock';
@@ -59,6 +66,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Відсутні обов\'язкові параметри' }, { status: 400 });
   }
 
+  /* Кожен POST створює лід у CRM — без ліміту це відкритий канал спаму в базу. */
+  const rl = rateLimit(clientIp(req), { ns: 'payment', max: 5, windowMs: 60_000 });
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Забагато спроб оплати. Зачекайте, будь ласка, хвилину і спробуйте ще раз.' },
+      { status: 429 },
+    );
+  }
+
+  const amountNum = Number(amount);
+  if (!Number.isInteger(amountNum) || amountNum < MIN_AMOUNT_GROSZE || amountNum > MAX_AMOUNT_GROSZE) {
+    return NextResponse.json({ error: 'Некоректна сума платежу' }, { status: 400 });
+  }
+  if (!/^\S+@\S+\.\S+$/.test(String(email)) || String(email).length > 254) {
+    return NextResponse.json({ error: 'Некоректна email-адреса' }, { status: 400 });
+  }
+  if (String(description).length > 300) {
+    return NextResponse.json({ error: 'Занадто довгий опис платежу' }, { status: 400 });
+  }
+
   const leadSource = String(source || 'pricing');
   const sessionId  = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://www.kompasmigracji.com').replace(/\/$/, '');
@@ -79,7 +106,7 @@ export async function POST(req: NextRequest) {
 
       const result = await registerTransaction({
         sessionId,
-        amount:      Number(amount),
+        amount:      amountNum,
         description: String(description),
         email:       String(email),
         urlReturn:   `${siteUrl}/payment/success?session=${sessionId}`,
@@ -109,7 +136,7 @@ export async function POST(req: NextRequest) {
 
       const result = await createPayUOrder({
         sessionId,
-        amount:      Number(amount),
+        amount:      amountNum,
         description: String(description),
         email:       String(email),
         firstName:   firstName ? String(firstName) : undefined,
@@ -146,7 +173,7 @@ export async function POST(req: NextRequest) {
           price_data: {
             currency: 'pln',
             product_data: { name: String(description) },
-            unit_amount: Number(amount),
+            unit_amount: amountNum,
           },
           quantity: 1,
         }],

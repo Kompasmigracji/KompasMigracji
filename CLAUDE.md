@@ -70,7 +70,7 @@ Shared admin UI primitives (`StatCard`, `ProgressBar`, `DataTable`, `EmptyState`
 
 ### AI subsystems (three separate, non-overlapping bots)
 
-1. **Public chatbot** — `POST /api/chat`, Claude 3.5 Haiku, embedded via `components/ChatBot.tsx` on the marketing site. Parses lead info out of model output using a `[[LEAD:{...}]]` sentinel and writes it to the `leads` table. Rate-limited to 10 req/min/client.
+1. **Public chatbot** — `POST /api/chat`, Gemini (via `ai` SDK + `@ai-sdk/google`) with tool-calling, embedded via `components/ChatBot.tsx` on the marketing site. Tools query Supabase (`kompas_jobs_v2`, `kompas_partners`) and write leads to `kompas_leads` via the `record_lead` tool. Rate-limited to 10 req/min/IP via `lib/rate-limit.ts`.
 2. **Orakul** — a separate assistant (`lib/orakul-bot.ts`, `lib/orakul-prompt.ts`, `POST /api/orakul/chat`), distinct prompt/persona from the main chatbot.
 3. **God / Primus agent orchestration** — a simulated multi-agent ops layer: `POST /api/god/command` dispatches to `POST /api/agents/primus/dispatch`, which routes tasks to rows in the `agents`/`agent_tasks` Supabase tables (`lib/agents.ts`, `lib/god.ts`). `GET /api/agents/monitor/cron` (Vercel cron) scans heartbeats and emails alerts via `lib/notify.ts`. Admin UI at `/admin/agents` (`AgentsDashboard` → `GodCard` + `AgentCard[]`, SWR-polled every 10s). Authorization for these endpoints is a hardcoded email check (`iphoenixgsm@gmail.com`), not role-based.
 

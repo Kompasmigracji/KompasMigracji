@@ -2,8 +2,14 @@
 import { generateText, tool } from 'ai';
 import { google } from '@ai-sdk/google';
 import { z } from 'zod';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
+
+/* Публічний неавтентифікований ендпоінт, кожен виклик — платний запит до LLM.
+   Без цих лімітів будь-хто може скриптом спалювати квоту/бюджет Gemini. */
+const MAX_MESSAGES = 20;
+const MAX_MSG_CHARS = 4000;
 
 const SYSTEM_PROMPT = `Ти — AI-Координатор компанії Kompas Migracji (Польща). Твоя задача — допомагати мігрантам, використовуючи свої інструменти (Tools) для доступу до інших агентів екосистеми.
 
@@ -25,9 +31,25 @@ WhatsApp: +48 729 271 848 | Telegram: @kompasmigracji | info@kompasmigracji.com
 5. ЯКЩО клієнту потрібен перекладач чи адвокат, ОБОВ'ЯЗКОВО викликай find_discounts.
 6. НЕ ПИШИ великі полотна тексту. Викликай інструменти, щоб надати точну інформацію.`;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const rl = rateLimit(clientIp(req), { ns: 'chat', max: 10, windowMs: 60_000 });
+    if (!rl.ok) {
+      return NextResponse.json(
+        { content: 'Забагато повідомлень поспіль. Зачекайте, будь ласка, хвилину і спробуйте ще раз 🙏' },
+        { status: 429 }
+      );
+    }
+
+    const body = await req.json();
+    const rawMessages = Array.isArray(body?.messages) ? body.messages : [];
+    const messages = rawMessages
+      .filter((m: any) => (m?.role === 'user' || m?.role === 'assistant') && typeof m?.content === 'string')
+      .slice(-MAX_MESSAGES)
+      .map((m: any) => ({ role: m.role, content: m.content.slice(0, MAX_MSG_CHARS) }));
+    if (messages.length === 0) {
+      return NextResponse.json({ content: 'Напишіть, будь ласка, ваше запитання 🙂' }, { status: 400 });
+    }
     const supabase = getSupabase();
 
     const { text } = await generateText({

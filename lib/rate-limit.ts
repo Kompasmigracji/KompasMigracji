@@ -20,6 +20,15 @@ export function rateLimit(
 ): { ok: boolean; remaining: number } {
   const store = getStore(ns);
   const now   = Date.now();
+
+  // Стор живе весь час життя інстансу — без прибирання прострочений запис
+  // на кожен унікальний IP лишається назавжди (повільний memory leak).
+  if (store.size > 10_000) {
+    for (const [k, e] of store) {
+      if (now - e.start >= windowMs) store.delete(k);
+    }
+  }
+
   const entry = store.get(key);
 
   if (!entry || now - entry.start >= windowMs) {

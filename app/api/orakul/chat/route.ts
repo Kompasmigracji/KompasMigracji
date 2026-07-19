@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 import { q, one } from '@/lib/db';
 import { ORAKUL_SYSTEM_PROMPT } from '@/lib/orakul-prompt';
 import {
@@ -133,9 +134,25 @@ async function finalizeLead(
   }
 }
 
+/** Фронтенд читає лише SSE-події `{error}` при res.ok, тому ліміт віддаємо
+ * як 200-стрім з подією error — інакше користувач побачить лише «⚠️ Помилка»
+ * без пояснення. Кожен виклик — платний запит до Gemini, публічний і без
+ * автентифікації, тому per-IP ліміт обов'язковий. */
+function sseError(msg: string): Response {
+  const payload = `data: ${JSON.stringify({ error: msg })}\n\ndata: [DONE]\n\n`;
+  return new Response(payload, {
+    headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache' },
+  });
+}
+
 export async function POST(req: NextRequest) {
   if (!process.env.GEMINI_API_KEY) {
     return NextResponse.json({ error: 'AI not configured' }, { status: 503 });
+  }
+
+  const rl = rateLimit(clientIp(req), { ns: 'orakul', max: 20, windowMs: 60_000 });
+  if (!rl.ok) {
+    return sseError('Забагато повідомлень поспіль. Зачекайте, будь ласка, хвилину і спробуйте ще раз.');
   }
 
   let body: { messages?: { role: string; content: string }[]; sessionId?: string };
@@ -143,7 +160,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const messages = (body.messages || []).slice(-20); // keep last 20 turns max
+  const messages = (body.messages || [])
+    .filter((m) => (m?.role === 'user' || m?.role === 'assistant') && typeof m?.content === 'string')
+    .slice(-20) // keep last 20 turns max
+    .map((m) => ({ role: m.role, content: m.content.slice(0, 4000) }));
   const sessionId = typeof body.sessionId === 'string' && body.sessionId ? body.sessionId : undefined;
   const encoder = new TextEncoder();
   let fullText = '';
