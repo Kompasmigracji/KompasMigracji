@@ -232,10 +232,10 @@ SQL-схема: `supabase/agents_schema.sql`
 
 | Метод | Маршрут | Опис | Авторизація |
 |-------|---------|------|-------------|
-| POST | `/api/god/command` | Відправити команду God → Primus | email = `iphoenixgsm@gmail.com` |
-| POST | `/api/agents/primus/dispatch` | Створити задачу для агента | email = `iphoenixgsm@gmail.com` |
-| GET | `/api/agents/primus/status` | Отримати стан усіх агентів | email = `iphoenixgsm@gmail.com` |
-| GET | `/api/agents/monitor/cron` | Cron: перевірка heartbeat, корективні задачі | Vercel cron |
+| POST | `/api/god/command` | Відправити команду God → Primus | JWT-cookie, роль `admin` |
+| POST | `/api/agents/primus/dispatch` | Створити задачу для агента | JWT-cookie, роль `admin` |
+| GET | `/api/agents/primus/status` | Отримати стан усіх агентів | JWT-cookie, роль `admin` |
+| GET | `/api/agents/monitor/cron` | Cron: перевірка heartbeat, корективні задачі | `CRON_SECRET` (Bearer) |
 
 ### Файли системи агентів
 

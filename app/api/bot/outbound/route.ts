@@ -1,7 +1,12 @@
 import { NextResponse } from 'next/server';
 import { q } from '@/lib/db';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(request: Request) {
+  const auth = await requireAuth(["admin", "moderator", "manager"]);
+  if (auth.error) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status || 401 });
+  }
   try {
     const { phone, platform, message, leadId } = await request.json();
 

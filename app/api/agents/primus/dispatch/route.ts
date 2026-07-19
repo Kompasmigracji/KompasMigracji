@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server';
 import { dispatchTask } from '@/lib/agents';
 import { getSupabase } from '@/lib/supabase';
+import { requireAuth } from '@/lib/auth';
 
 // POST /api/agents/primus/dispatch
 export async function POST(request: Request) {
@@ -9,9 +10,9 @@ export async function POST(request: Request) {
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
   }
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session || session.user.email !== 'iphoenixgsm@gmail.com') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  const auth = await requireAuth(["admin"]);
+  if (auth.error) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: auth.status || 403 });
   }
 
   const { agentId, type, payload } = await request.json();

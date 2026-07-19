@@ -1,8 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { q } from '@/lib/db';
 import { sendInitialMessage } from '@/lib/whatsapp';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const rl = rateLimit(clientIp(request), { max: 10, windowMs: 10 * 60_000, ns: 'architecture-lead' });
+  if (!rl.ok) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
   try {
     const body = await request.json();
     const { name, phone, objectType, area, package: pkgName } = body;

@@ -2,16 +2,17 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server';
 import { evaluateAndCommandGod } from '@/lib/god';
 import { getSupabase } from '@/lib/supabase';
+import { requireAuth } from '@/lib/auth';
 
 export async function POST(request: Request) {
   const supabase = getSupabase();
   if (!supabase) {
     return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
   }
-  const { data: { session } } = await supabase.auth.getSession();
-  // Only the Grand Architect (email) can call this endpoint
-  if (!session || session.user.email !== 'iphoenixgsm@gmail.com') {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  // Only admins (the Grand Architect) can command God
+  const auth = await requireAuth(["admin"]);
+  if (auth.error) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: auth.status || 403 });
   }
 
   const body = await request.json();
