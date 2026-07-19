@@ -545,7 +545,13 @@ export default function EmailsPage() {
                     minHeight: 250, whiteSpace: "pre-wrap"
                   }}>
                     {selectedEmail.body_html ? (
-                      <div dangerouslySetInnerHTML={{ __html: selectedEmail.body_html }} />
+                      /* sandbox без allow-scripts: HTML вхідних листів не може виконати JS в контексті адмінки */
+                      <iframe
+                        sandbox=""
+                        srcDoc={selectedEmail.body_html}
+                        title="Email content"
+                        style={{ width: "100%", minHeight: 250, border: "none", background: "#fff", borderRadius: 4 }}
+                      />
                     ) : (
                       selectedEmail.body_text
                     )}
