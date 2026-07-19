@@ -50,7 +50,8 @@ for (const theme of themes) {
   const context = await browser.newContext({ viewport: { width, height } });
   await context.addCookies([{ name: 'kompascrm_session', value: token, url: 'http://localhost:3000' }]);
   await context.addInitScript((t) => {
-    localStorage.setItem('kc-theme', t);
+    localStorage.setItem('kc-theme', t);   // тема KompasCRM (/admin/(panel))
+    localStorage.setItem('theme', t);      // тема сайту/iPhoenixCRM (/admin/crm)
     localStorage.setItem('kc-lang', 'uk');
   }, theme);
 
