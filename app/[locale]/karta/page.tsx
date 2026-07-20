@@ -193,7 +193,7 @@ const LANGS = {
     copy: 'Zero corruption · Strictly by the law · For Ukrainians in the EU',
   },
 
-  ro: {
+  rom: {
     flag: '🇷🇴', label: 'Română',
     ticker: ['ACCELERAREA CĂRȚII DE ȘEDERE ', '✦', ' 355 ZŁ — 1 ORĂ JURIDICĂ'],
     order: 'Comandă →',
@@ -245,6 +245,7 @@ const PAY_TEXT = {
   pl: { btn: 'Zapłać przez Przelewy24', firstNameLabel: 'Imię (łacińskie litery)', firstNamePh: 'Ivan', lastNameLabel: 'Nazwisko (łacińskie litery)', lastNamePh: 'Petrenko', phoneLabel: 'Telefon kontaktowy', phonePh: '+48 123 456 789', emailLabel: 'Twój email na paragon', emailPh: 'example@gmail.com', go: 'Przejdź do płatności Przelewy24', cancel: 'Anuluj', loading: 'Przekierowanie...', errFirstName: 'Wpisz imię łacińskimi literami (np. Ivan)', errLastName: 'Wpisz nazwisko łacińskimi literami (np. Petrenko)', errPhone: 'Wpisz numer telefonu kontaktowego', errEmail: 'Wpisz poprawny email', errNet: 'Błąd połączenia. Spróbuj ponownie.', regText: 'Dokonując płatności, akceptujesz' },
   ru: { btn: 'Оплатить через Przelewy24', firstNameLabel: 'Имя (латиницей)', firstNamePh: 'Ivan', lastNameLabel: 'Фамилия (латиницей)', lastNamePh: 'Petrenko', phoneLabel: 'Контактный телефон', phonePh: '+48 123 456 789', emailLabel: 'Ваш email для чека', emailPh: 'example@gmail.com', go: 'Перейти к оплате Przelewy24', cancel: 'Отмена', loading: 'Перенаправление...', errFirstName: 'Введите имя латиницей (напр. Ivan)', errLastName: 'Введите фамилию латиницей (напр. Petrenko)', errPhone: 'Введите контактный номер телефона', errEmail: 'Введите корректный email', errNet: 'Ошибка соединения. Попробуйте снова.', regText: 'Оплачивая, вы соглашаетесь с' },
   en: { btn: 'Pay via Przelewy24', firstNameLabel: 'First name (Latin)', firstNamePh: 'Ivan', lastNameLabel: 'Last name (Latin)', lastNamePh: 'Petrenko', phoneLabel: 'Contact phone', phonePh: '+48 123 456 789', emailLabel: 'Your email for receipt', emailPh: 'example@gmail.com', go: 'Proceed to Przelewy24 payment', cancel: 'Cancel', loading: 'Redirecting...', errFirstName: 'Enter first name in Latin (e.g. Ivan)', errLastName: 'Enter last name in Latin (e.g. Petrenko)', errPhone: 'Enter your contact phone number', errEmail: 'Enter a valid email', errNet: 'Connection error. Please try again.', regText: 'By paying, you agree to the' },
+  rom: { btn: 'Plătiți via Przelewy24', firstNameLabel: 'Nume (Latin)', firstNamePh: 'Ivan', lastNameLabel: 'Prenume (Latin)', lastNamePh: 'Petrenko', phoneLabel: 'Telefon contact', phonePh: '+48 123 456 789', emailLabel: 'Email pentru chitanță', emailPh: 'example@gmail.com', go: 'Treceți la plata Przelewy24', cancel: 'Anulare', loading: 'Redirecționare...', errFirstName: 'Introduceți numele în latină (ex. Ivan)', errLastName: 'Introduceți prenumele în latină (ex. Petrenko)', errPhone: 'Introduceți numărul de telefon', errEmail: 'Introduceți un email valid', errNet: 'Eroare de conexiune. Încercați din nou.', regText: 'Plătind, sunteți de acord cu' },
 };
 
 function Tag({ color, children }: { color: string; children: React.ReactNode }) {
@@ -261,7 +262,7 @@ function MixedText({ pre, bold, post, size = 15, lineHeight = 1.7 }: { pre: stri
   );
 }
 
-const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', en: 'en' };
+const LOCALE_TO_LANG: Record<string, LangKey> = { uk: 'ua', pl: 'pl', ru: 'ru', en: 'en', rom: 'rom' };
 
 export default function KartaPage(): React.JSX.Element {
   const locale = useLocale();
@@ -350,6 +351,7 @@ export default function KartaPage(): React.JSX.Element {
       pl: 'Chcę zamówić Pakiet Przyspieszenia — Karta pobytu',
       ru: 'Хочу заказать Пакет Ускорения — Карта побыту',
       en: 'I want to order the Acceleration Package — Residence Card',
+      rom: 'Vreau să comand Pachetul de Accelerare — Cartea de rezidență',
     };
     if (supabase) { try { await fetch('/api/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Анонім (Клік)', contact: 'WhatsApp', service: 'Пакет Прискорення — Карта побуту', message: msgs[lang], source: 'site' }) }); } catch {} }
     window.open(`https://wa.me/48729271848?text=${encodeURIComponent(msgs[lang])}`, '_blank');
