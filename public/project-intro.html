@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧭 Kompas Migracji — Ознайомчий Ролик</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070c1a;--card:rgba(255,255,255,.06);--border:rgba(255,255,255,.1);
+  --cyan:#00d4ff;--blue:#3b82f6;--purple:#a855f7;--gold:#fbbf24;
+  --text:#e2e8f0;--text-dim:#94a3b8;
+}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text)}
+
+/* ── Particle Canvas ── */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── Progress Bar ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--purple));z-index:100;transition:width .3s linear;box-shadow:0 0 12px var(--cyan)}
+
+/* ── Controls ── */
+.controls{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:16px}
+.controls button{background:var(--card);border:1px solid var(--border);color:var(--text);width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(10px)}
+.controls button:hover{background:rgba(0,212,255,.15);border-color:var(--cyan);box-shadow:0 0 20px rgba(0,212,255,.3)}
+.slide-counter{font-size:13px;color:var(--text-dim);font-weight:500;min-width:60px;text-align:center}
+
+/* ── Slide Container ── */
+.presentation{position:relative;width:100%;height:100vh;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .8s ease,transform .8s ease;transform:translateY(30px)}
+.slide.active{opacity:1;pointer-events:auto;transform:translateY(0)}
+
+/* ── Card ── */
+.card{background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:48px 56px;max-width:800px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.4);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);border-radius:24px 24px 0 0}
+
+/* ── Typography ── */
+.slide-emoji{font-size:48px;margin-bottom:16px;display:block;filter:drop-shadow(0 0 20px rgba(0,212,255,.5))}
+.slide-title{font-size:clamp(28px,4vw,42px);font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;line-height:1.2}
+.slide-subtitle{font-size:clamp(16px,2vw,20px);color:var(--text-dim);margin-bottom:24px;font-weight:400}
+.slide-text{font-size:15px;line-height:1.8;color:var(--text)}
+
+/* ── Animate Items ── */
+.anim-item{opacity:0;transform:translateY(20px);transition:all .5s ease}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.2s}
+.slide.active .anim-item:nth-child(2){transition-delay:.35s}
+.slide.active .anim-item:nth-child(3){transition-delay:.5s}
+.slide.active .anim-item:nth-child(4){transition-delay:.65s}
+.slide.active .anim-item:nth-child(5){transition-delay:.8s}
+.slide.active .anim-item:nth-child(6){transition-delay:.95s}
+.slide.active .anim-item:nth-child(7){transition-delay:1.1s}
+.slide.active .anim-item:nth-child(8){transition-delay:1.25s}
+
+/* ── Lists ── */
+.feature-list{list-style:none;padding:0}
+.feature-list li{padding:6px 0;font-size:15px;display:flex;align-items:flex-start;gap:8px}
+.feature-list li::before{content:'';display:none}
+
+/* ── Pages Grid ── */
+.pages-grid{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:14px}
+.pages-grid .route{color:var(--cyan);font-family:'Inter',monospace;font-weight:600}
+.pages-grid .desc{color:var(--text-dim)}
+
+/* ── Title Slide ── */
+.title-slide .slide-emoji{font-size:72px;margin-bottom:24px;animation:float 3s ease-in-out infinite}
+.title-slide .slide-title{font-size:clamp(36px,5vw,56px)}
+.title-slide .copyright{font-size:13px;color:var(--text-dim);margin-top:16px;opacity:.7}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* ── Outro ── */
+.outro-card{text-align:center}
+.outro-card .slide-title{font-size:clamp(32px,4.5vw,48px)}
+.outro-card .tagline{font-size:18px;color:var(--gold);margin:8px 0 16px;font-weight:500}
+
+/* ── Pulse dot ── */
+.pulse-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;display:inline-block;animation:pulse 2s infinite;margin-right:8px}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,255,.5)}50%{opacity:.7;box-shadow:0 0 0 8px rgba(0,212,255,0)}}
+
+/* ── Badge ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(0,212,255,.15);color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+
+/* ── Paused Overlay ── */
+.paused-indicator{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:64px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:200}
+.paused-indicator.show{opacity:.6}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="progress-bar" id="progressBar"></div>
+<div class="paused-indicator" id="pausedIndicator">⏸</div>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" data-duration="8000">
+    <div class="card title-slide" style="text-align:center">
+      <div class="anim-item slide-emoji">🧭</div>
+      <div class="anim-item slide-title">KOMPAS MIGRACJI</div>
+      <div class="anim-item slide-subtitle">Повноцінна платформа юридичних послуг<br>для мігрантів у Польщі та ЄС</div>
+      <div class="anim-item copyright">© 2024–2026 DOMUS V Sp. z o.o. (Варшава)<br>kompasmigracji.com</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: About -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="anim-item slide-emoji">📋</div>
+      <div class="anim-item slide-title">Про проект</div>
+      <div class="anim-item slide-subtitle">Комплексна цифрова платформа для мігрантів</div>
+      <ul class="feature-list slide-text">
+        <li class="anim-item">📋 Легалізація перебування (Карта Побиту)</li>
+        <li class="anim-item">📄 Оформлення документів та дозволів на роботу</li>
+        <li class="anim-item">⚖️ Юридичні консультації та супровід</li>
+        <li class="anim-item">🏠 Пошук житла та страхування</li>
+        <li class="anim-item">💳 Онлайн-оплата через Przelewy24</li>
+      </ul>
+      <div class="anim-item" style="margin-top:16px"><span class="badge">18 zł — 2 900 zł</span> діапазон послуг</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: i18n -->
+  <div class="slide" data-duration="6000">
+    <div class="card">
+      <div class="anim-item slide-emoji">🌍</div>
+      <div class="anim-item slide-title">4 мови підтримки</div>
+      <ul class="feature-list slide-text">
+        <li class="anim-item">🇺🇦 Українська <span class="badge">основна</span></li>
+        <li class="anim-item">🇵🇱 Польська (pl)</li>
+        <li class="anim-item">🇬🇧 Англійська (en)</li>
+        <li class="anim-item">🇷🇺 Російська (ru)</li>
+      </ul>
+      <div class="anim-item slide-text" style="margin-top:12px;color:var(--text-dim)">
+        <span class="pulse-dot"></span>Автоматичне визначення мови · next-intl маршрутизація: /uk/, /pl/, /en/, /ru/
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: AI Chatbot -->
+  <div class="slide" data-duration="7000">
+    <div class="card">
+      <div class="anim-item slide-emoji">🤖</div>
+      <div class="anim-item slide-title">AI-чатбот Claude 3.5 Haiku</div>
+      <ul class="feature-list slide-text">
+        <li class="anim-item"><span class="pulse-dot"></span>Відповідає на питання про міграцію 24/7</li>
+        <li class="anim-item">🎯 Автоматично захоплює ліди (ім'я + телефон)</li>
+        <li class="anim-item">⚡ Стрімінг відповідей у реальному часі</li>
+        <li class="anim-item">🔒 Rate limit: 10 запитів / хвилину</li>
+        <li class="anim-item">🌐 Підтримує 4 мови автоматично</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Website Features -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="anim-item slide-emoji">📱</div>
+      <div class="anim-item slide-title">Повнофункціональний сайт</div>
+      <div class="slide-text">
+        <div class="anim-item" style="margin-bottom:8px">Hero-секція з CTA · Каталог послуг · Pricing · FAQ</div>
+        <div class="anim-item" style="margin-bottom:8px">Блог · Відгуки клієнтів · Команда</div>
+        <div class="anim-item" style="margin-bottom:8px">Форма зворотнього зв'язку · WhatsApp / Viber інтеграція</div>
+        <div class="anim-item" style="margin-bottom:8px">🎨 Dark / Light тема · Cookie consent (GDPR)</div>
+        <div class="anim-item" style="margin-bottom:8px">✨ StarField анімація фону · Glassmorphism UI</div>
+        <div class="anim-item"><span class="badge">31 React-компонент</span> <span class="badge" style="background:rgba(168,85,247,.15);color:var(--purple);border-color:rgba(168,85,247,.2)">Premium Design</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Payment -->
+  <div class="slide" data-duration="6000">
+    <div class="card">
+      <div class="anim-item slide-emoji">💳</div>
+      <div class="anim-item slide-title">Przelewy24 — Онлайн оплата</div>
+      <ul class="feature-list slide-text">
+        <li class="anim-item">🔐 SHA-384 підпис транзакцій</li>
+        <li class="anim-item">🔄 Webhook підтвердження оплати</li>
+        <li class="anim-item">✅ Сторінка payment-success</li>
+        <li class="anim-item">🇪🇺 Безпечні платежі за стандартами ЄС</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: Primus -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="anim-item slide-emoji">⚡</div>
+      <div class="anim-item slide-title">PRIMUS — AI-оркестрація</div>
+      <div class="slide-text">
+        <div class="anim-item" style="margin-bottom:10px">👑 <strong>God Agent</strong> — головний оркестратор</div>
+        <div class="anim-item" style="margin-bottom:10px">⚡ <strong>Primus</strong> — диспетчер задач</div>
+        <div class="anim-item" style="margin-bottom:10px">🔍 <strong>Monitor Squad</strong> — моніторинг кожні 5 хвилин</div>
+        <div class="anim-item" style="margin-bottom:10px">📧 Email-сповіщення через SendGrid</div>
+        <div class="anim-item"><span class="badge">Heartbeat</span> <span class="badge">Agent Tasks</span> <span class="badge">God Policies</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Orakul -->
+  <div class="slide" data-duration="7000">
+    <div class="card">
+      <div class="anim-item slide-emoji">📱</div>
+      <div class="anim-item slide-title">Telegram-бот «Orakul»</div>
+      <ul class="feature-list slide-text">
+        <li class="anim-item">🤖 Інтелектуальний AI-бот для Telegram</li>
+        <li class="anim-item">🎯 Захоплення лідів через чат</li>
+        <li class="anim-item">🔗 Інтеграція з Supabase</li>
+        <li class="anim-item">🌐 Мультимовні відповіді</li>
+      </ul>
+      <div class="anim-item" style="margin-top:16px;font-size:13px;color:var(--text-dim)">
+        Автори: <strong style="color:var(--gold)">Oleksandr Khrystodul</strong> & <strong style="color:var(--gold)">Oleksandr Didkowski</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Pages -->
+  <div class="slide" data-duration="6000">
+    <div class="card">
+      <div class="anim-item slide-emoji">🗺️</div>
+      <div class="anim-item slide-title">Архітектура сторінок</div>
+      <div class="pages-grid slide-text">
+        <span class="route anim-item">/</span><span class="desc anim-item">Головна (лендінг)</span>
+        <span class="route anim-item">/karta</span><span class="desc anim-item">Карта Побиту (прискорення)</span>
+        <span class="route anim-item">/pricing</span><span class="desc anim-item">Каталог послуг та цін</span>
+        <span class="route anim-item">/privacy</span><span class="desc anim-item">GDPR / RODO</span>
+        <span class="route anim-item">/regulamin</span><span class="desc anim-item">Публічна оферта</span>
+        <span class="route anim-item">/admin</span><span class="desc anim-item">Панель керування (CRM)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: Outro -->
+  <div class="slide" data-duration="6000">
+    <div class="card outro-card" style="text-align:center">
+      <div class="anim-item slide-emoji" style="font-size:72px;animation:float 3s ease-in-out infinite">🧭</div>
+      <div class="anim-item slide-title">KOMPAS MIGRACJI</div>
+      <div class="anim-item tagline">Ваш надійний компас у світі міграції 🇵🇱</div>
+      <div class="anim-item slide-text" style="color:var(--text-dim)">DOMUS V Sp. z o.o. · Варшава, Польща</div>
+      <div class="anim-item" style="margin-top:12px">
+        <span class="badge" style="background:rgba(251,191,36,.15);color:var(--gold);border-color:rgba(251,191,36,.2)">kompasmigracji.com</span>
+      </div>
+      <div class="anim-item" style="margin-top:16px;font-size:12px;color:var(--text-dim);opacity:.6">© 2024–2026 Усі права захищені</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button id="prevBtn" title="Попередній (←)">◀</button>
+  <button id="playPauseBtn" title="Пауза (Space)">⏸</button>
+  <span class="slide-counter" id="slideCounter">1 / 10</span>
+  <button id="nextBtn" title="Наступний (→)">▶</button>
+</div>
+
+<script>
+// ── Particle System ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+const stars = Array.from({length: 120}, () => ({
+  x: Math.random() * W,
+  y: Math.random() * H,
+  r: Math.random() * 1.5 + 0.3,
+  dx: (Math.random() - 0.5) * 0.3,
+  dy: (Math.random() - 0.5) * 0.3,
+  alpha: Math.random() * 0.6 + 0.2,
+  pulse: Math.random() * Math.PI * 2
+}));
+
+function drawParticles() {
+  ctx.clearRect(0, 0, W, H);
+  const t = Date.now() / 1000;
+  stars.forEach(s => {
+    s.x += s.dx; s.y += s.dy;
+    if (s.x < 0) s.x = W; if (s.x > W) s.x = 0;
+    if (s.y < 0) s.y = H; if (s.y > H) s.y = 0;
+    const a = s.alpha * (0.5 + 0.5 * Math.sin(t * 1.5 + s.pulse));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(0, 212, 255, ${a})`;
+    ctx.fill();
+  });
+  // connections
+  for (let i = 0; i < stars.length; i++) {
+    for (let j = i + 1; j < stars.length; j++) {
+      const dx = stars[i].x - stars[j].x;
+      const dy = stars[i].y - stars[j].y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 100) {
+        ctx.beginPath();
+        ctx.moveTo(stars[i].x, stars[i].y);
+        ctx.lineTo(stars[j].x, stars[j].y);
+        ctx.strokeStyle = `rgba(0, 212, 255, ${0.08 * (1 - d / 100)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── Presentation Logic ──
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progressBar');
+const slideCounter = document.getElementById('slideCounter');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const pausedIndicator = document.getElementById('pausedIndicator');
+
+let currentSlide = 0;
+let isPlaying = true;
+let timer = null;
+let elapsed = 0;
+let interval = null;
+
+function getDuration() {
+  return parseInt(slides[currentSlide].dataset.duration) || 7000;
+}
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  currentSlide = ((idx % slides.length) + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  slideCounter.textContent = `${currentSlide + 1} / ${slides.length}`;
+  elapsed = 0;
+  updateProgress();
+}
+
+function updateProgress() {
+  const d = getDuration();
+  const totalElapsed = slides.length > 0 ? (currentSlide / slides.length) + (elapsed / d) / slides.length : 0;
+  progressBar.style.width = `${totalElapsed * 100}%`;
+}
+
+function startAutoPlay() {
+  clearInterval(interval);
+  elapsed = 0;
+  interval = setInterval(() => {
+    if (!isPlaying) return;
+    elapsed += 50;
+    updateProgress();
+    if (elapsed >= getDuration()) {
+      if (currentSlide < slides.length - 1) {
+        showSlide(currentSlide + 1);
+        elapsed = 0;
+      } else {
+        // restart
+        showSlide(0);
+        elapsed = 0;
+      }
+    }
+  }, 50);
+}
+
+function togglePlay() {
+  isPlaying = !isPlaying;
+  playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+  pausedIndicator.classList.toggle('show', !isPlaying);
+}
+
+playPauseBtn.addEventListener('click', togglePlay);
+prevBtn.addEventListener('click', () => { showSlide(currentSlide - 1); elapsed = 0; });
+nextBtn.addEventListener('click', () => { showSlide(currentSlide + 1); elapsed = 0; });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { showSlide(currentSlide + 1); elapsed = 0; }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { showSlide(currentSlide - 1); elapsed = 0; }
+  else if (e.key === ' ') { e.preventDefault(); togglePlay(); }
+});
+
+// Hover pause
+const pres = document.getElementById('presentation');
+pres.addEventListener('mouseenter', () => { if (isPlaying) { isPlaying = false; playPauseBtn.textContent = '▶'; pausedIndicator.classList.add('show'); }});
+pres.addEventListener('mouseleave', () => { if (!isPlaying) { isPlaying = true; playPauseBtn.textContent = '⏸'; pausedIndicator.classList.remove('show'); }});
+
+showSlide(0);
+startAutoPlay();
+</script>
+</body>
+</html>

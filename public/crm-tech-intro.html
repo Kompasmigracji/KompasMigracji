@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ KompasCRM — CRM, Технології, Розробник</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#0a0a1a;--bg2:#1a0a2e;
+  --card:rgba(255,255,255,.05);--border:rgba(255,255,255,.08);
+  --cyan:#00d4ff;--blue:#3b82f6;--purple:#a855f7;--gold:#fbbf24;--green:#10b981;--pink:#ec4899;--red:#ef4444;
+  --text:#e2e8f0;--text-dim:#94a3b8;
+}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text)}
+
+/* ── Neural Network BG ── */
+#neuralBg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4}
+
+/* ── Progress ── */
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--gold));z-index:100;transition:width .3s linear;box-shadow:0 0 16px var(--purple)}
+
+/* ── Controls ── */
+.controls{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:14px}
+.controls button{background:var(--card);border:1px solid var(--border);color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(10px)}
+.controls button:hover{background:rgba(168,85,247,.15);border-color:var(--purple);box-shadow:0 0 20px rgba(168,85,247,.3)}
+.slide-counter{font-size:12px;color:var(--text-dim);font-weight:500;min-width:56px;text-align:center;font-family:'JetBrains Mono',monospace}
+
+/* ── Slides ── */
+.presentation{position:relative;width:100%;height:100vh;z-index:1}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .7s ease,transform .7s ease;transform:scale(.96) translateY(20px)}
+.slide.active{opacity:1;pointer-events:auto;transform:scale(1) translateY(0)}
+
+/* ── Card ── */
+.card{background:var(--card);backdrop-filter:blur(24px);border:1px solid var(--border);border-radius:20px;padding:40px 48px;max-width:860px;width:92%;box-shadow:0 8px 40px rgba(0,0,0,.5);position:relative;overflow:hidden;max-height:85vh;overflow-y:auto}
+.card::-webkit-scrollbar{width:4px}
+.card::-webkit-scrollbar-track{background:transparent}
+.card::-webkit-scrollbar-thumb{background:rgba(168,85,247,.3);border-radius:4px}
+.card::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),var(--cyan),transparent);border-radius:20px 20px 0 0}
+
+/* ── Typography ── */
+.slide-emoji{font-size:44px;margin-bottom:12px;display:block;filter:drop-shadow(0 0 16px rgba(168,85,247,.5))}
+.slide-title{font-size:clamp(24px,3.5vw,38px);font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;line-height:1.2}
+.slide-subtitle{font-size:clamp(14px,1.8vw,18px);color:var(--text-dim);margin-bottom:20px;font-weight:400}
+.slide-text{font-size:14px;line-height:1.7;color:var(--text)}
+
+/* ── Animations ── */
+.ai{opacity:0;transform:translateY(16px);transition:all .5s ease}
+.slide.active .ai{opacity:1;transform:translateY(0)}
+.slide.active .ai:nth-child(1){transition-delay:.15s}
+.slide.active .ai:nth-child(2){transition-delay:.25s}
+.slide.active .ai:nth-child(3){transition-delay:.35s}
+.slide.active .ai:nth-child(4){transition-delay:.45s}
+.slide.active .ai:nth-child(5){transition-delay:.55s}
+.slide.active .ai:nth-child(6){transition-delay:.65s}
+.slide.active .ai:nth-child(7){transition-delay:.75s}
+.slide.active .ai:nth-child(8){transition-delay:.85s}
+.slide.active .ai:nth-child(9){transition-delay:.95s}
+.slide.active .ai:nth-child(10){transition-delay:1.05s}
+.slide.active .ai:nth-child(11){transition-delay:1.15s}
+.slide.active .ai:nth-child(12){transition-delay:1.25s}
+
+/* ── Badge ── */
+.badge{display:inline-block;padding:3px 10px;border-radius:16px;font-size:11px;font-weight:600;margin:2px}
+.badge-cyan{background:rgba(0,212,255,.12);color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+.badge-purple{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.2)}
+.badge-gold{background:rgba(251,191,36,.12);color:var(--gold);border:1px solid rgba(251,191,36,.2)}
+.badge-green{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.2)}
+.badge-pink{background:rgba(236,72,153,.12);color:var(--pink);border:1px solid rgba(236,72,153,.2)}
+
+/* ── Tech Table ── */
+.tech-table{width:100%;border-collapse:separate;border-spacing:0 4px;font-size:13px}
+.tech-table th{text-align:left;padding:6px 12px;color:var(--text-dim);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:1px}
+.tech-table td{padding:8px 12px;background:rgba(255,255,255,.03);transition:background .3s}
+.tech-table tr:hover td{background:rgba(168,85,247,.08)}
+.tech-table td:first-child{border-radius:8px 0 0 8px;font-weight:600;color:var(--cyan)}
+.tech-table td:last-child{border-radius:0 8px 8px 0;color:var(--text-dim)}
+.tech-table td:nth-child(2){font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold)}
+
+/* ── Developer Hero ── */
+.dev-hero{text-align:center;position:relative}
+.dev-hero::after{content:'';position:absolute;top:50%;left:50%;width:300px;height:300px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(168,85,247,.15),transparent 70%);border-radius:50%;pointer-events:none;animation:devGlow 4s ease-in-out infinite}
+@keyframes devGlow{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
+.dev-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;box-shadow:0 0 30px rgba(168,85,247,.4);border:2px solid rgba(255,255,255,.15)}
+.dev-name{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--gold),#ff6b35,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px}
+.dev-role{color:var(--cyan);font-size:16px;font-weight:500;margin-bottom:4px}
+.dev-email{color:var(--text-dim);font-size:13px;margin-bottom:20px;font-family:'JetBrains Mono',monospace}
+.dev-skills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+
+/* ── Stats Grid ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:16px;text-align:center;transition:all .3s}
+.stat-card:hover{background:rgba(168,85,247,.08);border-color:rgba(168,85,247,.2);transform:translateY(-2px)}
+.stat-num{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:11px;color:var(--text-dim);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ── Modules Section ── */
+.module-group{margin-bottom:12px}
+.module-group-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.module-items{font-size:12px;color:var(--text-dim);line-height:1.6}
+
+/* ── RBAC Roles ── */
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.role-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:10px 14px;font-size:13px;display:flex;align-items:center;gap:8px;transition:all .3s}
+.role-card:hover{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.15)}
+
+/* ── Architecture Diagram ── */
+.arch-box{background:rgba(255,255,255,.04);border:1px solid;border-radius:12px;padding:14px;margin:8px 0;text-align:center;font-size:13px;position:relative}
+.arch-box.god{border-color:rgba(251,191,36,.3);box-shadow:0 0 20px rgba(251,191,36,.1)}
+.arch-box.primus{border-color:rgba(0,212,255,.3);box-shadow:0 0 20px rgba(0,212,255,.1)}
+.arch-box.monitor{border-color:rgba(16,185,129,.3);box-shadow:0 0 20px rgba(16,185,129,.1)}
+.arch-connector{text-align:center;color:var(--text-dim);font-size:20px;line-height:1;margin:4px 0}
+.agents-row{display:flex;justify-content:center;gap:12px;margin:8px 0}
+.mini-agent{background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:8px 16px;font-size:12px;color:var(--purple)}
+
+/* ── Integrations Grid ── */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.int-item{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0}
+
+/* ── Title Slide ── */
+.title-center{text-align:center}
+.title-center .slide-emoji{font-size:64px;animation:titlePulse 3s ease-in-out infinite}
+.title-center .slide-title{font-size:clamp(32px,4.5vw,52px)}
+@keyframes titlePulse{0%,100%{filter:drop-shadow(0 0 16px rgba(168,85,247,.5))}50%{filter:drop-shadow(0 0 32px rgba(0,212,255,.8))}}
+
+/* ── Outro ── */
+.outro{text-align:center}
+.outro .dev-credit{font-size:14px;margin:6px 0}
+.outro .tech-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:12px}
+
+/* ── Pulse ── */
+.pulse{width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block;animation:pls 2s infinite;margin-right:6px}
+@keyframes pls{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+
+/* ── Feature List ── */
+.fl{list-style:none;padding:0}
+.fl li{padding:4px 0;font-size:13px;display:flex;align-items:flex-start;gap:6px}
+
+/* ── Paused ── */
+.paused-ind{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:64px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:200}
+.paused-ind.show{opacity:.5}
+
+/* ── Scroll indicator ── */
+.scroll-hint{position:absolute;bottom:8px;right:16px;font-size:10px;color:var(--text-dim);opacity:.5}
+</style>
+</head>
+<body>
+
+<canvas id="neuralBg"></canvas>
+<div class="progress-bar" id="progressBar"></div>
+<div class="paused-ind" id="pausedInd">⏸</div>
+
+<div class="presentation" id="presentation">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" data-duration="8000">
+    <div class="card title-center">
+      <div class="ai slide-emoji">⚡</div>
+      <div class="ai slide-title">KompasCRM</div>
+      <div class="ai slide-subtitle">Професійна CRM-система нового покоління</div>
+      <div class="ai" style="font-size:14px;color:var(--text-dim)">Розроблено <strong style="color:var(--gold)">iPhoenix</strong> · © 2024–2026</div>
+      <div class="ai" style="margin-top:12px">
+        <span class="badge badge-cyan">115+ модулів</span>
+        <span class="badge badge-purple">AI-powered</span>
+        <span class="badge badge-gold">Enterprise</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Developer -->
+  <div class="slide" data-duration="10000">
+    <div class="card dev-hero">
+      <div class="ai dev-avatar">👨‍💻</div>
+      <div class="ai dev-name">iPhoenix</div>
+      <div class="ai dev-role">Розробник KompasCRM</div>
+      <div class="ai dev-email">Oleksandr Khrystodul · iphoenixgsm@gmail.com</div>
+      <div class="ai slide-text" style="max-width:500px;margin:0 auto 12px;color:var(--text-dim);font-size:13px">
+        Full-Stack розробник з експертизою в:
+      </div>
+      <div class="ai dev-skills">
+        <span class="badge badge-cyan">Next.js / React</span>
+        <span class="badge badge-purple">TypeScript</span>
+        <span class="badge badge-gold">AI Integrations</span>
+        <span class="badge badge-green">PostgreSQL / Supabase</span>
+        <span class="badge badge-cyan">Przelewy24</span>
+        <span class="badge badge-purple">Vercel DevOps</span>
+        <span class="badge badge-pink">Telegram Bot</span>
+        <span class="badge badge-gold">AI Orchestration</span>
+      </div>
+      <div class="ai" style="margin-top:16px;font-size:12px;color:var(--text-dim)">
+        Співавтор Telegram-бота «Orakul» (разом з <strong style="color:var(--gold)">Oleksandr Didkowski</strong>)
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Scale -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="ai slide-emoji">📊</div>
+      <div class="ai slide-title">KompasCRM у цифрах</div>
+      <div class="ai stats-grid">
+        <div class="stat-card"><div class="stat-num">115+</div><div class="stat-label">модулів CRM</div></div>
+        <div class="stat-card"><div class="stat-num">21</div><div class="stat-label">автоматизацій</div></div>
+        <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">груп навігації</div></div>
+        <div class="stat-card"><div class="stat-num">19</div><div class="stat-label">API ендпоінтів</div></div>
+        <div class="stat-card"><div class="stat-num">31</div><div class="stat-label">React компонент</div></div>
+        <div class="stat-card"><div class="stat-num">9</div><div class="stat-label">адмін компонентів</div></div>
+        <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">мови інтерфейсу</div></div>
+        <div class="stat-card"><div class="stat-num">24</div><div class="stat-label">серверних модулів</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Frontend Stack -->
+  <div class="slide" data-duration="10000">
+    <div class="card">
+      <div class="ai slide-emoji">🎨</div>
+      <div class="ai slide-title">Frontend Stack</div>
+      <table class="ai tech-table">
+        <thead><tr><th>Технологія</th><th>Версія</th><th>Призначення</th></tr></thead>
+        <tbody>
+          <tr><td>Next.js</td><td>14 (App Router)</td><td>SSR/SSG фреймворк</td></tr>
+          <tr><td>React</td><td>18.3</td><td>UI бібліотека</td></tr>
+          <tr><td>TypeScript</td><td>5.7</td><td>Типізація коду</td></tr>
+          <tr><td>Tailwind CSS</td><td>4.0</td><td>Utility-first CSS</td></tr>
+          <tr><td>next-intl</td><td>3.26</td><td>i18n (4 мови)</td></tr>
+          <tr><td>SWR</td><td>2.4</td><td>Data fetching</td></tr>
+          <tr><td>QRCode.react</td><td>3.1</td><td>QR-коди для 2FA</td></tr>
+        </tbody>
+      </table>
+      <div class="ai" style="margin-top:12px">
+        <span class="badge badge-cyan">Glassmorphism</span>
+        <span class="badge badge-purple">StarField</span>
+        <span class="badge badge-gold">Dark/Light</span>
+        <span class="badge badge-green">CSS Variables</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Backend Stack -->
+  <div class="slide" data-duration="10000">
+    <div class="card">
+      <div class="ai slide-emoji">⚙️</div>
+      <div class="ai slide-title">Backend Stack</div>
+      <table class="ai tech-table">
+        <thead><tr><th>Технологія</th><th></th><th>Призначення</th></tr></thead>
+        <tbody>
+          <tr><td>🗄️ Supabase (PostgreSQL)</td><td></td><td>Основна БД, auth, realtime</td></tr>
+          <tr><td>🤖 Anthropic SDK</td><td>Claude 3.5</td><td>AI чатбот</td></tr>
+          <tr><td>🧠 Google GenAI SDK</td><td></td><td>AI інтеграції</td></tr>
+          <tr><td>💳 Przelewy24</td><td>SHA-384</td><td>Платежі</td></tr>
+          <tr><td>📧 SendGrid</td><td></td><td>Email-сповіщення</td></tr>
+          <tr><td>📬 Nodemailer + IMAPFlow</td><td></td><td>Email обробка</td></tr>
+          <tr><td>🔐 bcryptjs</td><td></td><td>Хешування паролів</td></tr>
+          <tr><td>🔑 jose (JWT)</td><td></td><td>Токени авторизації</td></tr>
+          <tr><td>🛡️ OTPAuth</td><td></td><td>Двофакторна авт. (2FA)</td></tr>
+          <tr><td>🐘 pg</td><td></td><td>PostgreSQL драйвер</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: DevOps & Testing -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="ai slide-emoji">🚀</div>
+      <div class="ai slide-title">DevOps & Testing</div>
+      <table class="ai tech-table">
+        <thead><tr><th>Інструмент</th><th></th><th>Призначення</th></tr></thead>
+        <tbody>
+          <tr><td>▲ Vercel</td><td></td><td>Хостинг та автодеплой</td></tr>
+          <tr><td>📊 Vercel Analytics</td><td></td><td>Аналітика трафіку</td></tr>
+          <tr><td>⚡ Vercel Speed Insights</td><td></td><td>Моніторинг швидкості</td></tr>
+          <tr><td>⏰ Vercel Cron</td><td></td><td>Планові задачі (Monitor)</td></tr>
+          <tr><td>📦 pnpm</td><td>11.2</td><td>Пакетний менеджер</td></tr>
+          <tr><td>🔍 ESLint</td><td></td><td>Лінтинг коду</td></tr>
+          <tr><td>🧪 Jest</td><td>30</td><td>Unit-тестування</td></tr>
+          <tr><td>🎭 Playwright</td><td>1.60</td><td>E2E тестування</td></tr>
+          <tr><td>🎨 PostCSS + Autoprefixer</td><td></td><td>CSS обробка</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: 115 CRM Modules -->
+  <div class="slide" data-duration="12000">
+    <div class="card">
+      <div class="ai slide-emoji">🏗️</div>
+      <div class="ai slide-title">115+ Модулів — 9 Груп</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;font-size:12px">
+        <div class="ai module-group">
+          <div class="module-group-title">📊 Продажі та Клієнти</div>
+          <div class="module-items">Ліди · Угоди · Пошук B2B · Портал Клієнтів · Лояльність · Скрипти</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">⚖️ Справи та Юриспруденція</div>
+          <div class="module-items">Справи · Виконавчі · Дозволи · Оскарження · E-Підписи · Док-Конструктор</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">💬 Комунікація та Маркетинг</div>
+          <div class="module-items">Пошта · Email Sequences · Omni-чат · LiveChat · Telegram · VoIP · Форми</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">💰 Фінанси та Аналітика</div>
+          <div class="module-items">Звіти · Бухгалтерія · E-Invoicing KSeF · Витрати · Підписки · Валюти FX</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">🏢 Операції та Логістика</div>
+          <div class="module-items">Записи · Booking · Страхування · Житло · Автопарк · Офіс · HR · Каталог</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">📚 Компанія та Розвиток</div>
+          <div class="module-items">Академія · База Знань · Гейміфікація · B2B Портал · Реферали</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">🤖 ШІ та Інструменти</div>
+          <div class="module-items">AI Копілот · OCR · Автоматизація WF · Держ. Портали RPA</div>
+        </div>
+        <div class="ai module-group">
+          <div class="module-group-title">⚙️ Система та Налаштування</div>
+          <div class="module-items">Налаштування · Інтеграції · API Hub · Імпорт · GDPR · Аудит · Моніторинг</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Architecture -->
+  <div class="slide" data-duration="10000">
+    <div class="card">
+      <div class="ai slide-emoji">🏛️</div>
+      <div class="ai slide-title">Архітектура KompasCRM</div>
+      <div class="ai" style="font-size:13px;margin-bottom:12px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">
+        /admin/(panel)/layout.jsx → Shell.jsx → AgentConsole.jsx
+      </div>
+      <div class="ai slide-subtitle" style="margin-bottom:12px;font-size:14px;font-weight:600;color:var(--text)">RBAC система ролей</div>
+      <div class="ai roles-grid">
+        <div class="role-card">👑 <strong>admin</strong> <span style="color:var(--text-dim);font-size:11px">— повний доступ</span></div>
+        <div class="role-card">🛡️ <strong>moderator</strong> <span style="color:var(--text-dim);font-size:11px">— управління</span></div>
+        <div class="role-card">👤 <strong>manager</strong> <span style="color:var(--text-dim);font-size:11px">— менеджмент</span></div>
+        <div class="role-card">💼 <strong>sales</strong> <span style="color:var(--text-dim);font-size:11px">— продажі</span></div>
+        <div class="role-card">⚖️ <strong>lawyer</strong> <span style="color:var(--text-dim);font-size:11px">— юриспруденція</span></div>
+        <div class="role-card">👥 <strong>member</strong> <span style="color:var(--text-dim);font-size:11px">— обмежений</span></div>
+      </div>
+      <div class="ai" style="margin-top:14px;font-size:12px;color:var(--text-dim)">
+        Компоненти: <span class="badge badge-cyan">Shell</span> <span class="badge badge-purple">AgentConsole</span> <span class="badge badge-gold">KanbanBoard</span> <span class="badge badge-green">Timeline</span> <span class="badge badge-pink">DataTable</span> <span class="badge badge-cyan">GlobalSearch</span> <span class="badge badge-purple">ImportWizard</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Security & Integrations -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="ai slide-emoji">🔐</div>
+      <div class="ai slide-title">Безпека та Інтеграції</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px">
+        <div>
+          <div class="ai" style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--cyan)">🛡️ Автентифікація</div>
+          <ul class="ai fl">
+            <li>🔑 JWT токени (jose)</li>
+            <li>📱 2FA (OTPAuth + QR-код)</li>
+            <li>🔒 bcrypt хешування</li>
+            <li>👥 RBAC авторизація</li>
+          </ul>
+        </div>
+        <div>
+          <div class="ai" style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--purple)">🔗 Зовнішні інтеграції</div>
+          <ul class="ai fl">
+            <li>💳 Przelewy24 (платежі)</li>
+            <li>🗄️ Supabase (БД + Auth)</li>
+            <li>🤖 Anthropic Claude (AI)</li>
+            <li>🧠 Google GenAI (AI)</li>
+            <li>📧 SendGrid (Email)</li>
+            <li>📱 Telegram Bot API</li>
+            <li>💬 WhatsApp / Viber</li>
+            <li>▲ Vercel Platform</li>
+            <li>🏛️ Gov.pl RPA Gateway</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10: AI Agent System -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="ai slide-emoji">🤖</div>
+      <div class="ai slide-title">Primus — AI Agent System</div>
+      <div class="ai arch-box god">
+        <strong>👑 GOD AGENT</strong><br>
+        <span style="font-size:12px;color:var(--text-dim)">Grand Architect · /api/god/command</span>
+      </div>
+      <div class="ai arch-connector">↓ dispatch</div>
+      <div class="ai arch-box primus">
+        <strong>⚡ PRIMUS</strong><br>
+        <span style="font-size:12px;color:var(--text-dim)">/api/agents/primus/dispatch · /api/agents/primus/status</span>
+      </div>
+      <div class="ai arch-connector">↓ task routing</div>
+      <div class="ai agents-row">
+        <div class="mini-agent">Agent 1</div>
+        <div class="mini-agent">Agent 2</div>
+        <div class="mini-agent">Agent N</div>
+      </div>
+      <div class="ai arch-connector">↑ monitor</div>
+      <div class="ai arch-box monitor">
+        <strong>🔍 MONITOR SQUAD</strong><br>
+        <span style="font-size:12px;color:var(--text-dim)">Cron кожні 5 хв · Email alerts · Heartbeat</span>
+      </div>
+      <div class="ai" style="text-align:center;margin-top:8px;font-size:12px;color:var(--text-dim)">
+        Supabase: <span class="badge badge-cyan">agents</span> <span class="badge badge-purple">agent_tasks</span> <span class="badge badge-gold">god_policies</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: UI Components -->
+  <div class="slide" data-duration="8000">
+    <div class="card">
+      <div class="ai slide-emoji">🎨</div>
+      <div class="ai slide-title">Преміум UI Компоненти</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:13px">
+        <div class="ai">🌟 <strong>StarField</strong> — анімований зоряний фон</div>
+        <div class="ai">💎 <strong>GlassMorphism</strong> — ефект матового скла</div>
+        <div class="ai">🎭 <strong>Dark/Light Theme</strong> — підтримка тем</div>
+        <div class="ai">🤖 <strong>ChatBot</strong> — AI-чат з стрімінгом</div>
+        <div class="ai">📊 <strong>KanbanBoard</strong> — дошка завдань</div>
+        <div class="ai">📈 <strong>Timeline</strong> — хронологія подій</div>
+        <div class="ai">🔔 <strong>NotificationCenter</strong> — сповіщення</div>
+        <div class="ai">🔍 <strong>GlobalSearch</strong> — пошук по CRM</div>
+        <div class="ai">📥 <strong>ImportWizard</strong> — імпорт даних</div>
+        <div class="ai">📤 <strong>FileUpload</strong> — завантаження файлів</div>
+        <div class="ai">🏆 <strong>GodCard</strong> — преміум картка агента</div>
+        <div class="ai">💳 <strong>PayModal</strong> — модальне вікно оплати</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: Outro -->
+  <div class="slide" data-duration="8000">
+    <div class="card outro">
+      <div class="ai" style="font-size:64px;animation:titlePulse 3s ease-in-out infinite">⚡</div>
+      <div class="ai slide-title" style="font-size:clamp(30px,4vw,46px)">KompasCRM</div>
+      <div class="ai" style="color:var(--gold);font-size:16px;font-weight:500;margin-bottom:12px">Створено з пристрастю до технологій</div>
+      <div class="ai dev-credit">👨‍💻 Розробник: <strong style="color:var(--gold)">iPhoenix</strong> (Oleksandr Khrystodul)</div>
+      <div class="ai dev-credit">🏢 Бренд: <strong>DOMUS V Sp. z o.o.</strong></div>
+      <div class="ai dev-credit">🌐 <strong style="color:var(--cyan)">kompasmigracji.com</strong></div>
+      <div class="ai" style="margin-top:12px;font-size:13px;color:var(--text-dim)">
+        115+ модулів · 15+ технологій · 4 мови · AI-powered
+      </div>
+      <div class="ai tech-tags">
+        <span class="badge badge-cyan">Next.js</span>
+        <span class="badge badge-purple">React</span>
+        <span class="badge badge-gold">TypeScript</span>
+        <span class="badge badge-green">Supabase</span>
+        <span class="badge badge-pink">Claude AI</span>
+        <span class="badge badge-cyan">Vercel</span>
+      </div>
+      <div class="ai" style="margin-top:16px;font-size:11px;color:var(--text-dim);opacity:.6">© 2024–2026 Усі права захищені</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls">
+  <button id="prevBtn" title="← Попередній">◀</button>
+  <button id="playPauseBtn" title="Space — Пауза">⏸</button>
+  <span class="slide-counter" id="slideCounter">01/12</span>
+  <button id="nextBtn" title="→ Наступний">▶</button>
+</div>
+
+<script>
+// ── Neural Network Background ──
+const canvas = document.getElementById('neuralBg');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize();
+addEventListener('resize', resize);
+
+const nodes = Array.from({length: 80}, () => ({
+  x: Math.random() * W, y: Math.random() * H,
+  vx: (Math.random() - .5) * .4, vy: (Math.random() - .5) * .4,
+  r: Math.random() * 2 + .5,
+  hue: Math.random() > .5 ? 270 : 190
+}));
+
+function drawNet() {
+  ctx.clearRect(0, 0, W, H);
+  nodes.forEach(n => {
+    n.x += n.vx; n.y += n.vy;
+    if (n.x < 0 || n.x > W) n.vx *= -1;
+    if (n.y < 0 || n.y > H) n.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${n.hue}, 80%, 60%, .5)`;
+    ctx.fill();
+  });
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 120) {
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `hsla(260, 60%, 50%, ${.06 * (1 - d / 120)})`;
+        ctx.lineWidth = .5;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawNet);
+}
+drawNet();
+
+// ── Presentation ──
+const slides = document.querySelectorAll('.slide');
+const progressBar = document.getElementById('progressBar');
+const slideCounter = document.getElementById('slideCounter');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const pausedInd = document.getElementById('pausedInd');
+
+let cur = 0, playing = true, elapsed = 0, iv;
+
+function dur() { return parseInt(slides[cur].dataset.duration) || 8000; }
+
+function show(i) {
+  slides.forEach(s => s.classList.remove('active'));
+  cur = ((i % slides.length) + slides.length) % slides.length;
+  slides[cur].classList.add('active');
+  slideCounter.textContent = `${String(cur + 1).padStart(2, '0')}/${slides.length}`;
+  elapsed = 0;
+  prog();
+}
+
+function prog() {
+  const p = (cur / slides.length) + (elapsed / dur()) / slides.length;
+  progressBar.style.width = `${p * 100}%`;
+}
+
+function start() {
+  clearInterval(iv);
+  iv = setInterval(() => {
+    if (!playing) return;
+    elapsed += 50;
+    prog();
+    if (elapsed >= dur()) {
+      show(cur < slides.length - 1 ? cur + 1 : 0);
+    }
+  }, 50);
+}
+
+function toggle() {
+  playing = !playing;
+  playPauseBtn.textContent = playing ? '⏸' : '▶';
+  pausedInd.classList.toggle('show', !playing);
+}
+
+document.getElementById('playPauseBtn').addEventListener('click', toggle);
+document.getElementById('prevBtn').addEventListener('click', () => { show(cur - 1); elapsed = 0; });
+document.getElementById('nextBtn').addEventListener('click', () => { show(cur + 1); elapsed = 0; });
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { show(cur + 1); elapsed = 0; }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { show(cur - 1); elapsed = 0; }
+  else if (e.key === ' ') { e.preventDefault(); toggle(); }
+  else if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+const pres = document.getElementById('presentation');
+pres.addEventListener('mouseenter', () => { if (playing) { playing = false; playPauseBtn.textContent = '▶'; pausedInd.classList.add('show'); }});
+pres.addEventListener('mouseleave', () => { if (!playing) { playing = true; playPauseBtn.textContent = '⏸'; pausedInd.classList.remove('show'); }});
+
+show(0);
+start();
+</script>
+</body>
+</html>
