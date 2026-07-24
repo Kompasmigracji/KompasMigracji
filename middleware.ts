@@ -72,7 +72,9 @@ export async function middleware(req: NextRequest) {
   // ── Rate Limiting ───────────────────────────────────────────────────────────
   const ip = req.headers.get("x-forwarded-for") || req.ip || "127.0.0.1";
   if (pathname.startsWith("/api/")) {
-    const isAuth = pathname.startsWith("/api/admin/auth/");
+    // /me — сесійний чек, який дергає кожна сторінка адмінки; під суворим
+    // auth-лімітом (20/хв) швидка навігація по CRM ловила 429.
+    const isAuth = pathname.startsWith("/api/admin/auth/") && pathname !== "/api/admin/auth/me";
     if (!rateLimit(ip, isAuth)) {
       return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
     }

@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — Omnichannel Messenger Integration (WhatsApp, Telegram, Viber) */
 import React, { useState } from "react";
-import { Icon, Badge, DataTable, Avatar, SearchInput } from "@/components/admin/ui";
+import { Icon, Badge, DataTable, Avatar, SearchInput, EmptyState } from "@/components/admin/ui";
 
 export default function MessengersPage() {
   const [activeTab, setActiveTab] = useState("chat"); // chat, channels, rules
@@ -168,6 +168,16 @@ export default function MessengersPage() {
 
           {/* Active Chat Center */}
           <div className="kc-card" style={{ flex: "2 1 450px", padding: 0, display: "flex", flexDirection: "column", overflow: "hidden", height: "600px" }}>
+            {!activeChat ? (
+              <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <EmptyState
+                  icon="message-square"
+                  title="No active chats"
+                  description="Connect a channel and incoming client conversations will appear here."
+                />
+              </div>
+            ) : (
+            <>
             {/* Header */}
             <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", background: "var(--panel)" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -223,6 +233,8 @@ export default function MessengersPage() {
                 <Icon name="send" size={16} /> Send
               </button>
             </div>
+            </>
+            )}
           </div>
         </div>
       )}

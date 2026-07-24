@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import DualSidebarShell from "@/components/admin/DualSidebarShell";
 import { Icon } from "@/components/admin/ui";
 import { motion } from "framer-motion";
 
@@ -35,7 +34,6 @@ export default function AIAutomationsPage() {
   ];
 
   return (
-    <DualSidebarShell>
       <div className="flex flex-col gap-6 max-w-6xl mx-auto w-full">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-white/10 p-6 rounded-3xl relative overflow-hidden backdrop-blur-xl">
@@ -162,6 +160,5 @@ export default function AIAutomationsPage() {
         </div>
 
       </div>
-    </DualSidebarShell>
   );
 }

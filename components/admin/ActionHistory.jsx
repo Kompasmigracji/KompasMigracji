@@ -26,7 +26,7 @@ export function ActionHistory() {
 
     fetchHistory();
 
-    const channel = supabase.channel('audit_log_changes')
+    const channel = supabase.channel(`audit-log-${Math.random().toString(36).slice(2)}`)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'kompas_audit_log' }, (payload) => {
         fetchHistory();
       })

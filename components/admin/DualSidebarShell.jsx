@@ -115,7 +115,9 @@ export default function DualSidebarShell({ children }) {
     fetchNotifications();
 
     if (supabase) {
-      const channel = supabase.channel('public:notifications')
+      // Унікальне ім'я на кожен маунт: іменований канал у supabase-js — синглтон,
+      // і повторний .on() на вже підписаному каналі кидає виняток при ремаунті.
+      const channel = supabase.channel(`notifications-${Math.random().toString(36).slice(2)}`)
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
           setNotifications(prev => [payload.new, ...prev]);
           setUnreadCount(prev => prev + 1);

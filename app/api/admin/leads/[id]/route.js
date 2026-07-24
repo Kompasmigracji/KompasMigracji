@@ -15,6 +15,11 @@ export async function GET(req, { params }) {
     return NextResponse.json({ error: "Missing ID" }, { status: 400 });
   }
 
+  // leads.id — uuid: невалідний формат інакше дає 22P02 і 500 замість 404
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+    return NextResponse.json({ error: "Lead not found" }, { status: 404 });
+  }
+
   const rows = await q(
     `SELECT
        id,

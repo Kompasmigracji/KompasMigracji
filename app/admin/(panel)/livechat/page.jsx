@@ -1,7 +1,7 @@
 "use client";
 /* KompasCRM — Live Chat & Omnichannel Inbox (Intercom style) */
 import React, { useState } from "react";
-import { Icon, Avatar, Badge } from "@/components/admin/ui";
+import { Icon, Avatar, Badge, EmptyState } from "@/components/admin/ui";
 
 export default function LiveChatPage() {
   const [conversations] = useState([]);
@@ -41,7 +41,7 @@ export default function LiveChatPage() {
                 style={{ 
                   padding: "var(--space-md)", 
                   borderBottom: "1px solid var(--border)", 
-                  background: activeChat.id === conv.id ? "var(--panel-2)" : "transparent",
+                  background: activeChat?.id === conv.id ? "var(--panel-2)" : "transparent",
                   cursor: "pointer",
                   display: "flex",
                   gap: "var(--space-md)"
@@ -79,6 +79,16 @@ export default function LiveChatPage() {
 
         {/* Chat Area */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--bg)" }}>
+          {!activeChat ? (
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <EmptyState
+                icon="message-square"
+                title="No conversations yet"
+                description="Incoming Website, WhatsApp, Telegram and Instagram messages will appear here."
+              />
+            </div>
+          ) : (
+          <>
           {/* Chat Header */}
           <div style={{ padding: "var(--space-md)", borderBottom: "1px solid var(--border)", background: "var(--panel)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--space-md)" }}>
@@ -130,6 +140,8 @@ export default function LiveChatPage() {
               Press Enter to send. Use / for saved replies.
             </div>
           </div>
+          </>
+          )}
         </div>
       </div>
     </div>

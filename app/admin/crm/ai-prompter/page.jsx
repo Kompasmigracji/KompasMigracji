@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import DualSidebarShell from "@/components/admin/DualSidebarShell";
 import { Icon } from "@/components/admin/ui";
 import { motion } from "framer-motion";
 
@@ -32,7 +31,6 @@ export default function AIPrompterPage() {
   };
 
   return (
-    <DualSidebarShell>
       <div className="flex flex-col gap-6 max-w-4xl mx-auto w-full">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-blue-500 mb-2">
@@ -108,6 +106,5 @@ export default function AIPrompterPage() {
           </div>
         </div>
       </div>
-    </DualSidebarShell>
   );
 }

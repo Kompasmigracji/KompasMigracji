@@ -41,8 +41,8 @@ export async function GET() {
        FROM kompas_revenue_snapshots
        ORDER BY date DESC LIMIT 30`),
 
-    // Top revenue months
-    q(`SELECT to_char(period, 'YYYY-MM') AS month,
+    // Top revenue months (period — text 'YYYY-MM', див. db/schema.sql)
+    q(`SELECT period AS month,
               sum(amount) AS revenue,
               count(*) FILTER (WHERE paid=true) AS paid_count
        FROM kompas_dues
