@@ -265,7 +265,10 @@ test.describe('ExitPopup', () => {
     attachConsoleCapture(page, consoleMsgs);
 
     await page.goto('/uk');
-    await page.waitForTimeout(500);
+    // Чекаємо гідрацію: mouseleave-слухач вішається в useEffect, і подія,
+    // відправлена до гідрації, губиться назавжди (таймер-фолбек 40s > timeout).
+    await page.waitForLoadState('networkidle').catch(() => {});
+    await page.waitForTimeout(800);
 
     let leadCallCount = 0;
     await page.route('**/api/lead', async (route) => {

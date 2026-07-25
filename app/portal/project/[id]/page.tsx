@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, Clock, Image as ImageIcon, Download, FileText, ChevronRight } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import StarField from '@/components/StarField';
+// Header/Footer сайту тут не підключати: вони викликають useTranslations(),
+// а /portal живе поза [locale]-деревом — без NextIntlClientProvider це 500.
 
 export default function ClientProjectTracker({ params }: { params: { id: string } }) {
   const [project, setProject] = useState<any>(null);
@@ -49,7 +49,6 @@ export default function ClientProjectTracker({ params }: { params: { id: string 
   return (
     <>
       <StarField />
-      <Header />
       <div className="min-h-screen pt-32 pb-20 px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           
@@ -151,7 +150,6 @@ export default function ClientProjectTracker({ params }: { params: { id: string 
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 }

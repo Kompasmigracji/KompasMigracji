@@ -125,6 +125,33 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // ── Strip locale prefix from member routes: /uk/member → /member ─────────
+  // Кабінет учасника живе в app/member/ (поза [locale]) — без префікса.
+  const localeMemberMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/member.*)$/);
+  if (localeMemberMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localeMemberMatch[2];
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ── Member pages: skip intl middleware ───────────────────────────────────
+  if (pathname.startsWith("/member")) {
+    return NextResponse.next();
+  }
+
+  // ── Strip locale prefix from NPS routes: /uk/nps → /nps ──────────────────
+  const localeNpsMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/nps.*)$/);
+  if (localeNpsMatch) {
+    const url = req.nextUrl.clone();
+    url.pathname = localeNpsMatch[2];
+    return NextResponse.redirect(url, 301);
+  }
+
+  // ── NPS survey page: skip intl middleware (public token-link page) ───────
+  if (pathname.startsWith("/nps")) {
+    return NextResponse.next();
+  }
+
   // ── Strip locale prefix from architect routes: /uk/architect → /architect ──
   const localeArchitectMatch = pathname.match(/^\/(uk|pl|en|ru|rom)(\/architect.*)$/);
   if (localeArchitectMatch) {

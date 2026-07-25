@@ -714,6 +714,12 @@ type LangKey = (typeof LANG_KEYS)[number];
 const DEFAULT_LANG: LangKey = 'uk';
 const normalizeLang = (locale: string): LangKey => (LANG_KEYS as readonly string[]).includes(locale) ? locale as LangKey : DEFAULT_LANG;
 
+// Node's SSR V8 and the browser's V8 build can return Math.sin/cos results that
+// differ in the last ULP, so raw trig-computed SVG coordinates cause a hydration
+// mismatch on every load. Rounding to 2dp (sub-pixel on this 320x320 icon) makes
+// the server and client strings identical.
+const rnd = (n: number): number => Math.round(n * 100) / 100;
+
 interface PageTrans {
   badge: string; h1: string; heroDesc: string;
   card1Title: string; card1Desc: string;
@@ -1568,8 +1574,8 @@ export default function OrakulPage() {
                 const isM=i%4===0;
                 const r2=isM?13.2:14;
                 return <line key={i}
-                  x1={17+15.5*Math.sin(a)} y1={17-15.5*Math.cos(a)}
-                  x2={17+r2*Math.sin(a)} y2={17-r2*Math.cos(a)}
+                  x1={rnd(17+15.5*Math.sin(a))} y1={rnd(17-15.5*Math.cos(a))}
+                  x2={rnd(17+r2*Math.sin(a))} y2={rnd(17-r2*Math.cos(a))}
                   stroke={isM?'#00e5ff':'#1d4ed8'}
                   strokeWidth={isM?1:0.6}
                   opacity={isM?0.8:0.3}
@@ -1759,8 +1765,8 @@ export default function OrakulPage() {
                     const op=isM?0.95:isN?0.55:isS?0.3:0.14;
                     const sc=isM?'#00e5ff':isN?'#4a88c0':'#2a4e70';
                     return <line key={i}
-                      x1={160+150*Math.sin(a)} y1={160-150*Math.cos(a)}
-                      x2={160+r2*Math.sin(a)} y2={160-r2*Math.cos(a)}
+                      x1={rnd(160+150*Math.sin(a))} y1={rnd(160-150*Math.cos(a))}
+                      x2={rnd(160+r2*Math.sin(a))} y2={rnd(160-r2*Math.cos(a))}
                       stroke={sc} strokeWidth={sw} opacity={op}
                     />;
                   })}
@@ -1771,7 +1777,7 @@ export default function OrakulPage() {
                   const a=(i*Math.PI*2)/16;
                   const isB=i%4===0;
                   return <circle key={i}
-                    cx={160+150*Math.sin(a)} cy={160-150*Math.cos(a)}
+                    cx={rnd(160+150*Math.sin(a))} cy={rnd(160-150*Math.cos(a))}
                     r={isB?3.5:2} fill={isB?'#182436':'#0e1828'}
                     stroke={isB?'#3a5878':'#1e3050'} strokeWidth={isB?1.2:0.7}
                   />;
