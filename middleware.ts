@@ -9,24 +9,22 @@ import { jwtVerify } from "jose";
 const COOKIE = "kompascrm_session";
 const rateLimitMap = new Map();
 
-function rateLimit(ip: string, isAuth: boolean) {
+function rateLimit(key: string, maxReqs: number) {
   const now = Date.now();
   const windowMs = 60 * 1000; // 1 minute
-  const maxReqs = isAuth ? 20 : 100;
-  const key = `${ip}_${isAuth ? 'auth' : 'api'}`;
-  
+
   if (!rateLimitMap.has(key)) {
     rateLimitMap.set(key, { count: 1, resetTime: now + windowMs });
     return true;
   }
-  
+
   const record = rateLimitMap.get(key);
   if (now > record.resetTime) {
     record.count = 1;
     record.resetTime = now + windowMs;
     return true;
   }
-  
+
   record.count += 1;
   return record.count <= maxReqs;
 }
@@ -74,8 +72,32 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/api/")) {
     // /me — сесійний чек, який дергає кожна сторінка адмінки; під суворим
     // auth-лімітом (20/хв) швидка навігація по CRM ловила 429.
-    const isAuth = pathname.startsWith("/api/admin/auth/") && pathname !== "/api/admin/auth/me";
-    if (!rateLimit(ip, isAuth)) {
+    const isAuthLogin = pathname.startsWith("/api/admin/auth/") && pathname !== "/api/admin/auth/me";
+
+    let key: string;
+    let maxReqs: number;
+    if (isAuthLogin) {
+      key = `${ip}_auth`;
+      maxReqs = 20;
+    } else if (pathname.startsWith("/api/admin")) {
+      // Authenticated CRM traffic — key by session cookie, not raw IP.
+      // A full admin-panel audit crawl showed the old per-IP "api" bucket
+      // (100/min) is shared by every request from that address: several
+      // staff behind one office/VPN NAT, or just a couple of busy CRM tabs
+      // (each page fires its own data fetch + DualSidebarShell notification
+      // poll), exhaust it and start 429ing each other — the same failure
+      // mode already fixed once for /api/admin/auth/me, just not generalized.
+      // Falls back to IP for requests with no session cookie (still 401s
+      // right after in the JWT check below, so this only bounds pre-auth probing).
+      const session = req.cookies.get(COOKIE)?.value;
+      key = session ? `sess_${session}` : `${ip}_api`;
+      maxReqs = 200;
+    } else {
+      key = `${ip}_api`;
+      maxReqs = 100;
+    }
+
+    if (!rateLimit(key, maxReqs)) {
       return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
     }
   }

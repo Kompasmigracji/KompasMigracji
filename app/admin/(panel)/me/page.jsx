@@ -15,13 +15,17 @@ export default function Cabinet() {
   const [msg, setMsg] = useState("");
 
   const load = async () => {
-    const me = await fetch("/api/admin/auth/me").then((r) => r.json());
-    if (!me.user) { router.push("/admin/login"); return; }
-    const res = await fetch("/api/admin/members/" + me.user.id);
-    const d = await res.json();
-    if (d.error) { setError(d.error); return; }
-    setData(d);
-    setForm({ phone: d.member.phone || "", city: d.member.city || "" });
+    try {
+      const me = await fetch("/api/admin/auth/me").then((r) => r.json());
+      if (!me.user) { router.push("/admin/login"); return; }
+      const res = await fetch("/api/admin/members/" + me.user.id);
+      const d = await res.json();
+      if (d.error) { setError(d.error); return; }
+      setData(d);
+      setForm({ phone: d.member.phone || "", city: d.member.city || "" });
+    } catch {
+      setError("Мережа недоступна. Спробуйте оновити сторінку.");
+    }
   };
 
   useEffect(() => { load(); }, []); // eslint-disable-line

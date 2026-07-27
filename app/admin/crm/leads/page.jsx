@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function LeadsPage() {
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newLead, setNewLead] = useState({ name: '', email: '', contact: '', source: 'manual', situation: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -70,6 +71,13 @@ export default function LeadsPage() {
     }
   };
 
+  const q = search.trim().toLowerCase();
+  const filteredLeads = !q ? leads : leads.filter((lead) =>
+    [lead.name, lead.contact, lead.email, lead.situation, lead.message].some(
+      (v) => v && String(v).toLowerCase().includes(q)
+    )
+  );
+
   return (
     <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
       
@@ -80,9 +88,11 @@ export default function LeadsPage() {
         {/* Search Bar */}
         <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
           <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Поиск лида..." 
+          <input
+            type="text"
+            placeholder="Поиск лида..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
@@ -123,10 +133,10 @@ export default function LeadsPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="8" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка данных из базы...</td></tr>
-              ) : leads.length === 0 ? (
-                <tr><td colSpan="8" className="p-8 text-center text-gray-500 dark:text-gray-400">Нет лидов</td></tr>
-              ) : leads.map((lead, index) => (
-                <tr key={lead.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== leads.length - 1 ? 'border-b' : ''}`}>
+              ) : filteredLeads.length === 0 ? (
+                <tr><td colSpan="8" className="p-8 text-center text-gray-500 dark:text-gray-400">{q ? 'Ничего не найдено' : 'Нет лидов'}</td></tr>
+              ) : filteredLeads.map((lead, index) => (
+                <tr key={lead.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== filteredLeads.length - 1 ? 'border-b' : ''}`}>
                   <td className="px-6 py-4">
                     <input type="checkbox" className="accent-blue-500 cursor-pointer" />
                   </td>

@@ -94,10 +94,10 @@ export default function LeadFinderPage() {
           
           <div>
             <label style={{ fontSize: "var(--text-xs)", color: "var(--dim)", fontWeight: 600 }}>Industry</label>
-            <select className="kc-input" style={{ width: "100%", marginTop: 4 }}>
+            <select className="kc-input" style={{ width: "100%", marginTop: 4 }} defaultValue="Manufacturing & Construction">
               <option>All Industries</option>
               <option>Logistics & Transport</option>
-              <option selected>Manufacturing & Construction</option>
+              <option>Manufacturing & Construction</option>
               <option>Retail & E-commerce</option>
             </select>
           </div>
@@ -109,10 +109,10 @@ export default function LeadFinderPage() {
 
           <div>
             <label style={{ fontSize: "var(--text-xs)", color: "var(--dim)", fontWeight: 600 }}>Company Size</label>
-            <select className="kc-input" style={{ width: "100%", marginTop: 4 }}>
+            <select className="kc-input" style={{ width: "100%", marginTop: 4 }} defaultValue="200+ Employees">
               <option>Any</option>
               <option>50 - 200 Employees</option>
-              <option selected>200+ Employees</option>
+              <option>200+ Employees</option>
             </select>
           </div>
 
