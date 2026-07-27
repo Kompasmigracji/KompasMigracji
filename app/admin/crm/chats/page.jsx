@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 
 export default function ChatsDemoPage() {
   const [activeTab, setActiveTab] = useState("open");
+  const [chatSearch, setChatSearch] = useState("");
   const [chats, setChats] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -152,7 +153,13 @@ export default function ChatsDemoPage() {
           </div>
           <div className="flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-3 py-2 gap-2 focus-within:border-blue-500/50 transition-colors">
             <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-            <input type="text" placeholder="Поиск" className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500" />
+            <input
+              type="text"
+              placeholder="Поиск"
+              value={chatSearch}
+              onChange={(e) => setChatSearch(e.target.value)}
+              className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
+            />
           </div>
         </div>
 
@@ -185,7 +192,13 @@ export default function ChatsDemoPage() {
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
           {loadingChats ? (
             <div className="p-8 text-center text-gray-500 dark:text-gray-400 text-sm">Загрузка чатов...</div>
-          ) : chats.filter(c => activeTab === "all" || c.status === activeTab).map(chat => (
+          ) : chats
+              .filter(c => activeTab === "all" || c.status === activeTab)
+              .filter(c => {
+                const s = chatSearch.trim().toLowerCase();
+                return !s || [c.name, c.last_message].some(v => v && String(v).toLowerCase().includes(s));
+              })
+              .map(chat => (
             <div key={chat.id} className="perspective-1000">
               <motion.div 
                 onClick={() => setActiveChat(chat)}

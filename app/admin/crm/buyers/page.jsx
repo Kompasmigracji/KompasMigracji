@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function BuyersDemoPage() {
   const [buyers, setBuyers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newBuyer, setNewBuyer] = useState({ full_name: '', email: '', phone: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,6 +49,11 @@ export default function BuyersDemoPage() {
     fetchData();
   }, []);
 
+  const q = search.trim().toLowerCase();
+  const filteredBuyers = !q ? buyers : buyers.filter((b) =>
+    [b.full_name, b.email, b.phone].some((v) => v && String(v).toLowerCase().includes(q))
+  );
+
   return (
     <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
       
@@ -58,9 +64,11 @@ export default function BuyersDemoPage() {
         {/* Search Bar */}
         <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
           <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Быстрый поиск" 
+          <input
+            type="text"
+            placeholder="Быстрый поиск"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
@@ -69,8 +77,8 @@ export default function BuyersDemoPage() {
           <Icon name="sliders" size={16} className="text-gray-500 dark:text-gray-400" />
         </button>
 
-        <button 
-          onClick={() => setIsModalOpen(true)} 
+        <button
+          onClick={() => setIsModalOpen(true)}
           className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all"
         >
           <Icon name="plus" size={16} />
@@ -102,10 +110,10 @@ export default function BuyersDemoPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="9" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка данных из базы...</td></tr>
-              ) : buyers.length === 0 ? (
-                <tr><td colSpan="9" className="p-8 text-center text-gray-500 dark:text-gray-400">Нет покупателей</td></tr>
-              ) : buyers.map((buyer, index) => (
-                <tr key={buyer.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== buyers.length - 1 ? 'border-b' : ''}`}>
+              ) : filteredBuyers.length === 0 ? (
+                <tr><td colSpan="9" className="p-8 text-center text-gray-500 dark:text-gray-400">{q ? 'Ничего не найдено' : 'Нет покупателей'}</td></tr>
+              ) : filteredBuyers.map((buyer, index) => (
+                <tr key={buyer.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/5 border-black/5 dark:border-white/5 ${index !== filteredBuyers.length - 1 ? 'border-b' : ''}`}>
                   <td className="px-6 py-4">
                     <input type="checkbox" className="accent-blue-500 cursor-pointer" />
                   </td>
@@ -184,19 +192,21 @@ export default function BuyersDemoPage() {
               
               <form onSubmit={handleAddBuyer} className="flex flex-col gap-4 relative z-10">
                 <div>
-                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">ФИО *</label>
-                  <input 
-                    required 
-                    placeholder="Иван Иванов" 
+                  <label htmlFor="buyer-full-name" className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">ФИО *</label>
+                  <input
+                    id="buyer-full-name"
+                    required
+                    placeholder="Иван Иванов"
                     value={newBuyer.full_name} 
                     onChange={e => setNewBuyer({...newBuyer, full_name: e.target.value})} 
                     className="w-full px-4 py-3 rounded-xl border border-black/10 dark:border-white/10 bg-white/60 dark:bg-white/5 text-gray-900 dark:text-white outline-none focus:border-blue-500/50 transition-colors placeholder:text-gray-400" 
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Email</label>
-                  <input 
-                    type="email" 
+                  <label htmlFor="buyer-email" className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Email</label>
+                  <input
+                    id="buyer-email"
+                    type="email"
                     placeholder="email@example.com" 
                     value={newBuyer.email} 
                     onChange={e => setNewBuyer({...newBuyer, email: e.target.value})} 
@@ -204,9 +214,10 @@ export default function BuyersDemoPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Телефон</label>
-                  <input 
-                    type="tel" 
+                  <label htmlFor="buyer-phone" className="text-xs text-gray-500 dark:text-gray-400 font-bold mb-1 block uppercase tracking-wider">Телефон</label>
+                  <input
+                    id="buyer-phone"
+                    type="tel"
                     placeholder="+48 000 000 000" 
                     value={newBuyer.phone} 
                     onChange={e => setNewBuyer({...newBuyer, phone: e.target.value})} 

@@ -4,9 +4,10 @@ import { Icon } from "@/components/admin/ui";
 import SpotlightCard from "@/components/SpotlightCard";
 
 export default function OrdersDemoPage() {
-  const [activeFilter, setActiveFilter] = useState("новый");
+  const [activeFilter, setActiveFilter] = useState("all");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newOrderForm, setNewOrderForm] = useState({ buyer_name: '', total_amount: '', notes: '' });
 
@@ -49,14 +50,20 @@ export default function OrdersDemoPage() {
   };
 
 
+  const q = search.trim().toLowerCase();
+  const filteredOrders = orders
+    .filter((o) => activeFilter === "all" || o.status === activeFilter)
+    .filter((o) => !q || [o.order_number, o.buyers?.full_name, o.notes].some((v) => v && String(v).toLowerCase().includes(q)));
+
+  const countFor = (status) => orders.filter((o) => o.status === status).length;
   const filters = [
     { id: "all", label: "ФИЛЬТР СТАТУСОВ", color: "text-gray-500 border-gray-600", outline: true },
-    { id: "новый", label: "НОВЫЙ - 3", color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" },
-    { id: "согласование", label: "СОГЛАСОВАНИЕ - 0", color: "text-amber-400 border-amber-500/30 bg-amber-500/10" },
-    { id: "производство", label: "ПРОИЗВОДСТВО - 0", color: "text-orange-400 border-orange-500/30 bg-orange-500/10" },
-    { id: "доставка", label: "ДОСТАВКА - 0", color: "text-purple-400 border-purple-500/30 bg-purple-500/10" },
-    { id: "выполнено", label: "ВЫПОЛНЕНО", color: "text-emerald-400 border-emerald-500/30 bg-transparent", outline: true },
-    { id: "отменено", label: "ОТМЕНЕНО", color: "text-red-400 border-red-500/30 bg-transparent", outline: true },
+    { id: "новый", label: `НОВЫЙ - ${countFor("новый")}`, color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10" },
+    { id: "согласование", label: `СОГЛАСОВАНИЕ - ${countFor("согласование")}`, color: "text-amber-400 border-amber-500/30 bg-amber-500/10" },
+    { id: "производство", label: `ПРОИЗВОДСТВО - ${countFor("производство")}`, color: "text-orange-400 border-orange-500/30 bg-orange-500/10" },
+    { id: "доставка", label: `ДОСТАВКА - ${countFor("доставка")}`, color: "text-purple-400 border-purple-500/30 bg-purple-500/10" },
+    { id: "выполнено", label: `ВЫПОЛНЕНО - ${countFor("выполнено")}`, color: "text-emerald-400 border-emerald-500/30 bg-transparent", outline: true },
+    { id: "отменено", label: `ОТМЕНЕНО - ${countFor("отменено")}`, color: "text-red-400 border-red-500/30 bg-transparent", outline: true },
   ];
 
   return (
@@ -69,14 +76,16 @@ export default function OrdersDemoPage() {
         {/* Search Bar */}
         <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-blue-500/50">
           <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Быстрый поиск" 
+          <input
+            type="text"
+            placeholder="Быстрый поиск"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
 
-        <button 
+        <button
           onClick={() => setIsModalOpen(true)}
           className="ml-auto bg-blue-500 hover:bg-blue-600 shadow-[0_0_15px_rgba(59,130,246,0.3)] text-white border-none px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
         >
@@ -125,10 +134,10 @@ export default function OrdersDemoPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="13" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка данных из базы...</td></tr>
-              ) : orders.length === 0 ? (
-                <tr><td colSpan="13" className="p-8 text-center text-gray-500 dark:text-gray-400">Нет заказов</td></tr>
-              ) : orders.map((order, index) => (
-                <tr key={order.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/10 border-black/5 dark:border-white/5 ${index !== orders.length - 1 ? 'border-b' : ''}`}>
+              ) : filteredOrders.length === 0 ? (
+                <tr><td colSpan="13" className="p-8 text-center text-gray-500 dark:text-gray-400">{q || activeFilter !== "all" ? 'Ничего не найдено' : 'Нет заказов'}</td></tr>
+              ) : filteredOrders.map((order, index) => (
+                <tr key={order.id} className={`transition-colors hover:bg-black/5 dark:hover:bg-white/10 border-black/5 dark:border-white/5 ${index !== filteredOrders.length - 1 ? 'border-b' : ''}`}>
                   <td className="px-6 py-4"><input type="checkbox" className="accent-blue-500 cursor-pointer" /></td>
                   <td className="px-4 py-4 font-medium text-gray-800 dark:text-gray-200">{order.order_number}</td>
                   <td className="px-4 py-4">
@@ -179,7 +188,7 @@ export default function OrdersDemoPage() {
           {/* Pagination Footer */}
           <div className="p-4 flex justify-end items-center text-xs text-gray-500 dark:text-gray-400 border-t border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5">
             <div className="flex items-center gap-6">
-              <span>Показано 1 - {orders.length} из {orders.length} записей</span>
+              <span>Показано 1 - {filteredOrders.length} из {orders.length} записей</span>
               <div className="flex items-center gap-2">
                 <select className="bg-white/60 dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md outline-none focus:border-blue-500/50">
                   <option>10</option>

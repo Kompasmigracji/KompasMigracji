@@ -139,4 +139,130 @@ test.describe('Admin panel — real-backend module interactions', () => {
       await expect(page.locator('body')).not.toContainText('Unhandled Runtime Error');
     }
   });
+
+  // crm/buyers, crm/orders, crm/payments, crm/chats all had the identical
+  // copy-pasted bug as crm/leads: a search <input> with no value/onChange.
+  test('crm/buyers: search box filters the table', async ({ page }) => {
+    await page.goto('/admin/crm/buyers');
+    const rows = page.locator('tbody tr');
+    await expect(rows.first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Загрузка данных из базы...')).toBeHidden({ timeout: 15000 });
+
+    // Self-seed one real row if the table is empty, so this actually
+    // exercises the filter instead of skipping on a sparse dev DB.
+    if (await page.getByText('Нет покупателей').isVisible()) {
+      const unique = 'PLAYWRIGHT_TEST_buyer_' + Date.now();
+      await page.getByRole('button', { name: 'Добавить покупателя' }).click();
+      await page.getByLabel('ФИО *').fill(unique);
+      await page.getByLabel('Телефон').fill('+48000000000');
+      await page.getByRole('button', { name: 'Сохранить' }).click();
+      await expect(page.getByText(unique)).toBeVisible({ timeout: 10000 });
+    }
+    const total = await rows.count();
+
+    const search = page.getByPlaceholder('Быстрый поиск');
+    await search.fill('zzz_no_such_buyer_zzz_' + Date.now());
+    await expect(page.getByText('Ничего не найдено')).toBeVisible();
+    await search.fill('');
+    await expect(rows).toHaveCount(total);
+  });
+
+  test('crm/orders: search box filters and status pills actually narrow the list (activeFilter was never applied)', async ({ page }) => {
+    await page.goto('/admin/crm/orders');
+    const rows = page.locator('tbody tr');
+    await expect(rows.first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Загрузка данных из базы...')).toBeHidden({ timeout: 15000 });
+    test.skip(await page.getByText('Нет заказов').isVisible(), 'no orders in this DB to filter');
+    const total = await rows.count();
+
+    const search = page.getByPlaceholder('Быстрый поиск');
+    await search.fill('zzz_no_such_order_zzz_' + Date.now());
+    await expect(page.getByText('Ничего не найдено')).toBeVisible();
+    await search.fill('');
+    await expect(rows).toHaveCount(total);
+
+    // "Отменено" (cancelled) pill: every remaining visible row's status badge
+    // must actually read "отменено" - correctness check independent of how
+    // many orders happen to exist in this DB (was: comparing counts, which
+    // is fragile when e.g. all orders already share one status).
+    await page.getByRole('button', { name: /^ОТМЕНЕНО/ }).click();
+    const visibleCount = await rows.count();
+    if (visibleCount > 0 && !(await page.getByText('Ничего не найдено').isVisible())) {
+      const statusBadges = page.locator('tbody tr td:nth-child(6) span');
+      const count = await statusBadges.count();
+      for (let i = 0; i < count; i++) {
+        await expect(statusBadges.nth(i)).toHaveText('отменено');
+      }
+    }
+  });
+
+  test('crm/payments: search box filters the table', async ({ page }) => {
+    await page.goto('/admin/crm/payments');
+    const rows = page.locator('tbody tr');
+    await expect(rows.first()).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Загрузка платежей...')).toBeHidden({ timeout: 15000 });
+    test.skip(await page.getByText('Журнал пуст').isVisible(), 'no payments in this DB to filter');
+    const total = await rows.count();
+
+    const search = page.getByPlaceholder('Быстрый поиск');
+    await search.fill('zzz_no_such_payment_zzz_' + Date.now());
+    await expect(page.getByText('Ничего не найдено')).toBeVisible();
+    await search.fill('');
+    await expect(rows).toHaveCount(total);
+  });
+
+  test('crm/chats: search box filters the chat list', async ({ page }) => {
+    await page.goto('/admin/crm/chats');
+    await expect(page.locator('body')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Загрузка чатов...')).toBeHidden({ timeout: 15000 });
+
+    // Tabs default to "open" — switch to "all" to get the full addressable set.
+    await page.getByRole('button', { name: 'Все' }).click();
+    const chatCards = page.locator('.perspective-1000');
+    const total = await chatCards.count();
+    test.skip(total === 0, 'no chats in this DB to filter');
+
+    const search = page.getByPlaceholder('Поиск');
+    await search.fill('zzz_no_such_chat_zzz_' + Date.now());
+    await expect(chatCards).toHaveCount(0);
+    await search.fill('');
+    await expect(chatCards).toHaveCount(total);
+  });
+
+  // categories/movements/publications/inventory/order-lists were all a static
+  // "Модуль в разработке" placeholder despite already having working GET/POST
+  // API routes (order-lists' API didn't even persist — fixed alongside the UI).
+  // Each gets a real create-then-search round trip against its now-real table.
+  const CRUD_MODULES: Array<{
+    path: string; addButton: string; fieldLabel: string; nameValue: string; searchPlaceholder: string;
+  }> = [
+    { path: '/admin/crm/categories', addButton: 'Добавить категорию', fieldLabel: 'Название *', nameValue: 'PLAYWRIGHT_TEST_category', searchPlaceholder: 'Поиск категории' },
+    { path: '/admin/crm/movements', addButton: 'Добавить движение', fieldLabel: 'Товар *', nameValue: 'PLAYWRIGHT_TEST_movement_item', searchPlaceholder: 'Поиск по товару' },
+    { path: '/admin/crm/publications', addButton: 'Добавить публикацию', fieldLabel: 'Заголовок *', nameValue: 'PLAYWRIGHT_TEST_publication', searchPlaceholder: 'Поиск по заголовку' },
+    { path: '/admin/crm/inventory', addButton: 'Добавить позицию', fieldLabel: 'Товар *', nameValue: 'PLAYWRIGHT_TEST_inventory_item', searchPlaceholder: 'Поиск по товару' },
+    { path: '/admin/crm/order-lists', addButton: 'Добавить список', fieldLabel: 'Название *', nameValue: 'PLAYWRIGHT_TEST_order_list', searchPlaceholder: 'Поиск по названию' },
+  ];
+
+  for (const m of CRUD_MODULES) {
+    test(`${m.path}: real create-flow works (was a static "Модуль в разработке" placeholder)`, async ({ page }) => {
+      await page.goto(m.path);
+      await expect(page.getByText('Модуль в разработке')).toHaveCount(0);
+      await expect(page.locator('table')).toBeVisible({ timeout: 15000 });
+
+      const unique = m.nameValue + '_' + Date.now();
+      await page.getByRole('button', { name: m.addButton }).click();
+      await page.getByLabel(m.fieldLabel).fill(unique);
+      await page.getByRole('button', { name: 'Сохранить' }).click();
+
+      // Modal closes and the new row is visible in the table.
+      await expect(page.getByRole('button', { name: 'Сохранить' })).toBeHidden({ timeout: 10000 });
+      await expect(page.getByText(unique)).toBeVisible({ timeout: 10000 });
+
+      // Search actually filters down to just the new row.
+      const search = page.getByPlaceholder(m.searchPlaceholder);
+      await search.fill(unique);
+      await expect(page.locator('tbody tr')).toHaveCount(1);
+      await expect(page.getByText(unique)).toBeVisible();
+    });
+  }
 });

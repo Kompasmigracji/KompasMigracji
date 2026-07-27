@@ -7,6 +7,7 @@ import SpotlightCard from "@/components/SpotlightCard";
 export default function PaymentsDemoPage() {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({ type: "income", description: "", amount: "", currency: "PLN" });
@@ -44,6 +45,11 @@ export default function PaymentsDemoPage() {
     setSaving(false);
   };
 
+  const q = search.trim().toLowerCase();
+  const filteredPayments = !q ? payments : payments.filter((p) =>
+    [p.description, p.type_label, p.amount].some((v) => v != null && String(v).toLowerCase().includes(q))
+  );
+
   return (
     <div className="flex flex-col h-full bg-transparent text-gray-800 dark:text-gray-300">
       
@@ -59,9 +65,11 @@ export default function PaymentsDemoPage() {
         {/* Search Bar */}
         <div className="flex-1 flex items-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl px-4 py-2.5 gap-3 max-w-[400px] transition-colors focus-within:border-emerald-500/50">
           <Icon name="search" size={16} className="text-gray-500 dark:text-gray-400" />
-          <input 
-            type="text" 
-            placeholder="Быстрый поиск" 
+          <input
+            type="text"
+            placeholder="Быстрый поиск"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="bg-transparent border-none outline-none text-gray-800 dark:text-white w-full text-sm placeholder:text-gray-500"
           />
         </div>
@@ -97,21 +105,21 @@ export default function PaymentsDemoPage() {
             <tbody>
               {loading ? (
                 <tr><td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">Загрузка платежей...</td></tr>
-              ) : payments.length === 0 ? (
-                <tr><td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">Журнал пуст</td></tr>
-              ) : payments.map((pay, index) => {
+              ) : filteredPayments.length === 0 ? (
+                <tr><td colSpan="5" className="p-8 text-center text-gray-500 dark:text-gray-400">{q ? 'Ничего не найдено' : 'Журнал пуст'}</td></tr>
+              ) : filteredPayments.map((pay, index) => {
                 const isIncome = pay.type === "income";
                 const isCancelled = pay.status === "cancelled";
-                
+
                 const dateObj = new Date(pay.created_at);
                 const dateStr = dateObj.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-                
+
                 return (
-                  <motion.tr 
-                    key={pay.id} 
+                  <motion.tr
+                    key={pay.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`transition-colors hover:bg-black/5 dark:hover:bg-white/10 border-black/5 dark:border-white/5 cursor-pointer ${index !== payments.length - 1 ? 'border-b' : ''}`}
+                    className={`transition-colors hover:bg-black/5 dark:hover:bg-white/10 border-black/5 dark:border-white/5 cursor-pointer ${index !== filteredPayments.length - 1 ? 'border-b' : ''}`}
                   >
                     <td className="px-6 py-4 text-gray-500 dark:text-gray-400 whitespace-nowrap font-medium">
                       {dateStr}
