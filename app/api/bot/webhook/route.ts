@@ -30,6 +30,18 @@ import {
 } from "@/lib/orakul-employer";
 import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from "@/lib/email";
 import { sendWhatsApp } from "@/lib/whatsapp";
+import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
+
+/** Mirrors a Telegram message into the CRM chats inbox (app/admin/crm/chats). Best-effort:
+ * never throws into the webhook — the Orakul AI flow must keep working even if this fails. */
+async function mirrorToCrmChats(chatId: number, displayName: string, text: string, sender: "client" | "bot"): Promise<void> {
+  try {
+    const crmChatId = await findOrCreateChat("telegram", String(chatId), displayName);
+    await appendMessage(crmChatId, text, sender);
+  } catch (e) {
+    console.error("[webhook] CRM chat mirror failed:", e);
+  }
+}
 
 function notifyEmployerChannels(d: Partial<EmployerLeadData>, situation: string): void {
   const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
@@ -134,6 +146,8 @@ export async function POST(req: NextRequest) {
         [lead.id, firstName, username, userContact]
       );
     }
+
+    await mirrorToCrmChats(chatId, firstName || (username ? `@${username}` : String(chatId)), text, "client");
 
     const history = Array.isArray(lead.history) ? lead.history : [];
 
@@ -256,6 +270,7 @@ export async function POST(req: NextRequest) {
           ]
         };
         await sendMessage(chatId, visibleText, "HTML", token, replyMarkup);
+        await mirrorToCrmChats(chatId, firstName || (username ? `@${username}` : String(chatId)), visibleText, "bot");
       }
 
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);

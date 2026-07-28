@@ -8,6 +8,7 @@ export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
+import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,6 +28,13 @@ export async function POST(req: NextRequest) {
 
       if (senderId && messageText) {
         console.log(`[viber-webhook] Received message from Viber ID ${senderId}: "${messageText}"`);
+
+        try {
+          const crmChatId = await findOrCreateChat("viber", senderId, senderName);
+          await appendMessage(crmChatId, messageText, "client");
+        } catch (e) {
+          console.error("[viber-webhook] CRM chat mirror failed:", e);
+        }
 
         // Check if lead already exists by Viber sender ID
         const existing = (await one(

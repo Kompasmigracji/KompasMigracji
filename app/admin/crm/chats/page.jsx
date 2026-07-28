@@ -3,9 +3,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { Icon, Avatar } from "@/components/admin/ui";
 import { motion, AnimatePresence } from "framer-motion";
 import SpotlightCard from "@/components/SpotlightCard";
-import { supabase } from "@/lib/supabase";
 
-export default function ChatsDemoPage() {
+const SOURCE_LABELS = { telegram: "Telegram", whatsapp: "WhatsApp", viber: "Viber", manual: "Вручну" };
+const sourceLabel = (source) => SOURCE_LABELS[source] || "Вручну";
+
+export default function ChatsPage() {
   const [activeTab, setActiveTab] = useState("open");
   const [chatSearch, setChatSearch] = useState("");
   const [chats, setChats] = useState([]);
@@ -21,31 +23,39 @@ export default function ChatsDemoPage() {
 
   const handleCreateChat = async (e) => {
     e.preventDefault();
-    if (!newChatName.trim() || !supabase) return;
-    const { data, error } = await supabase.from('custom_chats').insert([{
-      name: newChatName.trim(),
-      source: 'manual',
-      source_icon: 'user',
-      source_color: '#6b7280',
-      last_message: 'Новий діалог створено вручну',
-      time: new Date().toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' }),
-      unread: 0,
-      status: 'open',
-    }]).select().single();
-    if (!error && data) {
-      setChats(prev => [data, ...prev]);
-      setActiveChat(data);
-      setNewChatName("");
-      setIsNewChatOpen(false);
+    if (!newChatName.trim()) return;
+    try {
+      const res = await fetch('/api/admin/crm/chats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: newChatName.trim() }),
+      });
+      const json = await res.json();
+      if (res.ok && json.data) {
+        setChats(prev => [json.data, ...prev]);
+        setActiveChat(json.data);
+        setNewChatName("");
+        setIsNewChatOpen(false);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
   const handleCloseChat = async () => {
-    if (!activeChat || !supabase) return;
+    if (!activeChat) return;
     const newStatus = activeChat.status === 'closed' ? 'open' : 'closed';
-    await supabase.from('custom_chats').update({ status: newStatus }).eq('id', activeChat.id);
-    setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, status: newStatus } : c));
-    setActiveChat(prev => ({ ...prev, status: newStatus }));
+    try {
+      await fetch(`/api/admin/crm/chats/${activeChat.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, status: newStatus } : c));
+      setActiveChat(prev => ({ ...prev, status: newStatus }));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleSaveBuyer = async () => {
@@ -75,29 +85,37 @@ export default function ChatsDemoPage() {
   // 1. Fetch Chats
   useEffect(() => {
     (async () => {
-      if (!supabase) { setLoadingChats(false); return; }
       setLoadingChats(true);
-      const { data, error } = await supabase.from('custom_chats').select('*').order('created_at', { ascending: false });
-      if (!error && data) {
-        setChats(data);
-        if (data.length > 0) setActiveChat(data[0]);
+      try {
+        const res = await fetch('/api/admin/crm/chats');
+        const json = await res.json();
+        if (res.ok && json.data) {
+          setChats(json.data);
+          if (json.data.length > 0) setActiveChat(json.data[0]);
+        }
+      } catch (e) {
+        console.error(e);
       }
       setLoadingChats(false);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 2. Fetch Messages for Active Chat
   useEffect(() => {
-    if (!supabase || !activeChat) return;
+    if (!activeChat) return;
 
     const fetchMessages = async () => {
-      const { data, error } = await supabase.from('custom_messages').select('*').eq('chat_id', activeChat.id).order('created_at', { ascending: true });
-      if (!error && data) {
-        setMessages(data);
-        setTimeout(() => {
-          messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
+      try {
+        const res = await fetch(`/api/admin/crm/chats/${activeChat.id}/messages`);
+        const json = await res.json();
+        if (res.ok && json.data) {
+          setMessages(json.data);
+          setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }
+      } catch (e) {
+        console.error(e);
       }
     };
 
@@ -105,13 +123,13 @@ export default function ChatsDemoPage() {
   }, [activeChat]);
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !activeChat || !supabase) return;
+    if (!newMessage.trim() || !activeChat) return;
 
     const msgText = newMessage.trim();
     setNewMessage("");
 
     const now = new Date();
-    const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    const timeStr = now.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
 
     // Optimistic UI update
     const tempMsg = { id: Date.now().toString(), text: msgText, time: timeStr, sender: 'manager', is_seen: false };
@@ -120,17 +138,23 @@ export default function ChatsDemoPage() {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
 
-    // Update Chat last_message
-    await supabase.from('custom_chats').update({ last_message: msgText, time: timeStr }).eq('id', activeChat.id);
+    setChats(prev => prev.map(c => c.id === activeChat.id ? { ...c, last_message: msgText, time: timeStr } : c));
 
-    // Insert message
-    await supabase.from('custom_messages').insert([{
-      chat_id: activeChat.id,
-      text: msgText,
-      time: timeStr,
-      sender: 'manager',
-      is_seen: false
-    }]);
+    try {
+      const res = await fetch(`/api/admin/crm/chats/${activeChat.id}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: msgText }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        console.error('Failed to send message:', json.error);
+      } else if (json.delivery && json.delivery.mocked) {
+        console.warn(`Message logged, but ${activeChat.source} sending is in mock mode (no API credentials configured yet).`);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -255,7 +279,7 @@ export default function ChatsDemoPage() {
                   <div className="font-bold text-base text-gray-900 dark:text-white">{activeChat.name}</div>
                   <div className="text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-1.5 mt-0.5">
                     <Icon name={activeChat.source_icon} size={12} color={activeChat.source_color} />
-                    {activeChat.source === "telegram" ? "Telegram" : activeChat.source === "whatsapp" ? "WhatsApp" : "Viber"}
+                    {sourceLabel(activeChat.source)}
                   </div>
                 </div>
               </div>
@@ -280,7 +304,7 @@ export default function ChatsDemoPage() {
 
               <AnimatePresence>
                 {messages.map(msg => {
-                  const isManager = msg.sender === "manager";
+                  const isManager = msg.sender === "manager" || msg.sender === "bot";
                   return (
                     <motion.div 
                       key={msg.id}

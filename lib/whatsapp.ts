@@ -40,6 +40,45 @@ export async function sendWhatsApp(phone: string, text: string): Promise<void> {
   }
 }
 
+/**
+ * Надсилає звичайне текстове WhatsApp-повідомлення через Meta Cloud API
+ * (використовується для відповідей менеджера з CRM-чатів).
+ * Якщо WHATSAPP_TOKEN/WHATSAPP_PHONE_ID не налаштовані — працює в mock-режимі
+ * (лог у консоль, success:true), щоб CRM не блокувалась відсутністю креденшелів.
+ */
+export async function sendWhatsAppText(phone: string, text: string): Promise<{ ok: boolean; mocked?: boolean }> {
+  const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
+  const WHATSAPP_PHONE_ID = process.env.WHATSAPP_PHONE_ID;
+
+  if (!WHATSAPP_TOKEN || !WHATSAPP_PHONE_ID) {
+    console.log(`[WHATSAPP MOCK SEND] To: ${phone} | MSG: ${text}`);
+    return { ok: true, mocked: true };
+  }
+
+  try {
+    const res = await fetch(`https://graph.facebook.com/v17.0/${WHATSAPP_PHONE_ID}/messages`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${WHATSAPP_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: phone,
+        type: "text",
+        text: { body: text },
+      }),
+    });
+    if (!res.ok) {
+      console.error("sendWhatsAppText: API error", res.status, await res.text());
+    }
+    return { ok: res.ok };
+  } catch (err) {
+    console.error("sendWhatsAppText: fetch failed", err);
+    return { ok: false };
+  }
+}
+
 // OUTBOUND MESSAGE INITIATOR
 export async function sendInitialMessage(phone: string, template: string = "hello_architecture") {
   const WHATSAPP_TOKEN = process.env.WHATSAPP_TOKEN;
