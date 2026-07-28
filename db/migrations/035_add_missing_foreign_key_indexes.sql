@@ -1,0 +1,55 @@
+-- Applied directly to Supabase project uxbgrzmggeujgmryfohl (KompasMigracji) on 2026-07-28
+-- via Supabase advisor audit. Documented here for migration history consistency.
+-- Adds covering indexes for all foreign keys flagged by the Supabase performance advisor.
+
+create index if not exists idx_agent_tasks_agent_id on public.agent_tasks(agent_id);
+create index if not exists idx_buyers_source_id on public.buyers(source_id);
+create index if not exists idx_case_activities_actor_id on public.case_activities(actor_id);
+create index if not exists idx_case_billing_due_id on public.case_billing(due_id);
+create index if not exists idx_case_checklist_items_case_id on public.case_checklist_items(case_id);
+create index if not exists idx_case_checklist_items_document_id on public.case_checklist_items(document_id);
+create index if not exists idx_case_documents_previous_version_id on public.case_documents(previous_version_id);
+create index if not exists idx_case_documents_uploaded_by on public.case_documents(uploaded_by);
+create index if not exists idx_case_logs_case_id on public.case_logs(case_id);
+create index if not exists idx_case_sla_events_case_id on public.case_sla_events(case_id);
+create index if not exists idx_case_status_history_changed_by on public.case_status_history(changed_by);
+create index if not exists idx_conversations_service_id on public.conversations(service_id);
+create index if not exists idx_custom_messages_chat_id on public.custom_messages(chat_id);
+create index if not exists idx_document_verification_document_id on public.document_verification(document_id);
+create index if not exists idx_document_verification_verified_by on public.document_verification(verified_by);
+create index if not exists idx_enforcement_case_logs_case_id on public.enforcement_case_logs(case_id);
+create index if not exists idx_enforcement_cases_assigned_to on public.enforcement_cases(assigned_to);
+create index if not exists idx_enforcement_cases_lead_id on public.enforcement_cases(lead_id);
+create index if not exists idx_immigration_cases_assigned_agent_id on public.immigration_cases(assigned_agent_id);
+create index if not exists idx_kompas_appointments_assigned_to on public.kompas_appointments(assigned_to);
+create index if not exists idx_kompas_appointments_lead_id on public.kompas_appointments(lead_id);
+create index if not exists idx_kompas_appointments_member_id on public.kompas_appointments(member_id);
+create index if not exists idx_kompas_audit_log_user_id on public.kompas_audit_log(user_id);
+create index if not exists idx_kompas_broadcasts_created_by on public.kompas_broadcasts(created_by);
+create index if not exists idx_kompas_cases_assigned_to on public.kompas_cases(assigned_to);
+create index if not exists idx_kompas_commission_rules_user_id on public.kompas_commission_rules(user_id);
+create index if not exists idx_kompas_commissions_earned_due_id on public.kompas_commissions_earned(due_id);
+create index if not exists idx_kompas_commissions_earned_lead_id on public.kompas_commissions_earned(lead_id);
+create index if not exists idx_kompas_commissions_earned_rule_id on public.kompas_commissions_earned(rule_id);
+create index if not exists idx_kompas_commissions_earned_user_id on public.kompas_commissions_earned(user_id);
+create index if not exists idx_kompas_content_updated_by on public.kompas_content(updated_by);
+create index if not exists idx_kompas_emails_sent_by on public.kompas_emails(sent_by);
+create index if not exists idx_kompas_expenses_recorded_by on public.kompas_expenses(recorded_by);
+create index if not exists idx_kompas_generated_docs_generated_by on public.kompas_generated_docs(generated_by);
+create index if not exists idx_kompas_generated_docs_member_id on public.kompas_generated_docs(member_id);
+create index if not exists idx_kompas_invoices_due_id on public.kompas_invoices(due_id);
+create index if not exists idx_kompas_job_applications_job_id on public.kompas_job_applications(job_id);
+create index if not exists idx_kompas_leads_assigned_to on public.kompas_leads(assigned_to);
+create index if not exists idx_kompas_nps_surveys_lead_id on public.kompas_nps_surveys(lead_id);
+create index if not exists idx_kompas_partner_offers_partner_id on public.kompas_partner_offers(partner_id);
+create index if not exists idx_kompas_rodo_consent_logs_user_id on public.kompas_rodo_consent_logs(user_id);
+create index if not exists idx_kompas_subscriptions_lead_id on public.kompas_subscriptions(lead_id);
+create index if not exists idx_kompas_subscriptions_member_id on public.kompas_subscriptions(member_id);
+create index if not exists idx_leads_auto_assigned_to on public.leads(auto_assigned_to);
+create index if not exists idx_messages_knowledge_card_id on public.messages(knowledge_card_id);
+create index if not exists idx_order_items_order_id on public.order_items(order_id);
+create index if not exists idx_order_items_product_id on public.order_items(product_id);
+create index if not exists idx_orders_buyer_id on public.orders(buyer_id);
+create index if not exists idx_orders_source_id on public.orders(source_id);
+create index if not exists idx_task_documents_uploaded_by on public.task_documents(uploaded_by);
+create index if not exists idx_tasks_created_by on public.tasks(created_by);
