@@ -80,7 +80,10 @@ export async function POST(req: NextRequest) {
 
       if (lead) {
         /* ── Update Lead (і дзеркального kompas_leads) ─────────── */
-        await markLeadPaid(lead.id);
+        const { alreadyPaid } = await markLeadPaid(lead.id);
+        if (alreadyPaid) {
+          return NextResponse.json({ received: true });
+        }
 
         /* ── Auto Telegram Message ────────────────── */
         if (lead.chat_id) {

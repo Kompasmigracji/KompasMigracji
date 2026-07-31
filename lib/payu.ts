@@ -143,5 +143,6 @@ export function verifyPayUSignature(
     .update(body + MD5_KEY)
     .digest('hex');
 
-  return received === expected;
+  if (!received || received.length !== expected.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(received), Buffer.from(expected));
 }

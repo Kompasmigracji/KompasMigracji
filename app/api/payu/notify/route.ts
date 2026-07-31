@@ -55,9 +55,15 @@ export async function POST(req: NextRequest) {
     console.warn('payu/notify: session_id column issue', err);
   }
 
+  const amountFormatted = ((Number(amount) || 0) / 100).toFixed(2);
+  const adminChat = process.env.ADMIN_TELEGRAM_CHAT_ID ?? process.env.TELEGRAM_ADMIN_CHAT_ID;
+
   if (lead) {
     // Оновити статус ліда (і дзеркального kompas_leads)
-    await markLeadPaid(lead.id);
+    const { alreadyPaid } = await markLeadPaid(lead.id);
+    if (alreadyPaid) {
+      return NextResponse.json({ status: 'ok' });
+    }
 
     // Сповістити клієнта в Telegram
     if (lead.chat_id) {
@@ -70,9 +76,6 @@ export async function POST(req: NextRequest) {
     }
 
     // Сповістити адмін-чат
-    const amountFormatted = ((Number(amount) || 0) / 100).toFixed(2);
-    const adminChat = process.env.ADMIN_TELEGRAM_CHAT_ID ?? process.env.TELEGRAM_ADMIN_CHAT_ID;
-
     const tgText =
       `💳 <b>Оплата через PayU!</b>\n` +
       `👤 ${lead.first_name ?? '—'}\n` +
@@ -81,6 +84,19 @@ export async function POST(req: NextRequest) {
       `💰 ${amountFormatted} ${currency}\n` +
       `🔑 Order: <code>${orderId}</code>`;
 
+    if (adminChat) {
+      try { await sendMessage(adminChat, tgText); } catch { /* */ }
+    }
+    try {
+      await sendWhatsApp(ADMIN_WA_PHONE, tgText.replace(/<[^>]+>/g, ''));
+    } catch { /* */ }
+  } else {
+    // Лід не знайдено — все одно сповіщаємо адміна, інакше оплата "губиться"
+    // і ніхто про неї не дізнається (раніше цей випадок мовчки ігнорувався).
+    const tgText =
+      `💳 Оплата через PayU отримана (лід не знайдено)\n` +
+      `💰 ${amountFormatted} ${currency}\n` +
+      `🔑 Order: <code>${orderId}</code>`;
     if (adminChat) {
       try { await sendMessage(adminChat, tgText); } catch { /* */ }
     }

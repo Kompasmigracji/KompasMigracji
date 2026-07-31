@@ -104,7 +104,10 @@ export async function POST(req: NextRequest) {
   }
 
   /* ── Оновити статус ліда (і дзеркального kompas_leads) ──────────── */
-  await markLeadPaid(lead.id);
+  const { alreadyPaid } = await markLeadPaid(lead.id);
+  if (alreadyPaid) {
+    return NextResponse.json({ ok: true, status: "confirmed" });
+  }
 
   /* ── Telegram клієнту ────────────────────────────────────────────── */
   if (lead.chat_id) {
