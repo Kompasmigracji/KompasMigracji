@@ -6,10 +6,11 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
-import { one, q } from "@/lib/db";
+import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
+import { markLeadPaid } from "@/lib/lead-payment-sync";
 
 const ADMIN_WA_PHONE = "48729417050"; // WhatsApp для нотифікацій про оплату
 
@@ -102,11 +103,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, status: "confirmed" });
   }
 
-  /* ── Оновити статус ліда ─────────────────────────────────────────── */
-  await q(
-    `UPDATE leads SET paid_at = now(), status = 'closed' WHERE id = $1`,
-    [lead.id],
-  );
+  /* ── Оновити статус ліда (і дзеркального kompas_leads) ──────────── */
+  await markLeadPaid(lead.id);
 
   /* ── Telegram клієнту ────────────────────────────────────────────── */
   if (lead.chat_id) {

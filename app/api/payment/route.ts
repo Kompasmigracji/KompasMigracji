@@ -10,9 +10,10 @@ export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
-import { q } from '@/lib/db';
+import { q, one } from '@/lib/db';
 import { createTaskFromLead } from '@/lib/task-from-lead';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
+import { getServicePrice } from '@/lib/pricing-catalog';
 
 /* Суми приходять з клієнта в грошах (integer). Межі відсікають NaN, від'ємні
    та абсурдні значення до того, як вони підуть у P24/PayU/Stripe; максимум
@@ -24,7 +25,10 @@ function mockModeAllowed(): boolean {
   return process.env.NODE_ENV !== 'production' || process.env.P24_SANDBOX === 'mock';
 }
 
-/** Зберігає лід у БД з session_id щоб payment-mock-confirm міг його знайти */
+/** Зберігає лід у БД з session_id щоб payment-mock-confirm міг його знайти.
+    Дзеркалить лід у kompas_leads (як /api/lead та /api/admin/leads) і
+    зберігає bigint id назад у leads.kompas_lead_id — щоб вебхуки оплати
+    могли оновити статус у CRM-воронці за ключем, а не співпадінням email. */
 async function createLeadForPayment(opts: {
   sessionId: string;
   description: string;
@@ -40,11 +44,24 @@ async function createLeadForPayment(opts: {
     /* contact = телефон (відображається в колонці "Контакт" CRM)
        situation = опис + email (відображається в колонці "Повідомлення" CRM) */
     const situation = `${description}\n📧 ${email}`;
-    await q(
-      `INSERT INTO leads (first_name, contact, situation, source, session_id, status)
-       VALUES ($1, $2, $3, $4, $5, 'new')`,
-      [fullName, phone || null, situation, source, sessionId],
-    );
+    const leadRow = (await one(
+      `INSERT INTO leads (first_name, contact, situation, source, session_id, email, status)
+       VALUES ($1, $2, $3, $4, $5, $6, 'new')
+       RETURNING id`,
+      [fullName, phone || null, situation, source, sessionId, email || null],
+    )) as { id: string } | null;
+
+    const kompasLeadRow = (await one(
+      `INSERT INTO kompas_leads (source, name, contact, email, message, status)
+       VALUES ($1, $2, $3, $4, $5, 'new')
+       RETURNING id`,
+      [source, fullName, phone || null, email || null, description],
+    )) as { id: number } | null;
+
+    if (leadRow?.id && kompasLeadRow?.id) {
+      await q(`UPDATE leads SET kompas_lead_id = $1 WHERE id = $2`, [kompasLeadRow.id, leadRow.id]);
+    }
+
     await createTaskFromLead({ name: fullName, contact: phone, source, situation: description });
   } catch (err) {
     // Не блокуємо платіж якщо запис ліда не вдався
@@ -53,16 +70,16 @@ async function createLeadForPayment(opts: {
 }
 
 export async function POST(req: NextRequest) {
-  let body: { amount?: unknown; description?: unknown; email?: unknown; lang?: unknown; source?: unknown; firstName?: unknown; lastName?: unknown; phone?: unknown };
+  let body: { amount?: unknown; serviceId?: unknown; description?: unknown; email?: unknown; lang?: unknown; source?: unknown; firstName?: unknown; lastName?: unknown; phone?: unknown };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { amount, description, email, lang, source, firstName, lastName, phone } = body;
+  const { serviceId, description, email, lang, source, firstName, lastName, phone } = body;
 
-  if (!amount || !description || !email) {
+  if (!serviceId || !description || !email) {
     return NextResponse.json({ error: 'Відсутні обов\'язкові параметри' }, { status: 400 });
   }
 
@@ -75,7 +92,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const amountNum = Number(amount);
+  /* Сума береться ВИКЛЮЧНО з серверного каталогу за serviceId, а не з тіла
+     запиту — інакше клієнт міг би підмінити amount і оплатити будь-яку
+     послугу за 1 zł, залишивши в описі назву дорогої послуги. */
+  const amountNum = getServicePrice(String(serviceId));
+  if (amountNum === null) {
+    return NextResponse.json({ error: 'Невідома послуга' }, { status: 400 });
+  }
+  if (body.amount !== undefined && Number(body.amount) !== amountNum) {
+    console.warn('payment/route: client amount mismatch (ignored, using catalog price)', {
+      serviceId, clientAmount: body.amount, catalogAmount: amountNum,
+    });
+  }
   if (!Number.isInteger(amountNum) || amountNum < MIN_AMOUNT_GROSZE || amountNum > MAX_AMOUNT_GROSZE) {
     return NextResponse.json({ error: 'Некоректна сума платежу' }, { status: 400 });
   }
@@ -210,7 +238,7 @@ export async function POST(req: NextRequest) {
     });
 
     const qs = new URLSearchParams({
-      amount: String(amount),
+      amount: String(amountNum),
       desc:   String(description),
       cur:    'PLN',
     }).toString();

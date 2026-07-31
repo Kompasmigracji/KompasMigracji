@@ -323,7 +323,7 @@ export default function KartaPage(): React.JSX.Element {
       const res = await fetch('/api/payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: payStep.amount, description: payStep.desc, email: payEmail, firstName: payFirstName.trim(), lastName: payLastName.trim(), phone: payPhone.trim(), lang, source: 'karta' }),
+        body: JSON.stringify({ serviceId: payStep.pkg, description: payStep.desc, email: payEmail, firstName: payFirstName.trim(), lastName: payLastName.trim(), phone: payPhone.trim(), lang, source: 'karta' }),
       });
       const data = await res.json();
       if (data.redirectUrl) {
@@ -532,7 +532,7 @@ export default function KartaPage(): React.JSX.Element {
                   ))}
                 </ul>
                 <button
-                  onClick={() => openPay('p1', 35500, t.p1name)}
+                  onClick={() => openPay('karta_p1', 35500, t.p1name)}
                   style={{ width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: 'pointer', background: ORANGE, color: '#fff', fontWeight: 700, fontSize: 14, fontFamily: "'Syne', sans-serif", letterSpacing: '0.01em', transition: 'opacity 0.2s' }}
                   onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -568,7 +568,7 @@ export default function KartaPage(): React.JSX.Element {
                   ))}
                 </ul>
                 <button
-                  onClick={() => openPay('p2', 90000, t.p2name)}
+                  onClick={() => openPay('karta_p2', 90000, t.p2name)}
                   style={{ width: '100%', padding: '13px 0', borderRadius: 10, border: 'none', cursor: 'pointer', background: '#1e293b', color: '#fff', fontWeight: 700, fontSize: 14, fontFamily: "'Syne', sans-serif", letterSpacing: '0.01em', transition: 'opacity 0.2s' }}
                   onMouseEnter={e => { e.currentTarget.style.opacity = '0.82'; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
@@ -703,8 +703,8 @@ export default function KartaPage(): React.JSX.Element {
               <text x="55" y="20" textAnchor="middle" fill="#fff" fontFamily="'Arial Black',Arial,sans-serif" fontSize="12" fontWeight="900" letterSpacing="0.3">przelewy24</text>
             </svg>
             <p style={{ fontSize: 18, fontWeight: 800, color: DARK, margin: '0 0 4px' }}>{payStep.desc}</p>
-            <p style={{ fontSize: 26, fontWeight: 900, color: payStep.pkg === 'p1' ? ORANGE : '#1e293b', margin: '0 0 24px', letterSpacing: '-0.02em' }}>
-              {payStep.pkg === 'p1' ? '355 PLN' : '900 PLN'}
+            <p style={{ fontSize: 26, fontWeight: 900, color: payStep.pkg === 'karta_p1' ? ORANGE : '#1e293b', margin: '0 0 24px', letterSpacing: '-0.02em' }}>
+              {payStep.pkg === 'karta_p1' ? '355 PLN' : '900 PLN'}
             </p>
 
             {/* Ім'я */}

@@ -1,6 +1,6 @@
 "use client";
 // F3 UI: Appointment booking page — public calendar + form
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -45,7 +45,16 @@ export default function BookPage() {
   const [error, setError] = useState("");
   const [bookedAt, setBookedAt] = useState("");
 
-  const days = getNext14Days();
+  /* getNext14Days() depends on the current instant, so it must not run
+     during the render that gets prerendered/SSR'd — computing it there
+     bakes in build/server time, which differs from the client's "now" at
+     hydration and throws React #310 (hydration text mismatch). Starting
+     from an empty list (identical on server and first client render) and
+     filling it in a post-mount effect keeps both renders in sync. */
+  const [days, setDays] = useState<{ label: string; value: string }[]>([]);
+  useEffect(() => {
+    setDays(getNext14Days());
+  }, []);
 
   const submit = async () => {
     if (!name.trim()) { setError("Podaj imie i nazwisko"); return; }

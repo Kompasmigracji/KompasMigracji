@@ -10,7 +10,10 @@ import { motion } from 'framer-motion';
 
 const ORANGE = '#f97316';
 
-type ServiceRow = { name: string; price: string; amountGrosze: number | null; oldPrice?: string; free?: boolean };
+/* `id` is the serviceId sent to /api/payment — it must match a key in
+   lib/pricing-catalog.ts, which is the authoritative price (amountGrosze
+   here is display-only; the server never trusts a client-sent amount). */
+type ServiceRow = { id?: string; name: string; price: string; amountGrosze: number | null; oldPrice?: string; free?: boolean };
 type Category   = { id: string; title: string; icon: string; free?: boolean; rows: ServiceRow[] };
 
 function useCategories(): Category[] {
@@ -19,70 +22,70 @@ function useCategories(): Category[] {
     {
       id: 'notary', title: t('pcat_notary'), icon: '✍️',
       rows: [
-        { name: t('psvc_n1'),  price: '250', amountGrosze: 25000 },
-        { name: t('psvc_n2'),  price: '350', amountGrosze: 35000 },
-        { name: t('psvc_n3'),  price: '355', amountGrosze: 35500 },
-        { name: t('psvc_n4'),  price: '355', amountGrosze: 35500 },
-        { name: t('psvc_n5'),  price: '260', amountGrosze: 26000 },
-        { name: t('psvc_n6'),  price: '380', amountGrosze: 38000 },
-        { name: t('psvc_n7'),  price: '355', amountGrosze: 35500 },
-        { name: t('psvc_n8'),  price: '720', amountGrosze: 72000 },
-        { name: t('psvc_n9'),  price: '580', amountGrosze: 58000 },
-        { name: t('psvc_n10'), price: '150', amountGrosze: 15000 },
+        { id: 'psvc_n1',  name: t('psvc_n1'),  price: '250', amountGrosze: 25000 },
+        { id: 'psvc_n2',  name: t('psvc_n2'),  price: '350', amountGrosze: 35000 },
+        { id: 'psvc_n3',  name: t('psvc_n3'),  price: '355', amountGrosze: 35500 },
+        { id: 'psvc_n4',  name: t('psvc_n4'),  price: '355', amountGrosze: 35500 },
+        { id: 'psvc_n5',  name: t('psvc_n5'),  price: '260', amountGrosze: 26000 },
+        { id: 'psvc_n6',  name: t('psvc_n6'),  price: '380', amountGrosze: 38000 },
+        { id: 'psvc_n7',  name: t('psvc_n7'),  price: '355', amountGrosze: 35500 },
+        { id: 'psvc_n8',  name: t('psvc_n8'),  price: '720', amountGrosze: 72000 },
+        { id: 'psvc_n9',  name: t('psvc_n9'),  price: '580', amountGrosze: 58000 },
+        { id: 'psvc_n10', name: t('psvc_n10'), price: '150', amountGrosze: 15000 },
       ],
     },
     {
       id: 'legalization', title: t('pcat_legalization'), icon: '🏠',
       rows: [
-        { name: t('psvc_l1'),  price: '950', amountGrosze: 95000  },
-        { name: t('psvc_l2'),  price: '1400', amountGrosze: 140000 },
-        { name: t('psvc_l3'),  price: '800', amountGrosze: 80000  },
-        { name: t('psvc_l4'),  price: '1800', amountGrosze: 180000 },
-        { name: t('psvc_l5'),  price: '1800', amountGrosze: 180000 },
-        { name: t('psvc_l6'),  price: '2000', amountGrosze: 200000 },
-        { name: t('psvc_l7'),  price: '2500', amountGrosze: 250000 },
-        { name: t('psvc_l8'),  price: '4000', amountGrosze: 400000 },
-        { name: t('psvc_l9'),  price: '355', amountGrosze: 35500  },
-        { name: t('psvc_l10'), price: '900', amountGrosze: 90000  },
-        { name: t('psvc_l11'), price: '900', amountGrosze: 90000  },
-        { name: t('psvc_l12'), price: '150', amountGrosze: 15000  },
-        { name: t('psvc_l13'), price: '355', amountGrosze: 35500  },
+        { id: 'psvc_l1',  name: t('psvc_l1'),  price: '950', amountGrosze: 95000  },
+        { id: 'psvc_l2',  name: t('psvc_l2'),  price: '1400', amountGrosze: 140000 },
+        { id: 'psvc_l3',  name: t('psvc_l3'),  price: '800', amountGrosze: 80000  },
+        { id: 'psvc_l4',  name: t('psvc_l4'),  price: '1800', amountGrosze: 180000 },
+        { id: 'psvc_l5',  name: t('psvc_l5'),  price: '1800', amountGrosze: 180000 },
+        { id: 'psvc_l6',  name: t('psvc_l6'),  price: '2000', amountGrosze: 200000 },
+        { id: 'psvc_l7',  name: t('psvc_l7'),  price: '2500', amountGrosze: 250000 },
+        { id: 'psvc_l8',  name: t('psvc_l8'),  price: '4000', amountGrosze: 400000 },
+        { id: 'psvc_l9',  name: t('psvc_l9'),  price: '355', amountGrosze: 35500  },
+        { id: 'psvc_l10', name: t('psvc_l10'), price: '900', amountGrosze: 90000  },
+        { id: 'psvc_l11', name: t('psvc_l11'), price: '900', amountGrosze: 90000  },
+        { id: 'psvc_l12', name: t('psvc_l12'), price: '150', amountGrosze: 15000  },
+        { id: 'psvc_l13', name: t('psvc_l13'), price: '355', amountGrosze: 35500  },
       ],
     },
     {
       id: 'marriage', title: t('pcat_marriage'), icon: '💍',
       rows: [
-        { name: t('psvc_m1'), price: '800', amountGrosze: 80000 },
+        { id: 'psvc_m1', name: t('psvc_m1'), price: '800', amountGrosze: 80000 },
         { name: t('psvc_m2'), price: '200–350',          amountGrosze: null },
-        { name: t('psvc_m3'), price: '1800', amountGrosze: 180000 },
+        { id: 'psvc_m3', name: t('psvc_m3'), price: '1800', amountGrosze: 180000 },
         { name: t('psvc_m4'), price: t('psvc_price_1_2h'), amountGrosze: null },
       ],
     },
     {
       id: 'translations', title: t('pcat_translations'), icon: '📄',
       rows: [
-        { name: t('psvc_t1'), price: '100', amountGrosze: 10000 },
+        { id: 'psvc_t1', name: t('psvc_t1'), price: '100', amountGrosze: 10000 },
         { name: t('psvc_t2'), price: t('psvc_price_until_eval'), amountGrosze: null },
-        { name: t('psvc_t3'), price: '25', amountGrosze: 2500 },
-        { name: t('psvc_t4'), price: '35', amountGrosze: 3500 },
+        { id: 'psvc_t3', name: t('psvc_t3'), price: '25', amountGrosze: 2500 },
+        { id: 'psvc_t4', name: t('psvc_t4'), price: '35', amountGrosze: 3500 },
       ],
     },
     {
       id: 'bureaucracy', title: t('pcat_bureaucracy'), icon: '📋',
       rows: [
-        { name: t('psvc_b1'), price: '800', amountGrosze: 80000 },
-        { name: t('psvc_b2'), price: '355', amountGrosze: 35500 },
-        { name: t('psvc_b3'), price: '150', amountGrosze: 15000 },
-        { name: t('psvc_b4'), price: '150', amountGrosze: 15000 },
-        { name: t('psvc_b5'), price: '150', amountGrosze: 15000 },
-        { name: t('psvc_b6'), price: '150', amountGrosze: 15000 },
+        { id: 'psvc_b1', name: t('psvc_b1'), price: '800', amountGrosze: 80000 },
+        { id: 'psvc_b2', name: t('psvc_b2'), price: '355', amountGrosze: 35500 },
+        { id: 'psvc_b3', name: t('psvc_b3'), price: '150', amountGrosze: 15000 },
+        { id: 'psvc_b4', name: t('psvc_b4'), price: '150', amountGrosze: 15000 },
+        { id: 'psvc_b5', name: t('psvc_b5'), price: '150', amountGrosze: 15000 },
+        { id: 'psvc_b6', name: t('psvc_b6'), price: '150', amountGrosze: 15000 },
       ],
     },
     {
       id: 'legal', title: t('pcat_legal'), icon: '⚖️',
       rows: [
         { name: t('psvc_leg1'), price: t('psvc_price_individual'), amountGrosze: null },
-        { name: t('psvc_leg2'), price: '1600', amountGrosze: 160000 },
+        { id: 'psvc_leg2', name: t('psvc_leg2'), price: '1600', amountGrosze: 160000 },
         { name: t('psvc_leg3'), price: t('psvc_price_legal_h'),    amountGrosze: null },
         { name: t('psvc_leg4'), price: t('psvc_price_1_2h'),       amountGrosze: null },
         { name: t('psvc_leg5'), price: t('psvc_price_1_2h'),       amountGrosze: null },
@@ -194,7 +197,7 @@ function PayModal({ service, onClose }: { service: ServiceRow; onClose: () => vo
     if (!email || !/\S+@\S+\.\S+/.test(email))                                            { setError(t('pricing_err_email'));     return; }
     setLoading(true); setError('');
     try {
-      const res  = await fetch('/api/payment', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ amount:service.amountGrosze, description:`${service.name} — Kompas Migracji`, email, firstName:firstName.trim(), lastName:lastName.trim(), phone:phone.trim(), lang:'uk', source:'pricing', contactChannel:channel }) });
+      const res  = await fetch('/api/payment', { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify({ serviceId:service.id, description:`${service.name} — Kompas Migracji`, email, firstName:firstName.trim(), lastName:lastName.trim(), phone:phone.trim(), lang:'uk', source:'pricing', contactChannel:channel }) });
       const data = await res.json();
       if (data.redirectUrl) { window.location.href = data.redirectUrl; }
       else { setError(data.error || t('pricing_err_connection')); setLoading(false); }
@@ -371,7 +374,7 @@ export default function PricingPage() {
                 <span className="text-xl font-bold text-black dark:text-white">zł</span>
                 <span className="text-sm text-gray-500 ml-1">≈ 105 €</span>
               </div>
-              <button onClick={() => setPayService({ name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} className="bg-black text-white dark:bg-white dark:text-black px-8 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
+              <button onClick={() => setPayService({ id:'pricing_hero', name: t('pricing_hero_product'), amountGrosze:45000, price:'450' })} className="bg-black text-white dark:bg-white dark:text-black px-8 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-lg">
                 {t('pricing_hero_order')}
               </button>
             </div>

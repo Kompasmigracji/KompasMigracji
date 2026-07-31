@@ -6,9 +6,10 @@ export const runtime = "nodejs";
 */
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyPayUSignature } from '@/lib/payu';
-import { one, q } from '@/lib/db';
+import { one } from '@/lib/db';
 import { sendMessage } from '@/lib/telegram';
 import { sendWhatsApp } from '@/lib/whatsapp';
+import { markLeadPaid } from '@/lib/lead-payment-sync';
 
 const ADMIN_WA_PHONE = '48729417050';
 
@@ -55,11 +56,8 @@ export async function POST(req: NextRequest) {
   }
 
   if (lead) {
-    // Оновити статус ліда
-    await q(
-      `UPDATE leads SET paid_at = now(), status = 'closed' WHERE id = $1`,
-      [lead.id],
-    );
+    // Оновити статус ліда (і дзеркального kompas_leads)
+    await markLeadPaid(lead.id);
 
     // Сповістити клієнта в Telegram
     if (lead.chat_id) {

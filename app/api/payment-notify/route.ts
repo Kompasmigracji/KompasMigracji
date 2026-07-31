@@ -7,10 +7,11 @@ export const dynamic = "force-dynamic";
    4. Сповіщає адмін-чат про оплату */
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { one, q } from "@/lib/db";
+import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
+import { markLeadPaid } from "@/lib/lead-payment-sync";
 
 const ADMIN_WA_PHONE = "48729417050";
 
@@ -124,11 +125,8 @@ export async function POST(req: NextRequest) {
   }
 
   if (lead) {
-    /* ── 4. Оновити статус ліда ─────────────────────────────────── */
-    await q(
-      `UPDATE leads SET paid_at = now(), status = 'closed' WHERE id = $1`,
-      [lead.id],
-    );
+    /* ── 4. Оновити статус ліда (і дзеркального kompas_leads) ─────── */
+    await markLeadPaid(lead.id);
 
     /* ── 5. Авто-повідомлення клієнту в Telegram ────────────────── */
     if (lead.chat_id) {
