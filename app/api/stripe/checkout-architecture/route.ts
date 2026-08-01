@@ -1,15 +1,34 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY; // In production, add this to .env
 const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
-export async function POST(request: Request) {
-  try {
-    const { packageId, packageName, price } = await request.json();
+/* Server-side source of truth for the 3 fixed architecture packages, mirroring
+   the packageId/price pairs in app/architecture/page.tsx. This route used to take
+   packageName + price straight from the client request body and hand them to
+   Stripe unchecked — anyone could open devtools and buy the $4,500 package for
+   $0.50 by editing the request. Look the real price up here instead. */
+const ARCHITECTURE_PACKAGES: Record<string, { name: string; price: number }> = {
+  Starter: { name: 'Starter Concept', price: 1500 },
+  Pro: { name: 'Pro Vision', price: 2500 },
+  Premium: { name: 'Premium Revitalization', price: 4500 },
+};
 
-    if (!packageId || !price) {
-      return NextResponse.json({ error: 'Missing package details' }, { status: 400 });
+export async function POST(request: NextRequest) {
+  const rl = rateLimit(clientIp(request), { ns: 'checkout-architecture', max: 5, windowMs: 60_000 });
+  if (!rl.ok) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
+  try {
+    const { packageId } = await request.json();
+    const pkg = packageId ? ARCHITECTURE_PACKAGES[packageId] : undefined;
+
+    if (!pkg) {
+      return NextResponse.json({ error: 'Unknown package' }, { status: 400 });
     }
+    const { name: packageName, price } = pkg;
 
     if (!STRIPE_SECRET_KEY) {
       // Mock mode if no Stripe key is present

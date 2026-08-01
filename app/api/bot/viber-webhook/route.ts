@@ -9,8 +9,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
 import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 30, windowMs: 60_000, ns: "viber-webhook" });
+  if (!rl.ok) {
+    return NextResponse.json({ status: 1, status_message: "rate limited" }, { status: 429 });
+  }
+
   try {
     // Viber doesn't sign webhook requests the way Meta does — the only way to
     // authenticate the sender is a shared secret appended to the URL you register

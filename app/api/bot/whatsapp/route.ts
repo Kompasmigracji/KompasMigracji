@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { findOrCreateChat, appendMessage } from '@/lib/crm-chats';
+import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'iphoenix_secure_token';
 
@@ -35,7 +36,12 @@ export async function GET(request: Request) {
 }
 
 // INCOMING MESSAGES ENDPOINT
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const rl = rateLimit(clientIp(request), { max: 30, windowMs: 60_000, ns: 'whatsapp-webhook' });
+  if (!rl.ok) {
+    return new NextResponse('Too Many Requests', { status: 429 });
+  }
+
   try {
     const rawBody = await request.text();
     const appSecret = process.env.FB_APP_SECRET;

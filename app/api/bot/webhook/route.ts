@@ -13,6 +13,7 @@ export const maxDuration = 60;
 
 import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { sendMessage, notifyAdmin, answerCallback } from "@/lib/telegram";
 import { sendLanguagePanel, sendMainMenu } from "@/lib/orakul-bot";
 import { ORAKUL_SYSTEM_PROMPT } from "@/lib/orakul-prompt";
@@ -84,6 +85,16 @@ export async function POST(req: NextRequest) {
     if (secret !== process.env.TELEGRAM_WEBHOOK_SECRET) {
       return NextResponse.json({ ok: false }, { status: 403 });
     }
+  } else {
+    console.warn("[webhook] TELEGRAM_WEBHOOK_SECRET not configured — anyone can POST directly to this URL and trigger a paid Gemini call per request.");
+  }
+
+  // Defense in depth even with the secret set: every request here reaches a paid
+  // Gemini call. Traffic is Telegram-relayed (shared egress IPs), so keep this
+  // generous enough not to false-positive real conversations sharing an IP.
+  const rl = rateLimit(clientIp(req), { max: 60, windowMs: 60_000, ns: "tg-webhook" });
+  if (!rl.ok) {
+    return NextResponse.json({ ok: false }, { status: 429 });
   }
 
   let upd: TgUpdate;

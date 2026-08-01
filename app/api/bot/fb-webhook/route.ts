@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 /* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
    body, keyed by the Meta App Secret — shared by Messenger and WhatsApp Cloud API).
@@ -44,6 +45,11 @@ export async function GET(req: NextRequest) {
 
 /* ── POST: Ingest Facebook Messenger Messages ──────────────────────── */
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(clientIp(req), { max: 30, windowMs: 60_000, ns: "fb-webhook" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Too Many Requests" }, { status: 429 });
+  }
+
   try {
     const rawBody = await req.text();
     const appSecret = process.env.FB_APP_SECRET;
