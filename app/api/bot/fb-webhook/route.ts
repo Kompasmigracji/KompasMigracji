@@ -7,8 +7,22 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
+import { createHmac, timingSafeEqual } from "crypto";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
+
+/* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
+   body, keyed by the Meta App Secret — shared by Messenger and WhatsApp Cloud API).
+   Without checking it, anyone who finds this URL can POST a fake message and have
+   it create a real CRM lead + dispatch a task to the operator team. */
+function verifyMetaSignature(rawBody: string, signatureHeader: string | null, secret: string): boolean {
+  if (!signatureHeader) return false;
+  const expected = "sha256=" + createHmac("sha256", secret).update(rawBody).digest("hex");
+  const sigBuf = Buffer.from(signatureHeader);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length) return false;
+  return timingSafeEqual(sigBuf, expBuf);
+}
 
 /* ── GET: Meta Webhook Verification ────────────────────────────────── */
 export async function GET(req: NextRequest) {
@@ -31,7 +45,19 @@ export async function GET(req: NextRequest) {
 /* ── POST: Ingest Facebook Messenger Messages ──────────────────────── */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const rawBody = await req.text();
+    const appSecret = process.env.FB_APP_SECRET;
+    if (appSecret) {
+      const signature = req.headers.get("x-hub-signature-256");
+      if (!verifyMetaSignature(rawBody, signature, appSecret)) {
+        console.warn("[fb-webhook] Rejected webhook: invalid X-Hub-Signature-256");
+        return new NextResponse("Forbidden", { status: 403 });
+      }
+    } else {
+      console.warn("[fb-webhook] FB_APP_SECRET not configured — webhook signature NOT verified");
+    }
+
+    const body = JSON.parse(rawBody);
 
     if (body.object !== "page") {
       return NextResponse.json({ error: "Unsupported object type" }, { status: 400 });

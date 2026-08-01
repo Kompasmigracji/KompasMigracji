@@ -12,6 +12,20 @@ import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
 
 export async function POST(req: NextRequest) {
   try {
+    // Viber doesn't sign webhook requests the way Meta does — the only way to
+    // authenticate the sender is a shared secret appended to the URL you register
+    // via the Viber set_webhook call (?secret=...). Without it, anyone who finds
+    // this URL can POST a fake message and have it create a real CRM lead + task.
+    const webhookSecret = process.env.VIBER_WEBHOOK_SECRET;
+    if (webhookSecret) {
+      if (req.nextUrl.searchParams.get("secret") !== webhookSecret) {
+        console.warn("[viber-webhook] Rejected webhook: missing/invalid secret");
+        return NextResponse.json({ status: 1, status_message: "forbidden" }, { status: 403 });
+      }
+    } else {
+      console.warn("[viber-webhook] VIBER_WEBHOOK_SECRET not configured — webhook is unauthenticated");
+    }
+
     const body = await req.json();
 
     // 1. Webhook handshake verification

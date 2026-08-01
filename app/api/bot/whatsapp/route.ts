@@ -1,7 +1,21 @@
 import { NextResponse } from 'next/server';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { findOrCreateChat, appendMessage } from '@/lib/crm-chats';
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'iphoenix_secure_token';
+
+/* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
+   body, keyed by the Meta App Secret — shared by WhatsApp Cloud API and Messenger).
+   Without checking it, anyone who finds this URL can POST a fake incoming-message
+   payload for any phone number and have it written straight into the CRM inbox. */
+function verifyMetaSignature(rawBody: string, signatureHeader: string | null, secret: string): boolean {
+  if (!signatureHeader) return false;
+  const expected = 'sha256=' + createHmac('sha256', secret).update(rawBody).digest('hex');
+  const sigBuf = Buffer.from(signatureHeader);
+  const expBuf = Buffer.from(expected);
+  if (sigBuf.length !== expBuf.length) return false;
+  return timingSafeEqual(sigBuf, expBuf);
+}
 
 // VERIFICATION ENDPOINT FOR META
 export async function GET(request: Request) {
@@ -23,7 +37,19 @@ export async function GET(request: Request) {
 // INCOMING MESSAGES ENDPOINT
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const rawBody = await request.text();
+    const appSecret = process.env.FB_APP_SECRET;
+    if (appSecret) {
+      const signature = request.headers.get('x-hub-signature-256');
+      if (!verifyMetaSignature(rawBody, signature, appSecret)) {
+        console.warn('[whatsapp] Rejected webhook: invalid X-Hub-Signature-256');
+        return new NextResponse('Forbidden', { status: 403 });
+      }
+    } else {
+      console.warn('[whatsapp] FB_APP_SECRET not configured — webhook signature NOT verified');
+    }
+
+    const body = JSON.parse(rawBody);
 
     if (!body.object) {
       return new NextResponse('Not Found', { status: 404 });
