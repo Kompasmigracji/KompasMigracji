@@ -4,6 +4,8 @@ allowBuilds:
   esbuild: true
   unrs-resolver: true
   cypress: true
+  '@sentry/cli': true
+  core-js: true
 
 overrides:
   form-data: '>=4.0.6'

@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 
 const P24_RED    = "#D8232A";
 const P24_GREEN  = "#44A649";
@@ -75,7 +76,7 @@ function PaidView() {
       </p>
       <div style={{ background: P24_BG, border: `1px solid ${P24_BORDER}`, borderRadius: 8, padding: "14px 16px", marginBottom: 24 }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: P24_MUTED, textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 8 }}>Що далі?</div>
-        {["Чек надіслано на вказаний email", "Спеціаліст зв'яжеться протягом 2 годин", "Розпочнемо роботу над вашою справою"].map((item, i) => (
+        {["Чек надіслано на вказаний email", "Спеціаліст зв'яжеться протягом 24 годин", "Розпочнемо роботу над вашою справою"].map((item, i) => (
           <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: i < 2 ? 8 : 0 }}>
             <span style={{ width: 20, height: 20, borderRadius: "50%", background: P24_GREEN, color: "#fff", fontSize: 10, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>{i + 1}</span>
             <span style={{ fontSize: 13, color: P24_TEXT, lineHeight: 1.5 }}>{item}</span>
@@ -155,6 +156,7 @@ export default function PaymentStatusClient() {
         if (cancelled) return;
         if (data.status === "paid") {
           setState("paid");
+          trackEvent("payment_completed", { sessionId });
           return;
         }
       } catch {

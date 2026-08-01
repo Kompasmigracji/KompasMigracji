@@ -1,7 +1,15 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { motion } from 'framer-motion';
+
+interface ReviewRow {
+  author_name: string;
+  review_text: string;
+  rating: number;
+  review_date: string | null;
+  source_url: string | null;
+}
 
 function Stars({ n }: { n: number }) {
   return (
@@ -32,13 +40,19 @@ function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: 'prev' | 'next' 
 
 export default function Reviews() {
   const t = useTranslations();
-  
-  const REVIEWS = [
-    { text: t('rev1_t'), rating: 5, author: t('rev1_a'), date: t('rev1_d') },
-    { text: t('rev2_t'), rating: 5, author: t('rev2_a'), date: t('rev2_d') },
-    { text: t('rev3_t'), rating: 5, author: t('rev3_a'), date: t('rev3_d') },
-    { text: t('rev4_t'), rating: 5, author: t('rev4_a'), date: t('rev4_d') },
-  ];
+  const locale = useLocale();
+  const [reviews, setReviews] = useState<ReviewRow[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/reviews?locale=${locale}`)
+      .then((res) => res.json())
+      .then((data) => { if (!cancelled) setReviews(data.reviews || []); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [locale]);
+
+  if (reviews.length === 0) return null;
 
   return (
     <section className="py-24 sm:py-32 relative bg-[#fbfbfd] dark:bg-[#020617] overflow-hidden text-gray-900 dark:text-white">
@@ -72,27 +86,40 @@ export default function Reviews() {
           <div className="absolute top-0 right-0 bottom-0 w-24 sm:w-48 bg-gradient-to-l from-[#fbfbfd] dark:from-[#020617] to-transparent z-10 pointer-events-none" />
 
           <div className="flex gap-6 w-max animate-[marquee_40s_linear_infinite] hover:[animation-play-state:paused] pr-6">
-            {[...REVIEWS, ...REVIEWS, ...REVIEWS].map((r, i) => (
-              <div 
-                key={i} 
+            {[...reviews, ...reviews, ...reviews].map((r, i) => (
+              <div
+                key={i}
                 className="w-[320px] sm:w-[450px] shrink-0 bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] flex flex-col hover:border-green-500/30 transition-colors"
               >
                 <div className="flex items-center justify-between mb-6">
                   <Stars n={r.rating} />
                   <div className="text-6xl text-green-500/20 font-serif leading-none h-6 select-none">&ldquo;</div>
                 </div>
-                
+
                 <p className="text-base sm:text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed flex-grow whitespace-normal">
-                  {r.text}
+                  {r.review_text}
                 </p>
-                
+
                 <div className="mt-8 pt-6 border-t border-black/5 dark:border-white/10 flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-white font-bold text-xl shadow-inner">
-                    {r.author.charAt(0)}
+                    {r.author_name.charAt(0)}
                   </div>
-                  <div>
-                    <div className="font-bold text-gray-900 dark:text-white">{r.author}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">{r.date}</div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-gray-900 dark:text-white">{r.author_name}</span>
+                      <span title={t('rev_verified')} className="text-green-500 text-sm">✓</span>
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {r.review_date}
+                      {r.source_url && (
+                        <>
+                          {r.review_date ? ' · ' : ''}
+                          <a href={r.source_url} target="_blank" rel="noreferrer" className="text-green-500 hover:text-green-400 underline underline-offset-2">
+                            {t('rev_verified')}
+                          </a>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>

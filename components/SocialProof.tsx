@@ -85,7 +85,7 @@ export default function SocialProof() {
   const stats = [
     { value: 12000, suffix: "+", label: t('stat_members'), icon: ICONS[0] },
     { value: 1200,  suffix: "+", label: t('stat_cases'),   icon: ICONS[1] },
-    { value: 99,    suffix: "%", label: t('stat_success'), icon: ICONS[2] },
+    { value: 5,     suffix: "",  label: t('stat_languages'), icon: ICONS[2] },
     { value: 50,    suffix: "+", label: t('stat_countries'), icon: ICONS[3] },
     { value: 10,    suffix: "+", label: t('stat_years'),   icon: ICONS[4] },
   ];

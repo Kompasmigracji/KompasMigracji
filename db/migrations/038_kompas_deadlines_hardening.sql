@@ -1,0 +1,43 @@
+-- kompas_deadlines / kompas_deadline_notifications / kompas_deadlines_due() were created and
+-- verified directly against Supabase project uxbgrzmggeujgmryfohl (test rows inserted and
+-- deleted). Documented here for migration history consistency — see schema below for reference.
+-- This migration only APPLIES the one fix found on inspection: kompas_deadlines_due() had
+-- EXECUTE granted to `authenticated`, not just `service_role`. Since it's SECURITY DEFINER,
+-- any logged-in portal user (role='member' via Supabase auth) could have called it directly
+-- and dumped every user's target_date/telegram_chat_id/contact_email, bypassing the
+-- deadlines_client_read RLS policy that scopes clients to their own rows. Nothing in the repo
+-- calls the RPC yet, so revoking is safe.
+--
+-- Reference schema (already live, not re-applied by this file):
+--
+-- create table public.kompas_deadlines (
+--   id uuid primary key default gen_random_uuid(),
+--   kompas_user_id bigint references public.kompas_users(id) on delete cascade,
+--   telegram_chat_id bigint,
+--   contact_email text,
+--   deadline_type deadline_type_enum not null default 'other',
+--   title text not null,
+--   target_date date not null,
+--   notes text,
+--   locale text not null default 'uk',
+--   notify_offsets integer[] not null default '{90,60,30,14,7,1}',
+--   status text not null default 'active' check (status in ('active','completed','cancelled')),
+--   created_at timestamptz not null default now(),
+--   updated_at timestamptz not null default now(),
+--   constraint deadline_has_channel check (kompas_user_id is not null or telegram_chat_id is not null or contact_email is not null),
+--   constraint deadline_date_sane check (target_date > '2020-01-01')
+-- );
+--
+-- create table public.kompas_deadline_notifications (
+--   id uuid primary key default gen_random_uuid(),
+--   deadline_id uuid not null,
+--   days_before integer not null,
+--   channel text not null,
+--   sent_at timestamptz not null default now(),
+--   unique (deadline_id, days_before, channel)
+-- );
+--
+-- RLS: deadlines_client_read/write scope role='member' to their own kompas_user_id;
+-- deadlines_staff_all grants admin/moderator full access. anon has no grants.
+
+revoke execute on function public.kompas_deadlines_due(date) from authenticated;

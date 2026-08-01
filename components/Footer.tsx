@@ -59,7 +59,6 @@ export default function Footer() {
             <span>NIP: <span className="font-medium text-gray-800 dark:text-gray-300">5223350030</span></span>
             <span>KRS: <span className="font-medium text-gray-800 dark:text-gray-300">0001198474</span></span>
             <span>ul. Dzieci Warszawy 27c/49, 02-495 Warszawa</span>
-            <span className="flex-1 text-right">Nr konta: <span className="text-gray-800 dark:text-gray-300 font-mono tracking-wide font-medium bg-black/5 dark:bg-white/10 px-2 py-1 rounded-md ml-1">10 1050 1025 1000 0090 8594 6938</span></span>
           </div>
         </div>
 

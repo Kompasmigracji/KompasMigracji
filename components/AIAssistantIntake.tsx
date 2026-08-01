@@ -124,7 +124,7 @@ export default function AIAssistantIntake({ asModal = false, onClose }: { asModa
                 <div className="flex -space-x-3">
                   <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-200 overflow-hidden"><Image src="/team/user1.jpg" alt="" fill className="object-cover" /></div>
                   <div className="relative w-10 h-10 rounded-full border-2 border-[#0f172a] bg-gray-300 overflow-hidden"><Image src="/team/user2.jpg" alt="" fill className="object-cover" /></div>
-                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-xs font-bold text-gray-900">+3k</div>
+                  <div className="w-10 h-10 rounded-full border-2 border-[#0f172a] bg-orange-500 flex items-center justify-center text-lg text-gray-900">⚖️</div>
                 </div>
                 <div className="text-xs text-gray-700">
                   <strong className="text-gray-900 block text-sm">{t('ai_stat_1')}</strong>

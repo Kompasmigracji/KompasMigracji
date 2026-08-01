@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 import { MouseEvent } from 'react';
+import { trackEvent } from '@/lib/analytics';
 
 const getUrgencyOptions = (t: any) => [
   { value: 'normal', label: t('urgency_normal'), desc: t('urgency_normal_desc'), color: '#3b82f6' }, // blue-500
@@ -47,6 +48,7 @@ export default function ContactForm({ preselectedPlan }: { preselectedPlan?: str
           source: 'site',
         }),
       });
+      trackEvent('lead_submitted', { service, urgency });
     } catch (e) {
       console.error(e);
     }

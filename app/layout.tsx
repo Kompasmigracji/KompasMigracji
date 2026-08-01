@@ -1,29 +1,29 @@
 import { Inter } from "next/font/google";
+import Analytics from "@/components/Analytics";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"], variable: "--font-inter" });
 
 export const metadata = {
   title: {
-    default: "Kompas Migracji & iPhoenix Architecture",
+    default: "Kompas Migracji — Юридична допомога мігрантам",
     template: "%s | Kompas Migracji"
   },
-  description: "Цифрова екосистема для мігрантів у Польщі. Легалізація, пошук роботи, нерухомість та преміальна архітектура від iPhoenix.",
-  keywords: ["мігранти", "Польща", "карта побуту", "робота в Польщі", "архітектура", "дизайн інтер'єру", "ревіталізація", "iPhoenix", "Kompas Migracji"],
-  authors: [{ name: "Oleksandr Khrystodul" }],
-  creator: "iPhoenix",
+  description: "Юридична, психологічна та практична допомога мігрантам у Польщі та ЄС. Domus V.",
+  keywords: ["мігранти", "Польща", "карта побуту", "робота в Польщі", "легалізація", "Kompas Migracji"],
+  authors: [{ name: "DOMUS V Sp. z o.o." }],
+  creator: "DOMUS V Sp. z o.o.",
   openGraph: {
     type: "website",
     locale: "uk_UA",
-    url: "https://kompasmigracji.pl",
-    title: "Kompas Migracji & iPhoenix",
-    description: "Найшвидший шлях до легального життя та красивого простору у Польщі.",
+    url: "https://kompasmigracji.com",
+    title: "Kompas Migracji — Юридична допомога мігрантам",
+    description: "Юридична, психологічна та практична допомога мігрантам у Польщі та ЄС.",
     siteName: "Kompas Migracji"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kompas Migracji & iPhoenix Architecture",
-    description: "Цифрова екосистема для мігрантів у Польщі та преміальний архітектурний сервіс.",
-    creator: "@iphoenix"
+    title: "Kompas Migracji — Юридична допомога мігрантам",
+    description: "Юридична, психологічна та практична допомога мігрантам у Польщі та ЄС."
   },
   manifest: "/manifest.json",
   icons: {
@@ -49,39 +49,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          // PostHog Mock Initialization
-          window.posthog = { init: function(){}, capture: function(){} };
-          // Sentry Mock Initialization
-          window.Sentry = { init: function(){}, captureException: function(e){ console.error(e) } };
-        `}} />
         <script dangerouslySetInnerHTML={{ __html: `try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');document.documentElement.classList.add('dark');}else{document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark');}}catch(e){document.documentElement.setAttribute('data-theme','light');document.documentElement.classList.remove('dark');}` }} />
         
-        {/* JSON-LD Structured Data for SEO / Product Hunt */}
+        {/* JSON-LD Structured Data for SEO — describes the organization, no unverifiable ratings/offers */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": "Kompas Migracji LifeOS",
-          "operatingSystem": "Web",
-          "applicationCategory": "BusinessApplication",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.9",
-            "ratingCount": "128"
+          "@type": "LegalService",
+          "name": "Kompas Migracji",
+          "legalName": "DOMUS V Sp. z o.o.",
+          "url": "https://kompasmigracji.com",
+          "logo": "https://kompasmigracji.com/logo.svg",
+          "image": "https://kompasmigracji.com/logo.svg",
+          "telephone": "+48729271848",
+          "email": "info@kompasmigracji.com",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "ul. Dzieci Warszawy 27c/49",
+            "postalCode": "02-495",
+            "addressLocality": "Warszawa",
+            "addressCountry": "PL"
           },
-          "offers": {
-            "@type": "Offer",
-            "price": "9.00",
-            "priceCurrency": "USD"
-          },
-          "creator": {
-            "@type": "Organization",
-            "name": "iPhoenix Architecture & AI"
-          }
+          "areaServed": "PL",
+          "knowsLanguage": ["uk", "pl", "en", "ru"]
         })}} />
       </head>
       <body suppressHydrationWarning style={{ margin: 0, padding: 0 }}>
         {children}
+        <Analytics />
       </body>
     </html>
   );

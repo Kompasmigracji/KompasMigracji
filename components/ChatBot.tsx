@@ -1,6 +1,7 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { trackEvent } from '@/lib/analytics';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const generateUUID = () => {
@@ -62,6 +63,7 @@ export default function ChatBot() {
 
   useEffect(() => {
     if (isOpen) {
+      trackEvent('chat_opened');
       setHasUnread(false);
       setShowBadge(false);
       setTimeout(() => {
