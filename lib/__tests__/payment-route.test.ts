@@ -27,30 +27,35 @@ function req(body: unknown, ip?: string) {
   } as any;
 }
 
+// psvc_n1 = 25000 grosze (250 zl) in lib/pricing-catalog.ts
 const validBody = {
-  amount: 25000,
-  description: 'Testowa usługa',
+  serviceId: 'psvc_n1',
+  description: 'Testowa usluga',
   email: 'client@example.com',
 };
 
 describe('POST /api/payment — input validation', () => {
   it('rejects missing required params', async () => {
-    const res = await postPayment(req({ amount: 25000 }));
+    const res = await postPayment(req({ description: 'x', email: 'a@b.com' }));
     expect(res.status).toBe(400);
   });
 
-  it.each([
-    ['NaN', 'abc'],
-    ['negative', -100],
-    ['zero', 0],
-    ['fractional grosze', 100.5],
-    ['below 1 zł', 50],
-    ['absurdly large', 100_000_000],
-  ])('rejects %s amount', async (_label, amount) => {
-    const res = await postPayment(req({ ...validBody, amount }));
+  it('rejects an unknown serviceId', async () => {
+    const res = await postPayment(req({ ...validBody, serviceId: 'not_a_real_service' }));
     expect(res.status).toBe(400);
     const json = await res.json();
     expect(json.error).toBeTruthy();
+  });
+
+  it('ignores a tampered client amount and charges the catalog price instead', async () => {
+    // Regression test for the price-tampering fix: the route used to trust a
+    // client-supplied `amount` directly, letting a tampered request buy any
+    // service for as little as 1 zl. It must now always resolve the price
+    // server-side from serviceId, no matter what amount the client sends.
+    const res = await postPayment(req({ ...validBody, amount: 1 }));
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.redirectUrl).toContain('amount=25000');
   });
 
   it('rejects malformed email', async () => {
@@ -63,7 +68,7 @@ describe('POST /api/payment — input validation', () => {
     expect(res.status).toBe(400);
   });
 
-  it('accepts a valid catalog amount (falls through to mock provider in dev/test)', async () => {
+  it('accepts a valid catalog serviceId (falls through to mock provider in dev/test)', async () => {
     const res = await postPayment(req(validBody));
     const json = await res.json();
     expect(res.status).toBe(200);

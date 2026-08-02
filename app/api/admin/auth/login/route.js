@@ -5,8 +5,24 @@ export const runtime = "nodejs";
 import { NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { verifyPassword, signToken, COOKIE } from "@/lib/auth";
+import { rateLimit, checkLockout, recordFailure, resetLockout, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req) {
+  const ip = clientIp(req);
+
+  // Same brute-force protection as /api/portal/auth — this login had none before.
+  const rl = rateLimit(ip, { max: 10, windowMs: 15 * 60_000, ns: "admin-login" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Забагато спроб. Спробуйте через 15 хвилин." }, { status: 429 });
+  }
+  const lock = checkLockout(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
+  if (lock.locked) {
+    return NextResponse.json(
+      { error: `Забагато невдалих спроб. Спробуйте через ${lock.minutesLeft} хв.` },
+      { status: 429 },
+    );
+  }
+
   let body;
   try {
     body = await req.json();
@@ -35,8 +51,11 @@ export async function POST(req) {
   }
 
   if (!user || !(await verifyPassword(password, user.password_hash))) {
+    recordFailure(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
     return NextResponse.json({ error: "Неверный email или пароль" }, { status: 401 });
   }
+
+  resetLockout(ip);
 
   if (user.two_factor_enabled) {
     const { signTempToken } = await import("@/lib/auth");

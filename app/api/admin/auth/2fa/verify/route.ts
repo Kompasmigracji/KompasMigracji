@@ -1,12 +1,30 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { one, q } from "@/lib/db";
 import { verifyToken, signToken, COOKIE } from "@/lib/auth";
 import { verify2FA } from "@/lib/totp";
+import { rateLimit, checkLockout, recordFailure, resetLockout, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const ip = clientIp(req);
+
+  // The 6-digit TOTP code was checked with no throttling at all — with a valid
+  // tempToken (issued once the password already checked out) an attacker could
+  // brute-force it with unlimited attempts within the code's validity window.
+  const rl = rateLimit(ip, { max: 10, windowMs: 15 * 60_000, ns: "admin-2fa" });
+  if (!rl.ok) {
+    return NextResponse.json({ error: "Забагато спроб. Спробуйте через 15 хвилин." }, { status: 429 });
+  }
+  const lock = checkLockout(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
+  if (lock.locked) {
+    return NextResponse.json(
+      { error: `Забагато невдалих спроб. Спробуйте через ${lock.minutesLeft} хв.` },
+      { status: 429 },
+    );
+  }
+
   let body;
   try {
     body = await req.json();
@@ -43,8 +61,11 @@ export async function POST(req: Request) {
 
   const isValid = verify2FA(code, user.two_factor_secret);
   if (!isValid) {
+    recordFailure(ip, { maxFailures: 5, lockMs: 15 * 60_000 });
     return NextResponse.json({ error: "Неверный код 2FA" }, { status: 401 });
   }
+
+  resetLockout(ip);
 
   // Code valid, issue real token
   const token = await signToken({
