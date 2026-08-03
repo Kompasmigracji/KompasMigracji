@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { stripe } from "@/lib/stripe";
 import { one, q } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
   } catch (err: any) {
     console.error("Stripe signature verification failed:", err.message);
+    Sentry.captureException(err);
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
@@ -48,6 +50,7 @@ export async function POST(req: NextRequest) {
       );
     } catch (e) {
       console.error("Failed to save transaction", e);
+      Sentry.captureException(e);
     }
 
     if (type === "subscription") {
@@ -59,7 +62,52 @@ export async function POST(req: NextRequest) {
         );
       } catch (e) {
         console.error("Failed to update subscription status", e);
+        Sentry.captureException(e);
       }
+    }
+
+    if (type === "architecture") {
+      /* checkout-architecture/route.ts builds this session with no linked `leads`
+         row (the architecture landing page captures name/phone separately via
+         /api/architecture/lead, before Stripe even runs) — so the sessionId-based
+         `leads` lookup below would never find anything for these purchases. Mirror
+         the purchase straight into kompas_leads (same shape as createLeadForPayment
+         in app/api/payment/route.ts) so it's visible in the CRM funnel, and notify
+         admin the same way the other payment paths do. */
+      const packageId = session.metadata?.packageId;
+      const packageName = session.metadata?.packageName || packageId || "Architecture";
+      const customerEmail: string | null = session.customer_details?.email || session.customer_email || null;
+      const customerName: string | null = session.customer_details?.name || null;
+      const amountFormattedArch = (amountTotal / 100).toFixed(2);
+
+      try {
+        await q(
+          `INSERT INTO kompas_leads (source, name, email, message, status)
+           VALUES ($1, $2, $3, $4, 'won')`,
+          ["other", customerName, customerEmail, `Архітектура: ${packageName} — ${amountFormattedArch} ${currency}`],
+        );
+      } catch (e) {
+        console.error("Failed to record architecture purchase in kompas_leads", e);
+        Sentry.captureException(e);
+      }
+
+      const archAdminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+      const archAdminText =
+        `💳 <b>Нова оплата (Architecture)!</b>\n` +
+        `📦 Пакет: ${packageName}\n` +
+        (customerName  ? `👤 Клієнт: ${customerName}\n`  : "") +
+        (customerEmail ? `📧 Email: ${customerEmail}\n`  : "") +
+        `💰 Сума: ${amountFormattedArch} ${currency}\n` +
+        `🔑 Session: <code>${session.id}</code>`;
+
+      if (archAdminChat) {
+        try { await sendMessage(archAdminChat, archAdminText); } catch {}
+      }
+      try {
+        await sendWhatsApp(ADMIN_WA_PHONE, archAdminText.replace(/<[^>]+>/g, ""));
+      } catch {}
+
+      return NextResponse.json({ received: true });
     }
 
     if (sessionId) {

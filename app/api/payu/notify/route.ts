@@ -5,6 +5,7 @@ export const runtime = "nodejs";
    Docs: https://developers.payu.com/europe/docs/online-payments/notifications/
 */
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { verifyPayUSignature } from '@/lib/payu';
 import { one } from '@/lib/db';
 import { sendMessage } from '@/lib/telegram';
@@ -19,6 +20,7 @@ export async function POST(req: NextRequest) {
 
   if (!verifyPayUSignature(rawBody, sigHeader)) {
     console.error('PayU notify: invalid signature');
+    Sentry.captureException(new Error('PayU notify: invalid signature'));
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 

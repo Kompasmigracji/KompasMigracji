@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/auth';
 import { sendMessage as sendTelegramMessage } from '@/lib/telegram';
 import { sendWhatsAppText } from '@/lib/whatsapp';
 import { sendViberMessage } from '@/lib/viber';
+import { sendFacebookMessage } from '@/lib/facebook';
 
 export async function GET(req, { params }) {
   try {
@@ -32,6 +33,8 @@ async function dispatchOutbound(chat, text) {
       return sendWhatsAppText(chat.external_id, text);
     case 'viber':
       return sendViberMessage(chat.external_id, text);
+    case 'facebook':
+      return sendFacebookMessage(chat.external_id, text);
     default:
       return { ok: true };
   }

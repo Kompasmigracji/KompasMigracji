@@ -53,6 +53,14 @@ export async function POST(request: NextRequest) {
         'mode': 'payment',
         'success_url': `${DOMAIN}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
         'cancel_url': `${DOMAIN}/architecture`,
+        /* Without metadata, checkout.session.completed in the webhook has no way to
+           tell an architecture-package purchase apart from any other Stripe session
+           (session.metadata?.sessionId is undefined for these), so the purchase never
+           got synced into the CRM — see app/api/stripe/webhook/route.ts's `type ===
+           "architecture"` branch, which reads these fields back out. */
+        'metadata[type]': 'architecture',
+        'metadata[packageId]': packageId,
+        'metadata[packageName]': packageName,
       }),
     });
 

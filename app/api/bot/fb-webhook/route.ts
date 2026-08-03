@@ -11,6 +11,7 @@ import { createHmac, timingSafeEqual } from "crypto";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
 
 /* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
    body, keyed by the Meta App Secret — shared by Messenger and WhatsApp Cloud API).
@@ -77,6 +78,16 @@ export async function POST(req: NextRequest) {
 
         if (senderId && messageText) {
           console.log(`[fb-webhook] Received message from FB PSID ${senderId}: "${messageText}"`);
+
+          // Mirror into the unified CRM chats inbox (app/admin/crm/chats), same
+          // pattern as the WhatsApp/Telegram/Viber webhooks — in addition to (not
+          // instead of) the kompas_leads write below.
+          try {
+            const chatId = await findOrCreateChat("facebook", senderId, `FB User ${senderId.slice(-4)}`);
+            await appendMessage(chatId, messageText, "client");
+          } catch (e) {
+            console.error("[fb-webhook] CRM chat mirror failed:", e);
+          }
 
           // Check if lead already exists by FB sender ID (stored in chat_id/tg_chat_id or meta metadata jsonb)
           const existing = (await one(

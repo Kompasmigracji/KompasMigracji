@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
    3. Надсилає авто-повідомлення клієнту в Telegram (якщо є chat_id)
    4. Сповіщає адмін-чат про оплату */
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import crypto from "crypto";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
@@ -22,6 +23,9 @@ export async function POST(req: NextRequest) {
   const sandbox    = process.env.P24_SANDBOX === "true";
 
   if (!merchantId || !crc || !apiKey) {
+    const err = new Error("payment-notify: P24 not configured (missing merchantId/crc/apiKey)");
+    console.error(err.message);
+    Sentry.captureException(err);
     return NextResponse.json({ error: "Not configured" }, { status: 500 });
   }
 
@@ -32,40 +36,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const {
-    sessionId, orderId, amount, currency, sign,
-    merchantId: bodyMerchantId, posId, originAmount, methodId, statement,
-  } = body as Record<string, string | number>;
+  const { sessionId, orderId, amount, currency } = body as Record<string, string | number>;
 
-  /* ── 1. Перевірка підпису нотифікації від Przelewy24 ─────────────
-     Поля й порядок за REST API v1 (окремі від sign у transaction/verify).
-     Не блокуємо запит при розбіжності — нижче йде авторитетна
-     перевірка через verify(), яку підробити без реальних ключів
-     мерчанта неможливо; жорсткий 400 тут ризикував би тихо
-     відкидати легітимні нотифікації через розбіжність формату. */
-  const expectedNotifySign = crypto
-    .createHash("sha384")
-    .update(JSON.stringify({
-      merchantId: bodyMerchantId,
-      posId,
-      sessionId,
-      amount,
-      originAmount,
-      currency,
-      orderId,
-      methodId,
-      statement,
-      crc,
-    }))
-    .digest("hex");
-
-  if (sign !== expectedNotifySign) {
-    console.warn("P24 notify: signature mismatch (proceeding to authoritative verify)", {
-      received: sign,
-      expected: expectedNotifySign,
-    });
-  }
-
+  /* Верифікація нотифікації від Przelewy24 покладається виключно на
+     авторитетний виклик POST /api/v1/transaction/verify нижче (підписаний
+     мерчант-креденшелами, які неможливо підробити без реальних ключів).
+     Раніше тут ще стояла локально обчислена перевірка підпису самого
+     notify-запиту, яка ніколи не блокувала запит при розбіжності (лише
+     console.warn) — вона була мертвим кодом, що створював оманливе
+     враження перевірки підпису, тому її прибрано. */
   const BASE = sandbox
     ? "https://sandbox.przelewy24.pl"
     : "https://secure.przelewy24.pl";
@@ -98,11 +77,13 @@ export async function POST(req: NextRequest) {
     if (!r.ok) {
       const text = await r.text();
       console.error("P24 verify failed:", text);
+      Sentry.captureException(new Error(`P24 verify failed: ${text}`));
       return NextResponse.json({ error: "Verification failed" }, { status: 502 });
     }
     verified = true;
   } catch (err) {
     console.error("payment-notify error:", err);
+    Sentry.captureException(err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 

@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
@@ -133,6 +134,7 @@ export async function POST(req: NextRequest) {
       }
     } catch (err) {
       console.error("payment-mock-confirm: Telegram client send failed", err);
+      Sentry.captureException(err);
     }
   }
 
