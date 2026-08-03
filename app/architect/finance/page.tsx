@@ -1,6 +1,15 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GlassCard } from '@/components/lifeos/GlassCard';
+
+interface FinanceKpis {
+  revenueLast30: number;
+  revenueMomPct: number | null;
+  subscriptionPayments30d: number;
+  paymentSuccessRate: number;
+  completedTx30d: number;
+  totalTx30d: number;
+}
 
 export default function FinanceCFOPage() {
   const [messages, setMessages] = useState([
@@ -8,6 +17,27 @@ export default function FinanceCFOPage() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [kpis, setKpis] = useState<FinanceKpis | null>(null);
+  const [kpiError, setKpiError] = useState<string | null>(null);
+  const [kpiLoading, setKpiLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/architect/finance');
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+        const body = await res.json();
+        if (!cancelled) setKpis(body);
+      } catch (err: any) {
+        if (!cancelled) setKpiError(err.message || 'Failed to load finance data');
+      } finally {
+        if (!cancelled) setKpiLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const sendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -50,22 +80,39 @@ export default function FinanceCFOPage() {
         <p className="text-slate-400 mt-2">Financial Intelligence & Academy Monetization Tracker.</p>
       </header>
 
-      {/* KPI Stats */}
+      {/* KPI Stats — real aggregates from `transactions`, see app/api/architect/finance/route.ts */}
+      {kpiError && (
+        <div className="mb-4 px-3 py-2 rounded bg-red-500/10 border border-red-500/30 text-red-300 text-xs">
+          Failed to load finance data: {kpiError}
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <GlassCard className="p-4 border-l-4 border-l-emerald-500">
-          <div className="text-sm text-slate-400 mb-1">Total Revenue (Mock)</div>
-          <div className="text-2xl font-bold text-white">$450.00</div>
-          <div className="text-xs text-emerald-400 mt-1">+12% this week</div>
+          <div className="text-sm text-slate-400 mb-1">Revenue (Last 30 Days)</div>
+          <div className="text-2xl font-bold text-white">
+            {kpiLoading ? '—' : `$${(kpis?.revenueLast30 ?? 0).toFixed(2)}`}
+          </div>
+          <div className="text-xs text-emerald-400 mt-1">
+            {kpis?.revenueMomPct != null
+              ? `${kpis.revenueMomPct >= 0 ? '+' : ''}${kpis.revenueMomPct}% vs prior 30 days`
+              : 'No data for prior period'}
+          </div>
         </GlassCard>
         <GlassCard className="p-4 border-l-4 border-l-cyan-500">
-          <div className="text-sm text-slate-400 mb-1">Active Subscriptions</div>
-          <div className="text-2xl font-bold text-white">24</div>
-          <div className="text-xs text-cyan-400 mt-1">4 new today</div>
+          <div className="text-sm text-slate-400 mb-1">Subscription Payments (30d)</div>
+          <div className="text-2xl font-bold text-white">
+            {kpiLoading ? '—' : (kpis?.subscriptionPayments30d ?? 0)}
+          </div>
+          <div className="text-xs text-cyan-400 mt-1">Completed `product_type = 'subscription'` transactions</div>
         </GlassCard>
         <GlassCard className="p-4 border-l-4 border-l-purple-500">
-          <div className="text-sm text-slate-400 mb-1">Conversion Rate</div>
-          <div className="text-2xl font-bold text-white">12.5%</div>
-          <div className="text-xs text-purple-400 mt-1">Target: 15%</div>
+          <div className="text-sm text-slate-400 mb-1">Payment Success Rate</div>
+          <div className="text-2xl font-bold text-white">
+            {kpiLoading ? '—' : `${kpis?.paymentSuccessRate ?? 0}%`}
+          </div>
+          <div className="text-xs text-purple-400 mt-1">
+            {kpiLoading ? '' : `${kpis?.completedTx30d ?? 0} of ${kpis?.totalTx30d ?? 0} transactions (30d)`}
+          </div>
         </GlassCard>
       </div>
 

@@ -11,9 +11,27 @@ const ArchitectCharts = nextDynamic(() => import('@/components/lifeos/ArchitectC
 
 export const dynamic = 'force-dynamic';
 
+// Returns the last `n` calendar days as YYYY-MM-DD keys (UTC), oldest first,
+// ending today — used to bucket transactions/logs into a fixed 7-slot series
+// so the chart always has one bar per day even for days with zero activity.
+function lastNDayKeys(n: number): string[] {
+  const days: string[] = [];
+  const now = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    d.setUTCDate(d.getUTCDate() - i);
+    days.push(d.toISOString().slice(0, 10));
+  }
+  return days;
+}
+
+function dayLabel(dateKey: string): string {
+  return new Date(`${dateKey}T00:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+}
+
 export default async function ArchitectDashboard() {
   const supabase = getSupabaseAdmin();
-  
+
   let modules = [
     { name: 'FateEngine', is_active: true, status: 'Online', load: '0%' },
     { name: 'SoulEngine', is_active: true, status: 'Online', load: '0%' },
@@ -27,26 +45,12 @@ export default async function ArchitectDashboard() {
   let fateStatus = 'Balanced';
   let fateRecommendation = 'System is alive.';
 
-  // Mock historical data for charts
-  const revenueData = [
-    { name: 'Mon', amount: 120 },
-    { name: 'Tue', amount: 300 },
-    { name: 'Wed', amount: 250 },
-    { name: 'Thu', amount: 450 },
-    { name: 'Fri', amount: 380 },
-    { name: 'Sat', amount: 600 },
-    { name: 'Sun', amount: 0 } // Will be updated with today's real revenue
-  ];
-
-  const energyData = [
-    { name: 'Mon', resonance: 40 },
-    { name: 'Tue', resonance: 60 },
-    { name: 'Wed', resonance: 55 },
-    { name: 'Thu', resonance: 85 },
-    { name: 'Fri', resonance: 75 },
-    { name: 'Sat', resonance: 95 },
-    { name: 'Sun', resonance: 0 } // Will be updated with today's real resonance
-  ];
+  // Real last-7-days series — filled in below from `transactions` (revenue)
+  // and `system_logs` SoulEngine entries (resonance). Zeroed placeholders
+  // here only cover the case where the DB fetch itself fails.
+  const dayKeys = lastNDayKeys(7);
+  let revenueData = dayKeys.map(d => ({ name: dayLabel(d), amount: 0 }));
+  let energyData = dayKeys.map(d => ({ name: dayLabel(d), resonance: 0 }));
 
   if (supabase) {
     try {
@@ -83,16 +87,54 @@ export default async function ArchitectDashboard() {
         fateRecommendation = latestFate.details.recommendation || 'Maintain trajectory.';
       }
 
-      // 3. Fetch Transactions (Finance Pulse)
-      const { data: txs } = await supabase.from('transactions').select('amount');
+      // 3. Fetch Transactions (Finance Pulse) — completed only, so
+      // pending/failed/refunded rows aren't counted as revenue.
+      const { data: txs } = await supabase
+        .from('transactions')
+        .select('amount')
+        .eq('status', 'completed');
       if (txs) {
         recentTxCount = txs.length;
-        totalRevenue = txs.reduce((acc, curr) => acc + (curr.amount || 0), 0);
+        totalRevenue = txs.reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
       }
 
-      // Inject real real-time data into the end of our charts
-      revenueData[revenueData.length - 1].amount = totalRevenue;
-      energyData[energyData.length - 1].resonance = Math.floor(soulResonance * 100);
+      // 4. Real last-7-days revenue series, bucketed by day from `transactions`.
+      const sevenDaysAgoIso = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const dayKeySet = new Set(dayKeys);
+
+      const { data: recentTxs } = await supabase
+        .from('transactions')
+        .select('amount, status, created_at')
+        .gte('created_at', sevenDaysAgoIso);
+
+      const revenueByDay: Record<string, number> = Object.fromEntries(dayKeys.map(d => [d, 0]));
+      (recentTxs || []).forEach((tx: any) => {
+        if (tx.status !== 'completed' || !tx.created_at) return;
+        const dayKey = String(tx.created_at).slice(0, 10);
+        if (dayKeySet.has(dayKey)) revenueByDay[dayKey] += Number(tx.amount) || 0;
+      });
+      revenueData = dayKeys.map(d => ({ name: dayLabel(d), amount: Math.round(revenueByDay[d] * 100) / 100 }));
+
+      // 5. Real last-7-days resonance series, bucketed by day from SoulEngine
+      // system_logs entries (the daily cron writes ~one per day; the latest
+      // entry on a given day wins if there are several).
+      const { data: recentSoulLogs } = await supabase
+        .from('system_logs')
+        .select('details, created_at')
+        .eq('source', 'SoulEngine')
+        .gte('created_at', sevenDaysAgoIso)
+        .order('created_at', { ascending: true });
+
+      const resonanceByDay: Record<string, number> = {};
+      (recentSoulLogs || []).forEach((log: any) => {
+        if (!log.created_at) return;
+        const dayKey = String(log.created_at).slice(0, 10);
+        const resonance = log.details?.resonance;
+        if (dayKeySet.has(dayKey) && typeof resonance === 'number') {
+          resonanceByDay[dayKey] = resonance;
+        }
+      });
+      energyData = dayKeys.map(d => ({ name: dayLabel(d), resonance: Math.round((resonanceByDay[d] ?? 0) * 100) }));
 
     } catch (e) {
       console.error("Dashboard error:", e);
