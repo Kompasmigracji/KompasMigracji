@@ -10,11 +10,11 @@ export async function POST(req) {
 
     const timestamp = new Date().toISOString();
 
-    // 1. Create a test lead in the live `leads` table — the same table
-    //    backing /admin/crm/leads and /admin/crm/funnels, so the test
+    // 1. Create a test lead in the live `kompas_leads` table — the same
+    //    table backing /admin/crm/leads and /admin/crm/funnels, so the test
     //    actually exercises the pipeline the CRM UI shows.
     const newLead = await one(`
-      INSERT INTO leads (name, contact, message, source, status)
+      INSERT INTO kompas_leads (name, contact, message, source, status)
       VALUES ($1, $2, $3, $4, $5)
       RETURNING id
     `, [
@@ -31,7 +31,7 @@ export async function POST(req) {
     const paymentToken = `tok_${Math.random().toString(36).substring(2, 10)}`;
 
     // 3. Move lead to 'won' — mirrors a successful conversion
-    await q(`UPDATE leads SET status = 'won' WHERE id = $1`, [leadId]);
+    await q(`UPDATE kompas_leads SET status = 'won' WHERE id = $1`, [leadId]);
 
     // 4. Create a real follow-up task, visible in /admin/crm/tasks
     await q(`
