@@ -1,5 +1,7 @@
 import { getSupabase } from './supabase';
+import { dispatchTask } from './agents';
 import type { GodAgent, GodCommand } from '../types/god';
+import type { AgentTask } from '../types/agents';
 
 function getDb() {
   const sb = getSupabase();
@@ -26,10 +28,18 @@ export async function getGodAgent(): Promise<GodAgent | null> {
   } as GodAgent;
 }
 
-/** Evaluate health of all agents and decide if scaling or restart needed */
-export async function evaluateAndCommandGod(command: GodCommand): Promise<boolean> {
+/**
+ * Evaluate a God command and forward it to Primus (agent with role 'primus').
+ *
+ * Dispatches through `dispatchTask`, which now executes the task's bounded
+ * effect synchronously (e.g. 'scale') and marks it completed/failed
+ * immediately, instead of only writing an inert `agent_tasks` row.
+ * Returns the resulting task (or null on failure) so callers/routes can
+ * report the real outcome back to the UI.
+ */
+export async function evaluateAndCommandGod(command: GodCommand): Promise<AgentTask | null> {
   const god = await getGodAgent();
-  if (!god) return false;
+  if (!god) return null;
 
   const db = getDb();
 
@@ -41,18 +51,8 @@ export async function evaluateAndCommandGod(command: GodCommand): Promise<boolea
     .single();
   if (error || !primusAgent) {
     console.error('No Primus agent found', error);
-    return false;
+    return null;
   }
 
-  // Dispatch as a task to Primus
-  const { error: taskErr } = await db.from('agent_tasks').insert({
-    agent_id: primusAgent.id,
-    type: command.command,
-    payload: command.payload || {},
-  });
-  if (taskErr) {
-    console.error('Failed to dispatch God command to Primus', taskErr);
-    return false;
-  }
-  return true;
+  return dispatchTask(primusAgent.id, command.command, command.payload || {});
 }

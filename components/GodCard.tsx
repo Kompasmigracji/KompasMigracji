@@ -5,15 +5,29 @@ import type { GodAgent } from '../types/god';
 
 interface GodCardProps {
   god: GodAgent;
+  /** Called after a command finishes so the caller can revalidate agent status (SWR). */
+  onCommandDispatched?: () => void;
 }
 
-export const GodCard: React.FC<GodCardProps> = ({ god }) => {
+export const GodCard: React.FC<GodCardProps> = ({ god, onCommandDispatched }) => {
+  const [pending, setPending] = React.useState(false);
+
   const handleScale = async () => {
-    await fetch('/api/god/command', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: 'scale', payload: { factor: 1.5 } }),
-    });
+    setPending(true);
+    try {
+      const res = await fetch('/api/god/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command: 'scale', payload: { factor: 1.5 } }),
+      });
+      if (res.ok) {
+        // The command already executed synchronously server-side; revalidate
+        // now instead of waiting for the dashboard's next 10s poll.
+        onCommandDispatched?.();
+      }
+    } finally {
+      setPending(false);
+    }
   };
 
   return (
@@ -28,9 +42,10 @@ export const GodCard: React.FC<GodCardProps> = ({ god }) => {
       </p>
       <button
         onClick={handleScale}
-        className="relative z-10 bg-godGold text-black font-semibold px-5 py-2 rounded-lg hover:bg-godGold/80 transition-colors duration-200"
+        disabled={pending}
+        className="relative z-10 bg-godGold text-black font-semibold px-5 py-2 rounded-lg hover:bg-godGold/80 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Запустить масштабирование
+        {pending ? '…' : 'Запустить масштабирование'}
       </button>
     </div>
   );

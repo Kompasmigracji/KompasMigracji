@@ -120,7 +120,8 @@ describe('Integration Tests - API Routes', () => {
     it('returns 500 if dispatching command fails', async () => {
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
       (requireAuth as jest.Mock).mockResolvedValue(adminAuth);
-      (evaluateAndCommandGod as jest.Mock).mockResolvedValue(false);
+      // evaluateAndCommandGod now returns the executed AgentTask (or null on failure)
+      (evaluateAndCommandGod as jest.Mock).mockResolvedValue(null);
 
       const req = {
         json: async () => ({ command: 'scale' }),
@@ -135,7 +136,13 @@ describe('Integration Tests - API Routes', () => {
     it('returns 200 on success', async () => {
       (getSupabase as jest.Mock).mockReturnValue(mockSupabase);
       (requireAuth as jest.Mock).mockResolvedValue(adminAuth);
-      (evaluateAndCommandGod as jest.Mock).mockResolvedValue(true);
+      (evaluateAndCommandGod as jest.Mock).mockResolvedValue({
+        id: 'task-1',
+        agent_id: 'primus-id',
+        type: 'scale',
+        status: 'completed',
+        result: { effect: 'scale', acknowledged: true, appliedChange: false },
+      });
 
       const req = {
         json: async () => ({ command: 'scale', payload: { factor: 2 } }),
@@ -144,8 +151,10 @@ describe('Integration Tests - API Routes', () => {
       const res = await postCommand(req);
       expect(res.status).toBe(200);
       const json = await res.json();
-      expect(json.message).toBe('Command dispatched');
+      expect(json.message).toBe('Command executed');
       expect(json.command).toBe('scale');
+      expect(json.taskId).toBe('task-1');
+      expect(json.status).toBe('completed');
     });
   });
 });

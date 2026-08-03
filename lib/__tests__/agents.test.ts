@@ -79,13 +79,87 @@ describe('heartbeat', () => {
 });
 
 describe('dispatchTask', () => {
-  it('returns the created task on success', async () => {
-    const fakeTask = { id: 't1', agent_id: 'a1', type: 'restart', status: 'queued' };
-    mockSingle.mockResolvedValue({ data: fakeTask, error: null });
+  // dispatchTask now: (1) inserts the agent_tasks row, (2) applies the task's
+  // bounded effect synchronously (writing to the `agents` table for
+  // restart/motivate), (3) updates the agent_tasks row to completed/failed.
+  // Each table gets its own chain/mock so effects on `agents` don't collide
+  // with the `agent_tasks` insert/update calls.
+  const setupChains = () => {
+    const agentTasksSingle = jest.fn();
+    const agentsEq = jest.fn().mockResolvedValue({ error: null });
+
+    mockFrom.mockImplementation((table: string) => {
+      if (table === 'agent_tasks') {
+        return {
+          insert: jest.fn().mockReturnThis(),
+          update: jest.fn().mockReturnThis(),
+          select: jest.fn().mockReturnThis(),
+          eq: jest.fn().mockReturnThis(),
+          single: agentTasksSingle,
+        };
+      }
+      if (table === 'agents') {
+        return {
+          update: jest.fn().mockReturnThis(),
+          eq: agentsEq,
+        };
+      }
+      return chainMethods();
+    });
+
+    return { agentTasksSingle, agentsEq };
+  };
+
+  it('inserts the task then marks it completed after applying the restart effect', async () => {
+    const { agentTasksSingle, agentsEq } = setupChains();
+    const insertedTask = { id: 't1', agent_id: 'a1', type: 'restart', status: 'running' };
+    agentTasksSingle
+      .mockResolvedValueOnce({ data: insertedTask, error: null })
+      .mockResolvedValueOnce({
+        data: { ...insertedTask, status: 'completed', result: { effect: 'restart', newStatus: 'idle' } },
+        error: null,
+      });
 
     const result = await dispatchTask('a1', 'restart', {});
-    expect(result).toEqual(fakeTask);
+
+    expect(result?.status).toBe('completed');
+    expect(result?.result).toMatchObject({ effect: 'restart', newStatus: 'idle' });
+    // The restart effect actually resets the agent's status/heartbeat.
+    expect(agentsEq).toHaveBeenCalledWith('id', 'a1');
     expect(mockFrom).toHaveBeenCalledWith('agent_tasks');
+    expect(mockFrom).toHaveBeenCalledWith('agents');
+  });
+
+  it('applies the motivate effect and reports it as completed', async () => {
+    const { agentTasksSingle } = setupChains();
+    const insertedTask = { id: 't2', agent_id: 'a1', type: 'motivate', status: 'running' };
+    agentTasksSingle
+      .mockResolvedValueOnce({ data: insertedTask, error: null })
+      .mockResolvedValueOnce({
+        data: { ...insertedTask, status: 'completed', result: { effect: 'motivate', message: 'Go team!' } },
+        error: null,
+      });
+
+    const result = await dispatchTask('a1', 'motivate', { message: 'Go team!' });
+
+    expect(result?.status).toBe('completed');
+    expect(result?.result).toMatchObject({ effect: 'motivate', message: 'Go team!' });
+  });
+
+  it('honestly reports that scale has no effect when no capacity field exists', async () => {
+    const { agentTasksSingle } = setupChains();
+    const insertedTask = { id: 't3', agent_id: 'primus', type: 'scale', status: 'running' };
+    agentTasksSingle
+      .mockResolvedValueOnce({ data: insertedTask, error: null })
+      .mockResolvedValueOnce({
+        data: { ...insertedTask, status: 'completed', result: { effect: 'scale', appliedChange: false } },
+        error: null,
+      });
+
+    const result = await dispatchTask('primus', 'scale', { factor: 2 });
+
+    expect(result?.status).toBe('completed');
+    expect(result?.result).toMatchObject({ effect: 'scale', appliedChange: false });
   });
 
   it('returns null on error', async () => {

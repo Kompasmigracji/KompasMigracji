@@ -21,9 +21,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing command' }, { status: 400 });
   }
 
-  const success = await evaluateAndCommandGod({ command, payload });
-  if (!success) {
+  const task = await evaluateAndCommandGod({ command, payload });
+  if (!task) {
     return NextResponse.json({ error: 'Failed to dispatch command' }, { status: 500 });
   }
-  return NextResponse.json({ message: 'Command dispatched', command }, { status: 200 });
+  return NextResponse.json(
+    { message: 'Command executed', command, taskId: task.id, status: task.status, result: task.result },
+    { status: 200 }
+  );
 }

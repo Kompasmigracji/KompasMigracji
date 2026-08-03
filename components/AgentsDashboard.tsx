@@ -12,7 +12,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export const AgentsDashboard: React.FC = () => {
   const t = useTranslations();
-  const { data: statusData, error } = useSWR<{ agents: Agent[] }>(
+  const { data: statusData, error, mutate } = useSWR<{ agents: Agent[] }>(
     '/api/agents/primus/status',
     fetcher,
     { refreshInterval: 10000 }
@@ -41,7 +41,7 @@ export const AgentsDashboard: React.FC = () => {
         {t('admin_title')}
       </h1>
 
-      <GodCard god={god} />
+      <GodCard god={god} onCommandDispatched={() => mutate()} />
 
       {agents.length === 0 ? (
         <div className="text-gray-500 text-center py-12">
@@ -50,7 +50,7 @@ export const AgentsDashboard: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {agents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} />
+            <AgentCard key={agent.id} agent={agent} onTaskDispatched={() => mutate()} />
           ))}
         </div>
       )}

@@ -24,5 +24,8 @@ export async function POST(request: Request) {
   if (!task) {
     return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });
   }
-  return NextResponse.json({ message: 'Task queued', taskId: task.id }, { status: 200 });
+  return NextResponse.json(
+    { message: 'Task executed', taskId: task.id, status: task.status, result: task.result },
+    { status: 200 }
+  );
 }
