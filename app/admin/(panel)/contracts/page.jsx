@@ -1,430 +1,582 @@
 "use client";
-/* KompasCRM — E-Signatures & Contracts */
-import React, { useState, useEffect } from "react";
-import { Icon, Badge, Avatar, ProgressBar, SearchInput } from "@/components/admin/ui";
+/* KompasCRM — Client Service Contracts (Умови обслуговування клієнтів DOMUS V) */
+import React, { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { Spinner, EmptyState, Icon, Badge, DataTable, StatCard, SearchInput } from "@/components/admin/ui";
+
+const CONTRACT_TYPE_LABEL = {
+  karta_pobytu: "Карта побуту",
+  obywatelstwo: "Громадянство",
+  zezwolenie_pracy: "Дозвіл на роботу",
+  legalizacja_firmy: "Легалізація фірми",
+  inne: "Інше",
+};
+
+const STATUS_META = {
+  draft:      { badge: "dim",   label: "Чернетка" },
+  active:     { badge: "green", label: "Активний" },
+  completed:  { badge: "blue",  label: "Завершено" },
+  terminated: { badge: "red",   label: "Розірвано" },
+  expired:    { badge: "brass", label: "Термін дії закінчився" },
+};
+
+const STATUS_FILTERS = [
+  { id: "", label: "Всі" },
+  { id: "draft", label: "Чернетка" },
+  { id: "active", label: "Активний" },
+  { id: "completed", label: "Завершено" },
+  { id: "terminated", label: "Розірвано" },
+  { id: "expired", label: "Термін дії закінчився" },
+];
+
+const EMPTY_FORM = {
+  client_full_name: "", client_contact: "", contract_type: "inne", title: "",
+  value_pln: "", signed_date: "", valid_from: "", valid_until: "", notes: ""
+};
+
+function fmtPLN(v) {
+  return new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN" }).format(parseFloat(v) || 0);
+}
+
+function fmtDate(v) {
+  if (!v) return "—";
+  return new Date(v).toLocaleDateString("uk-UA");
+}
 
 export default function ContractsPage() {
-  const [activeTab, setActiveTab] = useState("all_docs");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDoc, setSelectedDoc] = useState(null);
-  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [contracts, setContracts] = useState(null);
+  const [workers, setWorkers] = useState([]);
 
-  // Mock Contracts/Documents Database
-  const [documents, setDocuments] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [search, setSearch] = useState("");
 
-  // AI Document Verification Engine Logs (175 agents, 15 coordinators, 1 president)
-  const [docLogs, setDocLogs] = useState([]);
+  const [form, setForm] = useState(null);           // null | new-contract form data
+  const [detail, setDetail] = useState(null);        // null | { contract, logs }
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [busy, setBusy] = useState("");
+  const [toast, setToast] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const messages = [
-      { type: "agent", text: "Agent-059 dispatched SMS verification pin code to client Ivan Ivanov." },
-      { type: "agent", text: "Agent-121 registered contract view event from IP 194.29.50.12 (TechCorp Ltd)." },
-      { type: "coordinator", text: "Coordinator [Agent-C12] flagged document DOC-26-004 as declined by signer." },
-      { type: "system", text: "President digital key verified and stored securely in Vault HSM." },
-      { type: "agent", text: "Agent-007 matched passport OCR scanning data with signed client name Elena Rostova." },
-      { type: "agent", text: "Agent-145 pushed webhook e-sign event notification to Slack channel #contracts." }
-    ];
-
-    const interval = setInterval(() => {
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-      const now = new Date();
-      const timeStr = now.toTimeString().split(" ")[0];
-      setDocLogs(prev => [
-        { time: timeStr, type: randomMsg.type, message: randomMsg.text },
-        ...prev.slice(0, 19)
-      ]);
-    }, 4500);
-
-    return () => clearInterval(interval);
+    setMounted(true);
+    fetch("/api/admin/team").then(r => r.json()).then(d => setWorkers(d.team || [])).catch(() => {});
   }, []);
 
-  const handleRequestSignature = (e) => {
-    e.preventDefault();
-    alert("AI Диспетчер успішно згенерував PDF та надіслав посилання для підпису на Email та СМС клієнта.");
-    setShowRequestModal(false);
+  const flash = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 3000);
   };
 
-  const filteredDocs = documents.filter(doc =>
-    doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    doc.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const loadContracts = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      if (statusFilter) params.set("status", statusFilter);
+      if (typeFilter) params.set("type", typeFilter);
+      const res = await fetch("/api/admin/contracts?" + params.toString());
+      const d = await res.json();
+      setContracts(d.contracts || []);
+    } catch {
+      flash("Помилка завантаження договорів");
+    }
+  }, [statusFilter, typeFilter]);
+
+  useEffect(() => { loadContracts(); }, [loadContracts]);
+
+  const openDetail = async (row) => {
+    setIsEditMode(false);
+    setDetail({ contract: row, logs: [] });
+    try {
+      const r = await fetch(`/api/admin/contracts/${row.id}`);
+      const d = await r.json();
+      if (!d.error) setDetail(d);
+    } catch { /* keep optimistic view */ }
+  };
+
+  const handleCreateContract = async () => {
+    if (!form.client_full_name) { flash("Введіть ПІБ клієнта"); return; }
+    if (!form.title) { flash("Введіть назву договору"); return; }
+    setBusy("create");
+    try {
+      const res = await fetch("/api/admin/contracts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form)
+      });
+      const d = await res.json();
+      if (d.error) {
+        flash(d.error);
+      } else {
+        flash("Договір створено успішно!");
+        setForm(null);
+        loadContracts();
+      }
+    } catch {
+      flash("Помилка з'єднання");
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const handleUpdateContract = async () => {
+    const c = detail.contract;
+    if (!c.client_full_name) { flash("Введіть ПІБ клієнта"); return; }
+    if (!c.title) { flash("Введіть назву договору"); return; }
+    setBusy("update");
+    try {
+      const res = await fetch(`/api/admin/contracts/${c.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_full_name: c.client_full_name,
+          client_contact: c.client_contact,
+          contract_type: c.contract_type,
+          title: c.title,
+          value_pln: c.value_pln,
+          status: c.status,
+          signed_date: c.signed_date,
+          valid_from: c.valid_from,
+          valid_until: c.valid_until,
+          assigned_to: c.assigned_to,
+          notes: c.notes,
+        })
+      });
+      const d = await res.json();
+      if (d.error) {
+        flash(d.error);
+      } else {
+        flash("Договір оновлено");
+        setIsEditMode(false);
+        openDetail(d.contract);
+        loadContracts();
+      }
+    } catch {
+      flash("Помилка при оновленні");
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    if (!detail || !detail.contract || newStatus === detail.contract.status) return;
+    setBusy("status");
+    try {
+      const res = await fetch(`/api/admin/contracts/${detail.contract.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const d = await res.json();
+      if (d.error) {
+        flash(d.error);
+      } else {
+        flash("Статус договору оновлено");
+        openDetail(d.contract);
+        loadContracts();
+      }
+    } catch {
+      flash("Помилка при зміні статусу");
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const handleDeleteContract = async (id) => {
+    if (!confirm("Ви впевнені, що хочете видалити цей договір? Дію неможливо скасувати.")) return;
+    setBusy("delete");
+    try {
+      const res = await fetch(`/api/admin/contracts/${id}`, { method: "DELETE" });
+      const d = await res.json();
+      if (d.error) {
+        flash(d.error);
+      } else {
+        flash("Договір видалено");
+        setDetail(null);
+        loadContracts();
+      }
+    } catch {
+      flash("Помилка при видаленні");
+    } finally {
+      setBusy("");
+    }
+  };
+
+  const visibleContracts = contracts ? contracts.filter(c => {
+    if (!search) return true;
+    const q = search.toLowerCase();
+    return (
+      (c.title || "").toLowerCase().includes(q) ||
+      (c.client_full_name || "").toLowerCase().includes(q) ||
+      (c.client_contact || "").toLowerCase().includes(q) ||
+      (c.assigned_to_name || "").toLowerCase().includes(q) ||
+      (c.notes || "").toLowerCase().includes(q)
+    );
+  }) : [];
+
+  // --- Stats (computed from real fetched data) ---
+  const totalContracts = contracts ? contracts.length : 0;
+  const activeContracts = contracts ? contracts.filter(c => c.status === "active").length : 0;
+  const totalValuePln = contracts ? contracts.reduce((sum, c) => sum + (parseFloat(c.value_pln) || 0), 0) : 0;
+  const expiringSoon = (() => {
+    if (!contracts) return 0;
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const in30 = new Date(today); in30.setDate(in30.getDate() + 30);
+    return contracts.filter(c => {
+      if (!c.valid_until || c.status !== "active") return false;
+      const vu = new Date(c.valid_until);
+      return vu >= today && vu <= in30;
+    }).length;
+  })();
+
+  const tableColumns = [
+    { header: "Назва договору", cell: (row) => (
+      <div>
+        <div style={{ fontWeight: 600 }}>{row.title}</div>
+        <div style={{ fontSize: 11, color: "var(--dim)" }}>{CONTRACT_TYPE_LABEL[row.contract_type] || row.contract_type}</div>
+      </div>
+    ) },
+    { header: "Клієнт", cell: (row) => (
+      <div>
+        <div>{row.client_full_name}</div>
+        {row.client_contact && <div style={{ fontSize: 11, color: "var(--dim)" }}>{row.client_contact}</div>}
+      </div>
+    ) },
+    { header: "Сума", cell: (row) => <div className="kc-mono">{fmtPLN(row.value_pln)}</div> },
+    { header: "Статус", cell: (row) => {
+      const meta = STATUS_META[row.status] || { badge: "dim", label: row.status };
+      return <Badge status={meta.badge} text={meta.label} />;
+    } },
+    { header: "Діє до", cell: (row) => fmtDate(row.valid_until) },
+    { header: "Виконавець", cell: (row) => row.assigned_to_name || "—" },
+  ];
+
+  if (contracts === null) return <Spinner />;
 
   return (
-    <div style={{ height: "100%", display: "flex", flexDirection: "column", gap: "var(--space-lg)" }}>
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <div>
-          <h2 className="kc-h2" style={{ margin: 0 }}>Шаблони & Е-Підписи (Contracts & Vault)</h2>
-          <p style={{ color: "var(--dim)", marginTop: "var(--space-xs)", fontSize: "var(--text-sm)" }}>
-            Цифровий підпис документів, шаблони контрактів та безпечний криптографічний архів.
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: "var(--space-sm)" }}>
-          <button className="kc-btn kc-btn-secondary" onClick={() => setShowRequestModal(true)}>
-            <Icon name="edit" size={16} /> Надіслати на підпис
-          </button>
-          <button className="kc-btn kc-btn-primary">
-            <Icon name="plus" size={16} /> Створити Шаблон
-          </button>
-        </div>
-      </div>
-
-      {/* KPI Stats block */}
-      <div className="kc-grid kc-grid-4">
-        <div className="kc-stat">
-          <div className="kc-stat-top">
-            <div className="kc-stat-ico" style={{ background: "rgba(95,184,122,0.1)" }}>
-              <Icon name="check" size={18} color="var(--color-success)" />
-            </div>
-            <Badge status="green" text="Success" />
-          </div>
-          <div className="kc-stat-val">412</div>
-          <div className="kc-stat-lbl">Підписано контрактів</div>
-        </div>
-
-        <div className="kc-stat">
-          <div className="kc-stat-top">
-            <div className="kc-stat-ico" style={{ background: "rgba(225,168,75,0.1)" }}>
-              <Icon name="clock" size={18} color="var(--color-warning)" />
-            </div>
-            <Badge status="brass" text="Pending" />
-          </div>
-          <div className="kc-stat-val">45</div>
-          <div className="kc-stat-lbl">Очікують підпису</div>
-        </div>
-
-        <div className="kc-stat">
-          <div className="kc-stat-top">
-            <div className="kc-stat-ico" style={{ background: "rgba(95,155,213,0.1)" }}>
-              <Icon name="eye" size={18} color="var(--color-info)" />
-            </div>
-            <span style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Views</span>
-          </div>
-          <div className="kc-stat-val">87%</div>
-          <div className="kc-stat-lbl">Коефіцієнт відкриття</div>
-        </div>
-
-        <div className="kc-stat">
-          <div className="kc-stat-top">
-            <div className="kc-stat-ico" style={{ background: "var(--brass-bg)" }}>
-              <Icon name="file-text" size={18} color="var(--color-primary)" />
-            </div>
-            <span style={{ fontSize: "var(--text-xs)", color: "var(--color-primary)" }}>SHA-256</span>
-          </div>
-          <div className="kc-stat-val">Vault Ok</div>
-          <div className="kc-stat-lbl">Захищений архів</div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", gap: "var(--space-md)", overflowX: "auto", whiteSpace: "nowrap", scrollbarWidth: "none" }}>
-        <button 
-          onClick={() => setActiveTab("all_docs")} 
-          style={{
-            padding: "12px 16px", background: "none", border: "none",
-            borderBottom: activeTab === "all_docs" ? "2px solid var(--color-primary)" : "2px solid transparent",
-            color: activeTab === "all_docs" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
-            flexShrink: 0
-          }}
-        >
-          <Icon name="file-text" size={16} /> Усі документи
-        </button>
-        <button 
-          onClick={() => setActiveTab("templates")} 
-          style={{
-            padding: "12px 16px", background: "none", border: "none",
-            borderBottom: activeTab === "templates" ? "2px solid var(--color-primary)" : "2px solid transparent",
-            color: activeTab === "templates" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
-            flexShrink: 0
-          }}
-        >
-          <Icon name="copy" size={16} /> Бланки & Шаблони
-        </button>
-        <button 
-          onClick={() => setActiveTab("ai_sign")} 
-          style={{
-            padding: "12px 16px", background: "none", border: "none",
-            borderBottom: activeTab === "ai_sign" ? "2px solid var(--color-primary)" : "2px solid transparent",
-            color: activeTab === "ai_sign" ? "var(--color-primary)" : "var(--dim)",
-            fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
-            flexShrink: 0
-          }}
-        >
-          <Icon name="cpu" size={16} /> AI Валідація підписів (175+ Agents)
-        </button>
-      </div>
-
-      {/* Tab content area */}
-      <div style={{ flex: 1, minHeight: 400 }}>
-        {activeTab === "all_docs" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-            <SearchInput 
-              value={searchQuery} 
-              onChange={setSearchQuery} 
-              placeholder="Пошук документів за назвою, клієнтом чи ID..." 
-            />
-
-            <div className="kc-table-wrap">
-              <table className="kc-table">
-                <thead>
-                  <tr>
-                    <th>ID Документа</th>
-                    <th>Назва бланку</th>
-                    <th>Клієнт</th>
-                    <th>Сума контракту</th>
-                    <th>Статус підпису</th>
-                    <th>Надіслано</th>
-                    <th style={{ textAlign: "right" }}>Дії</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredDocs.map((row) => (
-                    <tr key={row.id}>
-                      <td style={{ fontWeight: 600 }}>{row.id}</td>
-                      <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <Icon name="file-text" size={14} color="var(--dim)" />
-                          <span style={{ fontWeight: 500 }}>{row.title}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <Avatar name={row.client} size={20} />
-                          <span>{row.client}</span>
-                        </div>
-                      </td>
-                      <td>{row.value}</td>
-                      <td>
-                        {row.status === "signed" && <Badge status="green" text="Підписано" />}
-                        {row.status === "viewed" && <Badge status="brass" text="Переглянуто" />}
-                        {row.status === "sent" && <Badge status="blue" text="Надіслано" />}
-                        {row.status === "declined" && <Badge status="red" text="Відхилено" />}
-                      </td>
-                      <td>{row.sent}</td>
-                      <td style={{ textAlign: "right" }}>
-                        <div style={{ display: "flex", gap: 4, justifyContent: "flex-end" }}>
-                          <button 
-                            className="kc-btn kc-btn-ghost" 
-                            style={{ padding: 6, minHeight: "auto" }}
-                            title="Переглянути печатку та деталі підпису"
-                            onClick={() => setSelectedDoc(row)}
-                          >
-                            <Icon name="eye" size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "templates" && (
-          <div className="kc-grid kc-grid-3">
-            <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Icon name="file-text" size={24} color="var(--color-primary)" />
-                <h4 style={{ margin: 0 }}>Pełnomocnictwo (PoA)</h4>
-              </div>
-              <p style={{ color: "var(--dim)", fontSize: "var(--text-xs)", margin: 0 }}>
-                Бланк доручення на представлення інтересів клієнта в ужендах Польщі.
-              </p>
-              <div style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)", marginTop: "auto", display: "flex", justifyContent: "space-between" }}>
-                <Badge status="green" text="v2.4 (Active)" />
-                <button className="kc-btn kc-btn-ghost" style={{ padding: "4px 8px", minHeight: "auto" }}>Вибрати</button>
-              </div>
-            </div>
-
-            <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Icon name="file-text" size={24} color="var(--color-primary)" />
-                <h4 style={{ margin: 0 }}>Umowa o pracę (UoP)</h4>
-              </div>
-              <p style={{ color: "var(--dim)", fontSize: "var(--text-xs)", margin: 0 }}>
-                Стандартний трудовий договір польською та українською мовами.
-              </p>
-              <div style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)", marginTop: "auto", display: "flex", justifyContent: "space-between" }}>
-                <Badge status="green" text="v1.9 (Active)" />
-                <button className="kc-btn kc-btn-ghost" style={{ padding: "4px 8px", minHeight: "auto" }}>Вибрати</button>
-              </div>
-            </div>
-
-            <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                <Icon name="file-text" size={24} color="var(--color-primary)" />
-                <h4 style={{ margin: 0 }}>Umowa Zlecenia</h4>
-              </div>
-              <p style={{ color: "var(--dim)", fontSize: "var(--text-xs)", margin: 0 }}>
-                Договір доручення для студентів та тимчасових працівників.
-              </p>
-              <div style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)", marginTop: "auto", display: "flex", justifyContent: "space-between" }}>
-                <Badge status="green" text="v3.1 (Active)" />
-                <button className="kc-btn kc-btn-ghost" style={{ padding: "4px 8px", minHeight: "auto" }}>Вибрати</button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "ai_sign" && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 350px), 1fr))", gap: "var(--space-lg)" }}>
-            <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-              <h3 className="kc-card-cap" style={{ margin: 0 }}>AI Cryptographic Vault</h3>
-              
-              <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-sm)", background: "var(--panel-2)", padding: "var(--space-md)", borderRadius: "var(--radius-md)" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span>Hashing Verification Agents</span>
-                  <strong style={{ color: "var(--color-primary)" }}>175</strong>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span>Security Coordinators</span>
-                  <strong style={{ color: "var(--color-info)" }}>15</strong>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span>HSM Key Custodian</span>
-                  <strong style={{ color: "var(--color-success)" }}>1 President</strong>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "var(--space-sm)", marginTop: 4 }}>
-                  <span>Vault Integrity</span>
-                  <Badge status="green" text="Secured (SHA)" />
-                </div>
-              </div>
-
-              <div className="kc-note" style={{ fontSize: "var(--text-xs)" }}>
-                <strong>Опис системи:</strong> Агенти в реальному часі прораховують хеші підписаних PDF-документів, звіряють IP-адреси та телефони підписантів, створюючи юридично стійкий доказ підпису.
-              </div>
-            </div>
-
-            <div className="kc-card" style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", background: "#06090e" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <h3 className="kc-card-cap" style={{ margin: 0, color: "#58a6ff" }}>Консоль криптографічної перевірки (Live Vault logs)</h3>
-                <span className="kc-mono" style={{ fontSize: 10, color: "var(--dim)" }}>Auto-updating logs...</span>
-              </div>
-
-              <div style={{ 
-                flex: 1, maxHeight: 280, overflowY: "auto", fontFamily: "var(--font-mono)", 
-                fontSize: "var(--text-xs)", lineHeight: "1.6", color: "#c9d1d9",
-                display: "flex", flexDirection: "column", gap: 8
-              }}>
-                {docLogs.map((log, index) => {
-                  let color = "#8b949e";
-                  if (log.type === "coordinator") color = "#58a6ff";
-                  if (log.type === "system") color = "#56d364";
-                  return (
-                    <div key={index} style={{ borderLeft: `2px solid ${color}`, paddingLeft: 8 }}>
-                      <span style={{ color: "var(--dim)" }}>[{log.time}]</span>{" "}
-                      <strong style={{ color }}>{log.type.toUpperCase()}</strong>: {log.message}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Signature Vault Modal Viewer */}
-      {selectedDoc && (
-        <div className="kc-modal-bg" onClick={() => setSelectedDoc(null)}>
-          <div className="kc-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 650 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-sm)" }}>
-              <div>
-                <h3 className="kc-modal-title" style={{ margin: 0 }}>Сертифікат цифрового підпису</h3>
-                <p style={{ color: "var(--dim)", fontSize: "var(--text-xs)", margin: "4px 0 0" }}>{selectedDoc.title} · ID: {selectedDoc.id}</p>
-              </div>
-              <button onClick={() => setSelectedDoc(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dim)" }}>
-                <Icon name="x" size={20} />
-              </button>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)", fontSize: "var(--text-sm)" }}>
-              <div style={{ background: "var(--panel-2)", padding: "var(--space-md)", borderRadius: "var(--radius-md)", border: "1px solid var(--border)" }}>
-                <div style={{ fontWeight: 600, color: "var(--color-primary)", marginBottom: 8 }}>Криптографічні реквізити:</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "var(--dim)" }}>Підписант (Signer):</span>
-                    <strong>{selectedDoc.client}</strong>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "var(--dim)" }}>IP-адреса підпису:</span>
-                    <span className="kc-mono">{selectedDoc.details.signerIP}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "var(--dim)" }}>СМС-верифікація:</span>
-                    <span>{selectedDoc.details.phoneVerified}</span>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <span style={{ color: "var(--dim)" }}>Час підписання:</span>
-                    <span>{selectedDoc.details.signedAt}</span>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", marginTop: 4 }}>
-                    <span style={{ color: "var(--dim)" }}>Контрольний хеш PDF (SHA-256):</span>
-                    <span className="kc-mono" style={{ fontSize: 11, background: "var(--bg)", padding: 6, borderRadius: 4, marginTop: 4, wordBreak: "break-all" }}>{selectedDoc.details.pdfHash}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: "flex", gap: "var(--space-sm)", justifyContent: "flex-end", marginTop: "var(--space-sm)" }}>
-                <button className="kc-btn" onClick={() => setSelectedDoc(null)}>Закрити</button>
-                {selectedDoc.status === "signed" && (
-                  <button className="kc-btn kc-btn-primary" onClick={() => alert("Договір завантажується...")}>
-                    <Icon name="download" size={14} /> Скачати підписаний PDF
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+    <div>
+      {toast && (
+        <div style={{ position: "fixed", top: 80, right: 24, zIndex: 1000 }} className="kc-note">
+          {toast}
         </div>
       )}
 
-      {/* Request Signature Modal Dialog */}
-      {showRequestModal && (
-        <div className="kc-modal-bg" onClick={() => setShowRequestModal(false)}>
-          <div className="kc-modal" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--space-md)", borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-sm)" }}>
-              <h3 className="kc-modal-title" style={{ margin: 0 }}>Запит на електронний підпис</h3>
-              <button onClick={() => setShowRequestModal(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--dim)" }}>
-                <Icon name="x" size={20} />
-              </button>
+      {/* Stat row */}
+      <div className="kc-grid kc-grid-4" style={{ marginBottom: "var(--space-lg)" }}>
+        <StatCard icon="file-text" value={totalContracts} label="Всього договорів" />
+        <StatCard icon="check-circle" value={activeContracts} label="Активні договори" />
+        <StatCard icon="cash" value={fmtPLN(totalValuePln)} label="Загальна сума (PLN)" />
+        <StatCard icon="clock" value={expiringSoon} label="Спливають за 30 днів" />
+      </div>
+
+      {/* Header controls */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "var(--space-lg)", flexWrap: "wrap", gap: "var(--space-md)" }}>
+
+        {/* Filters */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+          {STATUS_FILTERS.map(f => (
+            <button
+              key={f.id}
+              className={`kc-btn ${statusFilter === f.id ? 'kc-btn-primary' : 'kc-btn-ghost'}`}
+              onClick={() => setStatusFilter(f.id)}
+            >
+              {f.label}
+            </button>
+          ))}
+
+          <select className="kc-select" style={{ minHeight: 36 }} value={typeFilter} onChange={e => setTypeFilter(e.target.value)}>
+            <option value="">Всі типи</option>
+            {Object.entries(CONTRACT_TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+          </select>
+
+          <SearchInput value={search} onChange={setSearch} placeholder="Пошук договорів..." style={{ width: 240 }} />
+        </div>
+
+        <button className="kc-btn kc-btn-primary" onClick={() => setForm({ ...EMPTY_FORM })}>
+          <Icon name="plus" size={16} /> Новий договір
+        </button>
+      </div>
+
+      {visibleContracts.length === 0 ? (
+        <EmptyState
+          title="Договорів не знайдено"
+          description="Спробуйте змінити критерії пошуку/фільтри або створіть новий договір."
+          icon="file-text"
+        />
+      ) : (
+        <DataTable
+          columns={tableColumns}
+          data={visibleContracts}
+          onRowClick={openDetail}
+        />
+      )}
+
+      {/* Detail panel */}
+      {mounted && detail && detail.contract && createPortal(
+        <div style={{
+          position: "fixed", top: 0, right: 0, bottom: 0, width: "100%", maxWidth: 460,
+          background: "var(--panel)", borderLeft: "1px solid var(--border)",
+          boxShadow: "var(--shadow-lg)", overflowY: "auto", zIndex: 150, padding: 24
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <h2 style={{ margin: 0, fontSize: "var(--text-lg)", fontWeight: 600 }}>
+              {isEditMode ? "Редагування договору" : "Деталі договору"}
+            </h2>
+            <button className="kc-btn kc-btn-ghost" onClick={() => { setDetail(null); setIsEditMode(false); }}>✕</button>
+          </div>
+
+          {isEditMode ? (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div className="kc-field">
+                <label className="kc-label">ПІБ клієнта *</label>
+                <input className="kc-input" value={detail.contract.client_full_name || ""}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, client_full_name: e.target.value } }))} />
+              </div>
+              <div className="kc-field">
+                <label className="kc-label">Контакт клієнта</label>
+                <input className="kc-input" value={detail.contract.client_contact || ""}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, client_contact: e.target.value } }))} />
+              </div>
+              <div className="kc-field">
+                <label className="kc-label">Назва договору *</label>
+                <input className="kc-input" value={detail.contract.title || ""}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, title: e.target.value } }))} />
+              </div>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Тип договору</label>
+                  <select className="kc-select" value={detail.contract.contract_type || "inne"}
+                    onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, contract_type: e.target.value } }))}>
+                    {Object.entries(CONTRACT_TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                </div>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Сума (PLN)</label>
+                  <input className="kc-input" type="number" step="0.01" value={detail.contract.value_pln || ""}
+                    onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, value_pln: e.target.value } }))} />
+                </div>
+              </div>
+
+              <div className="kc-field">
+                <label className="kc-label">Статус</label>
+                <select className="kc-select" value={detail.contract.status}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, status: e.target.value } }))}>
+                  {Object.entries(STATUS_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                </select>
+              </div>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Дата підписання</label>
+                  <input className="kc-input" type="date" value={detail.contract.signed_date ? detail.contract.signed_date.substring(0, 10) : ""}
+                    onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, signed_date: e.target.value } }))} />
+                </div>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Діє з</label>
+                  <input className="kc-input" type="date" value={detail.contract.valid_from ? detail.contract.valid_from.substring(0, 10) : ""}
+                    onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, valid_from: e.target.value } }))} />
+                </div>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Діє до</label>
+                  <input className="kc-input" type="date" value={detail.contract.valid_until ? detail.contract.valid_until.substring(0, 10) : ""}
+                    onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, valid_until: e.target.value } }))} />
+                </div>
+              </div>
+
+              <div className="kc-field">
+                <label className="kc-label">Виконавець</label>
+                <select className="kc-select" value={detail.contract.assigned_to || ""}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, assigned_to: e.target.value } }))}>
+                  <option value="">Не призначено</option>
+                  {workers.map(w => <option key={w.id} value={w.id}>{w.full_name}</option>)}
+                </select>
+              </div>
+
+              <div className="kc-field">
+                <label className="kc-label">Примітки</label>
+                <textarea className="kc-textarea" rows={3} value={detail.contract.notes || ""}
+                  onChange={e => setDetail(d => ({ ...d, contract: { ...d.contract, notes: e.target.value } }))} />
+              </div>
+
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 10 }}>
+                <button className="kc-btn kc-btn-ghost" onClick={() => setIsEditMode(false)}>Скасувати</button>
+                <button className="kc-btn kc-btn-primary" disabled={busy === "update"} onClick={handleUpdateContract}>
+                  {busy === "update" ? "Збереження..." : "Зберегти"}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <div style={{ background: "var(--panel-2)", padding: 16, borderRadius: "var(--radius-lg)" }}>
+                <div style={{ fontSize: "var(--text-xs)", color: "var(--dim)" }}>Сума договору</div>
+                <div style={{ fontSize: "var(--text-2xl)", fontWeight: 700, color: "var(--color-primary)", marginTop: 4 }}>
+                  {fmtPLN(detail.contract.value_pln)}
+                </div>
+                <div style={{ marginTop: 8, fontWeight: 600 }}>{detail.contract.title}</div>
+                <div style={{ fontSize: "var(--text-sm)", color: "var(--dim)" }}>{detail.contract.client_full_name}</div>
+              </div>
+
+              <div className="kc-field">
+                <label className="kc-label">Статус</label>
+                <select className="kc-select" disabled={busy === "status"} value={detail.contract.status}
+                  onChange={e => handleStatusChange(e.target.value)}>
+                  {Object.entries(STATUS_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+                </select>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Тип договору</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>
+                    {CONTRACT_TYPE_LABEL[detail.contract.contract_type] || detail.contract.contract_type}
+                  </div>
+                </div>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Контакт клієнта</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>{detail.contract.client_contact || "—"}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Дата підписання</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>{fmtDate(detail.contract.signed_date)}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Виконавець</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>{detail.contract.assigned_to_name || "—"}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Діє з</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>{fmtDate(detail.contract.valid_from)}</div>
+                </div>
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Діє до</span>
+                  <div style={{ fontSize: "var(--text-sm)", fontWeight: 500, marginTop: 4 }}>{fmtDate(detail.contract.valid_until)}</div>
+                </div>
+              </div>
+
+              {detail.contract.notes && (
+                <div>
+                  <span style={{ fontSize: 11, color: "var(--faint)" }}>Примітки</span>
+                  <div style={{ background: "var(--panel-2)", padding: 12, borderRadius: "var(--radius-md)", fontSize: "var(--text-sm)", marginTop: 4, whiteSpace: "pre-wrap" }}>
+                    {detail.contract.notes}
+                  </div>
+                </div>
+              )}
+
+              <div style={{ borderTop: "1px solid var(--border)", paddingTop: 20, marginTop: 4 }}>
+                <h3 className="kc-card-cap" style={{ marginBottom: "var(--space-md)" }}>Історія подій</h3>
+                {(detail.logs || []).length === 0 ? (
+                  <div style={{ color: "var(--faint)", fontSize: 12 }}>Поки немає подій</div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {detail.logs.map(l => (
+                      <div key={l.id} style={{
+                        fontSize: 12, padding: "8px 12px",
+                        background: "var(--panel-2)", borderRadius: 8,
+                        borderLeft: "3px solid var(--color-primary)",
+                      }}>
+                        <div style={{ fontWeight: 500 }}>{l.event}</div>
+                        <div style={{ color: "var(--dim)", marginTop: 2 }}>
+                          {new Date(l.created_at).toLocaleString("uk-UA")} · {l.actor}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: "flex", gap: 10, borderTop: "1px solid var(--border)", paddingTop: 20, marginTop: 4 }}>
+                <button className="kc-btn kc-btn-ghost" style={{ flex: 1 }} onClick={() => setIsEditMode(true)}>
+                  Редагувати
+                </button>
+                <button className="kc-btn kc-btn-danger" disabled={busy === "delete"} onClick={() => handleDeleteContract(detail.contract.id)}>
+                  Видалити
+                </button>
+              </div>
+            </div>
+          )}
+        </div>,
+        document.body
+      )}
+
+      {/* New Contract modal */}
+      {mounted && form && createPortal(
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+          display: "flex", alignItems: "center", justifyContent: "center", zIndex: 200
+        }}
+          onClick={e => { if (e.target === e.currentTarget) setForm(null); }}
+        >
+          <div className="kc-card" style={{ width: "100%", maxWidth: 500, maxHeight: "90vh", overflowY: "auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 style={{ margin: 0, fontSize: "var(--text-lg)", fontWeight: 600 }}>Новий договір</h2>
+              <button className="kc-btn kc-btn-ghost" onClick={() => setForm(null)}>✕</button>
             </div>
 
-            <form onSubmit={handleRequestSignature} style={{ display: "flex", flexDirection: "column", gap: "var(--space-md)" }}>
-              <div>
-                <label className="kc-label">Виберіть отримувача (Клієнта)</label>
-                <select className="kc-select" required>
-                  <option value="">-- Оберіть клієнта --</option>
-                  <option value="1">Elena Rostova</option>
-                  <option value="2">Ivan Ivanov</option>
-                  <option value="3">Oksana Koval</option>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div className="kc-field">
+                <label className="kc-label">ПІБ клієнта *</label>
+                <input className="kc-input" placeholder="Іван Петренко" value={form.client_full_name}
+                  onChange={e => setForm({ ...form, client_full_name: e.target.value })} />
+              </div>
+              <div className="kc-field">
+                <label className="kc-label">Контакт клієнта</label>
+                <input className="kc-input" placeholder="+48 xxx xxx xxx / email" value={form.client_contact}
+                  onChange={e => setForm({ ...form, client_contact: e.target.value })} />
+              </div>
+
+              <div className="kc-field">
+                <label className="kc-label">Тип договору</label>
+                <select className="kc-select" value={form.contract_type} onChange={e => setForm({ ...form, contract_type: e.target.value })}>
+                  {Object.entries(CONTRACT_TYPE_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                 </select>
               </div>
 
-              <div>
-                <label className="kc-label">Виберіть шаблон документа</label>
-                <select className="kc-select" required>
-                  <option value="">-- Оберіть шаблон --</option>
-                  <option value="poa">Pełnomocnictwo (PoA) v2.4</option>
-                  <option value="uop">Umowa o pracę v1.9</option>
-                  <option value="uz">Umowa Zlecenia v3.1</option>
-                </select>
+              <div className="kc-field">
+                <label className="kc-label">Назва / номер договору *</label>
+                <input className="kc-input" placeholder="Umowa o świadczenie usług prawnych nr 12/2026" value={form.title}
+                  onChange={e => setForm({ ...form, title: e.target.value })} />
               </div>
 
-              <div>
-                <label className="kc-label">Сума контракту (опціонально)</label>
-                <input type="text" placeholder="Напр. 15,000 PLN" className="kc-input" />
+              <div className="kc-field">
+                <label className="kc-label">Сума (PLN)</label>
+                <input className="kc-input" type="number" step="0.01" placeholder="1500.00" value={form.value_pln}
+                  onChange={e => setForm({ ...form, value_pln: e.target.value })} />
               </div>
 
-              <div style={{ display: "flex", gap: "var(--space-sm)", justifyContent: "flex-end", marginTop: "var(--space-sm)" }}>
-                <button type="button" className="kc-btn" onClick={() => setShowRequestModal(false)}>Скасувати</button>
-                <button type="submit" className="kc-btn kc-btn-primary">Надіслати клієнту</button>
+              <div style={{ display: "flex", gap: 10 }}>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Дата підписання</label>
+                  <input className="kc-input" type="date" value={form.signed_date}
+                    onChange={e => setForm({ ...form, signed_date: e.target.value })} />
+                </div>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Діє з</label>
+                  <input className="kc-input" type="date" value={form.valid_from}
+                    onChange={e => setForm({ ...form, valid_from: e.target.value })} />
+                </div>
+                <div className="kc-field" style={{ flex: 1 }}>
+                  <label className="kc-label">Діє до</label>
+                  <input className="kc-input" type="date" value={form.valid_until}
+                    onChange={e => setForm({ ...form, valid_until: e.target.value })} />
+                </div>
               </div>
-            </form>
+
+              <div className="kc-field">
+                <label className="kc-label">Примітки</label>
+                <textarea className="kc-textarea" rows={3} placeholder="Контекст договору..." value={form.notes}
+                  onChange={e => setForm({ ...form, notes: e.target.value })} />
+              </div>
+
+              <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 10 }}>
+                <button className="kc-btn kc-btn-ghost" onClick={() => setForm(null)}>Скасувати</button>
+                <button className="kc-btn kc-btn-primary" disabled={busy === "create"} onClick={handleCreateContract}>
+                  {busy === "create" ? "Створення..." : "Створити"}
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
