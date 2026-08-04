@@ -33,6 +33,42 @@ import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from "@/li
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
 
+const TERMIN_USAGE =
+  "Щоб додати нагадування про важливий термін, напишіть:\n" +
+  "<code>/termin ДД.ММ.РРРР Опис терміну</code>\n\n" +
+  "Наприклад:\n<code>/termin 15.03.2027 Закінчення карти побуту</code>\n\n" +
+  "Нагадаємо тут у Telegram за 90, 60, 30, 14, 7 і 1 день до дати.";
+
+/** /termin ДД.ММ.РРРР Опис — self-serve deadline reminder registration.
+ * kompas_deadlines already existed with a working daily cron (see 038_kompas_deadlines_hardening.sql)
+ * but nothing ever inserted a row into it — this is that missing write path. */
+async function handleTerminCommand(chatId: number, text: string): Promise<string> {
+  const match = text.match(/^\/termin\s+(\d{2})\.(\d{2})\.(\d{4})\s+(.+)$/s);
+  if (!match) return TERMIN_USAGE;
+
+  const [, dd, mm, yyyy, rawTitle] = match;
+  const title = rawTitle.trim().slice(0, 300);
+  const targetDate = `${yyyy}-${mm}-${dd}`;
+  const parsed = new Date(`${targetDate}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime()) || parsed.getUTCFullYear() !== Number(yyyy) || parsed.getUTCMonth() + 1 !== Number(mm)) {
+    return "Некоректна дата. Формат: ДД.ММ.РРРР, наприклад 15.03.2027.";
+  }
+  if (!title) return TERMIN_USAGE;
+
+  try {
+    await q(
+      `INSERT INTO kompas_deadlines (telegram_chat_id, deadline_type, title, target_date, locale)
+       VALUES ($1, 'other', $2, $3, 'uk')`,
+      [chatId, title, targetDate]
+    );
+    const dateLabel = `${dd}.${mm}.${yyyy}`;
+    return `✅ Термін збережено: «${title}» — ${dateLabel}.\nНагадаємо тут завчасно (за 90/60/30/14/7/1 день).`;
+  } catch (e) {
+    console.error("[webhook] /termin insert failed:", e);
+    return "Не вдалося зберегти термін. Спробуйте ще раз пізніше або напишіть менеджеру.";
+  }
+}
+
 /** Mirrors a Telegram message into the CRM chats inbox (app/admin/crm/chats). Best-effort:
  * never throws into the webhook — the Orakul AI flow must keep working even if this fails. */
 async function mirrorToCrmChats(chatId: number, displayName: string, text: string, sender: "client" | "bot"): Promise<void> {
@@ -166,6 +202,14 @@ export async function POST(req: NextRequest) {
     if (text.startsWith("/start")) {
       await sendLanguagePanel(chatId, firstName, token);
       history.push({ role: 'assistant', content: '[LANGUAGE_PANEL_SENT]' });
+      await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
+      return NextResponse.json({ ok: true });
+    }
+
+    if (text === "/termin" || text.startsWith("/termin ") || text.startsWith("/termin\n")) {
+      const reply = await handleTerminCommand(chatId, text);
+      await sendMessage(chatId, reply, "HTML", token);
+      history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
       return NextResponse.json({ ok: true });
     }
