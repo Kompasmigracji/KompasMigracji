@@ -14,14 +14,10 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function GET(req: NextRequest) {
-  if (!verifyCron(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runWeeklyDigest() {
   const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
   if (!adminChat) {
-    return NextResponse.json({ ok: false, reason: "TELEGRAM_ADMIN_CHAT_ID not set" });
+    return { ok: false, reason: "TELEGRAM_ADMIN_CHAT_ID not set" };
   }
 
   const [leads, members, dues, cases] = await Promise.all([
@@ -68,8 +64,15 @@ export async function GET(req: NextRequest) {
   try {
     await sendMessage(adminChat, text, "HTML");
   } catch (err) {
-    return NextResponse.json({ ok: false, error: String(err) }, { status: 500 });
+    return { ok: false, error: String(err) };
   }
 
-  return NextResponse.json({ ok: true, newLeads, converted, weekRevenue });
+  return { ok: true, newLeads, converted, weekRevenue };
+}
+
+export async function GET(req: NextRequest) {
+  if (!verifyCron(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runWeeklyDigest());
 }

@@ -20,11 +20,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function POST(req: NextRequest) {
-  if (!checkCronAuth(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runSubscriptionRenewal() {
   // 1. Expire subscriptions past their end date
   const expired = await q(
     `UPDATE kompas_subscriptions
@@ -80,11 +76,18 @@ export async function POST(req: NextRequest) {
     ).catch(() => {});
   }
 
-  return NextResponse.json({
+  return {
     ok: true,
     expired: expired.length,
     warned,
-  });
+  };
+}
+
+export async function POST(req: NextRequest) {
+  if (!checkCronAuth(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runSubscriptionRenewal());
 }
 
 export async function GET(req: NextRequest) {

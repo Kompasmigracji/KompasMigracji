@@ -17,11 +17,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function POST(req: NextRequest) {
-  if (!checkCronAuth(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runNpsSurvey() {
   // Find leads closed/converted (recently or unsurveyed) that don't have an NPS survey yet
   // Note: leads table has no updated_at; use paid_at or created_at as proxy
   const closedLeads = await q(
@@ -75,7 +71,14 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ ok: true, surveysCreated: closedLeads.length, notificationsSent: sent });
+  return { ok: true, surveysCreated: closedLeads.length, notificationsSent: sent };
+}
+
+export async function POST(req: NextRequest) {
+  if (!checkCronAuth(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runNpsSurvey());
 }
 
 export async function GET(req: NextRequest) {

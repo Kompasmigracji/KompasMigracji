@@ -18,11 +18,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function POST(req: NextRequest) {
-  if (!checkCronAuth(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runAppointmentReminders() {
   // Appointments in next 20-28h that haven't been reminded yet
   const upcoming = await q(
     `SELECT a.id, a.client_name, a.client_email, a.client_phone, a.service,
@@ -82,7 +78,14 @@ ${appt.meeting_link ? `<p>Link do spotkania: <a href="${appt.meeting_link}">${ap
     await q("UPDATE kompas_appointments SET reminder_sent=true WHERE id=$1", [appt.id]);
   }
 
-  return NextResponse.json({ ok: true, remindersCount: notified });
+  return { ok: true, remindersCount: notified };
+}
+
+export async function POST(req: NextRequest) {
+  if (!checkCronAuth(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runAppointmentReminders());
 }
 
 export async function GET(req: NextRequest) {

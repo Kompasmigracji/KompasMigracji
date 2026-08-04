@@ -14,11 +14,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function GET(req: NextRequest) {
-  if (!verifyCron(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runDuesReminders() {
   // Find leads with Telegram who have not paid (as proxy for members)
   // In practice: query kompas_dues joined with chat_id if stored
   const overdue = await q(`
@@ -64,9 +60,16 @@ export async function GET(req: NextRequest) {
   }
 
   // F16b: Log reminder counts (no personal Telegram for members yet)
-  return NextResponse.json({
+  return {
     ok: true,
     overdueMembers: overdue.length,
     staleLeadsNotified: sent,
-  });
+  };
+}
+
+export async function GET(req: NextRequest) {
+  if (!verifyCron(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runDuesReminders());
 }

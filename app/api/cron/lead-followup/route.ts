@@ -16,11 +16,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function GET(req: NextRequest) {
-  if (!verifyCron(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runLeadFollowup() {
   // F15: Escalate leads not picked up in 24h
   const stale = await q(`
     SELECT id, first_name, service, urgency, score
@@ -87,9 +83,16 @@ export async function GET(req: NextRequest) {
     } catch { /* non-blocking */ }
   }
 
-  return NextResponse.json({
+  return {
     ok: true,
     escalated,
     overdueAlertsCount: overdueCases.length,
-  });
+  };
+}
+
+export async function GET(req: NextRequest) {
+  if (!verifyCron(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runLeadFollowup());
 }

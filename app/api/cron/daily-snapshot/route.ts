@@ -13,11 +13,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function GET(req: NextRequest) {
-  if (!verifyCron(req)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export async function runDailySnapshot() {
   const today = new Date().toISOString().split("T")[0];
 
   const [members, dues, leads, churn] = await Promise.all([
@@ -67,5 +63,12 @@ export async function GET(req: NextRequest) {
     ],
   );
 
-  return NextResponse.json({ ok: true, date: today, mrr, arr });
+  return { ok: true, date: today, mrr, arr };
+}
+
+export async function GET(req: NextRequest) {
+  if (!verifyCron(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  return NextResponse.json(await runDailySnapshot());
 }
