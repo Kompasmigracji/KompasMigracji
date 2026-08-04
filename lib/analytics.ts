@@ -8,3 +8,9 @@ export function trackEvent(name: string, props?: Record<string, unknown>) {
     }
   } catch {}
 }
+
+/** Fires before a direct wa.me redirect so these clicks show up in the funnel — most
+ * WhatsApp CTAs skip /api/lead entirely, so this is otherwise invisible in PostHog. */
+export function trackWhatsAppClick(location: string) {
+  trackEvent('whatsapp_cta_click', { location });
+}

@@ -8,6 +8,7 @@ import type { Locale } from '@/i18n';
 import AIAssistantIntake from '@/components/AIAssistantIntake';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeSwitch from '@/components/ThemeSwitch';
+import { trackWhatsAppClick } from '@/lib/analytics';
 
 const PHONE = '+48 729 271 848';
 const WA_LINK = 'https://wa.me/48729271848';
@@ -172,7 +173,7 @@ export default function Header() {
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className="hidden lg:flex items-center gap-1 mr-2 bg-white/40 dark:bg-white/5 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full px-2 py-1">
               {SOCIAL.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 hover:scale-110 active:scale-95 ${s.color}`}>
+                <a key={i} href={s.href} target="_blank" rel="noreferrer" title={s.label} onClick={() => s.label === 'WhatsApp' && trackWhatsAppClick('header_social')} className={`w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-white/80 dark:hover:bg-white/10 transition-all duration-300 hover:scale-110 active:scale-95 ${s.color}`}>
                   {s.icon}
                 </a>
               ))}
@@ -295,7 +296,7 @@ export default function Header() {
               <a href={`tel:${PHONE.replace(/\s/g, '')}`} className="flex items-center justify-center w-full py-4 rounded-xl bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white font-bold mb-4 active:scale-95 transition-transform">{PHONE}</a>
               <div className="flex justify-center gap-4">
                 {SOCIAL.map((s, i) => (
-                  <a key={i} href={s.href} target="_blank" rel="noreferrer" className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300 active:scale-95 transition-transform hover:scale-110">
+                  <a key={i} href={s.href} target="_blank" rel="noreferrer" onClick={() => s.label === 'WhatsApp' && trackWhatsAppClick('header_mobile_social')} className="w-12 h-12 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-700 dark:text-gray-300 active:scale-95 transition-transform hover:scale-110">
                     {s.icon}
                   </a>
                 ))}

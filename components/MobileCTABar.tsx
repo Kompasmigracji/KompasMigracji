@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
+import { trackWhatsAppClick } from '@/lib/analytics';
 
 export default function MobileCTABar() {
   const t = useTranslations();
@@ -40,6 +41,7 @@ export default function MobileCTABar() {
               href="https://wa.me/48729271848?text=Потребую+допомоги+з+міграційним+питанням"
               target="_blank"
               rel="noreferrer"
+              onClick={() => trackWhatsAppClick('mobile_cta_bar')}
               className="flex flex-col items-center justify-center gap-1 no-underline text-gray-900 active:scale-95 transition-all relative overflow-hidden"
               style={{ background: 'linear-gradient(135deg, #128C7E, #25D366)' }}
             >

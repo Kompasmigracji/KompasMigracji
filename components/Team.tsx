@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 import { MouseEvent } from 'react';
+import { trackWhatsAppClick } from '@/lib/analytics';
 
 const PHOTO = 'https://yt3.ggpht.com/lu2REm3NMXphDWjWEz1mM9Ja8fUjdLNxMLr6pNHw5nPIcoK_vTFi9a9IAc8o173f5lGhhKlwl8LO=s1024-rw-nd-v1';
 
@@ -115,6 +116,7 @@ export default function Team() {
                 href="https://wa.me/48729271848"
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackWhatsAppClick('team_card')}
                 className="inline-flex items-center justify-center gap-3 bg-white text-black font-bold text-sm py-4 px-8 rounded-full hover:scale-105 transition-transform duration-300 shadow-xl shadow-white/10"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366">
