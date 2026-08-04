@@ -17,6 +17,8 @@ export const AgentsDashboard: React.FC = () => {
     fetcher,
     { refreshInterval: 10000 }
   );
+  const [checking, setChecking] = React.useState(false);
+  const [checkResult, setCheckResult] = React.useState<string | null>(null);
 
   const agents = statusData?.agents ?? [];
 
@@ -25,6 +27,21 @@ export const AgentsDashboard: React.FC = () => {
     name: 'Grand Architect Oleksandr Khrysytodul',
     policies: {},
     createdAt: new Date().toISOString(),
+  };
+
+  const runHealthCheck = async () => {
+    setChecking(true);
+    setCheckResult(null);
+    try {
+      const res = await fetch('/api/agents/monitor/cron', { method: 'POST' });
+      const data = await res.json();
+      setCheckResult(res.ok ? (data.message || 'OK') : (data.error || 'Помилка'));
+      mutate();
+    } catch (e: any) {
+      setCheckResult(e?.message || 'Помилка мережі');
+    } finally {
+      setChecking(false);
+    }
   };
 
   if (error) {
@@ -37,9 +54,21 @@ export const AgentsDashboard: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        {t('admin_title')}
-      </h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {t('admin_title')}
+        </h1>
+        <div className="flex items-center gap-3">
+          {checkResult && <span className="text-xs text-gray-600">{checkResult}</span>}
+          <button
+            onClick={runHealthCheck}
+            disabled={checking}
+            className="bg-white/60 border border-black/10 text-sm px-3 py-1.5 rounded-lg hover:bg-white/80 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {checking ? '…' : 'Перевірити агентів зараз'}
+          </button>
+        </div>
+      </div>
 
       <GodCard god={god} onCommandDispatched={() => mutate()} />
 
