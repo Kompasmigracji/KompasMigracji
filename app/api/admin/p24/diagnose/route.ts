@@ -41,12 +41,18 @@ export async function GET() {
       count:  r.n,
       amount: `${(r.grosz / 100).toFixed(2)} PLN`,
     })),
+    /* Формулювання звірені з офіційною специфікацією P24 (розділ
+       «API integration»): назви полів у панелі саме такі, і найчастіша
+       помилка — покласти в secretId ключ CRC замість ключа до звітів. */
     checklist: [
-      "Panel P24 → Moje dane → Konfiguracja → API: POS ID = P24_MERCHANT_ID",
-      "Там же «Klucz do API» = P24_API_KEY (окремий для sandbox і продакшену)",
-      "Там же «Adresy IP» = % — Vercel ходить з динамічних egress-IP",
-      "Klucz CRC = P24_CRC (теж окремий для sandbox і продакшену)",
+      "Панель P24 → Moje konto → Moje dane → «Dane API i konfiguracja»",
+      "user (posId/login) = P24_MERCHANT_ID — ID акаунта з листа про реєстрацію",
+      "secretId (API key) = P24_API_KEY — це «klucz do raportów», НЕ ключ CRC",
+      "CRC = P24_CRC — окреме поле, окремий ключ",
+      "Продакшен і sandbox мають ДВА різні комплекти всіх трьох значень",
+      "Поле «Adresy IP» має покривати адреси Vercel (динамічні) — інакше 401",
       "P24_SANDBOX=false у продакшені",
+      "TransactionVerify входить у типовий набір Web Services; якщо його вимкнено — це вмикає менеджер акаунта P24",
     ],
   });
 }

@@ -160,7 +160,7 @@ export default function OrdersPage() {
       {totals && (
         <div className="kc-stats-grid">
           <StatCard icon="check"  value={totals.paid_count} label="Оплачених замовлень" />
-          <StatCard icon="wallet" value={money(totals.paid_grosz, "PLN")} label="Отримано всього" />
+          <StatCard icon="cash" value={money(totals.paid_grosz, "PLN")} label="Отримано всього" />
           <StatCard icon="alert"  value={totals.failed_count} label="Не підтверджено провайдером" />
           <StatCard icon="clock"  value={totals.unclaimed_count} label="Ще ніхто не взяв у роботу" />
         </div>
@@ -192,7 +192,7 @@ export default function OrdersPage() {
         <EmptyState
           title="Замовлень поки немає"
           description="Щойно клієнт оплатить — замовлення з'явиться тут без ручного втручання."
-          icon="wallet"
+          icon="cash"
         />
       ) : (
         <DataTable columns={columns} data={orders} />

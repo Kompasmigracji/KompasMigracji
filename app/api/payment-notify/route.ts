@@ -27,7 +27,12 @@ import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
-import { verifyTransaction, isP24Configured } from "@/lib/przelewy24";
+import {
+  verifyTransaction,
+  isP24Configured,
+  verifyNotificationSign,
+  looksLikeP24Ip,
+} from "@/lib/przelewy24";
 import {
   recordNotify,
   markPaymentPaid,
@@ -78,6 +83,33 @@ export async function POST(req: NextRequest) {
 
   if (!sessionId || !orderId || !Number.isFinite(amount) || amount <= 0) {
     return NextResponse.json({ error: "Malformed notification" }, { status: 400 });
+  }
+
+  /* ── 0. Автентичність нотифікації ──────────────────────────────────────
+     Перевірка стоїть перед записом, бо запис тепер робиться беззастережно:
+     без неї будь-хто, хто вгадає session_id, створив би рядок у
+     kompas_payments і підняв команду по тривозі. Раніше від підробок
+     захищав сам виклик verify — тепер захист має спрацювати раніше.
+
+     Це локальний підрахунок SHA-384 від CRC: він не залежить від
+     доступності P24 і тому не може заблокувати реальну оплату. */
+  if (!verifyNotificationSign(body)) {
+    const ip = req.headers.get("x-forwarded-for");
+    console.warn(
+      `payment-notify: rejected notification with invalid sign (session=${sessionId}, ip=${ip ?? "?"})`,
+    );
+    /* Sentry — так, алерт у месенджер — ні: сканери стукають регулярно,
+       і команду не можна привчати ігнорувати сповіщення про платежі. */
+    Sentry.captureMessage(`payment-notify: invalid sign for session ${sessionId}`, "warning");
+    return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
+  }
+
+  /* М'яка перевірка джерела — лише для логів. Рішення вже ухвалив підпис,
+     а x-forwarded-for за проксі не є доказом. */
+  if (!looksLikeP24Ip(req.headers.get("x-forwarded-for"))) {
+    console.info(
+      `payment-notify: valid sign from unexpected IP ${req.headers.get("x-forwarded-for") ?? "?"}`,
+    );
   }
 
   /* ── 1. Запис нотифікації. До верифікації, завжди. ─────────────────── */

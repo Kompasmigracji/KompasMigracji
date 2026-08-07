@@ -101,6 +101,45 @@ function PaidView() {
   );
 }
 
+/* Гроші дійшли — провайдер надіслав нотифікацію, вона записана в
+   kompas_payments. Підтвердження від провайдера може ще не бути (верифікація
+   падала з 401 весь день 07.08), але це наша проблема, а не клієнтська: у
+   цьому стані пропонувати «спробувати ще раз» означає просити другу оплату
+   за вже оплачену послугу. Тому тут немає посилання на повторну оплату. */
+function ReceivedView({ orderNumber }: { orderNumber?: string }) {
+  return (
+    <div style={{ padding: "32px 28px" }}>
+      <div style={{ width: 76, height: 76, borderRadius: "50%", background: "rgba(22,163,74,0.1)", border: `2px solid ${P24_GREEN}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke={P24_GREEN} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M20 6L9 17l-5-5" />
+        </svg>
+      </div>
+      <h1 style={{ fontSize: 22, fontWeight: 800, color: P24_TEXT, textAlign: "center", margin: "0 0 8px" }}>
+        Оплату отримано
+      </h1>
+      {orderNumber && (
+        <p style={{ fontSize: 15, fontWeight: 700, color: P24_TEXT, textAlign: "center", margin: "0 0 12px" }}>
+          Замовлення {orderNumber}
+        </p>
+      )}
+      <p style={{ fontSize: 14, color: P24_MUTED, textAlign: "center", lineHeight: 1.7, margin: "0 0 20px" }}>
+        Ваш платіж зафіксовано, замовлення прийнято в роботу. Найближчим часом
+        з вами зв&apos;яжеться спеціаліст.{" "}
+        <strong style={{ color: P24_TEXT }}>Платити повторно не потрібно.</strong>
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+        <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: 8, background: P24_GREEN, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+          💬 Зв&apos;язатися з менеджером
+        </a>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <span style={{ fontSize: 12, color: P24_MUTED }}>Телефон: </span>
+        <a href="tel:+48729271848" style={{ fontSize: 13, fontWeight: 700, color: P24_TEXT, textDecoration: "none" }}>+48 729 271 848</a>
+      </div>
+    </div>
+  );
+}
+
 function PendingView({ stillWatching }: { stillWatching: boolean }) {
   return (
     <div style={{ padding: "32px 28px" }}>
@@ -157,8 +196,9 @@ export default function PaymentStatusClient() {
   const sessionId = searchParams.get("session");
 
   // No session id on the URL (old links, direct visits) — keep prior behavior.
-  const [state, setState] = useState<"checking" | "paid" | "pending">(sessionId ? "checking" : "paid");
+  const [state, setState] = useState<"checking" | "paid" | "received" | "pending">(sessionId ? "checking" : "paid");
   const [stillWatching, setStillWatching] = useState(true);
+  const [orderNumber, setOrderNumber] = useState<string | undefined>();
 
   useEffect(() => {
     if (!sessionId) return;
@@ -172,17 +212,26 @@ export default function PaymentStatusClient() {
         const res = await fetch(`/api/payment/status?session=${encodeURIComponent(sessionId)}`);
         const data = await res.json();
         if (cancelled) return;
+        if (data.orderNumber) setOrderNumber(data.orderNumber);
         if (data.status === "paid") {
           setState("paid");
           trackEvent("payment_completed", { sessionId });
           return;
+        }
+        /* Нотифікація провайдера дійшла — гроші пішли. Показуємо це одразу,
+           не чекаючи 20 секунд спінера, але опитування не спиняємо: після
+           успішної переперевірки статус стане paid. */
+        if (data.status === "received") {
+          setState("received");
         }
       } catch {
         // network hiccup — keep polling until we hit the attempt limit
       }
       if (cancelled) return;
       if (attempts === FAST_POLLS) {
-        setState("pending"); // stop showing the spinner, but keep polling below
+        /* setState із функцією: якщо ми вже показали «оплату отримано»,
+           відкочувати клієнта до «не підтверджено» не можна. */
+        setState((prev) => (prev === "checking" ? "pending" : prev));
       }
       if (attempts >= totalPolls) {
         setStillWatching(false);
@@ -199,6 +248,7 @@ export default function PaymentStatusClient() {
     <Shell>
       {state === "checking" && <CheckingView />}
       {state === "paid" && <PaidView />}
+      {state === "received" && <ReceivedView orderNumber={orderNumber} />}
       {state === "pending" && <PendingView stillWatching={stillWatching} />}
     </Shell>
   );

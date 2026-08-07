@@ -333,3 +333,71 @@ export async function diagnoseAccess(): Promise<AccessDiagnosis> {
 
   return base;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Перевірка автентичності нотифікації.
+
+   Потрібна саме тому, що /api/payment-notify тепер записує платіж ПЕРШОЮ
+   дією, до звернення до P24. Без цієї перевірки будь-хто, хто вгадає
+   session_id, міг би POST-ом створити рядок у kompas_payments і підняти
+   команду по тривозі. Раніше від цього захищав сам виклик verify (підробка
+   його не проходила) — тепер захист має стояти раніше.
+
+   Перевірка локальна: рахує SHA-384 від CRC-ключа, нікуди не ходить.
+   Тому вона працює навіть тоді, коли API P24 віддає 401, і не може
+   заблокувати запис реальної оплати через недоступність провайдера.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/** Діапазони серверів P24 (розділ «Server IP addresses» офіційної специфікації). */
+const P24_IP_RANGES = [
+  "5.252.202.255", "5.252.202.254", "20.215.81.124",
+  "193.178.213.", "91.220.177.", "20.215.183.", "134.112.88.",
+];
+
+/**
+ * Чи схожа адреса на сервер P24. Це м'яка перевірка для логів, а НЕ підстава
+ * відхилити нотифікацію: за Vercel стоїть проксі, x-forwarded-for можна
+ * підмінити, а діапазони P24 час від часу змінює. Рішення ухвалює підпис.
+ */
+export function looksLikeP24Ip(ip: string | null): boolean {
+  if (!ip) return false;
+  const addr = ip.split(",")[0].trim();
+  return P24_IP_RANGES.some((r) => (r.endsWith(".") ? addr.startsWith(r) : addr === r));
+}
+
+/**
+ * Звіряє поле `sign` нотифікації з власним підрахунком.
+ *
+ * Порядок ключів заданий специфікацією і значущий — хешується сам рядок JSON:
+ * {merchantId, posId, sessionId, amount, originAmount, currency, orderId,
+ *  methodId, statement, crc}
+ */
+export function verifyNotificationSign(body: Record<string, unknown>): boolean {
+  const { crc } = getConfig();
+  const provided = String(body.sign ?? "");
+  if (!provided) return false;
+
+  const expected = crypto
+    .createHash("sha384")
+    .update(
+      JSON.stringify({
+        merchantId:   Number(body.merchantId),
+        posId:        Number(body.posId),
+        sessionId:    String(body.sessionId ?? ""),
+        amount:       Number(body.amount),
+        originAmount: Number(body.originAmount),
+        currency:     String(body.currency ?? ""),
+        orderId:      Number(body.orderId),
+        methodId:     Number(body.methodId),
+        statement:    String(body.statement ?? ""),
+        crc,
+      }),
+    )
+    .digest("hex");
+
+  /* Порівняння сталого часу: підпис — секрет, і різниця в швидкості
+     відповіді дозволяє підбирати його побайтово. */
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(provided, "utf8");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
