@@ -274,3 +274,100 @@ export function employerHandoffEmailHtml(reason: string, contact: string, transc
 </div>
 <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;color:#374151;line-height:1.6;">${esc(transcript)}</div>`);
 }
+
+// ── Оплата ────────────────────────────────────────────────────────────────
+// До 07.08.2026 після успішної оплати не йшов ЖОДЕН лист: /api/payment-notify
+// слав тільки Telegram + WhatsApp адміну і не торкався цього файлу взагалі.
+// Клієнт після BLIK не отримував нічого, менеджер дізнавався про замовлення
+// з листа Przelewy24 на спільну пошту — тобто з листа банку, а не з системи.
+
+/** Клієнту: підтвердження оплати з номером замовлення. */
+export function paymentReceiptEmailHtml(opts: {
+  name?: string | null;
+  orderNumber: string;
+  service: string;
+  amount: string;
+  method?: string | null;
+}): string {
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x2705; Дякуємо за оплату</h2>
+<p style="margin:0 0 20px;color:#374151;font-size:15px;line-height:1.6;">
+  ${esc(opts.name || "Вітаємо")}, ваше замовлення прийнято та зареєстровано.
+</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <tr><td style="padding:6px 0;color:#6B7280;font-size:14px;">Номер замовлення</td>
+      <td style="padding:6px 0;text-align:right;font-weight:700;color:#111;font-size:15px;">${esc(opts.orderNumber)}</td></tr>
+  <tr><td style="padding:6px 0;color:#6B7280;font-size:14px;">Послуга</td>
+      <td style="padding:6px 0;text-align:right;color:#111;font-size:14px;">${esc(opts.service)}</td></tr>
+  <tr><td style="padding:6px 0;color:#6B7280;font-size:14px;">Сума</td>
+      <td style="padding:6px 0;text-align:right;color:#111;font-size:14px;">${esc(opts.amount)}</td></tr>
+  ${opts.method ? `<tr><td style="padding:6px 0;color:#6B7280;font-size:14px;">Спосіб оплати</td>
+      <td style="padding:6px 0;text-align:right;color:#111;font-size:14px;">${esc(opts.method)}</td></tr>` : ""}
+</table>
+<p style="margin:0 0 8px;color:#374151;font-size:15px;line-height:1.6;">
+  Найближчим часом з вами зв'яжеться спеціаліст у месенджері, який ви вказали
+  при оформленні. Номер замовлення варто зберегти — за ним ми знайдемо вашу
+  справу миттєво.
+</p>
+<p style="margin:0;color:#6B7280;font-size:14px;">Viber / WhatsApp: <strong>+48 729 271 848</strong></p>`);
+}
+
+/** Менеджеру: нове оплачене замовлення — те, за чим він починає роботу. */
+export function newPaidOrderEmailHtml(opts: {
+  orderNumber: string;
+  service: string;
+  amount: string;
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  messenger?: string | null;
+  method?: string | null;
+  paidAt: string;
+}): string {
+  const row = (label: string, value?: string | null) =>
+    value
+      ? `<tr><td style="padding:6px 0;color:#6B7280;font-size:14px;">${esc(label)}</td>
+             <td style="padding:6px 0;text-align:right;color:#111;font-size:14px;">${esc(value)}</td></tr>`
+      : "";
+
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x1F514; Нове оплачене замовлення</h2>
+<p style="margin:0 0 20px;color:#6B7280;font-size:14px;">${esc(opts.paidAt)}</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <tr><td style="padding:6px 0;color:#065F46;font-size:14px;">Замовлення</td>
+      <td style="padding:6px 0;text-align:right;font-weight:700;color:#065F46;font-size:15px;">${esc(opts.orderNumber)}</td></tr>
+  ${row("Послуга", opts.service)}
+  ${row("Сума", opts.amount)}
+  ${row("Спосіб оплати", opts.method)}
+  ${row("Клієнт", opts.name)}
+  ${row("Телефон", opts.phone)}
+  ${row("E-mail", opts.email)}
+  ${row("Месенджер", opts.messenger)}
+</table>
+<a href="${SITE}/admin/orders" style="display:inline-block;background:#D8232A;color:#fff;text-decoration:none;padding:12px 24px;border-radius:8px;font-weight:600;font-size:15px;">Відкрити картку клієнта &rarr;</a>`);
+}
+
+/** Адміну: гроші списані, але P24 не підтвердив. Найтерміновіший лист у системі. */
+export function paymentVerifyFailedEmailHtml(opts: {
+  orderNumber: string;
+  sessionId: string;
+  amount: string;
+  error: string;
+}): string {
+  return baseLayout(`
+<h2 style="margin:0 0 8px;font-size:20px;color:#991B1B;">&#x26A0;&#xFE0F; Платіж не підтверджено провайдером</h2>
+<p style="margin:0 0 16px;color:#374151;font-size:15px;line-height:1.6;">
+  Провайдер надіслав нотифікацію про оплату, але виклик верифікації не пройшов.
+  Гроші з клієнта, найімовірніше, вже списані — <strong>звір транзакцію в панелі
+  провайдера вручну</strong> і не проси клієнта платити повторно.
+</p>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <tr><td style="padding:6px 0;color:#7F1D1D;font-size:14px;">Замовлення</td>
+      <td style="padding:6px 0;text-align:right;font-weight:700;color:#7F1D1D;font-size:15px;">${esc(opts.orderNumber)}</td></tr>
+  <tr><td style="padding:6px 0;color:#7F1D1D;font-size:14px;">Сума</td>
+      <td style="padding:6px 0;text-align:right;color:#7F1D1D;font-size:14px;">${esc(opts.amount)}</td></tr>
+  <tr><td style="padding:6px 0;color:#7F1D1D;font-size:14px;">Сесія</td>
+      <td style="padding:6px 0;text-align:right;color:#7F1D1D;font-size:13px;">${esc(opts.sessionId)}</td></tr>
+</table>
+<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;white-space:pre-wrap;font-size:13px;color:#374151;line-height:1.6;">${esc(opts.error)}</div>`);
+}

@@ -50,6 +50,10 @@ export async function runLeadFollowup() {
 
     // Mark as escalated
     const ids = stale.map((l: any) => l.id);
+    /* leads.id — uuid (db/schema.sql:106), а не bigint. Приведення ::bigint[]
+       падало з `operator does not exist: uuid = bigint` на КОЖНОМУ запуску
+       з 05.08.2026, і разом із ним валився весь daily-ops: ескалація лідів
+       не працювала жодного разу з моменту, як крон увімкнули. */
     await q(
       `UPDATE leads SET escalated_at=now() WHERE id = ANY($1::uuid[])`,
       [ids],

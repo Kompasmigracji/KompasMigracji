@@ -26,6 +26,7 @@ import { runLeadFollowup } from "../lead-followup/route";
 import { runNpsSurvey } from "../nps-survey/route";
 import { runSubscriptionRenewal } from "../subscription-renewal/route";
 import { runWeeklyDigest } from "../weekly-digest/route";
+import { runPaymentReverify } from "../payment-reverify/route";
 
 function checkCronAuth(req: NextRequest): boolean {
   const authHeader = req.headers.get("authorization");
@@ -55,6 +56,9 @@ export async function GET(req: NextRequest) {
     safe("daily-snapshot", runDailySnapshot),
     safe("dues-reminders", runDuesReminders),
     safe("lead-followup", runLeadFollowup),
+    /* Платежі, які P24 не підтвердив — гроші клієнта вже списані, тож ця
+       задача має шанс повернути реальні злоті, а не просто прибрати помилку. */
+    safe("payment-reverify", runPaymentReverify),
     safe("nps-survey", runNpsSurvey),
     safe("subscription-renewal", runSubscriptionRenewal),
     ...(isMonday ? [safe("weekly-digest", runWeeklyDigest)] : []),

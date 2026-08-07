@@ -1,29 +1,63 @@
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 /* /api/payment-notify — Przelewy24 IPN webhook.
-   Після успішної верифікації:
-   1. Знаходить лід за session_id
-   2. Оновлює paid_at + status = 'closed'
-   3. Надсилає авто-повідомлення клієнту в Telegram (якщо є chat_id)
-   4. Сповіщає адмін-чат про оплату */
+ *
+ * Порядок дій тут навмисний і важливіший за будь-яку іншу деталь у файлі:
+ *
+ *   1. записати нотифікацію в kompas_payments   ← ПЕРШИМ, до перевірок
+ *   2. верифікувати транзакцію в P24
+ *   3. якщо ok   → позначити оплату, лід, листи клієнту й менеджеру
+ *      якщо ні   → позначити verify_failed і КРИКНУТИ адміну
+ *
+ * Чому саме так. 07.08.2026 клієнт оплатив 250 zł через BLIK. P24 списав
+ * гроші й надіслав нотифікацію. Виклик transaction/verify повернув
+ * 401 Incorrect authentication, і роут вийшов з 502 у рядку, який стояв ДО
+ * будь-якого запису в базу. Результат: leads.paid_at лишився NULL, у CRM
+ * порожньо, сторінка /payment/success показала клієнту «Оплату ще не
+ * підтверджено» з кнопкою «Спробувати ще раз», а єдиним доказом платежу
+ * був лист від Przelewy24 на спільну пошту.
+ *
+ * Верифікація може падати з причин, які від нас не залежать: протермінований
+ * ключ, IP поза білим списком, аварія на боці P24. Жодна з них не є підставою
+ * втратити факт оплати. */
 import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
-import crypto from "crypto";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
+import { verifyTransaction, isP24Configured } from "@/lib/przelewy24";
+import {
+  recordNotify,
+  markPaymentPaid,
+  markPaymentVerifyFailed,
+  formatAmount,
+} from "@/lib/payments";
+import {
+  sendEmail,
+  paymentReceiptEmailHtml,
+  newPaidOrderEmailHtml,
+  paymentVerifyFailedEmailHtml,
+} from "@/lib/email";
 
 const ADMIN_WA_PHONE = "48729417050";
+const MANAGER_EMAIL =
+  process.env.MANAGER_EMAIL || process.env.ADMIN_EMAIL || "kompas.migracji@gmail.com";
+
+/** Сповіщення команди, яке не має права впасти й забрати з собою платіж. */
+async function alertTeam(html: string): Promise<void> {
+  const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
+  const plain = html.replace(/<\/?[a-z]+>/g, "");
+  await Promise.allSettled([
+    adminChat ? sendMessage(adminChat, html) : Promise.resolve(),
+    sendWhatsApp(ADMIN_WA_PHONE, plain),
+  ]);
+}
 
 export async function POST(req: NextRequest) {
-  const merchantId = parseInt(process.env.P24_MERCHANT_ID ?? "", 10);
-  const crc        = process.env.P24_CRC;
-  const apiKey     = process.env.P24_API_KEY;
-  const sandbox    = process.env.P24_SANDBOX === "true";
-
-  if (!merchantId || !crc || !apiKey) {
-    const err = new Error("payment-notify: P24 not configured (missing merchantId/crc/apiKey)");
+  if (!isP24Configured()) {
+    const err = new Error("payment-notify: P24 not configured");
     console.error(err.message);
     Sentry.captureException(err);
     return NextResponse.json({ error: "Not configured" }, { status: 500 });
@@ -36,158 +70,187 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { sessionId, orderId, amount, currency } = body as Record<string, string | number>;
+  const sessionId = String(body.sessionId ?? "");
+  const orderId   = Number(body.orderId ?? 0);
+  const amount    = Number(body.amount ?? 0);
+  const currency  = String(body.currency ?? "PLN");
+  const methodId  = body.methodId != null ? String(body.methodId) : null;
 
-  /* Верифікація нотифікації від Przelewy24 покладається виключно на
-     авторитетний виклик POST /api/v1/transaction/verify нижче (підписаний
-     мерчант-креденшелами, які неможливо підробити без реальних ключів).
-     Раніше тут ще стояла локально обчислена перевірка підпису самого
-     notify-запиту, яка ніколи не блокувала запит при розбіжності (лише
-     console.warn) — вона була мертвим кодом, що створював оманливе
-     враження перевірки підпису, тому її прибрано. */
-  const BASE = sandbox
-    ? "https://sandbox.przelewy24.pl"
-    : "https://secure.przelewy24.pl";
-
-  /* ── 2. Верифікація транзакції в P24 ───────────────────────────── */
-  const verifySign = crypto
-    .createHash("sha384")
-    .update(JSON.stringify({ sessionId, orderId, amount, currency, crc }))
-    .digest("hex");
-
-  let verified = false;
-  try {
-    const r = await fetch(`${BASE}/api/v1/transaction/verify`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Basic ${Buffer.from(`${merchantId}:${apiKey}`).toString("base64")}`,
-      },
-      body: JSON.stringify({
-        merchantId,
-        posId: merchantId,
-        sessionId,
-        amount,
-        currency,
-        orderId,
-        sign: verifySign,
-      }),
-    });
-
-    if (!r.ok) {
-      const text = await r.text();
-      console.error("P24 verify failed:", text);
-      Sentry.captureException(new Error(`P24 verify failed: ${text}`));
-      return NextResponse.json({ error: "Verification failed" }, { status: 502 });
-    }
-    verified = true;
-  } catch (err) {
-    console.error("payment-notify error:", err);
-    Sentry.captureException(err);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+  if (!sessionId || !orderId || !Number.isFinite(amount) || amount <= 0) {
+    return NextResponse.json({ error: "Malformed notification" }, { status: 400 });
   }
 
-  if (!verified) return NextResponse.json({ status: "ok" });
+  /* ── 1. Запис нотифікації. До верифікації, завжди. ─────────────────── */
+  let payment;
+  try {
+    payment = await recordNotify({
+      provider:    "przelewy24",
+      sessionId,
+      p24OrderId:  orderId,
+      method:      methodId,
+      amountGrosz: amount,
+      currency,
+      raw:         body,
+    });
+  } catch (err) {
+    /* База недоступна — лишаємо слід бодай у Sentry й месенджері,
+       інакше платіж зникне безслідно. */
+    console.error("payment-notify: failed to record notification", err);
+    Sentry.captureException(err);
+    await alertTeam(
+      `🆘 <b>Оплата надійшла, але НЕ ЗАПИСАЛАСЯ в базу</b>\n` +
+      `Session: <code>${sessionId}</code>\nP24 orderId: ${orderId}\n` +
+      `Сума: ${formatAmount(amount, currency)}\n` +
+      `Звір транзакцію в панелі P24 вручну.`,
+    );
+    /* 500 → P24 повторить нотифікацію пізніше. */
+    return NextResponse.json({ error: "Storage error" }, { status: 500 });
+  }
 
-  /* ── 3. Знайти лід за session_id ───────────────────────────────── */
-  type LeadRow = { id: string; chat_id: number | null; first_name: string | null; service: string | null; contact: string | null; situation: string | null };
+  /* ── 2. Верифікація ────────────────────────────────────────────────── */
+  const verification = await verifyTransaction({ sessionId, orderId, amount, currency });
+
+  if (!verification.ok) {
+    const detail = `HTTP ${verification.status}: ${verification.body}`;
+    console.error("P24 verify failed:", detail);
+    Sentry.captureException(new Error(`P24 verify failed: ${detail}`));
+
+    await markPaymentVerifyFailed(sessionId, detail);
+
+    await alertTeam(
+      `⚠️ <b>Платіж не підтверджено провайдером</b>\n` +
+      `Замовлення: <b>${payment.order_number}</b>\n` +
+      `Сума: ${formatAmount(amount, currency)}\n` +
+      `Session: <code>${sessionId}</code>\n\n` +
+      `Гроші з клієнта, найімовірніше, вже списані. Звір транзакцію в панелі P24 ` +
+      `і НЕ проси клієнта платити повторно.\n\n${detail}`,
+    );
+
+    void sendEmail(
+      MANAGER_EMAIL,
+      `⚠️ Платіж ${payment.order_number} не підтверджено — потрібна ручна звірка`,
+      paymentVerifyFailedEmailHtml({
+        orderNumber: payment.order_number,
+        sessionId,
+        amount: formatAmount(amount, currency),
+        error: detail,
+      }),
+      "payment_verify_failed",
+    );
+
+    /* 502 → P24 повторить нотифікацію; /api/cron/payment-reverify теж
+       підбере цей рядок, коли доступ полагодять. */
+    return NextResponse.json({ error: "Verification failed" }, { status: 502 });
+  }
+
+  /* ── 3. Фіксація оплати (ідемпотентно) ─────────────────────────────── */
+  const newlyPaid = await markPaymentPaid(sessionId);
+  if (!newlyPaid) {
+    return NextResponse.json({ status: "ok", duplicate: true });
+  }
+
+  /* ── 4. Лід ────────────────────────────────────────────────────────── */
+  type LeadRow = {
+    id: string;
+    chat_id: number | null;
+    first_name: string | null;
+    service: string | null;
+    contact: string | null;
+    situation: string | null;
+    email: string | null;
+  };
+
   let lead: LeadRow | null = null;
   try {
     lead = (await one(
-      `SELECT id, chat_id, first_name, service, contact, situation
+      `SELECT id, chat_id, first_name, service, contact, situation, email
          FROM leads
         WHERE session_id = $1 AND deleted_at IS NULL
         LIMIT 1`,
       [sessionId],
     )) as LeadRow | null;
-  } catch {
-    // Якщо стовпця session_id ще немає — просто логуємо і продовжуємо
-    console.warn("payment-notify: session_id column missing or not found");
+  } catch (err) {
+    console.warn("payment-notify: lead lookup failed", err);
   }
 
-  if (lead) {
-    /* ── 4. Оновити статус ліда (і дзеркального kompas_leads) ─────── */
-    const { alreadyPaid } = await markLeadPaid(lead.id);
-    if (alreadyPaid) {
-      return NextResponse.json({ status: "ok" });
-    }
+  if (lead) await markLeadPaid(lead.id);
 
-    /* ── 5. Авто-повідомлення клієнту в Telegram ────────────────── */
-    if (lead.chat_id) {
-      try {
-        // Шукаємо шаблон з категорії payment + auto_send = true
-        const tpl = (await one(
-          `SELECT body FROM message_templates
-            WHERE category = 'payment' AND auto_send = true
-            ORDER BY sort_order ASC LIMIT 1`,
-        )) as { body: string } | null;
+  const serviceLabel =
+    payment.description ?? lead?.situation?.split("\n")[0] ?? lead?.service ?? "Послуга";
+  const amountLabel = formatAmount(amount, currency);
+  const clientEmail = payment.customer_email ?? lead?.email ?? null;
+  const clientName  = payment.customer_name  ?? lead?.first_name ?? null;
+  const clientPhone = payment.customer_phone ?? lead?.contact ?? null;
 
-        if (tpl) {
-          const text = renderTemplate(tpl.body, {
+  /* ── 5. Лист клієнту ───────────────────────────────────────────────── */
+  if (clientEmail) {
+    void sendEmail(
+      clientEmail,
+      `Оплата отримана — замовлення ${payment.order_number}`,
+      paymentReceiptEmailHtml({
+        name:        clientName,
+        orderNumber: payment.order_number,
+        service:     serviceLabel,
+        amount:      amountLabel,
+        method:      payment.method,
+      }),
+      "payment_receipt",
+    );
+  }
+
+  /* ── 6. Лист менеджеру ─────────────────────────────────────────────── */
+  void sendEmail(
+    MANAGER_EMAIL,
+    `🔔 Нове оплачене замовлення ${payment.order_number} — ${amountLabel}`,
+    newPaidOrderEmailHtml({
+      orderNumber: payment.order_number,
+      service:     serviceLabel,
+      amount:      amountLabel,
+      name:        clientName,
+      phone:       clientPhone,
+      email:       clientEmail,
+      messenger:   payment.messenger,
+      method:      payment.method,
+      paidAt:      new Date().toLocaleString("uk-UA", { timeZone: "Europe/Warsaw" }),
+    }),
+    "new_paid_order",
+  );
+
+  /* ── 7. Авто-повідомлення клієнту в Telegram ───────────────────────── */
+  if (lead?.chat_id) {
+    try {
+      const tpl = (await one(
+        `SELECT body FROM message_templates
+          WHERE category = 'payment' AND auto_send = true
+          ORDER BY sort_order ASC LIMIT 1`,
+      )) as { body: string } | null;
+
+      const text = tpl
+        ? renderTemplate(tpl.body, {
             name:    lead.first_name ?? "клієнте",
-            service: lead.service   ?? "",
+            service: lead.service ?? "",
             contact: "+48 729 271 848",
-          });
-          await sendMessage(lead.chat_id, text);
-        } else {
-          // Fallback якщо шаблону немає
-          await sendMessage(
-            lead.chat_id,
-            `✅ <b>Оплату підтверджено!</b>\n\nДякуємо за довіру. Ваш менеджер зв'яжеться з вами найближчим часом.`,
-          );
-        }
-      } catch (err) {
-        console.error("payment-notify: Telegram send failed", err);
-        // Не ламаємо відповідь P24 через помилку Telegram
-      }
+          })
+        : `✅ <b>Оплату підтверджено!</b>\n\nЗамовлення <b>${payment.order_number}</b>.\n` +
+          `Дякуємо за довіру. Ваш менеджер зв'яжеться з вами найближчим часом.`;
+
+      await sendMessage(lead.chat_id, text);
+    } catch (err) {
+      console.error("payment-notify: Telegram send failed", err);
     }
-
-    /* ── 6. Сповіщення адмін-чату (Telegram + WhatsApp) ───────── */
-    const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
-    const amountFormatted = ((Number(amount) || 0) / 100).toFixed(2);
-
-    const tgAdminText =
-      `💳 <b>Нова оплата!</b>\n` +
-      `👤 Клієнт: ${lead.first_name ?? "—"}\n` +
-      (lead.contact   ? `📞 Телефон: ${lead.contact}\n`                  : "") +
-      (lead.situation ? `📝 Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
-      (lead.service   ? `🏷 Сервіс: ${lead.service}\n`                   : "") +
-      `💰 Сума: ${amountFormatted} ${currency}\n` +
-      `🔑 Session: <code>${sessionId}</code>`;
-
-    if (adminChat) {
-      try { await sendMessage(adminChat, tgAdminText); } catch { /* ігноруємо */ }
-    }
-
-    // WhatsApp нотифікація
-    try {
-      const waText =
-        `💳 Нова оплата!\n` +
-        `Клієнт: ${lead.first_name ?? "—"}\n` +
-        (lead.contact   ? `Телефон: ${lead.contact}\n`                  : "") +
-        (lead.situation ? `Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
-        `Сума: ${amountFormatted} ${currency}`;
-      await sendWhatsApp(ADMIN_WA_PHONE, waText);
-    } catch { /* ігноруємо */ }
-
-  } else {
-    // Лід не знайдено — просто сповіщаємо адміна
-    const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
-    if (adminChat) {
-      try {
-        await sendMessage(
-          adminChat,
-          `💳 Оплата отримана (лід не знайдено)\nSession: <code>${sessionId}</code>`,
-        );
-      } catch { /* ігноруємо */ }
-    }
-    try {
-      await sendWhatsApp(
-        ADMIN_WA_PHONE,
-        `💳 Нова оплата!\n(лід не знайдено)\nSession: ${sessionId}`,
-      );
-    } catch { /* ігноруємо */ }
   }
 
-  return NextResponse.json({ status: "ok" });
+  /* ── 8. Сповіщення команди ─────────────────────────────────────────── */
+  await alertTeam(
+    `💳 <b>Нова оплата!</b>\n` +
+    `Замовлення: <b>${payment.order_number}</b>\n` +
+    `👤 Клієнт: ${clientName ?? "—"}\n` +
+    (clientPhone ? `📞 Телефон: ${clientPhone}\n` : "") +
+    `📝 Послуга: ${serviceLabel}\n` +
+    `💰 Сума: ${amountLabel}\n` +
+    (lead ? "" : "⚠️ Лід за цією сесією не знайдено — картку завести вручну\n") +
+    `🔑 Session: <code>${sessionId}</code>`,
+  );
+
+  return NextResponse.json({ status: "ok", orderNumber: payment.order_number });
 }
