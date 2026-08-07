@@ -101,7 +101,7 @@ function PaidView() {
   );
 }
 
-function PendingView() {
+function PendingView({ stillWatching }: { stillWatching: boolean }) {
   return (
     <div style={{ padding: "32px 28px" }}>
       <div style={{ width: 76, height: 76, borderRadius: "50%", background: "rgba(180,83,9,0.1)", border: `2px solid ${P24_AMBER}`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px" }}>
@@ -112,18 +112,26 @@ function PendingView() {
       <h1 style={{ fontSize: 22, fontWeight: 800, color: P24_TEXT, textAlign: "center", margin: "0 0 8px" }}>
         Оплату ще не підтверджено
       </h1>
-      <p style={{ fontSize: 14, color: P24_MUTED, textAlign: "center", lineHeight: 1.7, margin: "0 0 24px" }}>
-        Якщо ви щойно завершили оплату — зачекайте, підтвердження іноді приходить із затримкою,
-        і ми напишемо вам у WhatsApp, як тільки отримаємо його від банку.
-        <br />Якщо оплату не було завершено — спробуйте ще раз.
+      <p style={{ fontSize: 14, color: P24_MUTED, textAlign: "center", lineHeight: 1.7, margin: "0 0 16px" }}>
+        Якщо банк або BLIK вже показав вам «Платіж здійснено» — оплата пройшла,
+        просто підтвердження від банку до нас іноді йде довше.{" "}
+        <strong style={{ color: P24_TEXT }}>Не платіть повторно</strong> — напишіть нам,
+        і ми звіримо оплату вручну.
       </p>
+      {stillWatching && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 20 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: P24_AMBER, animation: "pulse 1.4s ease-in-out infinite" }} />
+          <style>{`@keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }`}</style>
+          <span style={{ fontSize: 12, color: P24_MUTED }}>Продовжуємо перевіряти автоматично…</span>
+        </div>
+      )}
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-        <Link href="/pricing" style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: 8, background: P24_GREEN, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
-          Спробувати ще раз →
-        </Link>
-        <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display: "block", textAlign: "center", padding: "11px 0", borderRadius: 8, background: "rgba(37,211,102,0.1)", border: "1.5px solid rgba(37,211,102,0.3)", color: "#16a34a", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
+        <a href="https://wa.me/48729271848" target="_blank" rel="noreferrer" style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: 8, background: P24_GREEN, color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}>
           💬 Зв&apos;язатися з менеджером
         </a>
+        <Link href="/pricing" style={{ display: "block", textAlign: "center", padding: "11px 0", borderRadius: 8, background: "#fff", border: `1.5px solid ${P24_BORDER}`, color: P24_MUTED, fontWeight: 700, fontSize: 13, textDecoration: "none" }}>
+          Оплату не було завершено — спробувати ще раз
+        </Link>
       </div>
       <div style={{ textAlign: "center" }}>
         <span style={{ fontSize: 12, color: P24_MUTED }}>Телефон: </span>
@@ -133,8 +141,16 @@ function PendingView() {
   );
 }
 
-const POLL_INTERVAL_MS = 2500;
-const MAX_POLLS = 6; // ~15s total
+/* P24/BLIK confirmation can lag noticeably behind the bank's own "success"
+   screen. First ~20s poll fast and show a spinner; if still unconfirmed,
+   switch to the "not yet confirmed" view (so the customer isn't stuck
+   staring at a spinner) but keep polling quietly in the background for a
+   few more minutes and flip to PaidView the moment the webhook lands —
+   without that, a merely-late webhook looks identical to a lost one. */
+const FAST_POLL_MS = 2500;
+const FAST_POLLS = 8; // ~20s of visible "checking" spinner
+const SLOW_POLL_MS = 5000;
+const SLOW_POLLS = 24; // +~120s of silent background polling
 
 export default function PaymentStatusClient() {
   const searchParams = useSearchParams();
@@ -142,11 +158,13 @@ export default function PaymentStatusClient() {
 
   // No session id on the URL (old links, direct visits) — keep prior behavior.
   const [state, setState] = useState<"checking" | "paid" | "pending">(sessionId ? "checking" : "paid");
+  const [stillWatching, setStillWatching] = useState(true);
 
   useEffect(() => {
     if (!sessionId) return;
     let cancelled = false;
     let attempts = 0;
+    const totalPolls = FAST_POLLS + SLOW_POLLS;
 
     const poll = async () => {
       attempts += 1;
@@ -163,11 +181,14 @@ export default function PaymentStatusClient() {
         // network hiccup — keep polling until we hit the attempt limit
       }
       if (cancelled) return;
-      if (attempts >= MAX_POLLS) {
-        setState("pending");
+      if (attempts === FAST_POLLS) {
+        setState("pending"); // stop showing the spinner, but keep polling below
+      }
+      if (attempts >= totalPolls) {
+        setStillWatching(false);
         return;
       }
-      setTimeout(poll, POLL_INTERVAL_MS);
+      setTimeout(poll, attempts < FAST_POLLS ? FAST_POLL_MS : SLOW_POLL_MS);
     };
 
     poll();
@@ -178,7 +199,7 @@ export default function PaymentStatusClient() {
     <Shell>
       {state === "checking" && <CheckingView />}
       {state === "paid" && <PaidView />}
-      {state === "pending" && <PendingView />}
+      {state === "pending" && <PendingView stillWatching={stillWatching} />}
     </Shell>
   );
 }
