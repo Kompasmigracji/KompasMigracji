@@ -19,6 +19,7 @@ import { Spinner, EmptyState, Badge, DataTable, StatCard, SearchInput } from "@/
 const STATUS_META = {
   paid:          { badge: "green", label: "Оплачено" },
   pending:       { badge: "blue",  label: "Очікує підтвердження" },
+  notified:      { badge: "blue",  label: "Нотифікація отримана" },
   verify_failed: { badge: "red",   label: "НЕ ПІДТВЕРДЖЕНО" },
   failed:        { badge: "red",   label: "Помилка" },
   refunded:      { badge: "dim",   label: "Повернено" },

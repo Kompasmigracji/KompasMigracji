@@ -40,15 +40,14 @@ ALTER TABLE kompas_payments
 
 -- 5. Дозволені статуси. verify_failed — реальний стан «гроші списані,
 --    але P24 не підтвердив»; його не можна плутати ні з pending, ні з paid.
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_constraint WHERE conname = 'kompas_payments_status_check'
-  ) THEN
-    ALTER TABLE kompas_payments ADD CONSTRAINT kompas_payments_status_check
-      CHECK (status IN ('pending','paid','verify_failed','failed','refunded','cancelled'));
-  END IF;
-END $$;
+--
+--    УВАГА: констрейнт із такою назвою вже існував (список без 'cancelled',
+--    зате з 'notified'). Обгортка IF NOT EXISTS тут мовчки нічого б не
+--    зробила, і база відхилила б 'cancelled' при першому ж записі —
+--    хоча код типізує його як валідний. Тому DROP + ADD, а не IF NOT EXISTS.
+ALTER TABLE kompas_payments DROP CONSTRAINT IF EXISTS kompas_payments_status_check;
+ALTER TABLE kompas_payments ADD CONSTRAINT kompas_payments_status_check
+  CHECK (status IN ('pending','notified','paid','verify_failed','failed','refunded','cancelled'));
 
 CREATE INDEX IF NOT EXISTS kompas_payments_unresolved_idx
   ON kompas_payments (status, last_verify_at NULLS FIRST)

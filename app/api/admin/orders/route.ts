@@ -58,7 +58,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const auth = await requireAuth(["admin", "moderator", "manager", "lawyer", "sales"]);
-  if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
+  /* requireAuth повертає або {error,status}, або {user} — перевіряємо обидва,
+     інакше auth.user лишається possibly undefined (той самий патерн, що в
+     app/api/admin/auth/2fa/*). */
+  if (auth.error || !auth.user) {
+    return NextResponse.json({ error: auth.error || "Unauthorized" }, { status: auth.status || 401 });
+  }
 
   const body = await req.json().catch(() => ({}));
   const sessionId = String(body.session_id || "");
@@ -71,7 +76,7 @@ export async function POST(req: NextRequest) {
         SET claimed_by = $2, claimed_at = now()
       WHERE session_id = $1 AND claimed_at IS NULL
       RETURNING order_number, lead_uuid`,
-    [sessionId, auth.user.id],
+    [sessionId, Number(auth.user.sub)],
   )) as { order_number: string; lead_uuid: string | null } | null;
 
   if (!row) {

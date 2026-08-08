@@ -12,6 +12,10 @@ import { q, one } from "@/lib/db";
 
 export type PaymentStatus =
   | "pending"
+  /* 'notified' лишився з ручного відновлення 07.08 — нотифікація прийшла,
+     верифікацію ще не проводили. Нового коду, що його пише, немає, але в
+     базі значення дозволене, тож тип має його знати. */
+  | "notified"
   | "paid"
   | "verify_failed"
   | "failed"
@@ -35,6 +39,8 @@ export interface PaymentRow {
   status: PaymentStatus;
   amount_grosz: number;
   currency: string;
+  provider: string | null;
+  method: string | null;
   description: string | null;
   customer_name: string | null;
   customer_email: string | null;
