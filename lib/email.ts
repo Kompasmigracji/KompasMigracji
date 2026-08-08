@@ -288,6 +288,8 @@ export function paymentReceiptEmailHtml(opts: {
   service: string;
   amount: string;
   method?: string | null;
+  /** PIN до порталу — видається автоматично в мить підтвердження оплати */
+  portalPin?: string | null;
 }): string {
   return baseLayout(`
 <h2 style="margin:0 0 8px;font-size:20px;color:#111;">&#x2705; Дякуємо за оплату</h2>
@@ -309,6 +311,16 @@ export function paymentReceiptEmailHtml(opts: {
   при оформленні. Номер замовлення варто зберегти — за ним ми знайдемо вашу
   справу миттєво.
 </p>
+${opts.portalPin ? `
+<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;padding:16px;margin:0 0 20px;">
+  <div style="font-size:13px;color:#6B7280;margin:0 0 8px;">Особистий кабінет</div>
+  <p style="margin:0 0 12px;color:#374151;font-size:14px;line-height:1.6;">
+    Стежте за станом справи та своїми оплатами в будь-який момент —
+    вхід за PIN-кодом, без реєстрації та паролів.
+  </p>
+  <div style="font-family:monospace;font-size:20px;font-weight:700;letter-spacing:0.15em;color:#111;margin:0 0 12px;">${esc(opts.portalPin)}</div>
+  <a href="${SITE}/portal" style="display:inline-block;background:#111;color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-weight:600;font-size:14px;">Відкрити кабінет &rarr;</a>
+</div>` : ""}
 <p style="margin:0;color:#6B7280;font-size:14px;">Viber / WhatsApp: <strong>+48 729 271 848</strong></p>`);
 }
 

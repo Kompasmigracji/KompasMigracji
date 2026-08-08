@@ -19,6 +19,12 @@ const STATUS_MAP = {
   active:      { label:"В роботі",               color: ORANGE, icon:"⚙️" },
 };
 
+const PAYMENT_MAP = {
+  paid:     { label:"Оплачено",        color: GREEN,  icon:"✓" },
+  received: { label:"Оплату отримано", color: GREEN,  icon:"✓" },
+  unpaid:   { label:"Не оплачено",     color:"#6B7280", icon:"•" },
+};
+
 const URGENCY_MAP = {
   low:    { label:"Звичайна",  color:"#6B7280" },
   medium: { label:"Середня",   color: ORANGE },
@@ -170,6 +176,62 @@ export default function PortalCasePage() {
                 {steps.map((s, i) => <Step key={i} n={i+1} label={s.label} done={s.done}/>)}
               </div>
             </div>
+
+            {/* Замовлення та оплати — головне, заради чого клієнт сюди заходить.
+                verify_failed показуємо як «оплату отримано»: для клієнта гроші
+                пішли, а те, що провайдер нам цього не підтвердив, — наша
+                внутрішня проблема, а не привід натякати, що він не платив. */}
+            {data.orders?.length > 0 && (
+              <div style={{ borderTop:"1px solid #E5E7EB", paddingTop:16, marginBottom:20 }}>
+                <div style={{ fontSize:11, fontWeight:600, color:"#9CA3AF", textTransform:"uppercase",
+                  letterSpacing:"0.05em", marginBottom:12 }}>Замовлення та оплати</div>
+                <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                  {data.orders.map((o) => {
+                    const pay = PAYMENT_MAP[o.paymentStatus] || PAYMENT_MAP.unpaid;
+                    return (
+                      <div key={o.orderNumber} style={{ border:"1px solid #E5E7EB", borderRadius:8,
+                        padding:"10px 12px" }}>
+                        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center",
+                          marginBottom:4 }}>
+                          <span style={{ fontFamily:"monospace", fontWeight:700, fontSize:13, color:"#111" }}>
+                            {o.orderNumber}
+                          </span>
+                          <span style={{ fontSize:11, fontWeight:700, color: pay.color }}>
+                            {pay.icon} {pay.label}
+                          </span>
+                        </div>
+                        {o.service && (
+                          <div style={{ fontSize:12, color:"#374151", marginBottom:2 }}>{o.service}</div>
+                        )}
+                        <div style={{ display:"flex", justifyContent:"space-between", fontSize:11,
+                          color:"#6B7280" }}>
+                          <span>{new Date(o.date).toLocaleDateString("uk-UA")}</span>
+                          <strong style={{ color:"#111" }}>{o.amount}</strong>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Терміни — те, що клієнту справді не можна проґавити */}
+            {data.deadlines?.length > 0 && (
+              <div style={{ borderTop:"1px solid #E5E7EB", paddingTop:16, marginBottom:20 }}>
+                <div style={{ fontSize:11, fontWeight:600, color:"#9CA3AF", textTransform:"uppercase",
+                  letterSpacing:"0.05em", marginBottom:12 }}>Найближчі терміни</div>
+                <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                  {data.deadlines.map((d, i) => (
+                    <div key={i} style={{ display:"flex", justifyContent:"space-between", gap:12 }}>
+                      <span style={{ fontSize:12, color:"#374151" }}>{d.title}</span>
+                      <strong style={{ fontSize:12, color:"#111", whiteSpace:"nowrap" }}>
+                        {new Date(d.date).toLocaleDateString("uk-UA")}
+                      </strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Notes */}
             {data.notes && (

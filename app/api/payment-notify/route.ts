@@ -27,6 +27,7 @@ import { sendMessage } from "@/lib/telegram";
 import { sendWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
+import { issuePortalPin } from "@/lib/portal";
 import {
   verifyTransaction,
   isP24Configured,
@@ -47,6 +48,7 @@ import {
 } from "@/lib/email";
 
 const ADMIN_WA_PHONE = "48729417050";
+const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://www.kompasmigracji.com").replace(/\/$/, "");
 const MANAGER_EMAIL =
   process.env.MANAGER_EMAIL || process.env.ADMIN_EMAIL || "kompas.migracji@gmail.com";
 
@@ -207,6 +209,26 @@ export async function POST(req: NextRequest) {
 
   if (lead) await markLeadPaid(lead.id);
 
+  /* ── 4a. Доступ до порталу ─────────────────────────────────────────
+     PIN видається саме тут, у мить підтвердження оплати. Портал, доступ до
+     якого треба комусь не забути видати вручну, залишається порожнім — це
+     вже перевірено: kompas_portal_sessions пролежала з нулем рядків увесь
+     час свого існування. Клієнт, який щойно заплатив, має отримати доступ
+     не питаючи. */
+  let portalPin: string | null = null;
+  if (lead) {
+    try {
+      const session = await issuePortalPin(lead.id, {
+        clientName: lead.first_name,
+        service:    lead.situation?.split("\n")[0] || lead.service,
+      });
+      portalPin = session.pin;
+    } catch (err) {
+      /* Портал — приємний бонус, а не умова зарахування оплати. */
+      console.error("payment-notify: portal pin issue failed", err);
+    }
+  }
+
   const serviceLabel =
     payment.description ?? lead?.situation?.split("\n")[0] ?? lead?.service ?? "Послуга";
   const amountLabel = formatAmount(amount, currency);
@@ -225,6 +247,7 @@ export async function POST(req: NextRequest) {
         service:     serviceLabel,
         amount:      amountLabel,
         method:      payment.method,
+        portalPin,
       }),
       "payment_receipt",
     );
@@ -266,7 +289,11 @@ export async function POST(req: NextRequest) {
         : `✅ <b>Оплату підтверджено!</b>\n\nЗамовлення <b>${payment.order_number}</b>.\n` +
           `Дякуємо за довіру. Ваш менеджер зв'яжеться з вами найближчим часом.`;
 
-      await sendMessage(lead.chat_id, text);
+      const withPortal = portalPin
+        ? `${text}\n\n🔐 Стежити за справою: ${SITE_URL}/portal\nВаш PIN: <b>${portalPin}</b>`
+        : text;
+
+      await sendMessage(lead.chat_id, withPortal);
     } catch (err) {
       console.error("payment-notify: Telegram send failed", err);
     }
