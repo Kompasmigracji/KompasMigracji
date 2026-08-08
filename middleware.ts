@@ -56,7 +56,22 @@ export async function middleware(req: NextRequest) {
   console.log(`[${new Date().toISOString()}] ${req.method} ${pathname}`);
 
   // ── CSRF Protection for mutations ───────────────────────────────────────────
-  if (req.method !== "GET" && req.method !== "OPTIONS" && req.method !== "HEAD") {
+  // Provider webhooks are server-to-server POSTs, not browser form submissions —
+  // some HTTP clients send an Origin header that never matches our own Host, so
+  // the check below would silently 403 a real payment/message confirmation
+  // before it ever reaches the route handler. Exempt the known public webhook
+  // receivers; they authenticate themselves (P24/Stripe signature checks,
+  // Telegram/Meta secret tokens) instead of relying on same-origin.
+  const isPublicWebhook =
+    pathname === "/api/payment-notify" ||
+    pathname === "/api/payu/notify" ||
+    pathname === "/api/stripe/webhook" ||
+    pathname === "/api/bot/webhook" ||
+    pathname === "/api/bot/fb-webhook" ||
+    pathname === "/api/bot/viber-webhook" ||
+    pathname === "/api/bot/whatsapp";
+
+  if (!isPublicWebhook && req.method !== "GET" && req.method !== "OPTIONS" && req.method !== "HEAD") {
     const origin = req.headers.get("origin");
     const host = req.headers.get("host");
     if (origin && host) {

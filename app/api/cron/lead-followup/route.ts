@@ -51,7 +51,7 @@ export async function runLeadFollowup() {
     // Mark as escalated
     const ids = stale.map((l: any) => l.id);
     await q(
-      `UPDATE leads SET escalated_at=now() WHERE id = ANY($1::bigint[])`,
+      `UPDATE leads SET escalated_at=now() WHERE id = ANY($1::uuid[])`,
       [ids],
     );
     escalated = stale.length;
