@@ -26,7 +26,7 @@ import { runLeadFollowup } from "../lead-followup/route";
 import { runNpsSurvey } from "../nps-survey/route";
 import { runSubscriptionRenewal } from "../subscription-renewal/route";
 import { runWeeklyDigest } from "../weekly-digest/route";
-import { runPaymentReverify } from "../payment-reverify/route";
+import { runPaymentReverify } from "@/lib/payment-reverify";
 
 function checkCronAuth(req: NextRequest): boolean {
   const authHeader = req.headers.get("authorization");

@@ -13,8 +13,9 @@ export const maxDuration = 60;
 
 import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
+import { buildServicesKeyboard, startBotPayment } from "@/lib/bot-payments";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
-import { sendMessage, notifyAdmin, answerCallback } from "@/lib/telegram";
+import { sendMessage, notifyAdmin, answerCallback, sendInlineKeyboard } from "@/lib/telegram";
 import { sendLanguagePanel, sendMainMenu } from "@/lib/orakul-bot";
 import { ORAKUL_SYSTEM_PROMPT } from "@/lib/orakul-prompt";
 import {
@@ -218,6 +219,54 @@ export async function POST(req: NextRequest) {
       await answerCallback(callbackId!, "", token);
       await sendMainMenu(chatId, callbackData, token);
       history.push({ role: 'user', content: `[LANGUAGE_SELECTED: ${callbackData}]` });
+      await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
+      return NextResponse.json({ ok: true });
+    }
+
+    /* ── Оплата всередині діалогу ─────────────────────────────────────
+       Пункт 2 механізму: бот не відсилає на сайт, а доводить до оплати
+       просто тут. Ціна береться з серверного каталогу за serviceId —
+       у callback_data суми немає й підмінити її неможливо. */
+    if (text === "/oplata" || text === "/оплата" || callbackData === "pay_menu") {
+      if (callbackId) await answerCallback(callbackId, "", token);
+      await sendInlineKeyboard(
+        chatId,
+        "💳 <b>Оплата послуги</b>\n\nОберіть послугу — я одразу створю платіж і дам кнопку для оплати.",
+        buildServicesKeyboard().inline_keyboard,
+        token,
+      );
+      history.push({ role: 'assistant', content: '[PAYMENT_MENU_SENT]' });
+      await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
+      return NextResponse.json({ ok: true });
+    }
+
+    if (callbackData === "pay_full_price") {
+      if (callbackId) await answerCallback(callbackId, "", token);
+      const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.kompasmigracji.com";
+      await sendInlineKeyboard(
+        chatId,
+        "Повний перелік послуг і цін — на сайті. Якщо потрібної позиції немає в боті, напишіть мені, і менеджер порахує вартість особисто.",
+        [[{ text: "📋 Відкрити прайс", url: `${siteUrl}/uk/pricing` }]],
+        token,
+      );
+      return NextResponse.json({ ok: true });
+    }
+
+    if (callbackData && callbackData.startsWith("pay_")) {
+      if (callbackId) await answerCallback(callbackId, "Створюю платіж…", token);
+      const serviceId = callbackData.slice(4);
+      const result = await startBotPayment(serviceId, lead.id, firstName);
+
+      if (result.ok && result.keyboard) {
+        await sendInlineKeyboard(chatId, result.text, result.keyboard.inline_keyboard, token);
+      } else {
+        await sendMessage(chatId, result.text, "HTML", token);
+      }
+
+      history.push(
+        { role: 'user', content: `[PAYMENT_SELECTED: ${serviceId}]` },
+        { role: 'assistant', content: result.text },
+      );
       await q(`UPDATE leads SET history = $1::jsonb WHERE id = $2`, [JSON.stringify(history), lead.id]);
       return NextResponse.json({ ok: true });
     }
