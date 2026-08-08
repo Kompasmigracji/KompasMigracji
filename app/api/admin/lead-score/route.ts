@@ -59,8 +59,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const leadId = Number(body.leadId);
-  if (!leadId) return NextResponse.json({ error: "leadId required" }, { status: 400 });
+/* leads.id — uuid, а не число. У цій базі співіснують ДВІ таблиці лідів:
+   `leads` (uuid, воронка бота й сайту) і `kompas_leads` (bigint, воронка CRM),
+   і плутанина між ними вже коштувала кількох мовчазних відмов. Number(uuid)
+   дає NaN — роут відповідав 400 на кожен запит. */
+  const leadId = String(body.leadId || "").trim();
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadId)) {
+    return NextResponse.json({ error: "leadId має бути uuid" }, { status: 400 });
+  }
 
   const lead = await one(
     "SELECT id, urgency, service, contact, situation, chat_id FROM leads WHERE id=$1 AND deleted_at IS NULL",

@@ -51,10 +51,16 @@ export async function POST(req: NextRequest) {
       : {}),
   };
 
-  if (body.leadId) {
+  /* leads.id — uuid (див. коментар у lead-score): Number() тут перетворював
+     ідентифікатор на NaN, і Postgres відхиляв запит як `invalid input syntax
+     for type uuid`. Генерація документа з ліда падала з 500 щоразу. */
+  const leadUuid = String(body.leadId || "").trim();
+  const isLeadUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leadUuid);
+
+  if (isLeadUuid) {
     const lead = await one(
       "SELECT first_name, contact, service, situation, urgency FROM leads WHERE id=$1 AND deleted_at IS NULL",
-      [Number(body.leadId)],
+      [leadUuid],
     );
     if (lead) {
       vars.name = lead.first_name || "Клієнт";
@@ -96,7 +102,8 @@ export async function POST(req: NextRequest) {
     [
       docNumber,
       templateSlug,
-      body.leadId ? Number(body.leadId) : null,
+      /* kompas_generated_docs.lead_id — теж uuid (посилається на leads). */
+      isLeadUuid ? leadUuid : null,
       body.memberId ? Number(body.memberId) : null,
       filledHtml,
       JSON.stringify(vars),
