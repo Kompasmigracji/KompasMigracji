@@ -19,6 +19,18 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  /* Захист від бекдору: без ADMIN_SETUP_SECRET цей ендпоінт покладався
+     виключно на "чи є вже хоч один admin у БД" — тобто будь-хто в інтернеті,
+     хто застав таблицю kompas_users порожньою (свіжий деплой, невдале
+     відновлення бази тощо), міг сам собі створити admin-акаунт без жодної
+     автентифікації. Той самий fail-closed паттерн, що й /api/bot/setup з
+     TELEGRAM_SETUP_SECRET: якщо секрет не заданий — ендпоінт завжди 403. */
+  const { searchParams } = new URL(req.url);
+  const secret = req.headers.get("x-setup-secret") || searchParams.get("secret");
+  if (!process.env.ADMIN_SETUP_SECRET || secret !== process.env.ADMIN_SETUP_SECRET) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   let body;
   try {
     body = await req.json();
