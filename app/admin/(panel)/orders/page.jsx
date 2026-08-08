@@ -148,17 +148,17 @@ export default function OrdersPage() {
   ];
 
   return (
-    <div className="kc-page">
-      <div className="kc-page-head">
-        <h1>Замовлення та оплати</h1>
-        <p style={{ color: "var(--dim)" }}>
+    <div>
+      <div style={{ marginBottom: "var(--space-lg)" }}>
+        <h1 style={{ margin: 0 }}>Замовлення та оплати</h1>
+        <p style={{ color: "var(--dim)", margin: "6px 0 0" }}>
           Кожна оплата з сайту, бота й месенджерів потрапляє сюди автоматично.
           Пошта лишається лише резервним сповіщенням.
         </p>
       </div>
 
       {totals && (
-        <div className="kc-stats-grid">
+        <div className="kc-grid kc-grid-4" style={{ marginBottom: "var(--space-lg)" }}>
           <StatCard icon="check"  value={totals.paid_count} label="Оплачених замовлень" />
           <StatCard icon="cash" value={money(totals.paid_grosz, "PLN")} label="Отримано всього" />
           <StatCard icon="alert"  value={totals.failed_count} label="Не підтверджено провайдером" />
@@ -170,7 +170,7 @@ export default function OrdersPage() {
         {STATUS_FILTERS.map((f) => (
           <button
             key={f.id}
-            className={`kc-pill ${statusFilter === f.id ? "kc-pill-active" : ""}`}
+            className={`kc-btn ${statusFilter === f.id ? "kc-btn-primary" : "kc-btn-ghost"}`}
             onClick={() => setStatusFilter(f.id)}
           >
             {f.label}
@@ -184,7 +184,14 @@ export default function OrdersPage() {
         />
       </div>
 
-      {toast && <div className="kc-toast">{toast}</div>}
+      {toast && (
+        <div style={{
+          padding: "10px 14px", marginBottom: "var(--space-md)", borderRadius: 8,
+          background: "var(--panel)", border: "1px solid var(--border)", color: "var(--dim)",
+        }}>
+          {toast}
+        </div>
+      )}
 
       {orders === null ? (
         <Spinner />

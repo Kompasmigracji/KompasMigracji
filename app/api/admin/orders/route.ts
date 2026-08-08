@@ -15,7 +15,7 @@ import { requireAuth } from "@/lib/auth";
 import { sendMessage } from "@/lib/telegram";
 
 export async function GET(req: NextRequest) {
-  const auth = await requireAuth(["admin", "moderator", "manager", "lawyer"]);
+  const auth = await requireAuth(["admin", "moderator", "manager", "lawyer", "sales"]);
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const { searchParams } = new URL(req.url);
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const auth = await requireAuth(["admin", "moderator", "manager", "lawyer"]);
+  const auth = await requireAuth(["admin", "moderator", "manager", "lawyer", "sales"]);
   if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   const body = await req.json().catch(() => ({}));
