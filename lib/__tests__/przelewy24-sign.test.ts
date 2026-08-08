@@ -53,6 +53,7 @@ describe("verifyNotificationSign", () => {
     /* getConfig() читає env при кожному виклику, тож модуль можна тягнути
        після того, як змінні виставлені. */
     jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports -- jest.isolateModules needs a synchronous require, not dynamic import()
       ({ verifyNotificationSign } = require("../przelewy24"));
     });
   });
