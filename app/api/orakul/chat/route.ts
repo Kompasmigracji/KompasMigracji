@@ -117,11 +117,15 @@ async function finalizeLead(
     }
 
     const crmMsg = [service, situation].filter(Boolean).join('\n') || null;
-    await one(
+    const kompasLeadRow = await one(
       `INSERT INTO kompas_leads (source, name, contact, email, message, status)
-       VALUES ('other', $1, $2, $3, $4, 'new')`,
+       VALUES ('orakul', $1, $2, $3, $4, 'new') RETURNING id`,
       [firstName, contact, email || null, crmMsg],
-    );
+    ) as { id: number } | null;
+
+    if (leadId && kompasLeadRow?.id) {
+      await q(`UPDATE leads SET kompas_lead_id = $1 WHERE id = $2`, [kompasLeadRow.id, leadId]);
+    }
 
     if (leadId && crmMsg) {
       await one(
