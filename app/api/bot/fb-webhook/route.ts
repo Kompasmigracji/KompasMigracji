@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
-  const localVerifyToken = process.env.FB_VERIFY_TOKEN || "kompas-fb-secret-token";
+  const localVerifyToken = process.env.FB_VERIFY_TOKEN || "";
 
   if (mode === "subscribe" && token === localVerifyToken) {
     console.log("[fb-webhook] Webhook verified successfully!");

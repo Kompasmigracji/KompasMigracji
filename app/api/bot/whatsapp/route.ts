@@ -3,7 +3,7 @@ import { createHmac, timingSafeEqual } from 'crypto';
 import { findOrCreateChat, appendMessage } from '@/lib/crm-chats';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 
-const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'iphoenix_secure_token';
+const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || '';
 
 /* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
    body, keyed by the Meta App Secret — shared by WhatsApp Cloud API and Messenger).

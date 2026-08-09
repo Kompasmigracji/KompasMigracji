@@ -89,8 +89,14 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ id: apptId, appointmentAt: appointmentAt.toISOString() });
 }
 
-// GET — admin list (no auth for simplicity; add requireAuth if needed)
+// GET — admin list (protected: requires admin or moderator)
 export async function GET() {
+  const { requireAuth } = await import("@/lib/auth");
+  const auth = await requireAuth(["admin", "moderator"]);
+  if ("error" in auth) {
+    return NextResponse.json({ error: auth.error }, { status: auth.status });
+  }
+
   try {
     const rows = await q(
       `SELECT id, client_name, client_email, client_phone, service,

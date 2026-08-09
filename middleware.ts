@@ -121,6 +121,9 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/api/") && !pathname.startsWith("/api/admin")) {
     const res = NextResponse.next();
     res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("X-Frame-Options", "DENY");
+    res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     return res;
   }
 
@@ -260,6 +263,8 @@ export async function middleware(req: NextRequest) {
     // Add CSRF & Security Headers to all admin pages & APIs
     res.headers.set("X-Frame-Options", "DENY");
     res.headers.set("X-Content-Type-Options", "nosniff");
+    res.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    res.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; base-uri 'self';");
     res.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
     return res;
   }
