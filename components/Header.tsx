@@ -58,6 +58,7 @@ export default function Header() {
     { label: t('pcat_bureaucracy'),  href: '/pricing#bureaucracy',  icon: '📋' },
     { label: t('pcat_free'),         href: '/pricing#free',         icon: '🎁' },
     { label: t('nav_svc_express'),   href: '/karta',                icon: '⚡', accent: true },
+    { label: t('footer_subscriptions'), href: '/plans',              icon: '📅' },
   ];
 
   const changeLang = (lng: string) => {
@@ -118,7 +119,7 @@ export default function Header() {
             <span className="font-display font-bold text-gray-900 dark:text-white text-lg tracking-tight hidden sm:block">Kompas Migracji</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-2 flex-1 justify-center">
+          <nav className="hidden 2xl:flex items-center gap-2 flex-1 justify-center">
             <div className="relative" ref={dropRef}>
               <button
                 onClick={() => setDropOpen(!dropOpen)}
@@ -161,7 +162,9 @@ export default function Header() {
             </Link>
             <Link href="/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
             <Link href="/orakul" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">EWU</Link>
-            <button 
+            <Link href="/portal" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none !whitespace-nowrap no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('footer_client_portal')}</Link>
+            <Link href="/book" className="premium-btn !border-transparent !bg-blue-500/10 !text-blue-600 dark:!text-blue-400 hover:!bg-blue-500/20 !shadow-none !whitespace-nowrap no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_cta')}</Link>
+            <button
               onClick={() => setShowAIModal(true)}
               className="premium-btn overflow-hidden transition-transform duration-300 hover:scale-105 active:scale-95 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] dark:hover:shadow-[0_0_20px_rgba(59,130,246,0.2)]"
             >
@@ -213,7 +216,7 @@ export default function Header() {
               </div>
             </div>
 
-            <button className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/60 border border-black/10 text-gray-900" onClick={() => setMobileOpen(true)} aria-label={t('nav_open_menu')}>
+            <button className="2xl:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-full bg-white/60 border border-black/10 text-gray-900" onClick={() => setMobileOpen(true)} aria-label={t('nav_open_menu')}>
               <span className="w-5 h-0.5 bg-current rounded-full" />
               <span className="w-5 h-0.5 bg-current rounded-full" />
             </button>
@@ -228,7 +231,7 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20, transition: { delay: 0.1 } }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 dark:bg-[#111111]/95 backdrop-blur-3xl flex flex-col md:hidden"
+            className="fixed inset-0 z-50 bg-[#fbfbfd]/95 dark:bg-[#111111]/95 backdrop-blur-3xl flex flex-col 2xl:hidden"
           >
             <div className="flex items-center justify-between px-6 h-[72px] border-b border-black/10 dark:border-white/10">
               <span className="font-display font-bold text-lg text-gray-900 dark:text-white">Menu</span>
@@ -276,6 +279,12 @@ export default function Header() {
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/orakul" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">EWU</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/portal" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('footer_client_portal')}</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/book" onClick={() => setMobileOpen(false)} className="block text-xl font-bold text-blue-500 dark:text-blue-400 py-2 no-underline active:scale-95 transition-transform">{t('footer_book_consultation')}</Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <button
