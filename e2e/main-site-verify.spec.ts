@@ -36,7 +36,7 @@ test.describe('Main public site — homepage per-locale', () => {
 
       // Mobile hamburger — resize to mobile viewport
       await page.setViewportSize({ width: 390, height: 844 });
-      const hamburger = page.locator('header button.md\\:hidden');
+      const hamburger = page.locator('header button.2xl\\:hidden');
       await expect(hamburger).toBeVisible();
       // aria-label functional check: not just present but the menu actually opens
       await hamburger.click();
@@ -45,7 +45,7 @@ test.describe('Main public site — homepage per-locale', () => {
       // close via the X button (aria-label should be localized close-menu label)
       const closeBtn = page.locator('header button[aria-label]').filter({ hasText: '' }).last();
       // more robust: find the button inside the mobile overlay with an svg X
-      const overlay = page.locator('div.fixed.inset-0.z-50.md\\:hidden');
+      const overlay = page.locator('div.fixed.inset-0.z-50.2xl\\:hidden');
       await expect(overlay).toBeVisible();
       await overlay.locator('button').first().click();
       await expect(overlay).toBeHidden({ timeout: 3000 });

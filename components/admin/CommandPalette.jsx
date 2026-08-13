@@ -3,13 +3,11 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Icon } from "./ui";
-import { useTheme } from "@/lib/ThemeContext";
 
 export default function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -27,11 +25,20 @@ export default function CommandPalette() {
 
   if (!isOpen) return null;
 
+  const currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  const toggleTheme = () => {
+    const next = currentTheme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    if (next === "dark") document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
+    try { localStorage.setItem("theme", next); } catch (e) { /* ignore */ }
+  };
+
   const actions = [
     { id: "chats", icon: "message-circle", label: "Перейти до чатів", action: () => router.push("/admin/crm/chats") },
     { id: "funnels", icon: "trello", label: "Воронки продажів", action: () => router.push("/admin/crm/funnels") },
     { id: "orders", icon: "shopping-bag", label: "Замовлення", action: () => router.push("/admin/crm/orders") },
-    { id: "theme", icon: theme === "dark" ? "sun" : "moon", label: `Увімкнути ${theme === "dark" ? "світлу" : "темну"} тему`, action: () => setTheme(theme === "dark" ? "light" : "dark") },
+    { id: "theme", icon: currentTheme === "dark" ? "sun" : "moon", label: `Увімкнути ${currentTheme === "dark" ? "світлу" : "темну"} тему`, action: toggleTheme },
     { id: "home", icon: "home", label: "На головну сайту", action: () => window.location.href = "/" },
   ];
 
