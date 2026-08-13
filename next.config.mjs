@@ -16,6 +16,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    minimumCacheTTL: 86400,
     // External photo domains used in Team.tsx
     remotePatterns: [
       { protocol: 'https', hostname: 'yt3.ggpht.com' },

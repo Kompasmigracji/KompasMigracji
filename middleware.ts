@@ -5,28 +5,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { jwtVerify } from "jose";
+import { kv } from "@vercel/kv";
 
 const COOKIE = "kompascrm_session";
-const rateLimitMap = new Map();
 
-function rateLimit(key: string, maxReqs: number) {
-  const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-
-  if (!rateLimitMap.has(key)) {
-    rateLimitMap.set(key, { count: 1, resetTime: now + windowMs });
-    return true;
+async function rateLimit(key: string, maxReqs: number) {
+  try {
+    const current = await kv.incr(key);
+    if (current === 1) {
+      await kv.expire(key, 60);
+    }
+    return current <= maxReqs;
+  } catch (err) {
+    console.warn("KV rate limit error:", err);
+    return true; // Fail open if KV is unavailable
   }
-
-  const record = rateLimitMap.get(key);
-  if (now > record.resetTime) {
-    record.count = 1;
-    record.resetTime = now + windowMs;
-    return true;
-  }
-
-  record.count += 1;
-  return record.count <= maxReqs;
 }
 
 /** Видаляє BOM (U+FEFF, charCode 65279) та \r — захист від PowerShell pipe артефактів. */
@@ -112,7 +105,7 @@ export async function middleware(req: NextRequest) {
       maxReqs = 100;
     }
 
-    if (!rateLimit(key, maxReqs)) {
+    if (!(await rateLimit(key, maxReqs))) {
       return NextResponse.json({ error: "Too many requests, please try again later." }, { status: 429 });
     }
   }

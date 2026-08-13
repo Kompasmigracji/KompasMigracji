@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 /* /api/cron/payment-reverify — HTTP-обгортка над lib/payment-reverify.

@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 import { NextResponse } from 'next/server';
 import { processSoul } from '@/lib/lifeos/soulEngine';
 import { processFate } from '@/lib/lifeos/fateEngine';

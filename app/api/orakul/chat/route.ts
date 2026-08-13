@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, clientIp } from '@/lib/rate-limit';

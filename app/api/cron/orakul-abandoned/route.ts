@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 /* Stage 8: Orakul web-chat abandonment detection — Vercel Cron.
    Finds sessions with server-side history (stage 7) that stalled before

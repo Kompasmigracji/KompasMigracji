@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 /* /api/bot/setup — реєстрація вебхука Telegram.
    Виклик один раз після деплою:

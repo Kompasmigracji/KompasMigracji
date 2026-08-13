@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { findOrCreateChat, appendMessage } from '@/lib/crm-chats';

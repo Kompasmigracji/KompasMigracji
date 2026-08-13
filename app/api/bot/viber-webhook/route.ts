@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 /* /api/bot/viber-webhook — Viber Bot webhook KompasCRM.
    

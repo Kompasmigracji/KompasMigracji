@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 /* Consolidated daily cron — runs 7 previously-unscheduled-but-fully-working
    cron handlers under a single Vercel cron entry.

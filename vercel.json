@@ -21,6 +21,11 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     }
   ],
+  "functions": {
+    "app/api/bot/**/*": { "memory": 3008 },
+    "app/api/cron/**/*": { "memory": 3008 },
+    "app/api/orakul/**/*": { "memory": 3008 }
+  },
   "crons": [
     {
       "path": "/api/cron/orakul-abandoned",

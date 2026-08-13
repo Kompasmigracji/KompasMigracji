@@ -15,6 +15,9 @@ const inter = Inter({
   display: 'swap',
 });
 
+export const revalidate = 3600; // 1 hour ISR
+
+
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const t = await getTranslations({ locale });
   

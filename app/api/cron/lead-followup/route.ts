@@ -1,3 +1,4 @@
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 /* F15: Lead escalation + F17: Case deadline alerts
    Vercel Cron fires every 6 hours

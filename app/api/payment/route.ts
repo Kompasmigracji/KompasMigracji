@@ -118,73 +118,27 @@ export async function POST(req: NextRequest) {
   const sessionId  = `km-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const siteUrl    = (process.env.NEXT_PUBLIC_APP_URL || 'https://www.kompasmigracji.com').replace(/\/$/, '');
 
-  /* ── 1. Try Przelewy24 (primary — matches on-site branding) ───────── */
+  
+  /* ── Payment Provider Strategy ───────────────────────────────────────── */
   try {
-    const { isP24Configured, registerTransaction, toP24Language } = await import('@/lib/przelewy24');
-    if (isP24Configured()) {
-      await createLeadForPayment({
-        sessionId,
-        description: String(description),
-        email:       String(email),
-        source:      leadSource,
-        firstName:   firstName ? String(firstName) : undefined,
-        lastName:    lastName  ? String(lastName)  : undefined,
-        phone:       phone     ? String(phone)     : undefined,
-      });
-
-      const result = await registerTransaction({
-        sessionId,
-        amount:      amountNum,
-        description: String(description),
-        email:       String(email),
-        urlReturn:   `${siteUrl}/payment/success?session=${sessionId}`,
-        urlStatus:   `${siteUrl}/api/payment-notify`,
-        language:    toP24Language(lang ? String(lang) : undefined),
-      });
-
-      return NextResponse.json({ redirectUrl: result.paymentUrl });
-    }
-  } catch (err) {
-    console.error('P24 handler error, trying PayU:', err);
-  }
-
-  /* ── 2. Try PayU ─────────────────────────────────────────────────── */
-  try {
-    const { isPayUConfigured, createPayUOrder } = await import('@/lib/payu');
-    if (isPayUConfigured()) {
-      await createLeadForPayment({
-        sessionId,
-        description: String(description),
-        email:       String(email),
-        source:      leadSource,
-        firstName:   firstName ? String(firstName) : undefined,
-        lastName:    lastName  ? String(lastName)  : undefined,
-        phone:       phone     ? String(phone)     : undefined,
-      });
-
-      const result = await createPayUOrder({
-        sessionId,
-        amount:      amountNum,
-        description: String(description),
-        email:       String(email),
-        firstName:   firstName ? String(firstName) : undefined,
-        lastName:    lastName  ? String(lastName)  : undefined,
-        phone:       phone     ? String(phone)     : undefined,
-        lang:        lang      ? String(lang)      : 'pl',
-        notifyUrl:   `${siteUrl}/api/payu/notify`,
-        continueUrl: `${siteUrl}/payment/success?session=${sessionId}`,
-      });
-
-      return NextResponse.json({ redirectUrl: result.redirectUrl });
-    }
-  } catch (err) {
-    console.error('PayU handler error, trying Stripe:', err);
-  }
-
-  /* ── 3. Try Stripe Checkout ──────────────────────────────────────── */
-  try {
+    const { isP24Configured } = await import('@/lib/przelewy24');
+    const { isPayUConfigured } = await import('@/lib/payu');
     const { stripe } = await import('@/lib/stripe');
-    if (stripe) {
+
+    let adapter: any = null;
+
+    if (isP24Configured()) {
+      const { przelewy24Adapter } = await import('@/lib/payments/adapters/przelewy24');
+      adapter = przelewy24Adapter;
+    } else if (isPayUConfigured()) {
+      const { payuAdapter } = await import('@/lib/payments/adapters/payu');
+      adapter = payuAdapter;
+    } else if (stripe) {
+      const { stripeAdapter } = await import('@/lib/payments/adapters/stripe');
+      adapter = stripeAdapter;
+    }
+
+    if (adapter) {
       await createLeadForPayment({
         sessionId,
         description: String(description),
@@ -195,28 +149,22 @@ export async function POST(req: NextRequest) {
         phone:       phone     ? String(phone)     : undefined,
       });
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card', 'p24', 'blik'],
-        line_items: [{
-          price_data: {
-            currency: 'pln',
-            product_data: { name: String(description) },
-            unit_amount: amountNum,
-          },
-          quantity: 1,
-        }],
-        mode:             'payment',
-        success_url:      `${siteUrl}/payment/success?session=${sessionId}`,
-        cancel_url:       `${siteUrl}/pricing`,
-        customer_email:   String(email),
-        client_reference_id: sessionId,
-        metadata: { sessionId, source: leadSource },
+      const redirectUrl = await adapter.registerTransaction({
+        sessionId,
+        amount: amountNum,
+        description: String(description),
+        email: String(email),
+        language: lang ? String(lang) : undefined,
+        firstName: firstName ? String(firstName) : undefined,
+        lastName: lastName ? String(lastName) : undefined,
+        phone: phone ? String(phone) : undefined,
+        source: leadSource,
       });
 
-      return NextResponse.json({ redirectUrl: session.url });
+      return NextResponse.json({ redirectUrl });
     }
   } catch (err) {
-    console.error('Stripe handler error, falling back to mock:', err);
+    console.error('payment/route: provider adapter error, falling back to mock:', err);
   }
 
   /* ── 4. Жоден провайдер не спрацював ───────────────────────────────── */
