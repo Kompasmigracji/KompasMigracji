@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/lib/navigation';
-import { useTheme } from '@/lib/ThemeContext';
 import type { Locale } from '@/i18n';
 import AIAssistantIntake from '@/components/AIAssistantIntake';
 import { motion, AnimatePresence } from 'framer-motion';

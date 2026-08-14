@@ -435,6 +435,43 @@ export default function PlansPage() {
     return langDict[key] || key;
   };
 
+  const showcaseLinks = {
+    pl: [
+      { label: "Strona główna", href: "/", description: "Dla wszystkich odwiedzających — komunikacja, oferta i lead capture." },
+      { label: "Karta pobytu / Przyspieszenie", href: "/karta", description: "Dla klientów, którzy oczekują na decyzję, potrzebują jasnego planu i szybszego przejścia." },
+      { label: "Opłata / płatności", href: "/plans", description: "Miejsce, gdzie klient przechodzi do P24 i potwierdza zakup." },
+      { label: "Chatbot", href: "/", description: "Do przyjmowania leadów, kwalifikacji i prowadzenia pierwszego kontaktu." },
+      { label: "Panel administracyjny", href: "/admin/login", description: "Wyświetla leady, zadania, statusy i środowisko operacyjne dla zespołu." },
+    ],
+    uk: [
+      { label: "Головна сторінка", href: "/", description: "Для всіх відвідувачів — комунікація, оффер і збір лідів." },
+      { label: "Карта перебування / Прискорення", href: "/karta", description: "Для клієнтів, які чекають рішення й потребують чіткого плану дій." },
+      { label: "Оплата / платежі", href: "/plans", description: "Місце, де клієнт переходить до P24 і підтверджує оплату." },
+      { label: "Чат-бот", href: "/", description: "Для первинної верифікації, збору лідів і запуску консультації." },
+      { label: "Адмін-панель", href: "/admin/login", description: "Показує ліди, завдання, статуси та операційне середовище команди." },
+    ],
+    en: [
+      { label: "Main landing page", href: "/", description: "For all visitors — brand messaging, offer and lead capture." },
+      { label: "Residence card / acceleration", href: "/karta", description: "For leads waiting on approval and needing a clear next step." },
+      { label: "Payment / checkout", href: "/plans", description: "Where the client checks out and confirms the purchase with P24." },
+      { label: "Chatbot", href: "/", description: "For intake, qualification and first-contact automation." },
+      { label: "Admin panel", href: "/admin/login", description: "Shows leads, tasks, statuses and daily operations to the team." },
+    ],
+    ru: [
+      { label: "Главная страница", href: "/", description: "Для всех посетителей — коммуникация, оффер и сбор лидов." },
+      { label: "Карта пребывания / Ускорение", href: "/karta", description: "Для клиентов, ожидающих решения и нуждающихся в понятном плане действий." },
+      { label: "Оплата / checkout", href: "/plans", description: "Место, где клиент переходит к P24 и подтверждает оплату." },
+      { label: "Чат-бот", href: "/", description: "Для первичной квалификации, лидогенерации и первого контакта." },
+      { label: "Админ-панель", href: "/admin/login", description: "Показывает лиды, задачи, статусы и оперативный контекст команды." },
+    ],
+  }[locale] || [
+    { label: "Strona główna", href: "/", description: "Dla wszystkich odwiedzających — komunikacja, oferta i lead capture." },
+    { label: "Karta pobytu / Przyspieszenie", href: "/karta", description: "Dla klientów, którzy oczekują na decyzję." },
+    { label: "Opłata / płatności", href: "/plans", description: "Miejsce do P24 i potwierdzenia płatności." },
+    { label: "Chatbot", href: "/", description: "Do przyjmowania leadów i kwalifikacji." },
+    { label: "Panel administracyjny", href: "/admin/login", description: "Wyświetla leady, zadania i statusy." },
+  ];
+
   return (
     <>
       <Header />
@@ -470,6 +507,117 @@ export default function PlansPage() {
                 <span style={{ color: "#10B981" }}>&#x2713;</span> {feat}
               </span>
             ))}
+          </div>
+        </section>
+
+        {/* Product overview / sales links */}
+        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 16px 0" }}>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ fontSize: 12, letterSpacing: "0.12em", fontWeight: 700, color: "#D8232A", textTransform: "uppercase", marginBottom: 12 }}>
+              {locale === "pl" ? "Mapa produktu" : locale === "uk" ? "Карта продукту" : locale === "ru" ? "Карта продукта" : "Product map"}
+            </div>
+            <h2 style={{ fontSize: 32, fontWeight: 800, color: "#111827", margin: 0 }}>
+              {locale === "pl" ? "Gdzie klient trafia i co widzi" : locale === "uk" ? "Куди потрапляє клієнт і що бачить" : locale === "ru" ? "Куда попадает клиент и что видит" : "Where the client lands and what they see"}
+            </h2>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
+            {showcaseLinks.map((item, index) => (
+              <a
+                key={item.label}
+                href={item.href}
+                style={{
+                  textDecoration: "none",
+                  background: "#fff",
+                  borderRadius: 16,
+                  padding: "20px 18px",
+                  border: "1px solid #E5E7EB",
+                  boxShadow: "0 12px 26px rgba(17, 24, 39, 0.04)",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                  display: "block",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-2px)";
+                  e.currentTarget.style.boxShadow = "0 18px 30px rgba(17,24,39,0.08)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 12px 26px rgba(17, 24, 39, 0.04)";
+                }}
+              >
+                <div style={{ fontSize: 11, letterSpacing: "0.1em", color: "#D8232A", fontWeight: 700, textTransform: "uppercase", marginBottom: 10 }}>
+                  {index + 1}
+                </div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 8 }}>{item.label}</div>
+                <div style={{ fontSize: 14, color: "#4B5563", lineHeight: 1.6 }}>{item.description}</div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 16px 0" }}>
+          <div style={{ background: "linear-gradient(135deg, #111827 0%, #1F2937 100%)", borderRadius: 24, padding: 24, color: "#fff", boxShadow: "0 28px 60px rgba(17,24,39,0.2)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, alignItems: "center", marginBottom: 20 }}>
+              <div>
+                <div style={{ fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
+                  {locale === "pl" ? "Podgląd panelu" : locale === "uk" ? "Попередній перегляд панелі" : locale === "ru" ? "Предпросмотр панели" : "Admin preview"}
+                </div>
+                <h3 style={{ margin: "8px 0 0", fontSize: 28, fontWeight: 800 }}>{locale === "pl" ? "CRM / leady / zadania" : locale === "uk" ? "CRM / ліди / завдання" : locale === "ru" ? "CRM / лиды / задачи" : "CRM / leads / tasks"}</h3>
+              </div>
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                {[
+                  {label: locale === "pl" ? "Nowi leady" : locale === "uk" ? "Нові ліди" : locale === "ru" ? "Новые лиды" : "New leads", value: "128"},
+                  {label: locale === "pl" ? "Do obsługi" : locale === "uk" ? "На обробку" : locale === "ru" ? "На обработку" : "In queue", value: "34"},
+                  {label: locale === "pl" ? "Płatności" : locale === "uk" ? "Платежі" : locale === "ru" ? "Платежи" : "Payments", value: "9"},
+                ].map(item => (
+                  <div key={item.label} style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: 14, padding: "10px 14px", minWidth: 120 }}>
+                    <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>{item.label}</div>
+                    <div style={{ fontSize: 24, fontWeight: 800, marginTop: 6 }}>{item.value}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1.7fr 1fr", gap: 18 }}>
+              <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 18, padding: 18 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+                  <div style={{ fontWeight: 700 }}>{locale === "pl" ? "Kanały i leady" : locale === "uk" ? "Канали та ліди" : locale === "ru" ? "Каналы и лиды" : "Channels & leads"}</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>Live</div>
+                </div>
+                <div style={{ display: "grid", gap: 12 }}>
+                  {[
+                    ["WhatsApp", "18 nowych", "#10B981"],
+                    ["Telegram", "12 nowych", "#60A5FA"],
+                    ["Instagram", "5 nowych", "#F59E0B"],
+                    ["Przelewy24", "9 płatności", "#D8232A"],
+                  ].map(([channel, count, color]) => (
+                    <div key={channel} style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 12, alignItems: "center" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, display: "inline-block" }} />
+                        <span>{channel}</span>
+                      </div>
+                      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.75)" }}>{count}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 18, padding: 18 }}>
+                <div style={{ fontWeight: 700, marginBottom: 12 }}>{locale === "pl" ? "Ostatnie zadania" : locale === "uk" ? "Останні завдання" : locale === "ru" ? "Последние задачи" : "Recent tasks"}</div>
+                <div style={{ display: "grid", gap: 10 }}>
+                  {[
+                    locale === "pl" ? "Zweryfikować ofertę klienta" : locale === "uk" ? "Перевірити оффер клієнта" : locale === "ru" ? "Проверить оффер клиента" : "Verify client offer",
+                    locale === "pl" ? "Zatwierdzić płatność P24" : locale === "uk" ? "Підтвердити оплату P24" : locale === "ru" ? "Подтвердить оплату P24" : "Confirm P24 payment",
+                    locale === "pl" ? "Przygotować follow-up" : locale === "uk" ? "Підготувати follow-up" : locale === "ru" ? "Подготовить follow-up" : "Prepare follow-up",
+                  ].map((task, idx) => (
+                    <div key={task} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.04)", borderRadius: 10, padding: "10px 12px" }}>
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: idx === 0 ? "#34D399" : idx === 1 ? "#FBBF24" : "#60A5FA", display: "inline-block" }} />
+                      <span style={{ fontSize: 13, lineHeight: 1.5 }}>{task}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

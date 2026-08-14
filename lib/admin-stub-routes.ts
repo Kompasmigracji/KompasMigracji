@@ -1,7 +1,11 @@
 /* lib/admin-stub-routes.ts — сторінки панелі, які ще не під'єднані до даних.
  *
  * Згенеровано перевіркою: сторінка потрапляє сюди, якщо у ній немає жодного
- * виклику fetch(). Таких 87 зі 117.
+ * виклику fetch(). Таких 89 зі 117.
+ *
+ * Виняток: /admin/gdpr і /admin/finance пройшли автоматичну перевірку (в них
+ * є текст "fetch("), але це закоментований рядок — реального запиту немає,
+ * дані повністю захардкоджені. Додано вручну після прямої перевірки коду.
  *
  * Навіщо цей список. Сторінка-макет виглядає точно як робоча: та сама
  * верстка, ті самі заголовки таблиць, той самий порожній стан. Різниця лише
@@ -49,10 +53,12 @@ export const ADMIN_STUB_ROUTES: ReadonlySet<string> = new Set([
   "/admin/expenses",
   "/admin/extensions",
   "/admin/feedback",
+  "/admin/finance",
   "/admin/fleet",
   "/admin/forms",
   "/admin/franchise",
   "/admin/gamification",
+  "/admin/gdpr",
   "/admin/goals",
   "/admin/gov-integration",
   "/admin/help-center",

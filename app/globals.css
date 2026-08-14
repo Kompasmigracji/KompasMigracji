@@ -6,7 +6,6 @@
  */
 @import "tailwindcss";
 @import "../styles/glass.css";
-@import "../design-system/tokens.css";
 
 @theme {
   --color-navy: #1a1a2e;
