@@ -103,30 +103,28 @@ export async function POST(req: NextRequest) {
   const amountGrosze = Math.round(Number(plan.price_pln) * 100);
   const description = `Subskrypcja ${plan.name} - Kompas Migracji`;
 
-  // ── 1. Try Przelewy24 (primary — matches on-site branding) ──────────
-  try {
-    const { isP24Configured, registerTransaction, toP24Language } = await import("@/lib/przelewy24");
-    if (isP24Configured()) {
-      const result = await registerTransaction({
-        sessionId,
-        amount: amountGrosze,
-        description,
-        email,
-        urlReturn: `${SITE}/payment/success?session=${sessionId}`,
-        urlStatus: `${SITE}/api/payment-notify`,
-        language: toP24Language(),
-      });
-      return NextResponse.json({ redirectUrl: result.paymentUrl, sessionId });
-    }
-  } catch (err: any) {
-    console.error("[subscribe] P24 checkout error, trying PayU:", err.message);
-  }
 
-  // ── 2. Try PayU ───────────────────────────────────────────────────
+  // ── Payment Provider Strategy ─────────────────────────────────────────
   try {
-    const { createPayUOrder, isPayUConfigured } = await import("@/lib/payu");
-    if (isPayUConfigured()) {
-      const result = await createPayUOrder({
+    const { isP24Configured } = await import('@/lib/przelewy24');
+    const { isPayUConfigured } = await import('@/lib/payu');
+    const { stripe } = await import('@/lib/stripe');
+
+    let adapter: any = null;
+
+    if (isP24Configured()) {
+      const { przelewy24Adapter } = await import('@/lib/payments/adapters/przelewy24');
+      adapter = przelewy24Adapter;
+    } else if (isPayUConfigured()) {
+      const { payuAdapter } = await import('@/lib/payments/adapters/payu');
+      adapter = payuAdapter;
+    } else if (stripe) {
+      const { stripeAdapter } = await import('@/lib/payments/adapters/stripe');
+      adapter = stripeAdapter;
+    }
+
+    if (adapter) {
+      const redirectUrl = await adapter.registerTransaction({
         sessionId,
         amount: amountGrosze,
         description,
@@ -134,13 +132,12 @@ export async function POST(req: NextRequest) {
         firstName: name.split(' ')[0] || '',
         lastName: name.split(' ').slice(1).join(' ') || '',
         phone,
-        notifyUrl: `${SITE}/api/payu/notify`,
-        continueUrl: `${SITE}/payment/success?session=${sessionId}`,
+        source: 'subscription',
       });
-      return NextResponse.json({ redirectUrl: result.redirectUrl, sessionId: result.orderId });
+      return NextResponse.json({ redirectUrl, sessionId });
     }
   } catch (err: any) {
-    console.error("[subscribe] PayU checkout error:", err.message);
+    console.error("[subscribe] provider adapter error, falling back to mock:", err.message);
   }
 
   // ── 3. No provider available ──────────────────────────────────────
