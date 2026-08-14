@@ -6,11 +6,11 @@ import * as Sentry from "@sentry/nextjs";
 import { stripe } from "@/lib/stripe";
 import { one, q } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
-import { sendWhatsApp } from "@/lib/whatsapp";
+import { sendAdminWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
 
-const ADMIN_WA_PHONE = "48729417050";
+
 
 export async function POST(req: NextRequest) {
   if (!stripe) {
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
         try { await sendMessage(archAdminChat, archAdminText); } catch {}
       }
       try {
-        await sendWhatsApp(ADMIN_WA_PHONE, archAdminText.replace(/<[^>]+>/g, ""));
+        await sendAdminWhatsApp( archAdminText.replace(/<[^>]+>/g, ""));
       } catch {}
 
       return NextResponse.json({ received: true });
@@ -182,7 +182,7 @@ export async function POST(req: NextRequest) {
             (lead.contact   ? `Телефон: ${lead.contact}\n`                  : "") +
             (lead.situation ? `Послуга: ${lead.situation.split("\n")[0]}\n` : "") +
             `Сума: ${amountFormatted} ${currency}`;
-          await sendWhatsApp(ADMIN_WA_PHONE, waText);
+          await sendAdminWhatsApp( waText);
         } catch {}
       } else {
         const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;

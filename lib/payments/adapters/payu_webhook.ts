@@ -9,10 +9,10 @@ import * as Sentry from '@sentry/nextjs';
 import { verifyPayUSignature } from '@/lib/payu';
 import { one } from '@/lib/db';
 import { sendMessage } from '@/lib/telegram';
-import { sendWhatsApp } from '@/lib/whatsapp';
+import { sendAdminWhatsApp } from "@/lib/whatsapp";
 import { markLeadPaid } from '@/lib/lead-payment-sync';
 
-const ADMIN_WA_PHONE = '48729417050';
+
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       try { await sendMessage(adminChat, tgText); } catch { /* */ }
     }
     try {
-      await sendWhatsApp(ADMIN_WA_PHONE, tgText.replace(/<[^>]+>/g, ''));
+      await sendAdminWhatsApp( tgText.replace(/<[^>]+>/g, ''));
     } catch { /* */ }
   } else {
     // Лід не знайдено — все одно сповіщаємо адміна, інакше оплата "губиться"
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
       try { await sendMessage(adminChat, tgText); } catch { /* */ }
     }
     try {
-      await sendWhatsApp(ADMIN_WA_PHONE, tgText.replace(/<[^>]+>/g, ''));
+      await sendAdminWhatsApp( tgText.replace(/<[^>]+>/g, ''));
     } catch { /* */ }
   }
 

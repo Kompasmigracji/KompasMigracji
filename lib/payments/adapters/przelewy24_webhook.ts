@@ -24,7 +24,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
-import { sendWhatsApp } from "@/lib/whatsapp";
+import { sendAdminWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
 import { issuePortalPin } from "@/lib/portal";
@@ -47,7 +47,7 @@ import {
   paymentVerifyFailedEmailHtml,
 } from "@/lib/email";
 
-const ADMIN_WA_PHONE = "48729417050";
+
 const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://www.kompasmigracji.com").replace(/\/$/, "");
 const MANAGER_EMAIL =
   process.env.MANAGER_EMAIL || process.env.ADMIN_EMAIL || "kompas.migracji@gmail.com";
@@ -58,7 +58,7 @@ async function alertTeam(html: string): Promise<void> {
   const plain = html.replace(/<\/?[a-z]+>/g, "");
   await Promise.allSettled([
     adminChat ? sendMessage(adminChat, html) : Promise.resolve(),
-    sendWhatsApp(ADMIN_WA_PHONE, plain),
+    sendAdminWhatsApp( plain),
   ]);
 }
 

@@ -13,6 +13,13 @@
  * @param phone  Номер без "+" і пробілів, напр. "48729417050"
  * @param text   Текст повідомлення (UTF-8)
  */
+
+export const ADMIN_WA_PHONES = ['48729417050', '48729271848'];
+
+export async function sendAdminWhatsApp(text: string): Promise<void> {
+  await Promise.all(ADMIN_WA_PHONES.map(phone => sendWhatsApp(phone, text)));
+}
+
 export async function sendWhatsApp(phone: string, text: string): Promise<void> {
   const apiKey = process.env.CALLMEBOT_API_KEY;
   if (!apiKey) {

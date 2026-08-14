@@ -9,11 +9,11 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
-import { sendWhatsApp } from "@/lib/whatsapp";
+import { sendAdminWhatsApp } from "@/lib/whatsapp";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
 
-const ADMIN_WA_PHONE = "48729417050"; // WhatsApp для нотифікацій про оплату
+ // WhatsApp для нотифікацій про оплату
 
 function isMockMode(): boolean {
   return (
@@ -95,8 +95,7 @@ export async function POST(req: NextRequest) {
 
     // WhatsApp нотифікація навіть без ліда
     try {
-      await sendWhatsApp(
-        ADMIN_WA_PHONE,
+      await sendAdminWhatsApp(
         `💳 [ТЕСТ] Оплата підтверджена!\nSession: ${sessionId}\n(лід не знайдено)`,
       );
     } catch { /* ігноруємо */ }
@@ -164,7 +163,7 @@ export async function POST(req: NextRequest) {
       (lead.service   ? `Сервіс: ${lead.service}\n`                   : "") +
       `Session: ${sessionId}`;
 
-    await sendWhatsApp(ADMIN_WA_PHONE, waText);
+    await sendAdminWhatsApp( waText);
   } catch { /* ігноруємо */ }
 
   return NextResponse.json({ ok: true, status: "confirmed" });
