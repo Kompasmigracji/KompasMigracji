@@ -30,7 +30,6 @@ import {
   type EmployerLeadData,
 } from "@/lib/orakul-employer";
 import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from "@/lib/email";
-import { sendAdminWhatsApp } from "@/lib/whatsapp";
 import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
 
 const TERMIN_USAGE =
@@ -82,14 +81,14 @@ async function mirrorToCrmChats(chatId: number, displayName: string, text: strin
 
 function notifyEmployerChannels(d: Partial<EmployerLeadData>, situation: string): void {
   const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
-  sendAdminWhatsApp( `${subject}\n\n${situation}`);
+  notifyAdmin( `${subject}\n\n${situation}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (!notifyEmail) return;
   sendEmail(notifyEmail, subject, employerLeadEmailHtml(d), 'employer_lead').catch((e) => console.error('[webhook] Email notify failed:', e));
 }
 
 function notifyHandoffChannels(reason: string, contact: string, transcript: string): void {
-  sendAdminWhatsApp( `⚠️ Ескалація Оракула: ${reason}\nКонтакт: ${contact}`);
+  notifyAdmin( `⚠️ Ескалація Оракула: ${reason}\nКонтакт: ${contact}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (!notifyEmail) return;
   sendEmail(notifyEmail, `Ескалація Оракула: ${reason}`, employerHandoffEmailHtml(reason, contact, transcript), 'employer_handoff').catch((e) => console.error('[webhook] Email notify failed:', e));

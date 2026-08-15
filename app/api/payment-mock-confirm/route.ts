@@ -9,7 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
-import { sendAdminWhatsApp } from "@/lib/whatsapp";
+import { notifyAdmin } from "@/lib/telegram";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
 
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
 
     // WhatsApp нотифікація навіть без ліда
     try {
-      await sendAdminWhatsApp(
+      await notifyAdmin(
         `💳 [ТЕСТ] Оплата підтверджена!\nSession: ${sessionId}\n(лід не знайдено)`,
       );
     } catch { /* ігноруємо */ }
@@ -163,7 +163,7 @@ export async function POST(req: NextRequest) {
       (lead.service   ? `Сервіс: ${lead.service}\n`                   : "") +
       `Session: ${sessionId}`;
 
-    await sendAdminWhatsApp( waText);
+    await notifyAdmin( waText);
   } catch { /* ігноруємо */ }
 
   return NextResponse.json({ ok: true, status: "confirmed" });

@@ -24,7 +24,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as Sentry from "@sentry/nextjs";
 import { one } from "@/lib/db";
 import { sendMessage } from "@/lib/telegram";
-import { sendAdminWhatsApp } from "@/lib/whatsapp";
+import { notifyAdmin } from "@/lib/telegram";
 import { renderTemplate } from "@/lib/template-render";
 import { markLeadPaid } from "@/lib/lead-payment-sync";
 import { issuePortalPin } from "@/lib/portal";
@@ -58,7 +58,7 @@ async function alertTeam(html: string): Promise<void> {
   const plain = html.replace(/<\/?[a-z]+>/g, "");
   await Promise.allSettled([
     adminChat ? sendMessage(adminChat, html) : Promise.resolve(),
-    sendAdminWhatsApp( plain),
+    Promise.resolve(),
   ]);
 }
 

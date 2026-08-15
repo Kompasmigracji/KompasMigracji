@@ -10,7 +10,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { q } from "@/lib/db";
 import { notifyAdmin } from "@/lib/telegram";
 import { sendEmail, orakulAbandonedEmailHtml } from "@/lib/email";
-import { sendAdminWhatsApp } from "@/lib/whatsapp";
 
 
 const STALE_MINUTES = 30;
@@ -59,7 +58,7 @@ export async function GET(req: NextRequest) {
       `👋 <b>Оракул: незавершена заявка (Web)</b>\nСесія: ${lead.chat_id}\nОстанній меседж: ${new Date(lead.last_activity_at).toLocaleString("uk-UA")}\n\n${transcript.slice(0, 3000)}`
     ).catch((e) => console.error("[cron/orakul-abandoned] Telegram notify failed:", e));
 
-    sendAdminWhatsApp(
+    notifyAdmin(
       `Незавершена заявка (Оракул, Web)\nСесія: ${lead.chat_id}\nОстанній меседж: ${new Date(lead.last_activity_at).toLocaleString("uk-UA")}\n\n${transcript.slice(0, 1000)}`
     );
 

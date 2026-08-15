@@ -16,7 +16,6 @@ import {
 } from '@/lib/orakul-employer';
 import { sendEmail, employerLeadEmailHtml, employerHandoffEmailHtml } from '@/lib/email';
 import { notifyAdmin } from '@/lib/telegram';
-import { sendAdminWhatsApp } from "@/lib/whatsapp";
 
 /** Gemini free-tier RPM quota (429 RESOURCE_EXHAUSTED) — the API embeds its
  * own suggested retryDelay in the error body, so we honor that instead of
@@ -36,7 +35,7 @@ function extractRetryDelaySeconds(err: unknown, fallback = 3): number {
 function notifyEmployerCompletion(d: Partial<EmployerLeadData>, situation: string): void {
   const subject = `Нова заявка: ${d.company_name || 'без назви'}, ${d.positions_needed || 'без деталей'}`;
   notifyAdmin(`🚨 <b>Новий лід у CRM (Роботодавець, Web)!</b>\n${situation}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
-  sendAdminWhatsApp( `${subject}\n\n${situation}`);
+  notifyAdmin( `${subject}\n\n${situation}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (notifyEmail) {
     sendEmail(notifyEmail, subject, employerLeadEmailHtml(d), 'employer_lead').catch((e) => console.error('[orakul/chat] Email notify failed:', e));
@@ -45,7 +44,7 @@ function notifyEmployerCompletion(d: Partial<EmployerLeadData>, situation: strin
 
 function notifyEmployerHandoff(reason: string, contact: string, transcript: string): void {
   notifyAdmin(`⚠️ <b>Оракул: негайна ескалація (Web)!</b>\nКонтакт: ${contact}\nПричина: ${reason}`).catch((e) => console.error('[orakul/chat] Telegram notify failed:', e));
-  sendAdminWhatsApp( `⚠️ Ескалація Оракула: ${reason}\nКонтакт: ${contact}`);
+  notifyAdmin( `⚠️ Ескалація Оракула: ${reason}\nКонтакт: ${contact}`);
   const notifyEmail = process.env.EMPLOYER_LEAD_NOTIFY_EMAIL;
   if (notifyEmail) {
     sendEmail(notifyEmail, `Ескалація Оракула: ${reason}`, employerHandoffEmailHtml(reason, contact, transcript), 'employer_handoff').catch((e) => console.error('[orakul/chat] Email notify failed:', e));

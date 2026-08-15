@@ -1,38 +1,15 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { getAdminWhatsAppConfigs } from "@/lib/whatsapp";
-
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+import { notifyAdmin } from "@/lib/telegram";
 
 export async function GET() {
-  const text = `🟢 *ТЕСТОВЕ ПОВІДОМЛЕННЯ*\nЦе системний тест.`;
-  const admins = getAdminWhatsAppConfigs();
-  const results = [];
+  const text = `🟢 *ТЕСТОВЕ ПОВІДОМЛЕННЯ*\nЦе системний тест через Telegram. Якщо ви бачите це, інтеграція на два номери (або в спільну групу) працює ідеально! ✅`;
   
-  for (const admin of admins) {
-    if (!admin.apiKey) {
-      results.push({ phone: admin.phone, error: `API key not found in Vercel (${admin.envVarName})` });
-      continue;
-    }
-
-    const cleanPhone = admin.phone.replace(/[^\d]/g, "");
-    const url =
-      `https://api.callmebot.com/whatsapp.php` +
-      `?phone=${encodeURIComponent(cleanPhone)}` +
-      `&text=${encodeURIComponent(text)}` +
-      `&apikey=${encodeURIComponent(admin.apiKey)}`;
-      
-    try {
-      const res = await fetch(url);
-      const body = await res.text();
-      results.push({ phone: admin.phone, ok: res.ok, status: res.status, body });
-    } catch (err: any) {
-      results.push({ phone: admin.phone, error: err.message });
-    }
-    
-    await delay(1000); // 1 second delay to avoid CallMeBot rate limits
+  try {
+    const result = await notifyAdmin(text);
+    return NextResponse.json({ success: true, message: "Test Telegram message sent", detail: result });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message });
   }
-  
-  return NextResponse.json({ results });
 }
