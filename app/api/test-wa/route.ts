@@ -3,6 +3,8 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import { getAdminWhatsAppConfigs } from "@/lib/whatsapp";
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export async function GET() {
   const text = `🟢 *ТЕСТОВЕ ПОВІДОМЛЕННЯ*\nЦе системний тест.`;
   const admins = getAdminWhatsAppConfigs();
@@ -28,6 +30,8 @@ export async function GET() {
     } catch (err: any) {
       results.push({ phone: admin.phone, error: err.message });
     }
+    
+    await delay(1000); // 1 second delay to avoid CallMeBot rate limits
   }
   
   return NextResponse.json({ results });

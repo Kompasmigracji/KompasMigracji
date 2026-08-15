@@ -15,12 +15,16 @@ export function getAdminWhatsAppConfigs() {
   ];
 }
 
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
 export async function sendAdminWhatsApp(text: string): Promise<void> {
   const admins = getAdminWhatsAppConfigs();
-  await Promise.all(admins.map(async (admin) => {
+  
+  // CallMeBot rate-limits if we send requests concurrently. Send sequentially with a small delay.
+  for (const admin of admins) {
     if (!admin.apiKey) {
       console.warn(`sendAdminWhatsApp: ${admin.envVarName} not set for ${admin.phone} — skipping`);
-      return;
+      continue;
     }
     const cleanPhone = admin.phone.replace(/[^\d]/g, "");
     const url =
@@ -38,7 +42,10 @@ export async function sendAdminWhatsApp(text: string): Promise<void> {
     } catch (err) {
       console.error(`sendAdminWhatsApp to ${admin.phone} fetch failed`, err);
     }
-  }));
+    
+    // 500ms delay to prevent "Too many requests" from CallMeBot
+    await delay(500);
+  }
 }
 
 /**
