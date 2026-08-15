@@ -54,12 +54,7 @@ const MANAGER_EMAIL =
 
 /** Сповіщення команди, яке не має права впасти й забрати з собою платіж. */
 async function alertTeam(html: string): Promise<void> {
-  const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
-  const plain = html.replace(/<\/?[a-z]+>/g, "");
-  await Promise.allSettled([
-    adminChat ? sendMessage(adminChat, html) : Promise.resolve(),
-    Promise.resolve(),
-  ]);
+  await notifyAdmin(html);
 }
 
 export async function POST(req: NextRequest) {
