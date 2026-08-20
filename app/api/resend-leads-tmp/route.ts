@@ -44,11 +44,11 @@ export async function GET() {
 <b>Крок 5: Робота</b>
 Менеджер просто бачить сповіщення в Telegram, бере клієнта в роботу і змінює статуси на Порталі. Всі гроші автоматично фіксуються в статистиці.`;
 
-    await notifyAdmin(projectInfo);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // пауза між повідомленнями
-    await notifyAdmin(paymentInfo);
+    const res1 = await notifyAdmin(projectInfo);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const res2 = await notifyAdmin(paymentInfo);
     
-    return NextResponse.json({ success: true, message: "Project and Payment info sent to Telegram" });
+    return NextResponse.json({ success: true, message: "Done", res1, res2 });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message });
   }
