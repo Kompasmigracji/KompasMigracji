@@ -150,7 +150,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('[/api/chat] error:', error?.message ?? String(error));
     return NextResponse.json(
-      { content: 'Вибачте, сталася технічна помилка. Будь ласка, напишіть нам напряму у WhatsApp: +48 729 271 848' },
+      { content: 'Помилка: ' + (error?.message ?? String(error)) },
       { status: 200 }
     );
   }
