@@ -67,9 +67,12 @@ export async function POST(req: NextRequest) {
 
     const body = JSON.parse(rawBody);
 
-    if (body.object !== "page") {
+    if (body.object !== "page" && body.object !== "instagram") {
       return NextResponse.json({ error: "Unsupported object type" }, { status: 400 });
     }
+
+    const source = body.object === "instagram" ? "instagram" : "facebook";
+    const srcPrefix = source === "instagram" ? "IG" : "FB";
 
     // Process entries
     for (const entry of body.entry || []) {
@@ -78,22 +81,22 @@ export async function POST(req: NextRequest) {
         const messageText = messagingEvent.message?.text?.trim();
 
         if (senderId && messageText) {
-          console.log(`[fb-webhook] Received message from FB PSID ${senderId}: "${messageText}"`);
+          console.log(`[fb-webhook] Received message from ${srcPrefix} PSID ${senderId}: "${messageText}"`);
 
           // Mirror into the unified CRM chats inbox (app/admin/crm/chats), same
           // pattern as the WhatsApp/Telegram/Viber webhooks — in addition to (not
           // instead of) the kompas_leads write below.
           try {
-            const chatId = await findOrCreateChat("facebook", senderId, `FB User ${senderId.slice(-4)}`);
+            const chatId = await findOrCreateChat(source, senderId, `${srcPrefix} User ${senderId.slice(-4)}`);
             await appendMessage(chatId, messageText, "client");
           } catch (e) {
-            console.error("[fb-webhook] CRM chat mirror failed:", e);
+            console.error(`[fb-webhook] CRM chat mirror failed for ${source}:`, e);
           }
 
           // Check if lead already exists by FB sender ID (stored in chat_id/tg_chat_id or meta metadata jsonb)
           const existing = (await one(
-            `SELECT id FROM kompas_leads WHERE chat_id = $1 AND source = 'facebook' AND deleted_at IS NULL LIMIT 1`,
-            [senderId]
+            `SELECT id FROM kompas_leads WHERE chat_id = $1 AND source = $2 AND deleted_at IS NULL LIMIT 1`,
+            [senderId, source]
           )) as { id: string } | null;
 
           if (existing) {
@@ -109,16 +112,16 @@ export async function POST(req: NextRequest) {
             // Create a new lead record
             const newLead = (await one(
               `INSERT INTO kompas_leads (chat_id, source, first_name, situation, status)
-               VALUES ($1, 'facebook', $2, $3, 'new')
+               VALUES ($1, $2, $3, $4, 'new')
                RETURNING id`,
-              [senderId, `FB User ${senderId.slice(-4)}`, messageText]
+              [senderId, source, `${srcPrefix} User ${senderId.slice(-4)}`, messageText]
             )) as { id: string };
 
             // Dispatch task to team
             await createTaskFromLead({
-              name: `FB User ${senderId.slice(-4)}`,
-              contact: `FB Messenger ID: ${senderId}`,
-              source: "facebook",
+              name: `${srcPrefix} User ${senderId.slice(-4)}`,
+              contact: `${srcPrefix} Messenger ID: ${senderId}`,
+              source: source,
             });
           }
         }
