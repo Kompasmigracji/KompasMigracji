@@ -100,7 +100,7 @@ export default function BookPage() {
             Zarezerwuj spotkanie z ekspertem
           </h1>
           <p style={{ fontSize: 15, color: "rgba(255,255,255,0.85)", maxWidth: 480, margin: "0 auto" }}>
-            30-minutowa konsultacja online z naszym specjalista ds. migracji. Bez oplat, bez zobowiazan.
+            2-minutowa konsultacja online z naszym specjalista ds. migracji. Bez oplat, bez zobowiazan.
           </p>
         </section>
 

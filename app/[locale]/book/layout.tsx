@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 // it renders the same Polish copy regardless of URL locale. Metadata matches
 // that reality rather than promising a translation the page doesn't have.
 const title = 'Zarezerwuj spotkanie z ekspertem | Kompas Migracji';
-const description = 'Bezpłatna pierwsza konsultacja — 30-minutowe spotkanie online z naszym specjalistą ds. migracji. Bez opłat, bez zobowiązań.';
+const description = 'Bezpłatna pierwsza konsultacja — 2-minutowe spotkanie online z naszym specjalistą ds. migracji. Bez opłat, bez zobowiązań.';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
   const url = `https://kompasmigracji.com/${locale}/book`;
