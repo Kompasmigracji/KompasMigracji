@@ -250,7 +250,7 @@ export async function POST(req: NextRequest) {
             parts: [{ text: m.content }],
           }));
           const callGemini = () => ai.models.generateContentStream({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash-latest',
             contents: aiMessages,
             config: { systemInstruction: systemInstructionWithNote }
           });
