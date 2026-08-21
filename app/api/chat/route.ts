@@ -130,12 +130,29 @@ export async function POST(req: NextRequest) {
               name,
               contact: phone,
               message: issue,
-              source: 'ai_chatbot',
+              source: 'ai_chat',
               status: 'new',
             });
             if (error) {
               console.error('AI Chatbot lead insert error:', error);
               return { success: false, message: 'Вибачте, сталася помилка при створенні заявки.' };
+            }
+            // Send telegram notification
+            try {
+              const { sendMessage } = await import('@/lib/telegram');
+              const ADMIN_CHAT = process.env.TELEGRAM_ADMIN_CHAT_ID;
+              if (ADMIN_CHAT) {
+                await sendMessage(
+                  ADMIN_CHAT,
+                  `<b>🤖 Новий лід від ШІ-асистента</b>\n` +
+                  `Клієнт: <b>${name}</b>\n` +
+                  `Контакт: ${phone}\n` +
+                  `Запит: ${issue}`,
+                  'HTML'
+                );
+              }
+            } catch (e) {
+              console.error('AI Chatbot telegram error:', e);
             }
             return {
               success: true,
