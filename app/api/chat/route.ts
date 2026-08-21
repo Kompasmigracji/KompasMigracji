@@ -125,33 +125,25 @@ export async function POST(req: NextRequest) {
           }),
           // @ts-expect-error ai sdk execute types
           execute: async ({ name, phone, issue }: { name: string; phone: string; issue: string }) => {
-            const adminDb = getSupabaseAdmin();
-            if (!adminDb) return { success: false, message: 'Сервіс запису тимчасово недоступний (помилка сервера).' };
-            const { error } = await adminDb.from('kompas_leads').insert({
-              name,
-              contact: phone,
-              message: issue,
-              source: 'ai_chat',
-              status: 'new',
-            });
-            if (error) {
-              console.error('AI Chatbot lead insert error:', error);
+            try {
+              const { q } = await import('@/lib/db');
+              await q(
+                `INSERT INTO kompas_leads (source, name, contact, message, status) VALUES ('ai_chat', $1, $2, $3, 'new')`,
+                [name, phone, issue]
+              );
+            } catch (err) {
+              console.error('AI Chatbot lead insert error:', err);
               return { success: false, message: 'Вибачте, сталася помилка при створенні заявки.' };
             }
             // Send telegram notification
             try {
-              const { sendMessage } = await import('@/lib/telegram');
-              const ADMIN_CHAT = process.env.TELEGRAM_ADMIN_CHAT_ID;
-              if (ADMIN_CHAT) {
-                await sendMessage(
-                  ADMIN_CHAT,
-                  `<b>🤖 Новий лід від ШІ-асистента</b>\n` +
-                  `Клієнт: <b>${name}</b>\n` +
-                  `Контакт: ${phone}\n` +
-                  `Запит: ${issue}`,
-                  'HTML'
-                );
-              }
+              const { notifyAdmin } = await import('@/lib/telegram');
+              await notifyAdmin(
+                `<b>🤖 Новий лід від ШІ-асистента</b>\n` +
+                `Клієнт: <b>${name}</b>\n` +
+                `Контакт: ${phone}\n` +
+                `Запит: ${issue}`
+              );
             } catch (e) {
               console.error('AI Chatbot telegram error:', e);
             }
