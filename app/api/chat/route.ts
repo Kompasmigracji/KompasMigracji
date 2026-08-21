@@ -4,7 +4,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY || '' });
 import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabase, getSupabaseAdmin } from '@/lib/supabase';
 import { rateLimit, clientIp } from '@/lib/rate-limit';
 
 /* Публічний неавтентифікований ендпоінт, кожен виклик — платний запит до LLM.
@@ -125,8 +125,9 @@ export async function POST(req: NextRequest) {
           }),
           // @ts-expect-error ai sdk execute types
           execute: async ({ name, phone, issue }: { name: string; phone: string; issue: string }) => {
-            if (!supabase) return { success: false, message: 'Сервіс запису тимчасово недоступний.' };
-            const { error } = await supabase.from('kompas_leads').insert({
+            const adminDb = getSupabaseAdmin();
+            if (!adminDb) return { success: false, message: 'Сервіс запису тимчасово недоступний (помилка сервера).' };
+            const { error } = await adminDb.from('kompas_leads').insert({
               name,
               contact: phone,
               message: issue,
