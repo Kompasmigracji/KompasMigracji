@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabase();
 
     const { text } = await generateText({
-      model: google('gemini-1.5-flash') as any,
+      model: google('gemini-2.5-flash') as any,
       system: SYSTEM_PROMPT,
       messages,
       // @ts-expect-error maxSteps not in types but supported
