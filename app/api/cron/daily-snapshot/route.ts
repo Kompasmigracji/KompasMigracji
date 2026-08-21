@@ -14,7 +14,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runDailySnapshot() {
+async function runDailySnapshot() {
   const today = new Date().toISOString().split("T")[0];
 
   const [members, dues, leads, churn] = await Promise.all([

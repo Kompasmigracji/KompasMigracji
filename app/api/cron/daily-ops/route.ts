@@ -20,13 +20,7 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 import { NextRequest, NextResponse } from "next/server";
-import { runAppointmentReminders } from "../appointment-reminders/route";
-import { runDailySnapshot } from "../daily-snapshot/route";
-import { runDuesReminders } from "../dues-reminders/route";
-import { runLeadFollowup } from "../lead-followup/route";
-import { runNpsSurvey } from "../nps-survey/route";
-import { runSubscriptionRenewal } from "../subscription-renewal/route";
-import { runWeeklyDigest } from "../weekly-digest/route";
+// Imports removed to prevent Next.js route export errors
 import { runPaymentReverify } from "@/lib/payment-reverify";
 
 function checkCronAuth(req: NextRequest): boolean {
@@ -34,6 +28,23 @@ function checkCronAuth(req: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
   if (secret) return authHeader === `Bearer ${secret}`;
   return req.headers.get("x-vercel-cron") === "1";
+}
+
+async function callCronRoute(name: string, req: NextRequest) {
+  try {
+    const url = new URL(`/api/cron/${name}`, req.url);
+    const authHeader = req.headers.get("authorization");
+    const headers: Record<string, string> = {};
+    if (authHeader) headers["authorization"] = authHeader;
+    else if (process.env.CRON_SECRET) headers["authorization"] = `Bearer ${process.env.CRON_SECRET}`;
+    
+    const res = await fetch(url.toString(), { headers });
+    const data = await res.json().catch(() => ({}));
+    return { name, ok: res.ok, ...data };
+  } catch (e) {
+    console.error(`[daily-ops] ${name} failed:`, e);
+    return { name, ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
 }
 
 async function safe(name: string, fn: () => Promise<any>) {
@@ -53,16 +64,16 @@ export async function GET(req: NextRequest) {
   const isMonday = new Date().getUTCDay() === 1;
 
   const results = await Promise.all([
-    safe("appointment-reminders", runAppointmentReminders),
-    safe("daily-snapshot", runDailySnapshot),
-    safe("dues-reminders", runDuesReminders),
-    safe("lead-followup", runLeadFollowup),
+    callCronRoute("appointment-reminders", req),
+    callCronRoute("daily-snapshot", req),
+    callCronRoute("dues-reminders", req),
+    callCronRoute("lead-followup", req),
     /* Платежі, які P24 не підтвердив — гроші клієнта вже списані, тож ця
        задача має шанс повернути реальні злоті, а не просто прибрати помилку. */
     safe("payment-reverify", runPaymentReverify),
-    safe("nps-survey", runNpsSurvey),
-    safe("subscription-renewal", runSubscriptionRenewal),
-    ...(isMonday ? [safe("weekly-digest", runWeeklyDigest)] : []),
+    callCronRoute("nps-survey", req),
+    callCronRoute("subscription-renewal", req),
+    ...(isMonday ? [callCronRoute("weekly-digest", req)] : []),
   ]);
 
   return NextResponse.json({ ok: true, ran: results });

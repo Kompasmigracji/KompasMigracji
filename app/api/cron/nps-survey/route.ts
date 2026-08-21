@@ -18,7 +18,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runNpsSurvey() {
+async function runNpsSurvey() {
   // Find leads closed/converted (recently or unsurveyed) that don't have an NPS survey yet
   // Note: leads table has no updated_at; use paid_at or created_at as proxy
   const closedLeads = await q(

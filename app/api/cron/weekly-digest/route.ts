@@ -15,7 +15,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runWeeklyDigest() {
+async function runWeeklyDigest() {
   const adminChat = process.env.TELEGRAM_ADMIN_CHAT_ID;
   if (!adminChat) {
     return { ok: false, reason: "TELEGRAM_ADMIN_CHAT_ID not set" };

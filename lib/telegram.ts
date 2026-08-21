@@ -18,18 +18,25 @@ async function tgPost(method: string, payload: object, token?: string): Promise<
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  return res.json();
+  const data = await res.json();
+  if (!data.ok) {
+    console.error(`[Telegram API Error] ${method}:`, data);
+  }
+  return data;
 }
 
 /** Відправити текстове повідомлення (HTML-розмітка за замовчуванням). */
 export function sendMessage(
   chatId: number | string,
   text: string,
-  parseMode: "HTML" | "Markdown" | "MarkdownV2" = "HTML",
+  parseMode?: "HTML" | "Markdown" | "MarkdownV2" | null,
   token?: string,
   replyMarkup?: object
 ) {
-  const payload: any = { chat_id: chatId, text, parse_mode: parseMode };
+  const payload: any = { chat_id: chatId, text };
+  if (parseMode) {
+    payload.parse_mode = parseMode;
+  }
   if (replyMarkup) {
     payload.reply_markup = replyMarkup;
   }
@@ -69,10 +76,13 @@ export function setWebhook(webhookUrl: string, secret?: string, token?: string) 
 
 /** Надіслати сповіщення адміністратору (власнику) */
 export function notifyAdmin(text: string, token?: string) {
-  const adminChatId = process.env.ADMIN_TELEGRAM_CHAT_ID;
+  const adminChatId = process.env.ADMIN_TELEGRAM_CHAT_ID || process.env.TELEGRAM_ADMIN_CHAT_ID;
   if (!adminChatId) {
-    console.warn("ADMIN_TELEGRAM_CHAT_ID is not set. Skipping admin notification.");
+    console.warn("ADMIN_TELEGRAM_CHAT_ID / TELEGRAM_ADMIN_CHAT_ID are not set. Skipping admin notification.");
     return Promise.resolve({ ok: false, description: "No admin chat ID" });
   }
-  return sendMessage(adminChatId, text, "HTML", token);
+  // Remove HTML tags so we can send as plain text without crashing Telegram
+  const plainText = text.replace(/<[^>]+>/g, "");
+  // Pass an empty string or undefined as parseMode so Telegram treats it as plain text
+  return sendMessage(adminChatId, plainText, undefined as any, token);
 }

@@ -15,7 +15,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runDuesReminders() {
+async function runDuesReminders() {
   // Find leads with Telegram who have not paid (as proxy for members)
   // In practice: query kompas_dues joined with chat_id if stored
   const overdue = await q(`

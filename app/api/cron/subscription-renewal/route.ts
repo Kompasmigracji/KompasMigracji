@@ -21,7 +21,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runSubscriptionRenewal() {
+async function runSubscriptionRenewal() {
   // 1. Expire subscriptions past their end date
   const expired = await q(
     `UPDATE kompas_subscriptions

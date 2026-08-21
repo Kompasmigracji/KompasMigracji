@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
     // If text is empty, check if there are tool results
     let finalContent = text;
     if (!finalContent && toolResults && toolResults.length > 0) {
-      const res = toolResults[0].result as any;
+      const res = (toolResults[0] as any).result;
       if (res.message) {
         finalContent = res.message;
         if (res.jobs) finalContent += '\\n' + res.jobs.map((j:any) => `- ${j.title} (${j.salary})`).join('\\n');

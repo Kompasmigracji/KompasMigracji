@@ -17,7 +17,7 @@ function verifyCron(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runLeadFollowup() {
+async function runLeadFollowup() {
   // F15: Escalate leads not picked up in 24h
   const stale = await q(`
     SELECT id, first_name, service, urgency, score

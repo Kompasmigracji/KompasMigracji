@@ -19,7 +19,7 @@ function checkCronAuth(req: NextRequest): boolean {
   return req.headers.get("x-vercel-cron") === "1";
 }
 
-export async function runAppointmentReminders() {
+async function runAppointmentReminders() {
   // Appointments in next 20-28h that haven't been reminded yet
   const upcoming = await q(
     `SELECT a.id, a.client_name, a.client_email, a.client_phone, a.service,
