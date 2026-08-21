@@ -150,13 +150,16 @@ export async function POST(req: NextRequest) {
     let finalContent = text;
     if (!finalContent && toolResults && toolResults.length > 0) {
       const res = (toolResults[0] as any).result;
-      if (res.message) {
+      if (res && res.message) {
         finalContent = res.message;
-        if (res.jobs) finalContent += '\\n' + res.jobs.map((j:any) => `- ${j.title} (${j.salary})`).join('\\n');
+        if (res.results) finalContent += '\\n' + res.results.map((j:any) => `- ${j.title || j.name || ''}`).join('\\n');
         if (res.partners) finalContent += '\\n' + res.partners.map((p:any) => `- ${p.name}: ${p.discount}`).join('\\n');
         if (res.status) finalContent += '\\nСтатус справи: ' + res.status;
-      } else {
+      } else if (res) {
         finalContent = JSON.stringify(res);
+      } else {
+        // Fallback if result is undefined or missing
+        finalContent = 'Дякую, я прийняв інформацію.';
       }
     }
 
