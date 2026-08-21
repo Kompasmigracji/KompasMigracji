@@ -160,6 +160,7 @@ export default function Header() {
               {{ uk: 'Доктрина', ru: 'Доктрина', pl: 'Doktryna', en: 'Doctrine', rom: 'Doctrină' }[locale] || 'Доктрина'}
             </Link>
             <Link href="/pricing" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_pricing')}</Link>
+            <Link href="/automation" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">B2B AI & CRM</Link>
             <Link href="/orakul" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none no-underline transition-transform duration-300 hover:scale-105 active:scale-95">EWU</Link>
             <Link href="/portal" className="premium-btn !border-transparent !bg-transparent hover:!bg-black/5 dark:hover:!bg-white/10 !shadow-none !whitespace-nowrap no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('footer_client_portal')}</Link>
             <Link href="/book" className="premium-btn !border-transparent !bg-blue-500/10 !text-blue-600 dark:!text-blue-400 hover:!bg-blue-500/20 !shadow-none !whitespace-nowrap no-underline transition-transform duration-300 hover:scale-105 active:scale-95">{t('nav_cta')}</Link>
@@ -275,6 +276,9 @@ export default function Header() {
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/pricing" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">{t('nav_pricing')}</Link>
+                </motion.div>
+                <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
+                  <Link href="/automation" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">B2B AI & CRM</Link>
                 </motion.div>
                 <motion.div variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0 } }}>
                   <Link href="/orakul" onClick={() => setMobileOpen(false)} className="block text-xl font-medium text-gray-700 dark:text-gray-300 py-2 no-underline active:scale-95 transition-transform">EWU</Link>
