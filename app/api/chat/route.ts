@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     }
     const supabase = getSupabase();
 
-    const { text } = await generateText({
+    const { text, toolResults } = await generateText({
       model: google('gemini-2.5-flash') as any,
       system: SYSTEM_PROMPT,
       messages,
@@ -146,7 +146,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ content: text ?? '' });
+    // If text is empty, check if there are tool results
+    let finalContent = text;
+    if (!finalContent && toolResults && toolResults.length > 0) {
+      const res = toolResults[0].result as any;
+      if (res.message) {
+        finalContent = res.message;
+        if (res.jobs) finalContent += '\\n' + res.jobs.map((j:any) => `- ${j.title} (${j.salary})`).join('\\n');
+        if (res.partners) finalContent += '\\n' + res.partners.map((p:any) => `- ${p.name}: ${p.discount}`).join('\\n');
+        if (res.status) finalContent += '\\nСтатус справи: ' + res.status;
+      } else {
+        finalContent = JSON.stringify(res);
+      }
+    }
+
+    return NextResponse.json({ content: finalContent || 'Запит обробляється...' });
   } catch (error: any) {
     console.error('[/api/chat] error:', error?.message ?? String(error));
     return NextResponse.json(
