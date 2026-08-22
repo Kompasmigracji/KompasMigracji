@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
 import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
+import { notifyAdmin } from "@/lib/telegram";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
@@ -87,6 +88,8 @@ export async function POST(req: NextRequest) {
             contact: `Viber ID: ${senderId}`,
             source: "viber",
           });
+          // Notify admin in Telegram
+          try { await notifyAdmin(`📳 <b>Viber — новий лід</b>\nВід: <b>${senderName}</b>\nID: ${senderId}\n${messageText.slice(0,300)}`); } catch (e) { /* non-blocking */ }
         }
       }
     }

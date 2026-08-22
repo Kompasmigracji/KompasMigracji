@@ -78,6 +78,22 @@ export async function POST(request: NextRequest) {
       } catch (e) {
         console.error('[whatsapp] CRM chat mirror failed:', e);
       }
+
+      // Save lead + notify admin
+      try {
+        const { q } = await import('@/lib/db');
+        await q(
+          `INSERT INTO kompas_leads (source, name, contact, message, status)
+           VALUES ('whatsapp', $1, $2, $3, 'new') ON CONFLICT DO NOTHING`,
+          [contactName || phoneNumber, phoneNumber, msgBody.slice(0, 500)]
+        );
+        const { notifyAdmin } = await import('@/lib/telegram');
+        await notifyAdmin(
+          `💬 <b>WhatsApp — нове повідомлення</b>\nВід: <b>${contactName || phoneNumber}</b>\nТел: ${phoneNumber}\n${msgBody.slice(0, 300)}`
+        );
+      } catch (e) {
+        console.error('[whatsapp] lead/notify error:', e);
+      }
     }
 
     return new NextResponse('EVENT_RECEIVED', { status: 200 });

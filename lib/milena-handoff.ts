@@ -4,6 +4,7 @@
 // як і task-from-lead.ts, зберігаю conversation_id текстовою міткою в
 // description, бо tasks.id це bigint без jsonb/FK-поля для зовнішніх систем.
 import { q, one } from "@/lib/db";
+import { notifyAdmin } from "@/lib/telegram";
 
 interface HandoffContext {
   conversationId: string;
@@ -64,4 +65,12 @@ export async function handoffToHuman(ctx: HandoffContext): Promise<void> {
   } catch (err) {
     console.error("[milena-handoff] lead mirror failed:", err);
   }
+
+  // Notify admin about handoff
+  try {
+    const contact = phone || email || 'невідомо';
+    await notifyAdmin(
+      `🤖 <b>Мілена — передача оператору</b>\nКлієнт: <b>${name}</b>\nКонтакт: ${contact}\nПослуга: ${service}\nПричина: ${ctx.reason.slice(0, 200)}`
+    );
+  } catch (e) { /* non-blocking */ }
 }

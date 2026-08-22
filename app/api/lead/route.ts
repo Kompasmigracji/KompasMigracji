@@ -68,6 +68,18 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Telegram notification for all site form leads
+    try {
+      const { notifyAdmin } = await import('@/lib/telegram');
+      await notifyAdmin(
+        `📋 <b>Нова заявка з сайту</b>\nІм'я: <b>${firstName}</b>\nКонтакт: ${contact}\nДжерело: ${source}` +
+        (service ? `\nПослуга: ${service}` : '') +
+        (message || situation ? `\nПовідомлення: ${(message || situation).slice(0, 200)}` : '')
+      );
+    } catch (e) {
+      console.error('[lead] Telegram notify error:', e);
+    }
+
     return NextResponse.json({ ok: true });
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'db error';

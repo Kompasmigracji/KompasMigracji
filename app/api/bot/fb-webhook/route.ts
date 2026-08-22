@@ -13,6 +13,7 @@ import { q, one } from "@/lib/db";
 import { createTaskFromLead } from "@/lib/task-from-lead";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { findOrCreateChat, appendMessage } from "@/lib/crm-chats";
+import { notifyAdmin } from "@/lib/telegram";
 
 /* Meta signs every webhook POST with X-Hub-Signature-256 (HMAC-SHA256 of the raw
    body, keyed by the Meta App Secret — shared by Messenger and WhatsApp Cloud API).
@@ -123,6 +124,8 @@ export async function POST(req: NextRequest) {
               contact: `${srcPrefix} Messenger ID: ${senderId}`,
               source: source,
             });
+            // Notify admin in Telegram
+            try { await notifyAdmin(`${source === 'instagram' ? '📸 Instagram' : '👥 Facebook'} — <b>новий лід</b>\nID: ${senderId}\n${messageText.slice(0,300)}`); } catch (e) { /* non-blocking */ }
           }
         }
       }
